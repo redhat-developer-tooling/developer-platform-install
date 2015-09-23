@@ -1,0 +1,65 @@
+.branding {
+  width: 180px;
+  height: auto;
+  padding-bottom: 20px;
+}
+
+header {
+  padding-bottom: 35px;
+}
+
+.breadcrumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 60%;
+}
+
+.breadcrumbs:before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: #d1d1d1;
+  position: relative;
+  top: 6px;
+  margin-right: 12.5%;
+}
+
+.breadcrumbs li {
+  display: block;
+  float: left;
+  text-align: center;
+  color: #d1d1d1;
+  width: 25%;
+  position: relative;
+  padding-top: 15px;
+}
+
+.breadcrumbs li:before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #d1d1d1;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -5px;
+}
+
+.breadcrumbs li.active {
+  color: #0088ce;
+}
+
+.breadcrumbs li.active:before {
+  background: #0088ce;
+}
+
+main {
+  margin-left: 20px;
+}
+
+form {
+  margin-left: 15px;
+}

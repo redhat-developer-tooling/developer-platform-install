@@ -11,5 +11,6 @@
   },
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "dependencies": {
+    "patternfly": "^2.2.0"
   }
 }
