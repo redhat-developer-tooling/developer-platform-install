@@ -1,19 +1,19 @@
 {
-  "name": "developer-platform-install",
-  "version": "0.0.1",
-  "description": "Installer for Red Hat Developer Platform",
-  "main": "index.js",
   "scripts": {
+    "start": "electron app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/redhat-developer/developer-platform-install.git"
+    "url": "https://github.com/redhat-developer/developer-platform-install.git"
   },
   "author": "Red Hat Developer Tooling Group",
   "license": "ASLv2",
   "bugs": {
     "url": "https://github.com/redhat-developer/developer-platform-install/issues"
   },
-  "homepage": "https://github.com/redhat-developer/developer-platform-install#readme"
+  "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^0.33.1"
+  }
 }
