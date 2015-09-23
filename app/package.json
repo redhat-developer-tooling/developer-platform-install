@@ -1,0 +1,15 @@
+{
+  "name": "developer-platform-install",
+  "productName": "Red Hat Developer Platform installer",
+  "version": "0.0.1",
+  "description": "Installer for Red Hat Developer Platform",
+  "main": "index.js",
+  "author": "Red Hat Developer Tooling Group",
+  "license": "ASLv2",
+  "bugs": {
+    "url": "https://github.com/redhat-developer/developer-platform-install/issues"
+  },
+  "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
+  "dependencies": {
+  }
+}
