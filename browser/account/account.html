@@ -11,7 +11,7 @@
 
 <main class="col-sm-offset-1">
   <h1>Log in to your Red Hat account</h1>
-  <form class="form-horizontal">
+  <form id="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
     <div class="form-group">
       <div class="col-sm-4">
         <input type="email" id="email" class="form-control" placeholder="Red Hat login"/>
