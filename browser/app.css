@@ -55,11 +55,3 @@ header {
 .breadcrumbs li.active:before {
   background: #0088ce;
 }
-
-main {
-  margin-left: 20px;
-}
-
-form {
-  margin-left: 15px;
-}
