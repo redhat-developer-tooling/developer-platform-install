@@ -1,6 +1,20 @@
+let ipc = require('ipc');
+
 class InstallController {
   constructor($state) {
     this.router = $state;
+
+    ipc.on('install-complete', () => {
+      this.finish();
+    });
+
+    this.performInstall();
+  }
+
+  performInstall() {
+    ipc.send('installJDK');
+    ipc.send('installIDE');
+    ipc.send('installVBox');
   }
 
   finish() {

@@ -14,12 +14,16 @@ crashReporter.start({
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
 
-ipc.on('crash', (event, arg)=>{
-    process.crash(arg);
+ipc.on('install', (event) => {
+  event.sender.send('install-complete');
 });
 
-ipc.on('devTools', (event,arg) =>{
-    mainWindow.openDevTools();
+ipc.on('crash', (event, arg) => {
+  process.crash(arg);
+});
+
+ipc.on('devTools', (event,arg) => {
+  mainWindow.openDevTools();
 });
 
 // Quit when all windows are closed.
