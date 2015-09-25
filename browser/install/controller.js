@@ -12,9 +12,9 @@ class InstallController {
   }
 
   performInstall() {
-    ipc.send('installJDK');
-    ipc.send('installIDE');
-    ipc.send('installVBox');
+    ipc.send('install');
+    // ipc.send('installIDE');
+    // ipc.send('installVBox');
   }
 
   finish() {

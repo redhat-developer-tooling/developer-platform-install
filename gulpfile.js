@@ -18,7 +18,7 @@ gulp.task('clean', function(){
 });
 
 gulp.task('copy:app', ['clean'], function(){
-    return gulp.src(['main/**/*', 'browser/**/*', 'package.json'], {base: '.'})
+    return gulp.src(['main/**/*', 'browser/**/*', 'installs/**/*', 'package.json'], {base: '.'})
         .pipe(gulp.dest('package'));
 });
 
