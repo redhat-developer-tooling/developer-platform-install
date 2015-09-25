@@ -29,7 +29,7 @@ gulp.task('run', ['transpile:app'], function() {
 gulp.task('build', function() {
   return gulp.src('package/**')
         .pipe(electron({
-          version: '0.30.3',
+          version: '0.33.1',
           platform: 'win32',
           arch: 'x64' }))
         .pipe(electron.zfsdest('dist/developer-platform-install.zip'));
