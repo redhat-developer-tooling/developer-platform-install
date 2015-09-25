@@ -15,7 +15,8 @@
   },
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "scripts": {
-    "start": "electron app",
+    "start": "electron .",
+    "package": "electron-packager ./package/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.1 --out=./dist/ --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -24,9 +25,9 @@
   },
   "devDependencies": {
     "del": "^2.0.2",
+    "electron-packager": "^5.1.0",
     "electron-prebuilt": "^0.33.1",
     "gulp": "^3.9.0",
-    "gulp-atom-electron": "^0.17.2",
     "gulp-babel": "^5.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.11",

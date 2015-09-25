@@ -2,7 +2,6 @@ var gulp = require('gulp'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
   rename = require('gulp-rename'),
-  electron  = require('gulp-atom-electron'),
   del = require('del'),
   run = require('gulp-run');
 
@@ -26,15 +25,6 @@ gulp.task('run', ['transpile:app'], function() {
   return run('electron .').exec();
 });
 
-gulp.task('build', function() {
-  return gulp.src('package/**')
-        .pipe(electron({
-          version: '0.33.1',
-          platform: 'win32',
-          arch: 'x64' }))
-        .pipe(electron.zfsdest('dist/developer-platform-install.zip'));
-});
-
 gulp.task('default', function(){
-    return runSequence('clean', 'transpile:app', 'copy:app','build');
+    return runSequence('clean', 'transpile:app', 'copy:app');
   });
