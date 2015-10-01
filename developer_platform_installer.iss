@@ -26,12 +26,15 @@ DefaultGroupName={#AppName}
 OutputBaseFilename=developer_platform
 Compression=lzma
 SolidCompression=yes
-WizardSmallImageFile=redhat.bmp
+WizardSmallImageFile=blank.bmp
 BackColor=clWhite
 BackSolid=yes
+DisableWelcomePage=yes
 
-;[Files]
-
+[Files]
+Source: "bc1.bmp"; Flags: dontcopy
+Source: "bc2.bmp"; Flags: dontcopy
+Source: "bc3.bmp"; Flags: dontcopy
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -42,9 +45,111 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName: "InstallDir"; ValueData: "{app}"
 
 [Code]
+
+var 
+  AuthPageID: Integer;
+
+function StringToColor(Color: String): TColor;
+var
+    RR, GG, BB: String;
+    Dec: Integer;
+begin
+    { Change string Color from $RRGGBB to $BBGGRR and then convert to TColor }
+    if((Length(Color) <> 7) or (Color[1] <> '$')) then
+        Result := $000000
+    else
+    begin
+        RR := Color[2] + Color[3];
+        GG := Color[4] + Color[5];
+        BB := Color[6] + Color[7];
+        Dec := StrToInt('$' + BB + GG + RR);
+        Result := TColor(Dec);
+    end;
+end;
+
+procedure FormButtonOnClick(Sender: TObject);
+var
+  Form: TSetupForm;
+  Edit: TNewEdit;
+  OKButton, CancelButton: TNewButton;
+begin
+  Form := CreateCustomForm();
+  try
+    Form.ClientWidth := ScaleX(256);
+    Form.ClientHeight := ScaleY(128);
+    Form.Caption := 'TSetupForm';
+    Form.CenterInsideControl(WizardForm, False);
+
+    Edit := TNewEdit.Create(Form);
+    Edit.Top := ScaleY(10);
+    Edit.Left := ScaleX(10);
+    Edit.Width := Form.ClientWidth - ScaleX(2 * 10);
+    Edit.Height := ScaleY(23);
+    Edit.Text := 'TNewEdit';
+    Edit.Parent := Form;
+
+    OKButton := TNewButton.Create(Form);
+    OKButton.Parent := Form;
+    OKButton.Width := ScaleX(75);
+    OKButton.Height := ScaleY(23);
+    OKButton.Left := Form.ClientWidth - ScaleX(75 + 6 + 75 + 10);
+    OKButton.Top := Form.ClientHeight - ScaleY(23 + 10);
+    OKButton.Caption := 'OK';
+    OKButton.ModalResult := mrOk;
+    OKButton.Default := True;
+
+    CancelButton := TNewButton.Create(Form);
+    CancelButton.Parent := Form;
+    CancelButton.Width := ScaleX(75);
+    CancelButton.Height := ScaleY(23);
+    CancelButton.Left := Form.ClientWidth - ScaleX(75 + 10);
+    CancelButton.Top := Form.ClientHeight - ScaleY(23 + 10);
+    CancelButton.Caption := 'Cancel';
+    CancelButton.ModalResult := mrCancel;
+    CancelButton.Cancel := True;
+
+    Form.ActiveControl := Edit;
+
+    if Form.ShowModal() = mrOk then
+      MsgBox('You clicked OK.', mbInformation, MB_OK);
+  finally
+    Form.Free();
+  end;
+
+end;
+
+procedure LoginButtonOnClick(Sender: TObject);
+var
+  AuthLabel: TNewStaticText;
+  Page: TWizardPage;
+  Button: TNewButton;
+begin
+  Page := PageFromID(AuthPageID);
+
+  AuthLabel := TNewStaticText.Create(Page);
+  AuthLabel.Caption := 'Authentication Successful';
+  AuthLabel.Parent := Page.Surface;
+  AuthLabel.Color := clWhite;
+  AuthLabel.Font.Color := clGreen;
+  Button := TNewButton(Sender);
+  AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
+
+  Wizardform.NextButton.Enabled := True;
+end;
+
+procedure ForgotLabelOnClick(Sender: TObject);
+var
+  ErrorCode: Integer;
+begin
+  ShellExecAsOriginalUser('open', 'http://www.redhat.com/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+
 procedure CreateWizardPages;
 var
+  StdColor: TColor;
   Page: TWizardPage;
+  LoginLabel: TNewStaticText;
+  ForgotLabel: TNewStaticText;
   Button, FormButton: TNewButton;
   Panel: TPanel;
   CheckBox: TNewCheckBox;
@@ -60,13 +165,31 @@ var
   BitmapImage, BitmapImage2, BitmapImage3: TBitmapImage;
   BitmapFileName: String;
   RichEditViewer: TRichEditViewer;
+  URLLabel: TNewStaticText;
 begin
-  { TButton and others }
+  StdColor := StringToColor('$0093d9');
 
-  Page := CreateCustomPage(wpWelcome, 'Log in to your Red Hat account', 'Foo');
+  Page := CreateCustomPage(wpWelcome, '', '');
+  AuthPageID := Page.ID;
+
+  LoginLabel := TNewStaticText.Create(Page);
+  LoginLabel.Caption := 'Log in to your Red Hat account';
+  LoginLabel.Parent := Page.Surface;
+  LoginLabel.Color := clWhite;
+  LoginLabel.Font.Style := LoginLabel.Font.Style + [fsBold];
+  LoginLabel.Font.Size := 10;
+
+  { Alter Font *after* setting Parent so the correct defaults are inherited first }
+//  URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
+//  if GetWindowsVersion >= $040A0000 then   { Windows 98 or later? }
+//    URLLabel.Font.Color := clHotLight
+//  else
+//    URLLabel.Font.Color := clBlue;
+//  URLLabel.Top := Button.Top + Button.Height + ScaleY(20);
+//  URLLabel.Left := Button.Left + Button.Width + ScaleX(20);
   
   Edit := TNewEdit.Create(Page);
-  Edit.Top := ScaleY(8);
+  Edit.Top := LoginLabel.Top + LoginLabel.Height + ScaleY(8);
   Edit.Width := Page.SurfaceWidth div 2 - ScaleX(8);
   Edit.Text := 'Red Hat Login';
   Edit.Parent := Page.Surface;
@@ -82,8 +205,35 @@ begin
   Button.Height := ScaleY(23);
   Button.Caption := 'LOG IN';
   Button.Top := PasswordEdit.Top + PasswordEdit.Height + ScaleY(8);
-  //Button.OnClick := @ButtonOnClick;
+  Button.OnClick := @LoginButtonOnClick;
   Button.Parent := Page.Surface;
+
+  {FormButton := TNewButton.Create(Page);
+  FormButton.Top := Button.Top + Button.Height + ScaleY(8);
+  FormButton.Width := ScaleX(75);
+  FormButton.Height := ScaleY(23);
+  FormButton.Caption := 'TSetupForm';
+  FormButton.OnClick := @FormButtonOnClick;
+  FormButton.Parent := Page.Surface;     }
+
+  ForgotLabel := TNewStaticText.Create(Page);
+  ForgotLabel.Caption := 'Forgot your login or password?';
+  ForgotLabel.Cursor := crHand;
+  ForgotLabel.OnClick := @ForgotLabelOnClick;
+  ForgotLabel.Parent := Page.Surface;
+  ForgotLabel.Color := clWhite;
+  { Alter Font *after* setting Parent so the correct defaults are inherited first }
+  //ForgotLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
+  ForgotLabel.Font.Style := ForgotLabel.Font.Style + [fsBold];
+  ForgotLabel.Font.Color := StdColor;
+//  if GetWindowsVersion >= $040A0000 then   { Windows 98 or later? }
+//    ForgotLabel.Font.Color := clHotLight
+//  else
+//    ForgotLabel.Font.Color := clBlue;
+  ForgotLabel.Top := Button.Top + ((Button.Height - ForgotLabel.Height) / 2) + ScaleY(0);
+  ForgotLabel.Left := Button.Left + Button.Width + ScaleX(20);
+
+  //WizardForm.NextButton.Enabled := false;
 
   {Panel := TPanel.Create(Page);
   Panel.Width := Page.SurfaceWidth div 2 - ScaleX(8);
@@ -122,9 +272,9 @@ begin
 
   { TComboBox and others }
 
-  {Page := CreateCustomPage(Page.ID, 'Custom wizard page controls', 'TComboBox and others');
+  Page := CreateInputDirPage(Page.ID, 'Custom wizard page controls', 'TComboBox and others', '', true, 'test');
 
-  ComboBox := TNewComboBox.Create(Page);
+  {ComboBox := TNewComboBox.Create(Page);
   ComboBox.Width := Page.SurfaceWidth;
   ComboBox.Parent := Page.Surface;
   ComboBox.Style := csDropDownList;
@@ -530,16 +680,62 @@ begin
      MsgBox('Installing', mbInformation, MB_OK);
 end;}
 
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if (CurPageID = AuthPageID) then 
+  begin
+    Wizardform.NextButton.Enabled := False;
+  end;
+end;
+
 procedure InitializeWizard();
 var
   BackgroundBitmapImage: TBitmapImage;
   BackgroundBitmapText: TNewStaticText;
+  BitmapFileName: String;
+  BitmapImage: TBitmapImage;
 begin
   { Custom wizard pages }
 
+  WizardForm.PageNameLabel.Visible := False;
+  WizardForm.PageDescriptionLabel.Visible := False;
+
+  WizardForm.OuterNotebook.Width := 800;
+  WizardForm.InnerPage.Width := 800;
+
+  WizardForm.MainPanel.Width := 800;
+  WizardForm.WizardSmallBitmapImage.Visible := false;
+
+  BitmapFileName := ExpandConstant('{tmp}\bc1.bmp');
+  ExtractTemporaryFile(ExtractFileName(BitmapFileName));
+
+  BitmapImage := TBitmapImage.Create(WizardForm.MainPanel);
+  BitmapImage.AutoSize := False;
+  BitmapImage.Bitmap.LoadFromFile(BitmapFileName);
+  BitmapImage.Parent := WizardForm.MainPanel;
+  BitmapImage.Width := 535;
+  BitmapImage.Height := 28;
+  BitmapImage.Top := 18;
+
+  WizardForm.BorderStyle := bsSingle;
+  WizardForm.Color := clWhite;
+
   // These lines change the width and height of the wizard window, but components need to be repositioned
-  //WizardForm.Width := 800;
-  //WizardForm.Height := 600;
+  WizardForm.Width := 940;
+  WizardForm.Height := 565;
+  WizardForm.Position := poScreenCenter;
+
+  WizardForm.CancelButton.Top := 500;
+  WizardForm.CancelButton.Left := 840;
+
+  WizardForm.NextButton.Top := 500;
+  WizardForm.NextButton.Left := 760;
+
+  WizardForm.BackButton.Top := 500;
+  WizardForm.BackButton.Left := 680;
+
+  WizardForm.Bevel.Visible := False;
+  WizardForm.Bevel1.Visible := False;
 
   // Sets the background color of the inner panel to white
   WizardForm.InnerPage.Color := clWhite;
@@ -552,10 +748,10 @@ begin
   // Hide the 'Details' button
   idpSetOption('DetailsButton', '0');
 
-  //idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  //idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', 'Zulu OpenJDK');
+  idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
+  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', 'Zulu OpenJDK');
 
-  idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', 'VirtualBox');
+  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', 'VirtualBox');
   //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', 'Vagrant');
 
   //idpDownloadAfter(wpWelcome);
@@ -564,4 +760,5 @@ begin
   idpConnectControls;
   idpInitMessages;
 end;
+
 
