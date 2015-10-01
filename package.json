@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "scripts": {
-    "start": "electron .",
-    "package": "electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.1 --out=./dist/ --overwrite",
+    "start": "node_modules/.bin/electron .",
+    "package": "node_modules/.bin/electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.1 --out=./dist/ --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
