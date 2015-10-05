@@ -30,7 +30,7 @@ gulp.task('package', ['copy:app'], function(cb) {
 });
 
 gulp.task('run', ['transpile:app'], function() {
-  exec('electron .', function(err, stdout, stderr) {
+  exec('npm start', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
   });
