@@ -4,3 +4,4 @@ jspm_packages
 package
 build
 main/index.js
+browser/config.js
