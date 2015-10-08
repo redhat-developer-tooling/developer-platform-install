@@ -3,9 +3,9 @@
 var app = require('app'); // Module to control application life.
 var ipc = require('ipc');
 var fs = require('fs');
-var AdmZip = require('adm-zip');
 var crashReporter = require('crash-reporter');
 var BrowserWindow = require('browser-window'); // Module to create native browser window.
+var jdkInstall = require('./jdk-install');
 
 // Report crashes to our server.
 crashReporter.start({
@@ -26,7 +26,10 @@ ipc.on('install', function(event) {
     installRoot = process.env.HOME + '/DeveloperPlatform';
   }
 
-  jdkInstall(installRoot);
+  jdkInstall(installRoot, __dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip',
+    function(err) {
+      console.log(err);
+    });
   event.sender.send('install-complete');
 });
 
@@ -62,13 +65,3 @@ app.on('ready', function() {
     mainWindow = null;
   });
 });
-
-
-// JDK install
-function jdkInstall(installRoot) {
-  var jdkInstall = new AdmZip(__dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip');
-  jdkInstall.extractAllTo(installRoot, true);
-  fs.rename(installRoot + '/openjdk8-win-8u60-x86_64', installRoot + '/jdk', function(err) {
-    if (err) throw err;
-  });
-};
