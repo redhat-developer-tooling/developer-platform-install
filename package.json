@@ -17,13 +17,14 @@
   "scripts": {
     "start": "node_modules/.bin/electron .",
     "package": "node_modules/.bin/electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.1 --out=./dist/ --overwrite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
     "patternfly": "^2.2.0"
   },
   "devDependencies": {
+    "babel": "^5.8.23",
     "del": "^2.0.2",
     "electron-packager": "^5.1.0",
     "electron-prebuilt": "^0.33.1",
@@ -32,7 +33,9 @@
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.11",
     "jspm": "^0.16.10",
-    "run-sequence": "^1.1.4"
+    "rimraf": "^2.4.3",
+    "run-sequence": "^1.1.4",
+    "tmp": "0.0.28"
   },
   "jspm": {
     "directories": {
