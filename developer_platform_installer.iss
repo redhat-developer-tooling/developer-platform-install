@@ -40,7 +40,7 @@ Source: "bc3.bmp"; Flags: dontcopy
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Registry]
-Root: HKLM; Subkey: "Software\Red Hat";             Flags: uninsdeletekeyifempty
+Root: HKLM; Subkey: "Software\Red Hat";            Flags: uninsdeletekeyifempty
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName: "InstallDir"; ValueData: "{app}"
 
@@ -48,6 +48,8 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName:
 
 var 
   AuthPageID: Integer;
+  AuthLabel: TNewStaticText;
+  StdColor: TColor;
 
 function StringToColor(Color: String): TColor;
 var
@@ -67,73 +69,17 @@ begin
     end;
 end;
 
-procedure FormButtonOnClick(Sender: TObject);
-var
-  Form: TSetupForm;
-  Edit: TNewEdit;
-  OKButton, CancelButton: TNewButton;
-begin
-  Form := CreateCustomForm();
-  try
-    Form.ClientWidth := ScaleX(256);
-    Form.ClientHeight := ScaleY(128);
-    Form.Caption := 'TSetupForm';
-    Form.CenterInsideControl(WizardForm, False);
-
-    Edit := TNewEdit.Create(Form);
-    Edit.Top := ScaleY(10);
-    Edit.Left := ScaleX(10);
-    Edit.Width := Form.ClientWidth - ScaleX(2 * 10);
-    Edit.Height := ScaleY(23);
-    Edit.Text := 'TNewEdit';
-    Edit.Parent := Form;
-
-    OKButton := TNewButton.Create(Form);
-    OKButton.Parent := Form;
-    OKButton.Width := ScaleX(75);
-    OKButton.Height := ScaleY(23);
-    OKButton.Left := Form.ClientWidth - ScaleX(75 + 6 + 75 + 10);
-    OKButton.Top := Form.ClientHeight - ScaleY(23 + 10);
-    OKButton.Caption := 'OK';
-    OKButton.ModalResult := mrOk;
-    OKButton.Default := True;
-
-    CancelButton := TNewButton.Create(Form);
-    CancelButton.Parent := Form;
-    CancelButton.Width := ScaleX(75);
-    CancelButton.Height := ScaleY(23);
-    CancelButton.Left := Form.ClientWidth - ScaleX(75 + 10);
-    CancelButton.Top := Form.ClientHeight - ScaleY(23 + 10);
-    CancelButton.Caption := 'Cancel';
-    CancelButton.ModalResult := mrCancel;
-    CancelButton.Cancel := True;
-
-    Form.ActiveControl := Edit;
-
-    if Form.ShowModal() = mrOk then
-      MsgBox('You clicked OK.', mbInformation, MB_OK);
-  finally
-    Form.Free();
-  end;
-
-end;
-
 procedure LoginButtonOnClick(Sender: TObject);
 var
-  AuthLabel: TNewStaticText;
   Page: TWizardPage;
   Button: TNewButton;
 begin
   Page := PageFromID(AuthPageID);
 
-  AuthLabel := TNewStaticText.Create(Page);
-  AuthLabel.Caption := 'Authentication Successful';
-  AuthLabel.Parent := Page.Surface;
-  AuthLabel.Color := clWhite;
-  AuthLabel.Font.Color := clGreen;
-  Button := TNewButton(Sender);
-  AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
+  // Display the 'authentication successful' message
+  AuthLabel.Visible := True;
 
+  // Enable the 'Next' button
   Wizardform.NextButton.Enabled := True;
 end;
 
@@ -144,62 +90,44 @@ begin
   ShellExecAsOriginalUser('open', 'http://www.redhat.com/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
-procedure CreateWizardPages;
+// Create the welcome page - this page allows the user to log in to their Red Hat account
+function createWelcomePage: TWizardPage;
 var
-  StdColor: TColor;
   Page: TWizardPage;
   LoginLabel: TNewStaticText;
   ForgotLabel: TNewStaticText;
-  Button, FormButton: TNewButton;
-  Panel: TPanel;
-  CheckBox: TNewCheckBox;
+  Button: TNewButton;
   Edit: TNewEdit;
   PasswordEdit: TPasswordEdit;
-  Memo: TNewMemo;
-  ComboBox: TNewComboBox;
-  ListBox: TNewListBox;
-  StaticText, ProgressBarLabel: TNewStaticText;
-  ProgressBar, ProgressBar2, ProgressBar3: TNewProgressBar;
-  CheckListBox, CheckListBox2: TNewCheckListBox;
-  FolderTreeView: TFolderTreeView;
-  BitmapImage, BitmapImage2, BitmapImage3: TBitmapImage;
-  BitmapFileName: String;
-  RichEditViewer: TRichEditViewer;
-  URLLabel: TNewStaticText;
 begin
-  StdColor := StringToColor('$0093d9');
-
   Page := CreateCustomPage(wpWelcome, '', '');
+
+  // The page has a unique id, we store it in the AuthPageID variable here so that we can refer to it elsewhere
   AuthPageID := Page.ID;
 
+  // Create the label for the user's login name
   LoginLabel := TNewStaticText.Create(Page);
   LoginLabel.Caption := 'Log in to your Red Hat account';
   LoginLabel.Parent := Page.Surface;
   LoginLabel.Color := clWhite;
   LoginLabel.Font.Style := LoginLabel.Font.Style + [fsBold];
   LoginLabel.Font.Size := 10;
-
-  { Alter Font *after* setting Parent so the correct defaults are inherited first }
-//  URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
-//  if GetWindowsVersion >= $040A0000 then   { Windows 98 or later? }
-//    URLLabel.Font.Color := clHotLight
-//  else
-//    URLLabel.Font.Color := clBlue;
-//  URLLabel.Top := Button.Top + Button.Height + ScaleY(20);
-//  URLLabel.Left := Button.Left + Button.Width + ScaleX(20);
   
+  // Create an edit control for the user's login name
   Edit := TNewEdit.Create(Page);
   Edit.Top := LoginLabel.Top + LoginLabel.Height + ScaleY(8);
   Edit.Width := Page.SurfaceWidth div 2 - ScaleX(8);
   Edit.Text := 'Red Hat Login';
   Edit.Parent := Page.Surface;
 
+  // Create a password control for the user's password
   PasswordEdit := TPasswordEdit.Create(Page);
   PasswordEdit.Top := Edit.Top + Edit.Height + ScaleY(8);
   PasswordEdit.Width := Edit.Width;
   PasswordEdit.Text := 'Password';
   PasswordEdit.Parent := Page.Surface;
 
+  // Create the 'LOG IN' button
   Button := TNewButton.Create(Page);
   Button.Width := ScaleX(75);
   Button.Height := ScaleY(23);
@@ -208,14 +136,7 @@ begin
   Button.OnClick := @LoginButtonOnClick;
   Button.Parent := Page.Surface;
 
-  {FormButton := TNewButton.Create(Page);
-  FormButton.Top := Button.Top + Button.Height + ScaleY(8);
-  FormButton.Width := ScaleX(75);
-  FormButton.Height := ScaleY(23);
-  FormButton.Caption := 'TSetupForm';
-  FormButton.OnClick := @FormButtonOnClick;
-  FormButton.Parent := Page.Surface;     }
-
+  // Create the 'forgot password' link
   ForgotLabel := TNewStaticText.Create(Page);
   ForgotLabel.Caption := 'Forgot your login or password?';
   ForgotLabel.Cursor := crHand;
@@ -226,193 +147,27 @@ begin
   //ForgotLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
   ForgotLabel.Font.Style := ForgotLabel.Font.Style + [fsBold];
   ForgotLabel.Font.Color := StdColor;
-//  if GetWindowsVersion >= $040A0000 then   { Windows 98 or later? }
-//    ForgotLabel.Font.Color := clHotLight
-//  else
-//    ForgotLabel.Font.Color := clBlue;
   ForgotLabel.Top := Button.Top + ((Button.Height - ForgotLabel.Height) / 2) + ScaleY(0);
   ForgotLabel.Left := Button.Left + Button.Width + ScaleX(20);
 
-  //WizardForm.NextButton.Enabled := false;
+  // Create the 'auth successful' label.  We set its visibility to false at first, then display it later when 
+  // auth is successful
+  AuthLabel := TNewStaticText.Create(Page);
+  AuthLabel.Caption := 'Authentication Successful';
+  AuthLabel.Parent := Page.Surface;
+  AuthLabel.Color := clWhite;
+  AuthLabel.Font.Color := clGreen;
+  AuthLabel.Visible := False;
+  AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
 
-  {Panel := TPanel.Create(Page);
-  Panel.Width := Page.SurfaceWidth div 2 - ScaleX(8);
-  Panel.Left :=  Page.SurfaceWidth - Panel.Width;
-  Panel.Height := Button.Height * 2;
-  Panel.Caption := 'TPanel';
-  Panel.Color := clWindow;
-  Panel.ParentBackground := False;
-  Panel.Parent := Page.Surface;
+  result := Page;
+end;
 
-  CheckBox := TNewCheckBox.Create(Page);
-  CheckBox.Top := Button.Top + Button.Height + ScaleY(8);
-  CheckBox.Width := Page.SurfaceWidth div 2;
-  CheckBox.Height := ScaleY(17);
-  CheckBox.Caption := 'TNewCheckBox';
-  CheckBox.Checked := True;
-  CheckBox.Parent := Page.Surface;
+procedure CreateWizardPages;
+begin
+  createWelcomePage;
 
-
-
-  Memo := TNewMemo.Create(Page);
-  Memo.Top := Edit.Top + Edit.Height + ScaleY(8);
-  Memo.Width := Page.SurfaceWidth;
-  Memo.Height := ScaleY(89);
-  Memo.ScrollBars := ssVertical;
-  Memo.Text := 'TNewMemo';
-  Memo.Parent := Page.Surface;
-
-  FormButton := TNewButton.Create(Page);
-  FormButton.Top := Memo.Top + Memo.Height + ScaleY(8);
-  FormButton.Width := ScaleX(75);
-  FormButton.Height := ScaleY(23);
-  FormButton.Caption := 'TSetupForm';
-  //FormButton.OnClick := @FormButtonOnClick;
-  FormButton.Parent := Page.Surface;  {
-
-  { TComboBox and others }
-
-  Page := CreateInputDirPage(Page.ID, 'Custom wizard page controls', 'TComboBox and others', '', true, 'test');
-
-  {ComboBox := TNewComboBox.Create(Page);
-  ComboBox.Width := Page.SurfaceWidth;
-  ComboBox.Parent := Page.Surface;
-  ComboBox.Style := csDropDownList;
-  ComboBox.Items.Add('TComboBox');
-  ComboBox.ItemIndex := 0;
-
-  ListBox := TNewListBox.Create(Page);
-  ListBox.Top := ComboBox.Top + ComboBox.Height + ScaleY(8);
-  ListBox.Width := Page.SurfaceWidth;
-  ListBox.Height := ScaleY(97);
-  ListBox.Parent := Page.Surface;
-  ListBox.Items.Add('TListBox');
-  ListBox.ItemIndex := 0;
-
-  StaticText := TNewStaticText.Create(Page);
-  StaticText.Top := ListBox.Top + ListBox.Height + ScaleY(8);
-  StaticText.Caption := 'TNewStaticText';
-  StaticText.AutoSize := True;
-  StaticText.Parent := Page.Surface;
-
-  ProgressBarLabel := TNewStaticText.Create(Page);
-  ProgressBarLabel.Top := StaticText.Top + StaticText.Height + ScaleY(8);
-  ProgressBarLabel.Caption := 'TNewProgressBar';
-  ProgressBarLabel.AutoSize := True;
-  ProgressBarLabel.Parent := Page.Surface;
-
-  ProgressBar := TNewProgressBar.Create(Page);
-  ProgressBar.Left := ProgressBarLabel.Width + ScaleX(8);
-  ProgressBar.Top := ProgressBarLabel.Top;
-  ProgressBar.Width := Page.SurfaceWidth - ProgressBar.Left;
-  ProgressBar.Height := ProgressBarLabel.Height + ScaleY(8);
-  ProgressBar.Parent := Page.Surface;
-  ProgressBar.Position := 25;
-
-  ProgressBar2 := TNewProgressBar.Create(Page);
-  ProgressBar2.Left := ProgressBarLabel.Width + ScaleX(8);
-  ProgressBar2.Top := ProgressBar.Top + ProgressBar.Height + ScaleY(4);
-  ProgressBar2.Width := Page.SurfaceWidth - ProgressBar.Left;
-  ProgressBar2.Height := ProgressBarLabel.Height + ScaleY(8);
-  ProgressBar2.Parent := Page.Surface;
-  ProgressBar2.Position := 50;     }
-  { Note: TNewProgressBar.State property only has an effect on Windows Vista and newer }
-  {ProgressBar2.State := npbsError;
-
-  ProgressBar3 := TNewProgressBar.Create(Page);
-  ProgressBar3.Left := ProgressBarLabel.Width + ScaleX(8);
-  ProgressBar3.Top := ProgressBar2.Top + ProgressBar2.Height + ScaleY(4);
-  ProgressBar3.Width := Page.SurfaceWidth - ProgressBar.Left;
-  ProgressBar3.Height := ProgressBarLabel.Height + ScaleY(8);
-  ProgressBar3.Parent := Page.Surface;  }
-  { Note: TNewProgressBar.Style property only has an effect on Windows XP and newer }
-  {ProgressBar3.Style := npbstMarquee;    }
-  
-  { TNewCheckListBox }
-
-  {Page := CreateCustomPage(Page.ID, 'Custom wizard page controls', 'TNewCheckListBox');
-
-  CheckListBox := TNewCheckListBox.Create(Page);
-  CheckListBox.Width := Page.SurfaceWidth;
-  CheckListBox.Height := ScaleY(97);
-  CheckListBox.Flat := True;
-  CheckListBox.Parent := Page.Surface;
-  CheckListBox.AddCheckBox('TNewCheckListBox', '', 0, True, True, False, True, nil);
-  CheckListBox.AddRadioButton('TNewCheckListBox', '', 1, True, True, nil);
-  CheckListBox.AddRadioButton('TNewCheckListBox', '', 1, False, True, nil);
-  CheckListBox.AddCheckBox('TNewCheckListBox', '', 0, True, True, False, True, nil);
-
-  CheckListBox2 := TNewCheckListBox.Create(Page);
-  CheckListBox2.Top := CheckListBox.Top + CheckListBox.Height + ScaleY(8);
-  CheckListBox2.Width := Page.SurfaceWidth;
-  CheckListBox2.Height := ScaleY(97);
-  CheckListBox2.BorderStyle := bsNone;
-  CheckListBox2.ParentColor := True;
-  CheckListBox2.MinItemHeight := WizardForm.TasksList.MinItemHeight;
-  CheckListBox2.ShowLines := False;
-  CheckListBox2.WantTabs := True;
-  CheckListBox2.Parent := Page.Surface;
-  CheckListBox2.AddGroup('TNewCheckListBox', '', 0, nil);
-  CheckListBox2.AddRadioButton('TNewCheckListBox', '', 0, True, True, nil);
-  CheckListBox2.AddRadioButton('TNewCheckListBox', '', 0, False, True, nil);  }
-
-  { TFolderTreeView }
-
- // Page := CreateCustomPage(Page.ID, 'Custom wizard page controls', 'TFolderTreeView');
-
-//  FolderTreeView := TFolderTreeView.Create(Page);
-//  FolderTreeView.Width := Page.SurfaceWidth;
-//  FolderTreeView.Height := Page.SurfaceHeight;
-//  FolderTreeView.Parent := Page.Surface;
-//  FolderTreeView.Directory := ExpandConstant('{src}');     
-
-  { TBitmapImage }
-
-  {Page := CreateCustomPage(Page.ID, 'Custom wizard page controls', 'TBitmapImage');    }
-
-  //BitmapFileName := ExpandConstant('{tmp}\WizModernSmallImage.bmp');
-  //ExtractTemporaryFile(ExtractFileName(BitmapFileName));
-
-  {BitmapImage := TBitmapImage.Create(Page);
-  BitmapImage.AutoSize := True;
-  //BitmapImage.Bitmap.LoadFromFile(BitmapFileName);
-  BitmapImage.Cursor := crHand;
-  //BitmapImage.OnClick := @BitmapImageOnClick;
-  BitmapImage.Parent := Page.Surface;
-
-  BitmapImage2 := TBitmapImage.Create(Page);
-  BitmapImage2.BackColor := $400000;
-  BitmapImage2.Bitmap := BitmapImage.Bitmap;
-  BitmapImage2.Center := True;
-  BitmapImage2.Left := BitmapImage.Width + 10;
-  BitmapImage2.Height := 2*BitmapImage.Height;
-  BitmapImage2.Width := 2*BitmapImage.Width;
-  BitmapImage2.Cursor := crHand;
-  //BitmapImage2.OnClick := @BitmapImageOnClick;
-  BitmapImage2.Parent := Page.Surface;
-
-  BitmapImage3 := TBitmapImage.Create(Page);
-  BitmapImage3.Bitmap := BitmapImage.Bitmap;
-  BitmapImage3.Stretch := True;
-  BitmapImage3.Left := 3*BitmapImage.Width + 20;
-  BitmapImage3.Height := 4*BitmapImage.Height;
-  BitmapImage3.Width := 4*BitmapImage.Width;
-  BitmapImage3.Cursor := crHand;
-  //BitmapImage3.OnClick := @BitmapImageOnClick;
-  BitmapImage3.Parent := Page.Surface;       }
-
-  { TRichViewer }
-
-  //Page := CreateCustomPage(Page.ID, 'Custom wizard page controls', 'TRichViewer');
-
-  //RichEditViewer := TRichEditViewer.Create(Page);
-  //RichEditViewer.Width := Page.SurfaceWidth;
-  //RichEditViewer.Height := Page.SurfaceHeight;
-  //RichEditViewer.Parent := Page.Surface;
-  //RichEditViewer.ScrollBars := ssVertical;
-  //RichEditViewer.UseRichEdit := True;
-  //RichEditViewer.RTFText := '{\rtf1\ansi\ansicpg1252\deff0\deflang1043{\fonttbl{\f0\fswiss\fcharset0 Arial;}}{\colortbl ;\red255\green0\blue0;\red0\green128\blue0;\red0\green0\blue128;}\viewkind4\uc1\pard\f0\fs20 T\cf1 Rich\cf2 Edit\cf3 Viewer\cf0\par}';
-  //RichEditViewer.ReadOnly := True;         
+        
 end;
 
 procedure activateDownloadForm(Page: TWizardPage);
@@ -672,14 +427,6 @@ begin
     Result := IDPForm.Page.ID;
 end;
 
-{procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ErrorCode: Integer;
-begin
-  if CurStep = ssInstall then
-     MsgBox('Installing', mbInformation, MB_OK);
-end;}
-
 procedure CurPageChanged(CurPageID: Integer);
 begin
   if (CurPageID = AuthPageID) then 
@@ -695,6 +442,8 @@ var
   BitmapFileName: String;
   BitmapImage: TBitmapImage;
 begin
+  StdColor := StringToColor('$0093d9');
+
   { Custom wizard pages }
 
   WizardForm.PageNameLabel.Visible := False;
