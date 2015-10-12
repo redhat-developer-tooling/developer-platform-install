@@ -46,8 +46,15 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName:
 
 [Code]
 
+type
+  ComponentEntry = record
+    Container: TPanel;
+    Content: TPanel;
+  end;
+
 var 
   AuthPageID: Integer;
+  ComponentPageID: Integer;
   AuthLabel: TNewStaticText;
   StdColor: TColor;
 
@@ -163,9 +170,108 @@ begin
   result := Page;
 end;
 
+function createComponentEntry(Page: TWizardPage; Top: integer; ComponentName: String; ComponentVersion: String; 
+    ComponentDescription: String; ContentHeight: integer): ComponentEntry;
+var
+  Panel, PanelHeader, PanelContent: TPanel;
+  NameLabel, VersionLabel, DescriptionLabel: TNewStaticText;
+begin
+  Panel := TPanel.Create(Page);
+  Panel.Parent := Page.Surface;
+  Panel.Top := Top;
+  Panel.BorderStyle := bsNone;
+  Panel.Color := StringToColor('$d3d3d3');
+  Panel.Width := 840;
+  Panel.Height := ContentHeight + 40;
+  Panel.BevelInner := bvNone;
+  Panel.BevelOuter := bvNone;
+  
+  PanelHeader := TPanel.Create(Page);
+  PanelHeader.Parent := Panel;
+  PanelHeader.Top := 1;
+  PanelHeader.Left := 1;
+  PanelHeader.BorderStyle := bsNone;
+  PanelHeader.Color := StringToColor('$f6f6f6');
+  PanelHeader.Width := 838;
+  PanelHeader.Height := 39;
+  PanelHeader.BevelInner := bvNone;
+  PanelHeader.BevelOuter := bvNone;
+
+  NameLabel := TNewStaticText.Create(Page);
+  NameLabel.Caption := ComponentName;
+  NameLabel.Parent := PanelHeader;
+  NameLabel.Left := 12;
+  NameLabel.Top := 2;
+  NameLabel.Font.Size := 11;
+  NameLabel.Font.Color := StringToColor('$cc0000');
+  NameLabel.Font.Style := NameLabel.Font.Style + [fsBold];
+
+  VersionLabel := TNewStaticText.Create(Page);
+  VersionLabel.Caption := ComponentVersion;
+  VersionLabel.Parent := PanelHeader;
+  VersionLabel.Left := NameLabel.Left + NameLabel.Width + ScaleX(4);
+  VersionLabel.Top := 8;
+  VersionLabel.Font.Size := 7;
+  VersionLabel.Font.Color := StringToColor('$797979');
+
+  DescriptionLabel := TNewStaticText.Create(Page);
+  DescriptionLabel.Caption := ComponentDescription;
+  DescriptionLabel.Parent := PanelHeader;
+  DescriptionLabel.Left := 12;
+  DescriptionLabel.Top := NameLabel.Top + NameLabel.Height + ScaleY(2);
+  DescriptionLabel.Font.Size := 7;
+  DescriptionLabel.Font.Color := StringToColor('$797979');
+
+  PanelContent := TPanel.Create(Page);
+  PanelContent.Parent := Panel;
+  PanelContent.Top := 41;
+  PanelContent.Left := 1;
+  PanelContent.BorderStyle := bsNone;
+  PanelContent.Color := clWhite;
+  PanelContent.Width := 838;
+  PanelContent.Height := ContentHeight - 2;
+  PanelContent.BevelInner := bvNone;
+  PanelContent.BevelOuter := bvNone;  
+
+  Result.Container := Panel;
+  Result.Content := PanelContent;
+end;
+
+// Create the welcome page - this page allows the user to log in to their Red Hat account
+function createComponentPage: TWizardPage;
+var
+  Page: TWizardPage;
+  HeadingLabel: TNewStaticText;
+  Entry: ComponentEntry;
+begin
+  Page := CreateCustomPage(AuthPageID, '', '');
+
+  // The page has a unique id, we store it in the AuthPageID variable here so that we can refer to it elsewhere
+  ComponentPageID := Page.ID;
+
+  // Create the heading label for the component selection list
+  HeadingLabel := TNewStaticText.Create(Page);
+  HeadingLabel.Caption := 'Select the products and tools you want to install.';
+  HeadingLabel.Parent := Page.Surface;
+  HeadingLabel.Font.Size := 8;
+
+  Entry := createComponentEntry(Page, HeadingLabel.Top + HeadingLabel.Height + ScaleY(8), 
+    'RED HAT ENTERPRISE LINUX ATOMIC PLATFORM', 'v2.0', 
+    'Host Linux containers in a minimal version of Red Hat Enterprise Linux.', 80);
+
+  Entry := createComponentEntry(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
+    'RED HAT JBOSS DEVELOPER STUDIO', 'v9.0', 
+    'An IDE with tooling that will help you easily code, test, and deploy your projects.', 60);
+
+  Entry := createComponentEntry(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
+    'RED HAT OPENSHIFT ENTERPRISE', 'v3.0', 
+    'DevOps tooling that helps you easily build and deploy your projects in a PaaS environment.', 40);
+end;
+
 procedure CreateWizardPages;
 begin
   createWelcomePage;
+  createComponentPage;
 
         
 end;
@@ -449,10 +555,17 @@ begin
   WizardForm.PageNameLabel.Visible := False;
   WizardForm.PageDescriptionLabel.Visible := False;
 
-  WizardForm.OuterNotebook.Width := 800;
-  WizardForm.InnerPage.Width := 800;
+  WizardForm.OuterNotebook.Width := 880;
+  WizardForm.OuterNotebook.Height := 460;
 
-  WizardForm.MainPanel.Width := 800;
+  WizardForm.InnerNotebook.Width := 880;
+  WizardForm.InnerNotebook.Height := 460;
+
+  // Set the width of the top panel
+  WizardForm.MainPanel.Width := 920;
+  //WizardForm.MainPanel.Color := clGreen;
+
+
   WizardForm.WizardSmallBitmapImage.Visible := false;
 
   BitmapFileName := ExpandConstant('{tmp}\bc1.bmp');
