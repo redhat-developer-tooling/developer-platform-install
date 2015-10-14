@@ -582,7 +582,11 @@ begin
     SelectBreadcrumb(1);
   end else if (CurPageID = ComponentPageID) then
   begin
-    SelectBreadcrumb(2);
+    SelectBreadcrumb(2);    
+  end else if (CurPageID = DownloadPageID) then
+  begin
+    SelectBreadcrumb(3);
+    WizardForm.NextButton.Visible := False;
   end;
 end;
 
