@@ -32,9 +32,7 @@ BackSolid=yes
 DisableWelcomePage=yes
 
 [Files]
-Source: "bc1.bmp"; Flags: dontcopy
-Source: "bc2.bmp"; Flags: dontcopy
-Source: "bc3.bmp"; Flags: dontcopy
+Source: "bg.bmp"; Flags: dontcopy
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -51,13 +49,24 @@ type
     Container: TPanel;
     Content: TPanel;
   end;
+  BcLabelArray = array[1..4] of TLabel;
 
 var 
-  AuthPageID: Integer;
-  ComponentPageID: Integer;
-  AuthLabel: TNewStaticText;
-  StdColor: TColor;
+  // Page IDs
+  AuthPageID, ComponentPageID, DownloadPageID : Integer; 
 
+  AuthLabel: TNewStaticText;
+
+  // "Standard" blue color used throughout the installer
+  StdColor: TColor;  
+
+  // Breadcrumb image
+  Breadcrumbs: TBitmapImage; 
+
+  // Breadcrumb labels, we store references to these in an array for convenience
+  BreadcrumbLabel: BcLabelArray; 
+
+// Converts a color String in the format '$rrggbb' to a TColor value
 function StringToColor(Color: String): TColor;
 var
     RR, GG, BB: String;
@@ -533,20 +542,68 @@ begin
     Result := IDPForm.Page.ID;
 end;
 
+procedure SelectBreadcrumb(Index: Integer);
+var
+  I: Integer;
+  ItemColor: TColor;
+begin
+  for I := 1 to 4 do
+  begin
+    if (I = Index) then
+      begin     
+        ItemColor := StdColor;
+        BreadcrumbLabel[I].Font.Style := BreadcrumbLabel[I].Font.Style + [fsBold];
+      end
+    else
+      begin
+        ItemColor := StringToColor('$cccccc');
+        BreadcrumbLabel[I].Font.Style := BreadcrumbLabel[I].Font.Style - [fsBold];
+      end;
+
+    BreadcrumbLabel[I].Font.Color := ItemColor;
+    BreadcrumbLabel[I].Width := 120;
+    BreadcrumbLabel[I].Alignment := taCenter;
+
+    with Breadcrumbs.Bitmap.Canvas do
+    begin
+      Brush.Color := ItemColor;
+      Brush.Style := bsSolid;
+      Pen.Color := ItemColor;;
+      Ellipse(BreadcrumbLabel[I].Left + 54, 22, BreadcrumbLabel[I].Left + 64, 12);
+    end;
+  end;
+end;
+
 procedure CurPageChanged(CurPageID: Integer);
 begin
   if (CurPageID = AuthPageID) then 
   begin
     Wizardform.NextButton.Enabled := False;
+    SelectBreadcrumb(1);
+  end else if (CurPageID = ComponentPageID) then
+  begin
+    SelectBreadcrumb(2);
   end;
 end;
+
+procedure CreateBreadcrumbLabel(Index: Integer; Caption: String);
+begin
+  BreadcrumbLabel[Index] := TLabel.Create(WizardForm.MainPanel);
+  BreadcrumbLabel[Index].Caption := Caption;
+  BreadcrumbLabel[Index].Parent := WizardForm.MainPanel;
+  BreadcrumbLabel[Index].Font.Color := StringToColor('$cccccc');
+  BreadcrumbLabel[Index].Font.Size := 8;
+  BreadcrumbLabel[Index].Top := 24;
+  BreadcrumbLabel[Index].Left := 36 + ((Index - 1) * 120);
+  BreadcrumbLabel[Index].Width := 120;
+  BreadcrumbLabel[Index].Alignment := taCenter;
+end;             
 
 procedure InitializeWizard();
 var
   BackgroundBitmapImage: TBitmapImage;
   BackgroundBitmapText: TNewStaticText;
   BitmapFileName: String;
-  BitmapImage: TBitmapImage;
 begin
   StdColor := StringToColor('$0093d9');
 
@@ -563,21 +620,34 @@ begin
 
   // Set the width of the top panel
   WizardForm.MainPanel.Width := 920;
-  //WizardForm.MainPanel.Color := clGreen;
-
 
   WizardForm.WizardSmallBitmapImage.Visible := false;
 
-  BitmapFileName := ExpandConstant('{tmp}\bc1.bmp');
+  Breadcrumbs := TBitmapImage.Create(WizardForm.MainPanel);
+  Breadcrumbs.Parent := WizardForm.MainPanel;
+  Breadcrumbs.Top := 0;
+  Breadcrumbs.Left := 0;
+  Breadcrumbs.Width := 600;
+  Breadcrumbs.Height := 50;
+  Breadcrumbs.AutoSize := True;
+
+  BitmapFileName := ExpandConstant('{tmp}\bg.bmp');
   ExtractTemporaryFile(ExtractFileName(BitmapFileName));
 
-  BitmapImage := TBitmapImage.Create(WizardForm.MainPanel);
-  BitmapImage.AutoSize := False;
-  BitmapImage.Bitmap.LoadFromFile(BitmapFileName);
-  BitmapImage.Parent := WizardForm.MainPanel;
-  BitmapImage.Width := 535;
-  BitmapImage.Height := 28;
-  BitmapImage.Top := 18;
+  Breadcrumbs.Bitmap.LoadFromFile(BitmapFileName);
+
+  with Breadcrumbs.Bitmap.Canvas do
+  begin
+    Pen.Color := StringToColor('$cccccc');
+    MoveTo(1, 16);
+    LineTo(460,16);
+  end;
+
+  // Create the breadcrumb labels
+  CreateBreadcrumbLabel(1, 'Install Setup');
+  CreateBreadcrumbLabel(2, 'Confirmation');
+  CreateBreadcrumbLabel(3, 'Download && Install');
+  CreateBreadcrumbLabel(4, 'Get Started');
 
   WizardForm.BorderStyle := bsSingle;
   WizardForm.Color := clWhite;
@@ -618,7 +688,8 @@ begin
 
   //idpDownloadAfter(wpWelcome);
 
-  createDownloadForm(wpReady);
+  DownloadPageID := createDownloadForm(ComponentPageID);
+
   idpConnectControls;
   idpInitMessages;
 end;
