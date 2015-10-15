@@ -26,13 +26,14 @@ DefaultGroupName={#AppName}
 OutputBaseFilename=developer_platform
 Compression=lzma
 SolidCompression=yes
-WizardSmallImageFile=blank.bmp
+;WizardSmallImageFile=blank.bmp
 BackColor=clWhite
 BackSolid=yes
 DisableWelcomePage=yes
+DisableDirPage=no
+DisableReadyPage=no
 
 [Files]
-Source: "bg.bmp"; Flags: dontcopy
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -53,7 +54,7 @@ type
 
 var 
   // Page IDs
-  AuthPageID, ComponentPageID, DownloadPageID : Integer; 
+  AuthPageID, ComponentPageID, DownloadPageID, GetStartedPageID : Integer; 
 
   AuthLabel: TNewStaticText;
 
@@ -65,6 +66,9 @@ var
 
   // Breadcrumb labels, we store references to these in an array for convenience
   BreadcrumbLabel: BcLabelArray; 
+
+  // Flag indicating whether the user has authenticated successfully
+  IsAuthenticated: Boolean;
 
 // Converts a color String in the format '$rrggbb' to a TColor value
 function StringToColor(Color: String): TColor;
@@ -92,11 +96,14 @@ var
 begin
   Page := PageFromID(AuthPageID);
 
+  // Set the flag to true for now
+  IsAuthenticated := True;
+
   // Display the 'authentication successful' message
-  AuthLabel.Visible := True;
+  AuthLabel.Visible := IsAuthenticated;
 
   // Enable the 'Next' button
-  Wizardform.NextButton.Enabled := True;
+  Wizardform.NextButton.Enabled := IsAuthenticated;
 end;
 
 procedure ForgotLabelOnClick(Sender: TObject);
@@ -277,12 +284,22 @@ begin
     'DevOps tooling that helps you easily build and deploy your projects in a PaaS environment.', 40);
 end;
 
+// Create the Get Started page
+function createGetStartedPage: TWizardPage;
+var
+  Page: TWizardPage;
+begin
+  Page := CreateCustomPage(ComponentPageID, '', '');
+
+  // The page has a unique id, we store it in the AuthPageID variable here so that we can refer to it elsewhere
+  GetStartedPageID := Page.ID;
+end;
+
 procedure CreateWizardPages;
 begin
   createWelcomePage;
   createComponentPage;
-
-        
+  createGetStartedPage;       
 end;
 
 procedure activateDownloadForm(Page: TWizardPage);
@@ -578,8 +595,8 @@ procedure CurPageChanged(CurPageID: Integer);
 begin
   if (CurPageID = AuthPageID) then 
   begin
-    Wizardform.NextButton.Enabled := False;
     SelectBreadcrumb(1);
+    WizardForm.NextButton.Enabled := IsAuthenticated;
   end else if (CurPageID = ComponentPageID) then
   begin
     SelectBreadcrumb(2);    
@@ -587,6 +604,11 @@ begin
   begin
     SelectBreadcrumb(3);
     WizardForm.NextButton.Visible := False;
+  end else if (CurPageID = GetStartedPageID) then
+  begin
+    SelectBreadcrumb(4);
+    WizardForm.NextButton.Visible := False;
+    WizardForm.BackButton.Visible := False;
   end;
 end;
 
@@ -635,10 +657,8 @@ begin
   Breadcrumbs.Height := 50;
   Breadcrumbs.AutoSize := True;
 
-  BitmapFileName := ExpandConstant('{tmp}\bg.bmp');
-  ExtractTemporaryFile(ExtractFileName(BitmapFileName));
-
-  Breadcrumbs.Bitmap.LoadFromFile(BitmapFileName);
+  Breadcrumbs.Bitmap.Height := 50;
+  Breadcrumbs.Bitmap.Width := 600;
 
   with Breadcrumbs.Bitmap.Canvas do
   begin
@@ -661,14 +681,16 @@ begin
   WizardForm.Height := 565;
   WizardForm.Position := poScreenCenter;
 
-  WizardForm.CancelButton.Top := 500;
-  WizardForm.CancelButton.Left := 840;
+  // Let's just hide the cancel button, if the user wishes to cancel they can just close the installer window
+  WizardForm.CancelButton.Visible := False;
+  //WizardForm.CancelButton.Top := 500;
+  //WizardForm.CancelButton.Left := 32;
 
   WizardForm.NextButton.Top := 500;
-  WizardForm.NextButton.Left := 760;
+  WizardForm.NextButton.Left := 840;
 
   WizardForm.BackButton.Top := 500;
-  WizardForm.BackButton.Left := 680;
+  WizardForm.BackButton.Left := 32;
 
   WizardForm.Bevel.Visible := False;
   WizardForm.Bevel1.Visible := False;
