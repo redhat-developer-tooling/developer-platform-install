@@ -10,5 +10,11 @@ After installing both Inno Setup and the Inno Download Plugin, launch the Inno S
 
 Ctrl+F9 will compile the installer, while F9 will compile and run the installer.
 
+Building on Linux
+-----------------
 
+```
+make
+```
 
+The resulting installer will be in the `dist` directory.
