@@ -32,6 +32,7 @@ BackSolid=yes
 DisableWelcomePage=yes
 DisableDirPage=no
 DisableReadyPage=no
+ExtraDiskSpaceRequired=1048576
 
 [Files]
 
@@ -54,7 +55,7 @@ type
 
 var 
   // Page IDs
-  AuthPageID, ComponentPageID, DownloadPageID, GetStartedPageID : Integer; 
+  AuthPageID, ComponentPageID, DownloadPageID, GetStartedPageID, InstallPageID : Integer; 
 
   AuthLabel: TNewStaticText;
 
@@ -102,8 +103,8 @@ begin
   // Display the 'authentication successful' message
   AuthLabel.Visible := IsAuthenticated;
 
-  // Enable the 'Next' button
-  Wizardform.NextButton.Enabled := IsAuthenticated;
+  // Simulate a click of the Next button
+  WizardForm.NextButton.OnClick(nil);
 end;
 
 procedure ForgotLabelOnClick(Sender: TObject);
@@ -559,6 +560,17 @@ begin
     Result := IDPForm.Page.ID;
 end;
 
+procedure CustomWpInstallingPage;
+begin
+  InstallPageID := CreateCustomPage(wpReady, '', '');
+
+
+  // Render the page
+
+  InstallPage.Surface.Show;
+  InstallPage.Surface.Update;
+end;
+
 procedure SelectBreadcrumb(Index: Integer);
 var
   I: Integer;
@@ -596,7 +608,7 @@ begin
   if (CurPageID = AuthPageID) then 
   begin
     SelectBreadcrumb(1);
-    WizardForm.NextButton.Enabled := IsAuthenticated;
+    WizardForm.NextButton.Visible := False;
   end else if (CurPageID = ComponentPageID) then
   begin
     SelectBreadcrumb(2);    
@@ -610,6 +622,23 @@ begin
     WizardForm.NextButton.Visible := False;
     WizardForm.BackButton.Visible := False;
   end;
+
+  if (CurPageID = wpInstalling) then
+  begin
+    CustomWpInstallingPage();
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ErrorCode: Integer;
+begin
+  if CurStep = ssInstall then
+  begin
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart /log {app}\cache\zulu_install_log.txt'), 
+        '', SW_SHOW, ewNoWait, ErrorCode);
+  end;
+
 end;
 
 procedure CreateBreadcrumbLabel(Index: Integer; Caption: String);
@@ -707,12 +736,14 @@ begin
   idpSetOption('DetailsButton', '0');
 
   idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', 'Zulu OpenJDK');
+  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
 
   //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', 'VirtualBox');
   //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', 'Vagrant');
 
-  //idpDownloadAfter(wpWelcome);
+  idpDownloadAfter(ComponentPageID);
+
+
 
   DownloadPageID := createDownloadForm(ComponentPageID);
 
