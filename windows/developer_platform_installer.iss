@@ -30,8 +30,9 @@ SolidCompression=yes
 BackColor=clWhite
 BackSolid=yes
 DisableWelcomePage=yes
-DisableDirPage=no
+DisableDirPage=yes
 DisableReadyPage=no
+DisableFinishedPage=yes
 ExtraDiskSpaceRequired=1048576
 
 [Files]
@@ -101,7 +102,7 @@ begin
   IsAuthenticated := True;
 
   // Display the 'authentication successful' message
-  AuthLabel.Visible := IsAuthenticated;
+  //AuthLabel.Visible := IsAuthenticated;
 
   // Simulate a click of the Next button
   WizardForm.NextButton.OnClick(nil);
@@ -176,13 +177,13 @@ begin
 
   // Create the 'auth successful' label.  We set its visibility to false at first, then display it later when 
   // auth is successful
-  AuthLabel := TNewStaticText.Create(Page);
-  AuthLabel.Caption := 'Authentication Successful';
-  AuthLabel.Parent := Page.Surface;
-  AuthLabel.Color := clWhite;
-  AuthLabel.Font.Color := clGreen;
-  AuthLabel.Visible := False;
-  AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
+  //AuthLabel := TNewStaticText.Create(Page);
+  //AuthLabel.Caption := 'Authentication Successful';
+  //AuthLabel.Parent := Page.Surface;
+  //AuthLabel.Color := clWhite;
+  //AuthLabel.Font.Color := clGreen;
+  //AuthLabel.Visible := False;
+  //AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
 
   result := Page;
 end;
@@ -261,10 +262,10 @@ var
   HeadingLabel: TNewStaticText;
   Entry: ComponentEntry;
 begin
-  Page := CreateCustomPage(AuthPageID, '', '');
+  Page := PageFromID(wpReady);
 
   // The page has a unique id, we store it in the AuthPageID variable here so that we can refer to it elsewhere
-  ComponentPageID := Page.ID;
+  //ComponentPageID := Page.ID;
 
   // Create the heading label for the component selection list
   HeadingLabel := TNewStaticText.Create(Page);
@@ -290,7 +291,7 @@ function createGetStartedPage: TWizardPage;
 var
   Page: TWizardPage;
 begin
-  Page := CreateCustomPage(ComponentPageID, '', '');
+  Page := CreateCustomPage(wpInstalling, '', '');
 
   // The page has a unique id, we store it in the AuthPageID variable here so that we can refer to it elsewhere
   GetStartedPageID := Page.ID;
@@ -301,14 +302,6 @@ begin
   createWelcomePage;
   createComponentPage;
   createGetStartedPage;       
-end;
-
-procedure activateDownloadForm(Page: TWizardPage);
-begin
-   idpFormActivate(Page);
-   MsgBox('Downloads complete', mbInformation, MB_OK);
-
-   // TODO perform installs next
 end;
 
 function createDownloadForm(PreviousPageId: Integer): Integer;
@@ -561,14 +554,22 @@ begin
 end;
 
 procedure CustomWpInstallingPage;
+var
+  Page: TWizardPage;
+  HeadingLabel: TNewStaticText;
 begin
-  InstallPageID := CreateCustomPage(wpReady, '', '');
+  Page := CreateCustomPage(wpReady, '', '');
 
+  // Create the heading label for the component selection list
+  HeadingLabel := TNewStaticText.Create(Page);
+  HeadingLabel.Caption := 'Installing components';
+  HeadingLabel.Parent := Page.Surface;
+  HeadingLabel.Font.Size := 8;
 
   // Render the page
 
-  InstallPage.Surface.Show;
-  InstallPage.Surface.Update;
+  Page.Surface.Show;
+  Page.Surface.Update;
 end;
 
 procedure SelectBreadcrumb(Index: Integer);
@@ -609,7 +610,7 @@ begin
   begin
     SelectBreadcrumb(1);
     WizardForm.NextButton.Visible := False;
-  end else if (CurPageID = ComponentPageID) then
+  end else if (CurPageID = wpReady) then
   begin
     SelectBreadcrumb(2);    
   end else if (CurPageID = DownloadPageID) then
@@ -617,9 +618,9 @@ begin
     SelectBreadcrumb(3);
     WizardForm.NextButton.Visible := False;
   end else if (CurPageID = GetStartedPageID) then
-  begin
+  begin 
     SelectBreadcrumb(4);
-    WizardForm.NextButton.Visible := False;
+    WizardForm.NextButton.Visible := True;
     WizardForm.BackButton.Visible := False;
   end;
 
@@ -635,8 +636,11 @@ var
 begin
   if CurStep = ssInstall then
   begin
-    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart /log {app}\cache\zulu_install_log.txt'), 
-        '', SW_SHOW, ewNoWait, ErrorCode);
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart TARGETDIR="{app}\zulu-8"'), 
+        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+
+    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart /log "{app}\zulu_install_log.txt"'), 
+    //    '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
   end;
 
 end;
@@ -741,11 +745,9 @@ begin
   //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', 'VirtualBox');
   //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', 'Vagrant');
 
-  idpDownloadAfter(ComponentPageID);
+  idpDownloadAfter(wpReady);
 
-
-
-  DownloadPageID := createDownloadForm(ComponentPageID);
+  DownloadPageID := createDownloadForm(wpReady);
 
   idpConnectControls;
   idpInitMessages;
