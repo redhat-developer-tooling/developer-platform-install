@@ -58,6 +58,9 @@ var
   // Page IDs
   AuthPageID, ComponentPageID, DownloadPageID, GetStartedPageID, InstallPageID : Integer; 
 
+  UsernameEdit: TNewEdit;
+  PasswordEdit: TPasswordEdit;
+
   AuthLabel: TNewStaticText;
 
   // "Standard" blue color used throughout the installer
@@ -93,19 +96,45 @@ end;
 
 procedure LoginButtonOnClick(Sender: TObject);
 var
+  Url, Resource: String;
   Page: TWizardPage;
   Button: TNewButton;
+  WinHttpReq: Variant;
 begin
   Page := PageFromID(AuthPageID);
 
-  // Set the flag to true for now
-  IsAuthenticated := True;
+  AuthLabel.Caption := 'Authenticating, please wait...';
+  AuthLabel.Font.Color := clBlack;
+  AuthLabel.Visible := True;
+  AuthLabel.Refresh;
 
-  // Display the 'authentication successful' message
-  //AuthLabel.Visible := IsAuthenticated;
+  Resource := 'https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=jbossdeveloperstudio&downloadType=distributions';
 
-  // Simulate a click of the Next button
-  WizardForm.NextButton.OnClick(nil);
+  Url := 'https://idp.redhat.com/idp/authUser?j_username=' + UsernameEdit.Text + '&j_password=' + PasswordEdit.Text +
+    '&redirect=' + Resource;
+
+  // Perform a SAML authentication for redhat.com
+  WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+  WinHttpReq.Open('POST', Url, false);
+  WinHttpReq.SetClientCertificate('LOCAL_MACHINE\Personal\My Certificate');
+  WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  WinHttpReq.Send();
+
+  if WinHttpReq.Status <> 200 then
+  begin
+     AuthLabel.Caption := 'Authentication Failed.';
+     AuthLabel.Font.Color := clRed;
+     Exit;    
+  end else begin
+    // Set the authenticated flag to true 
+    IsAuthenticated := True;
+
+    AuthLabel.Caption := 'Authentication Successful.';
+    AuthLabel.Font.Color := clGreen;
+
+    // Simulate a click of the Next button
+    WizardForm.NextButton.OnClick(nil);
+  end; 
 end;
 
 procedure ForgotLabelOnClick(Sender: TObject);
@@ -122,8 +151,6 @@ var
   LoginLabel: TNewStaticText;
   ForgotLabel: TNewStaticText;
   Button: TNewButton;
-  Edit: TNewEdit;
-  PasswordEdit: TPasswordEdit;
 begin
   Page := CreateCustomPage(wpWelcome, '', '');
 
@@ -139,16 +166,16 @@ begin
   LoginLabel.Font.Size := 10;
   
   // Create an edit control for the user's login name
-  Edit := TNewEdit.Create(Page);
-  Edit.Top := LoginLabel.Top + LoginLabel.Height + ScaleY(8);
-  Edit.Width := Page.SurfaceWidth div 2 - ScaleX(8);
-  Edit.Text := 'Red Hat Login';
-  Edit.Parent := Page.Surface;
+  UsernameEdit := TNewEdit.Create(Page);
+  UsernameEdit.Top := LoginLabel.Top + LoginLabel.Height + ScaleY(8);
+  UsernameEdit.Width := Page.SurfaceWidth div 2 - ScaleX(8);
+  UsernameEdit.Text := 'Red Hat Login';
+  UsernameEdit.Parent := Page.Surface;
 
   // Create a password control for the user's password
   PasswordEdit := TPasswordEdit.Create(Page);
-  PasswordEdit.Top := Edit.Top + Edit.Height + ScaleY(8);
-  PasswordEdit.Width := Edit.Width;
+  PasswordEdit.Top := UsernameEdit.Top +UsernameEdit.Height + ScaleY(8);
+  PasswordEdit.Width := UsernameEdit.Width;
   PasswordEdit.Text := 'Password';
   PasswordEdit.Parent := Page.Surface;
 
@@ -175,15 +202,12 @@ begin
   ForgotLabel.Top := Button.Top + ((Button.Height - ForgotLabel.Height) / 2) + ScaleY(0);
   ForgotLabel.Left := Button.Left + Button.Width + ScaleX(20);
 
-  // Create the 'auth successful' label.  We set its visibility to false at first, then display it later when 
-  // auth is successful
-  //AuthLabel := TNewStaticText.Create(Page);
-  //AuthLabel.Caption := 'Authentication Successful';
-  //AuthLabel.Parent := Page.Surface;
-  //AuthLabel.Color := clWhite;
-  //AuthLabel.Font.Color := clGreen;
-  //AuthLabel.Visible := False;
-  //AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
+  // Create the authentication label.  We set its visibility to false at first, then display it later when needed
+  AuthLabel := TNewStaticText.Create(Page);
+  AuthLabel.Parent := Page.Surface;
+  AuthLabel.Color := clWhite;
+  AuthLabel.Visible := False;
+  AuthLabel.Top := Button.Top + Button.Height + ScaleY(8);
 
   result := Page;
 end;
