@@ -36,6 +36,7 @@ DisableFinishedPage=yes
 ExtraDiskSpaceRequired=1048576
 
 [Files]
+Source: "EfTidy.dll"; Flags: dontcopy
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -46,6 +47,9 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName: "InstallDir"; ValueData: "{app}"
 
 [Code]
+//function xxxx
+//external 'xxx@files:EfTidy.dll stdcall setuponly';
+
 
 type
   ComponentGroup = record
@@ -102,11 +106,11 @@ end;
 
 procedure LoginButtonOnClick(Sender: TObject);
 var
-  Url, Resource: String;                                                       
-
+  Url, Resource, ResponseText, SAMLRequest, RelayState: String;                                                       
+  I, J, K: Integer;
   Page: TWizardPage;
   Button: TNewButton;
-  WinHttpReq: Variant;
+  WinHttpReq, EfTidy, XMLDoc, NodeList, FormNode, InputNode: Variant;
 begin
   Page := PageFromID(AuthPageID);
 
@@ -115,7 +119,8 @@ begin
   AuthLabel.Visible := True;
   AuthLabel.Refresh;
 
-  Resource := 'https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=jbossdeveloperstudio&downloadType=distributions';
+  //Resource := 'https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=jbossdeveloperstudio&downloadType=distributions';
+  Resource := 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
 
   Url := 'https://idp.redhat.com/idp/authUser?j_username=' + UsernameEdit.Text + '&j_password=' + PasswordEdit.Text +
     '&redirect=' + Resource;
@@ -138,6 +143,65 @@ begin
 
     AuthLabel.Caption := 'Authentication Successful.';
     AuthLabel.Font.Color := clGreen;
+
+    //MsgBox(WinHttpReq.ResponseText, mbInformation, MB_OK);
+
+
+    // Perform a SAML authentication for redhat.com
+    WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+    WinHttpReq.Open('GET', Resource, false);
+    WinHttpReq.SetClientCertificate('LOCAL_MACHINE\Personal\My Certificate');
+    WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    WinHttpReq.Send();
+
+    ResponseText := WinHttpReq.ResponseText;
+
+    ExtractTemporaryFile('EfTidy.dll');
+    RegisterServer(True, ExpandConstant('{tmp}\EfTidy.dll'), False);
+
+    // Tidy up the (non well-formed) response with EfTidy
+    EfTidy := CreateOleObject('EfTidy.tidyCom');
+    EfTidy.Option.Clean := True;
+    EfTidy.Option.OutputType := 1; // XhtmlOut
+    EfTidy.Option.DoctypeMode := 3; // DoctypeLoose
+    ResponseText := EfTidy.TidyMemToMem(ResponseText);
+
+    XMLDoc := CreateOleObject('MSXML2.DOMDocument');
+    XMLDoc.async := False;
+    XMLDoc.resolveExternals := False;
+    XMLDoc.validateOnParse := False;
+    XMLDoc.setProperty('ProhibitDTD', False);
+    XMLDoc.loadXML(ResponseText);
+
+    if XMLDoc.parseError.errorCode <> 0 then
+    begin
+      MsgBox('Error on line ' + IntToStr(XMLDoc.parseError.line) + ', position ' + 
+        IntToStr(XMLDoc.parseError.linepos) + ': ' + XMLDoc.parseError.reason, mbInformation, MB_OK);
+    end else begin
+      NodeList := XMLDoc.getElementsByTagName('form');
+
+      for I := 0 to NodeList.length - 1 do 
+      begin
+        FormNode := NodeList.item(i);
+
+        for J := 0 to FormNode.childNodes.length - 1 do
+        begin
+          if FormNode.childNodes.item(J).nodeName = 'input' then
+          begin
+            InputNode := FormNode.childNodes.item[J];
+
+            if InputNode.attributes.getNamedItem('name').nodeValue = 'SAMLRequest' then
+              SAMLRequest := InputNode.attributes.getNamedItem('value').nodeValue;
+            if InputNode.attributes.getNamedItem('name').nodeValue = 'RelayState' then
+              RelayState := InputNode.attributes.getNamedItem('value').nodeValue;
+          end;       
+        end;
+      end;
+    end;
+
+
+    //MsgBox('SAMLRequest: ' + SAMLRequest + ' RelayState: ' + RelayState, mbInformation, MB_OK);
+
 
     // Simulate a click of the Next button
     WizardForm.NextButton.OnClick(nil);
@@ -682,7 +746,7 @@ begin
 
 
     // Install Vagrant
-    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\vagrant_1.7.4.msi INSTALLDIR="{app}\Vagrant" /passive /norestart'), 
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\vagrant_1.7.4.msi VAGRANTAPPDIR="{app}\Vagrant" /passive /norestart'), 
         '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
   end;
 
@@ -784,16 +848,16 @@ begin
 
   // Zulu
   //idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  //idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
-  idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
+  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
+  //idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
                
   // VirtualBox
-  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
-  idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  //idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   
   // Vagrant
-  //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
-  idpAddFile('http://192.168.1.114/~shane/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
+  idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
+  //idpAddFile('http://192.168.1.114/~shane/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
 
   idpDownloadAfter(wpReady);
 
