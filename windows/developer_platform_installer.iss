@@ -48,11 +48,17 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName:
 [Code]
 
 type
-  ComponentEntry = record
+  ComponentGroup = record
     Container: TPanel;
     Content: TPanel;
   end;
   BcLabelArray = array[1..4] of TLabel;
+
+  Component = record
+    Name: String;
+    DownloadUrl: String;
+    Install: Boolean;
+  end;
 
 var 
   // Page IDs
@@ -96,7 +102,8 @@ end;
 
 procedure LoginButtonOnClick(Sender: TObject);
 var
-  Url, Resource: String;
+  Url, Resource: String;                                                       
+
   Page: TWizardPage;
   Button: TNewButton;
   WinHttpReq: Variant;
@@ -212,8 +219,8 @@ begin
   result := Page;
 end;
 
-function createComponentEntry(Page: TWizardPage; Top: integer; ComponentName: String; ComponentVersion: String; 
-    ComponentDescription: String; ContentHeight: integer): ComponentEntry;
+function createComponentGroup(Page: TWizardPage; Top: integer; ComponentName: String; ComponentVersion: String; 
+    ComponentDescription: String; ContentHeight: integer): ComponentGroup;
 var
   Panel, PanelHeader, PanelContent: TPanel;
   NameLabel, VersionLabel, DescriptionLabel: TNewStaticText;
@@ -284,7 +291,7 @@ function createComponentPage: TWizardPage;
 var
   Page: TWizardPage;
   HeadingLabel: TNewStaticText;
-  Entry: ComponentEntry;
+  Entry: ComponentGroup;
 begin
   Page := PageFromID(wpReady);
 
@@ -297,15 +304,15 @@ begin
   HeadingLabel.Parent := Page.Surface;
   HeadingLabel.Font.Size := 8;
 
-  Entry := createComponentEntry(Page, HeadingLabel.Top + HeadingLabel.Height + ScaleY(8), 
+  Entry := createComponentGroup(Page, HeadingLabel.Top + HeadingLabel.Height + ScaleY(8), 
     'RED HAT ENTERPRISE LINUX ATOMIC PLATFORM', 'v2.0', 
     'Host Linux containers in a minimal version of Red Hat Enterprise Linux.', 80);
 
-  Entry := createComponentEntry(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
+  Entry := createComponentGroup(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
     'RED HAT JBOSS DEVELOPER STUDIO', 'v9.0', 
     'An IDE with tooling that will help you easily code, test, and deploy your projects.', 60);
 
-  Entry := createComponentEntry(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
+  Entry := createComponentGroup(Page, Entry.Container.Top + Entry.Container.Height + ScaleY(8), 
     'RED HAT OPENSHIFT ENTERPRISE', 'v3.0', 
     'DevOps tooling that helps you easily build and deploy your projects in a PaaS environment.', 40);
 end;
@@ -646,6 +653,7 @@ begin
     SelectBreadcrumb(4);
     WizardForm.NextButton.Visible := True;
     WizardForm.BackButton.Visible := False;
+    WizardForm.NextButton.Caption := 'Close';
   end;
 
   if (CurPageID = wpInstalling) then
@@ -660,9 +668,19 @@ var
 begin
   if CurStep = ssInstall then
   begin
-    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart TARGETDIR="{app}\zulu-8"'), 
+    // Install Zulu JDK
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_60-8.9.0.4-win64.msi INSTALLDIR="{app}\zulu-8" /passive /norestart'), 
         '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
 
+    // Extract the VirtualBox msi files from the downloaded exe
+    Shellexec('', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'), ExpandConstant('--extract -path {tmp} --silent'),
+        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+
+    // Install VirtualBox
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\VirtualBox-5.0.2-r102096-MultiArch_x86.msi INSTALLDIR="{app}\VirtualBox" /passive /norestart'), 
+        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+
+    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\VirtualBox-5.0.2-102096-Win.exe IN
     //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart /log "{app}\zulu_install_log.txt"'), 
     //    '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
   end;
@@ -763,10 +781,16 @@ begin
   // Hide the 'Details' button
   idpSetOption('DetailsButton', '0');
 
-  idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
-
-  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', 'VirtualBox');
+  // Zulu
+  //idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
+  //idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
+  idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
+               
+  // VirtualBox
+  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  
+  
   //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', 'Vagrant');
 
   idpDownloadAfter(wpReady);
