@@ -653,7 +653,7 @@ begin
     SelectBreadcrumb(4);
     WizardForm.NextButton.Visible := True;
     WizardForm.BackButton.Visible := False;
-    WizardForm.NextButton.Caption := 'Close';
+    WizardForm.NextButton.Caption := 'Finish';
   end;
 
   if (CurPageID = wpInstalling) then
@@ -677,12 +677,13 @@ begin
         '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
 
     // Install VirtualBox
-    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\VirtualBox-5.0.2-r102096-MultiArch_x86.msi INSTALLDIR="{app}\VirtualBox" /passive /norestart'), 
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\VirtualBox-5.0.2-r102096-MultiArch_amd64.msi INSTALLDIR="{app}\VirtualBox" /passive /norestart'), 
         '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
 
-    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\VirtualBox-5.0.2-102096-Win.exe IN
-    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_51-8.8.0.3-win64.msi /passive /norestart /log "{app}\zulu_install_log.txt"'), 
-    //    '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+
+    // Install Vagrant
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\vagrant_1.7.4.msi INSTALLDIR="{app}\Vagrant" /passive /norestart'), 
+        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
   end;
 
 end;
@@ -790,8 +791,9 @@ begin
   //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   
-  
-  //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', 'Vagrant');
+  // Vagrant
+  //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
+  idpAddFile('http://192.168.1.114/~shane/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
 
   idpDownloadAfter(wpReady);
 
