@@ -47,9 +47,6 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName: "InstallDir"; ValueData: "{app}"
 
 [Code]
-//function xxxx
-//external 'xxx@files:EfTidy.dll stdcall setuponly';
-
 
 type
   ComponentGroup = record
@@ -62,6 +59,13 @@ type
     Name: String;
     DownloadUrl: String;
     Install: Boolean;
+  end;
+
+  SAMLFormParams = record
+    Action: String;
+    SAMLRequest: String;
+    SAMLResponse: String;
+    RelayState: String;
   end;
 
 var 
@@ -104,13 +108,107 @@ begin
     end;
 end;
 
+// Converts a value to hex
+function DigitToHex(Digit: Integer): Char;
+begin
+  if (Digit >= 0) and (Digit <= 9) then
+    Result := Chr(Digit + Ord('0'))
+  else if (Digit >= 10) and (Digit <= 15) then
+    Result := Chr(Digit - 10 + Ord('A'))
+  else
+    Result := '0';
+end;
+
+// URL-encodes the provided string
+function URLEncode(const S: string): string;
+var
+  i, idx, len: Integer;
+begin
+  len := 0;
+  for i := 1 to Length(S) do
+    if ((S[i] >= '0') and (S[i] <= '9')) or
+    ((S[i] >= 'A') and (S[i] <= 'Z')) or
+    ((S[i] >= 'a') and (S[i] <= 'z')) or (S[i] = ' ') or
+    (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+      len := len + 1
+    else
+      len := len + 3;
+
+  SetLength(Result, len);
+  idx := 1;
+
+  for i := 1 to Length(S) do
+    if S[i] = ' ' then
+      begin
+        Result[idx] := '+';
+        idx := idx + 1;
+      end
+    else if ((S[i] >= '0') and (S[i] <= '9')) or
+      ((S[i] >= 'A') and (S[i] <= 'Z')) or
+      ((S[i] >= 'a') and (S[i] <= 'z')) or
+      (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+      begin
+        Result[idx] := S[i];
+        idx := idx + 1;
+      end
+    else
+    begin
+      Result[idx] := '%';
+      Result[idx + 1] := DigitToHex(Ord(S[i]) div 16);
+      Result[idx + 2] := DigitToHex(Ord(S[i]) mod 16);
+      idx := idx + 3;
+    end;
+end;
+
+function ExtractSAMLFormValues(ResponseText: String): SAMLFormParams;
+var
+  I, J, K: Integer;
+  XMLDoc, NodeList, FormNode, InputNode: Variant;
+begin
+  XMLDoc := CreateOleObject('MSXML2.DOMDocument');
+  XMLDoc.async := False;
+  XMLDoc.resolveExternals := False;
+  XMLDoc.validateOnParse := False;
+  XMLDoc.setProperty('ProhibitDTD', False);
+  XMLDoc.loadXML(ResponseText);
+
+  if XMLDoc.parseError.errorCode <> 0 then
+  begin
+    MsgBox('Error on line ' + IntToStr(XMLDoc.parseError.line) + ', position ' + 
+      IntToStr(XMLDoc.parseError.linepos) + ': ' + XMLDoc.parseError.reason, mbInformation, MB_OK);
+  end else begin
+    NodeList := XMLDoc.getElementsByTagName('form');
+
+    for I := 0 to NodeList.length - 1 do 
+    begin
+      FormNode := NodeList.item(i);
+
+      Result.Action := FormNode.attributes.getNamedItem('action').nodeValue;
+
+      for J := 0 to FormNode.childNodes.length - 1 do
+      begin
+        if FormNode.childNodes.item(J).nodeName = 'input' then
+        begin
+          InputNode := FormNode.childNodes.item[J];
+
+          if InputNode.attributes.getNamedItem('name').nodeValue = 'SAMLRequest' then
+            Result.SAMLRequest := InputNode.attributes.getNamedItem('value').nodeValue;
+          if InputNode.attributes.getNamedItem('name').nodeValue = 'SAMLResponse' then
+            Result.SAMLResponse := InputNode.attributes.getNamedItem('value').nodeValue;
+          if InputNode.attributes.getNamedItem('name').nodeValue = 'RelayState' then
+            Result.RelayState := InputNode.attributes.getNamedItem('value').nodeValue;
+        end;       
+      end;
+    end;
+  end;
+end;
+
 procedure LoginButtonOnClick(Sender: TObject);
 var
-  Url, Resource, ResponseText, SAMLRequest, RelayState: String;                                                       
-  I, J, K: Integer;
+  Url, Resource, ResponseText, RequestText: String;                                                       
   Page: TWizardPage;
-  Button: TNewButton;
-  WinHttpReq, EfTidy, XMLDoc, NodeList, FormNode, InputNode: Variant;
+  WinHttpReq, EfTidy: Variant;
+  SAMLValues: SAMLFormParams;
 begin
   Page := PageFromID(AuthPageID);
 
@@ -127,9 +225,13 @@ begin
 
   // Perform a SAML authentication for redhat.com
   WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-  WinHttpReq.Open('POST', Url, false);
+  WinHttpReq.Open('GET', Url, false);
   WinHttpReq.SetClientCertificate('LOCAL_MACHINE\Personal\My Certificate');
   WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  // Temporary - set proxy so Fiddler can inspect the traffic
+  //WinHttpReq.SetProxy( 2, '127.0.0.1:8888');
+
   WinHttpReq.Send();
 
   if WinHttpReq.Status <> 200 then
@@ -144,64 +246,82 @@ begin
     AuthLabel.Caption := 'Authentication Successful.';
     AuthLabel.Font.Color := clGreen;
 
-    //MsgBox(WinHttpReq.ResponseText, mbInformation, MB_OK);
-
-
-    // Perform a SAML authentication for redhat.com
-    WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-    WinHttpReq.Open('GET', Resource, false);
-    WinHttpReq.SetClientCertificate('LOCAL_MACHINE\Personal\My Certificate');
-    WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    WinHttpReq.Send();
-
-    ResponseText := WinHttpReq.ResponseText;
-
+    // Register the EfTidy dll so that we can call its functions
     ExtractTemporaryFile('EfTidy.dll');
     RegisterServer(True, ExpandConstant('{tmp}\EfTidy.dll'), False);
 
-    // Tidy up the (non well-formed) response with EfTidy
+    // We are going to tidy up the (non well-formed) response with EfTidy -
+    // the first step is to create the EfTidy object
     EfTidy := CreateOleObject('EfTidy.tidyCom');
     EfTidy.Option.Clean := True;
     EfTidy.Option.OutputType := 1; // XhtmlOut
     EfTidy.Option.DoctypeMode := 3; // DoctypeLoose
-    ResponseText := EfTidy.TidyMemToMem(ResponseText);
 
-    XMLDoc := CreateOleObject('MSXML2.DOMDocument');
-    XMLDoc.async := False;
-    XMLDoc.resolveExternals := False;
-    XMLDoc.validateOnParse := False;
-    XMLDoc.setProperty('ProhibitDTD', False);
-    XMLDoc.loadXML(ResponseText);
+    // Tidy up the response to make it valid XML so we can parse it
+    ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
-    if XMLDoc.parseError.errorCode <> 0 then
+    //MsgBox('Got response: ' + ResponseText, mbInformation, MB_OK);
+
+    // Parse the now-valid XML response and extract the values we're interested in
+    SAMLValues := ExtractSAMLFormValues(ResponseText);
+
+    RequestText := 'SAMLRequest=' + URLEncode(SAMLValues.SAMLRequest) + 
+                   '&RelayState=' + URLEncode(SAMLValues.RelayState);
+
+    // POST the SAMLRequest and RelayState to the URL specified in the returned action attribute,
+    // which in this case should be the IdP
+    WinHttpReq.Open('POST', SAMLValues.Action, false);
+    WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
+    WinHttpReq.Send(RequestText);
+
+    //MsgBox('Sending request: ' + RequestText, mbInformation, MB_OK);
+
+    if WinHttpReq.Status <> 200 then
     begin
-      MsgBox('Error on line ' + IntToStr(XMLDoc.parseError.line) + ', position ' + 
-        IntToStr(XMLDoc.parseError.linepos) + ': ' + XMLDoc.parseError.reason, mbInformation, MB_OK);
+      AuthLabel.Caption := 'Authentication Failed.';
+      AuthLabel.Font.Color := clRed;
+      Exit;    
     end else begin
-      NodeList := XMLDoc.getElementsByTagName('form');
+      // Tidy up the response to make it valid XML so we can parse it
+      ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
-      for I := 0 to NodeList.length - 1 do 
+      //MsgBox('Got response: ' + ResponseText, mbInformation, MB_OK);
+
+      // Extract the Action, SAMLResponse and RelayState parameter values from the response
+      SAMLValues := ExtractSAMLFormValues(ResponseText);
+
+      {MsgBox('Posting SAMLResponse to ' + SAMLValues.Action + ', Request length: ' + 
+             IntToStr(Length(SAMLValues.SAMLResponse)) + 
+             ', SAMLResponse: ' + Copy(SAMLValues.SAMLResponse, 1, 1000) +             
+             ', RelayState: ' + SAMLValues.RelayState, 
+             mbInformation, MB_OK);}
+
+      RequestText := 'SAMLResponse=' + URLEncode(SAMLValues.SAMLResponse) + 
+                     '&RelayState=' + URLEncode(SAMLValues.RelayState);
+
+      //MsgBox('Sending request: ' + Copy(RequestText, 0, 1000), mbInformation, MB_OK);
+      WinHttpReq.Open('POST', SAMLValues.Action, false);
+
+      // Do not follow redirects here
+      WinHttpReq.Option(6) := False;
+
+      WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
+      WinHttpReq.Send(RequestText);
+
+      if WinHttpReq.Status <> 302 then
       begin
-        FormNode := NodeList.item(i);
+        AuthLabel.Caption := 'Authentication Failed.';
+        AuthLabel.Font.Color := clRed;
+        Exit;
+      end else begin        
+        MsgBox('Got cookies: ' + WinHttpReq.getResponseHeader('Set-Cookie'), mbInformation, MB_OK);
 
-        for J := 0 to FormNode.childNodes.length - 1 do
-        begin
-          if FormNode.childNodes.item(J).nodeName = 'input' then
-          begin
-            InputNode := FormNode.childNodes.item[J];
-
-            if InputNode.attributes.getNamedItem('name').nodeValue = 'SAMLRequest' then
-              SAMLRequest := InputNode.attributes.getNamedItem('value').nodeValue;
-            if InputNode.attributes.getNamedItem('name').nodeValue = 'RelayState' then
-              RelayState := InputNode.attributes.getNamedItem('value').nodeValue;
-          end;       
-        end;
+        //MsgBox('Got response code: ' + WinHttpReq.Status + ', response: ' + 
+        //       WinHttpReq.ResponseText, mbInformation, MB_OK);
       end;
     end;
-
-
-    //MsgBox('SAMLRequest: ' + SAMLRequest + ' RelayState: ' + RelayState, mbInformation, MB_OK);
-
 
     // Simulate a click of the Next button
     WizardForm.NextButton.OnClick(nil);
