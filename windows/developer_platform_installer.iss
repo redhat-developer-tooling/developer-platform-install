@@ -160,6 +160,65 @@ begin
     end;
 end;
 
+function Split(const Value: String; const Delimiter: String): TStringList;
+var
+   dx: integer;
+   ns: String;
+   txt: String;
+   delta: integer;
+begin
+   delta := Length(Delimiter);
+   txt := value + Delimiter;
+   Result := TStringList.Create();
+
+   while Length(txt) > 0 do
+   begin
+     dx := Pos(delimiter, txt);
+     ns := Copy(txt, 0, dx-1);
+     Result.Add(ns);
+     txt := Copy(txt, dx+delta, MaxInt);
+   end;
+end;
+
+// Tests whether a String value starts with another String value, returns true if it does
+function StartsWith(const Text: String; const Value: String): boolean;
+var
+  I: Integer;
+begin
+  if Length(Text) < Length(Value) then
+  begin
+    Result := False;
+  end else begin
+    for I := 1 to Length(Value) do
+    begin
+      if Value[I] <> Text[I] then
+      begin
+        Result := False;
+        Exit;
+      end;
+    end;
+    Result := True;
+  end;
+end;
+
+// Extracts a particular cookie value from the Set-Cookie response header
+function GetCookieValue(const CookieText: String; const CookieName: String): String;  
+var
+  Cookies: TStringList;
+  I: integer;
+begin
+  Cookies := Split(CookieText, ';');
+
+  for I := 0 to Cookies.Count - 1 do
+  begin
+    if StartsWith(Cookies.Strings[I], CookieName + '=') then
+    begin
+      Result := Split(Cookies.Strings[I], '=')[1];
+      Exit;
+    end;
+  end;
+end;
+
 function ExtractSAMLFormValues(ResponseText: String): SAMLFormParams;
 var
   I, J, K: Integer;
@@ -316,10 +375,8 @@ begin
         AuthLabel.Font.Color := clRed;
         Exit;
       end else begin        
-        MsgBox('Got cookies: ' + WinHttpReq.getResponseHeader('Set-Cookie'), mbInformation, MB_OK);
-
-        //MsgBox('Got response code: ' + WinHttpReq.Status + ', response: ' + 
-        //       WinHttpReq.ResponseText, mbInformation, MB_OK);
+        MsgBox('Got rh_sso cookie: ' + 
+          GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso'), mbInformation, MB_OK);
       end;
     end;
 
