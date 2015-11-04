@@ -5,6 +5,7 @@ windows/idp_source/InnoDownloadPlugin.sdf
 windows/idp_source/InnoDownloadPlugin.workspace
 windows/idp_source/idp/Debug/
 windows/idp_source/idp/Release/
+windows/idp_source/idp/Release ANSI/
 windows/idp_source/InnoDownloadPlugin.opensdf
 windows/idp_source/unicode/idp.lib
 windows/idp_source/unicode/idp.ipdb
@@ -16,19 +17,3 @@ windows/idp_source/ansi/idp.iobj
 windows/idp_source/ansi/idp.ipdb
 windows/idp_source/ansi/idp.lib
 windows/idp_source/ansi/idp.pdb
-windows/idp_source/idp/Release ANSI/downloader.obj
-windows/idp_source/idp/Release ANSI/file.obj
-windows/idp_source/idp/Release ANSI/errordialog.obj
-windows/idp_source/idp/Release ANSI/idp.log
-windows/idp_source/idp/Release ANSI/ftpdir.obj
-windows/idp_source/idp/Release ANSI/idp.res
-windows/idp_source/idp/Release ANSI/idp.obj
-windows/idp_source/idp/Release ANSI/idp.tlog/
-windows/idp_source/idp/Release ANSI/vc140.pdb
-windows/idp_source/idp/Release ANSI/url.obj
-windows/idp_source/idp/Release ANSI/internetoptions.obj
-windows/idp_source/idp/Release ANSI/netfile.obj
-windows/idp_source/idp/Release ANSI/timer.obj
-windows/idp_source/idp/Release ANSI/trace.obj
-windows/idp_source/idp/Release ANSI/tstring.obj
-windows/idp_source/idp/Release ANSI/ui.obj
