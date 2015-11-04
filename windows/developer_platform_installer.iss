@@ -6,8 +6,6 @@
 #define AppPublisher "Red Hat"
 #define AppURL "http://www.redhat.com/"
 
-#include <idp.iss>
-
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -37,6 +35,8 @@ ExtraDiskSpaceRequired=1048576
 
 [Files]
 Source: "EfTidy.dll"; Flags: dontcopy
+
+#include "idp_source\idp.iss"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
