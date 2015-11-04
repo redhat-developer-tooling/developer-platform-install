@@ -1,2 +1,5 @@
 windows/Output/
 dist/
+windows/idp_source/.vs/InnoDownloadPlugin/v14/.suo
+windows/idp_source/InnoDownloadPlugin.sdf
+windows/idp_source/InnoDownloadPlugin.workspace
