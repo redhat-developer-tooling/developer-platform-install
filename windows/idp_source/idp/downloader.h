@@ -28,6 +28,7 @@ public:
     ~Downloader();
 
     void      addFile(tstring url, tstring filename, DWORDLONG size = FILE_SIZE_UNKNOWN, tstring comp = _T(""));
+	void      setCookie(tstring url, tstring domainUrl, tstring cookieValue);
     void      addFtpDir(tstring url, tstring mask, tstring destdir, bool recursive, tstring comp = _T(""));
     void      addMirror(tstring url, tstring mirror);
     void      setMirrorList(Downloader *d);

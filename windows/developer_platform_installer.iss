@@ -21,7 +21,7 @@ AppUpdatesURL={#AppURL}
 CreateAppDir=yes
 DefaultDirName={pf}\{#AppName}
 DefaultGroupName={#AppName}
-OutputBaseFilename=developer_platform
+OutputBaseFilename=developer_platform_setup
 Compression=lzma
 SolidCompression=yes
 ;WizardSmallImageFile=blank.bmp
@@ -34,7 +34,7 @@ DisableFinishedPage=yes
 ExtraDiskSpaceRequired=1048576
 
 [Files]
-Source: "EfTidy.dll"; Flags: dontcopy
+Source: "EfTidy.dll"; Flags: dontcopy;
 
 #include "idp_source\idp.iss"
 
@@ -68,6 +68,9 @@ type
     RelayState: String;
   end;
 
+const
+  JBDS_URL = 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
+
 var 
   // Page IDs
   AuthPageID, ComponentPageID, DownloadPageID, GetStartedPageID, InstallPageID : Integer; 
@@ -89,8 +92,8 @@ var
   // Flag indicating whether the user has authenticated successfully
   IsAuthenticated: Boolean;
 
-  // rh_sso cookie value for downloading JBDS
-  RHSSOCookieValue: String;
+  // cookie values for downloading JBDS
+  RHSSOCookieValue, JSessionIdCookieValue: String;
 
 // Converts a color String in the format '$rrggbb' to a TColor value
 function StringToColor(Color: String): TColor;
@@ -279,11 +282,8 @@ begin
   AuthLabel.Visible := True;
   AuthLabel.Refresh;
 
-  //Resource := 'https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=jbossdeveloperstudio&downloadType=distributions';
-  Resource := 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
-
   Url := 'https://idp.redhat.com/idp/authUser?j_username=' + UsernameEdit.Text + '&j_password=' + PasswordEdit.Text +
-    '&redirect=' + Resource;
+    '&redirect=' + JBDS_URL;
 
   // Perform a SAML authentication for redhat.com
   WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
@@ -295,6 +295,9 @@ begin
   //WinHttpReq.SetProxy( 2, '127.0.0.1:8888');
 
   WinHttpReq.Send();
+
+  // Extract the JSESSIONID cookie
+  JSessionIdCookieValue := 'JSESSIONID=' + GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'JSESSIONID');
 
   if WinHttpReq.Status <> 200 then
   begin
@@ -376,8 +379,13 @@ begin
         AuthLabel.Font.Color := clRed;
         Exit;
       end else begin        
-        RHSSOCookieValue := GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso')
+        RHSSOCookieValue := 'rh_sso=' + GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso');    
         Log('Got rh_sso cookie: ' + RHSSOCookieValue);
+
+        idpAddFile(JBDS_URL, ExpandConstant('{tmp}\jboss-devstudio-9.0.0.GA-installer-standalone.jar'));
+        idpSetCookie(JBDS_URL, 'http://access.redhat.com/', JSessionIdCookieValue);
+        idpSetCookie(JBDS_URL, 'http://access.redhat.com/', RHSSOCookieValue);
+        
       end;
     end;
 
@@ -1026,15 +1034,15 @@ begin
 
   // Zulu
   //idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
+  //idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
   //idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
                
   // VirtualBox
-  idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   //idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   
   // Vagrant
-  idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
+  //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
   //idpAddFile('http://192.168.1.114/~shane/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
 
   idpDownloadAfter(wpReady);

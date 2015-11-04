@@ -1,6 +1,7 @@
 LIBRARY	"idp"
 EXPORTS
 idpAddFile
+idpSetCookie
 idpAddFileSize
 idpAddFileComp
 idpAddFileSizeComp

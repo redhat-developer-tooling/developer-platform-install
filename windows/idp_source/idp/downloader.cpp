@@ -62,6 +62,11 @@ void Downloader::addFile(tstring url, tstring filename, DWORDLONG size, tstring 
     }
 }
 
+void Downloader::setCookie(tstring url, tstring domainUrl, tstring cookieValue)
+{
+	files[url]->url.setCookie(domainUrl, cookieValue);
+}
+
 void Downloader::addMirror(tstring url, tstring mirror)
 {
     mirrors.insert(pair<tstring, tstring>(url, mirror));

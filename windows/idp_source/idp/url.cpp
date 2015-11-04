@@ -83,6 +83,11 @@ HINTERNET Url::connect(HINTERNET internet)
     return connection;
 }
 
+void Url::setCookie(tstring domainUrl, tstring value)
+{
+	cookies.insert(pair<tstring, tstring>(domainUrl, value));
+}
+
 HINTERNET Url::open(HINTERNET internet, const _TCHAR *httpVerb)
 {
     LPCTSTR acceptTypes[] = { _T("*/*"), NULL };
@@ -107,9 +112,20 @@ HINTERNET Url::open(HINTERNET internet, const _TCHAR *httpVerb)
 
         tstring fullUrl = urlPath;
         fullUrl += extraInfo;
+
+		for (multimap<tstring, tstring>::iterator i = cookies.begin(); i != cookies.end(); i++)
+		{
+			tstring domainUrl = (*i).first;
+			tstring cookievalue = (*i).second;
+			InternetSetCookie(TEXT(domainUrl.c_str()), NULL, TEXT(cookievalue.c_str()));
+		}
+
         TRACE(_T("Opening %s..."), fullUrl.c_str());
         filehandle = HttpOpenRequest(connection, httpVerb, fullUrl.c_str(), NULL, internetOptions.hasReferer() ? internetOptions.referer.c_str() : NULL, acceptTypes, flags, NULL);
 
+		DWORD dwTimeout = 600 * 1000; // Timeout in milliseconds - 10 minutes
+
+		InternetSetOption(filehandle, INTERNET_OPTION_RECEIVE_TIMEOUT, &dwTimeout, sizeof(DWORD));
 retry:
         TRACE(_T("Sending request..."));
         if(!HttpSendRequest(filehandle, NULL, 0, NULL, 0))

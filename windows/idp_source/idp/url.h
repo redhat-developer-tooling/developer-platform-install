@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include "tstring.h"
 #include "internetoptions.h"
+#include <map>
 
 #define FILE_SIZE_UNKNOWN 0xffffffffffffffffULL
 #define OPERATION_STOPPED 0xfffffffffffffffeULL
@@ -41,6 +42,7 @@ public:
     HINTERNET open(HINTERNET internet, const _TCHAR *httpVerb = NULL);
     void      disconnect();
     void      close();
+	void      setCookie(tstring domainUrl, tstring value);
     DWORDLONG getSize(HINTERNET internet);
 
     tstring         urlString;
@@ -48,6 +50,8 @@ public:
     URL_COMPONENTS  components;
     HINTERNET      connection;
     HINTERNET      filehandle;
+
+	
 
 protected:
     _TCHAR        *scheme;
@@ -57,4 +61,6 @@ protected:
     _TCHAR        *urlPath;
     _TCHAR        *extraInfo;
     DWORD          service;
+
+	multimap<tstring, tstring>    cookies;
 };

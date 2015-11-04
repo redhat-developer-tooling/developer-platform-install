@@ -12,6 +12,11 @@ void idpAddFile(_TCHAR *url, _TCHAR *filename)
     downloader.addFile(STR(url), STR(filename));
 }
 
+void idpSetCookie(_TCHAR *url, _TCHAR *domainurl, _TCHAR *cookievalue)
+{
+	downloader.setCookie(STR(url), STR(domainurl), STR(cookievalue));
+}
+
 void idpAddFileSize(_TCHAR *url, _TCHAR *filename, DWORDLONG filesize)
 {
     downloader.addFile(STR(url), STR(filename), filesize);

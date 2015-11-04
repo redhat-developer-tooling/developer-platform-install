@@ -40,6 +40,7 @@ Source: "{#IDPDLLDIR}\idp.dll"; Flags: dontcopy;
 
 [Code]
 procedure idpAddFile(url, filename: String);                     external 'idpAddFile@files:idp.dll cdecl';
+procedure idpSetCookie(url, cookiename, cookievalue: String);	 external 'idpSetCookie@files:idp.dll cdecl';
 procedure idpAddFileComp(url, filename, components: String);     external 'idpAddFileComp@files:idp.dll cdecl';
 procedure idpAddMirror(url, mirror: String);                     external 'idpAddMirror@files:idp.dll cdecl';
 procedure idpAddFtpDir(url, mask, destdir: String; recursive: Boolean); external 'idpAddFtpDir@files:idp.dll cdecl';

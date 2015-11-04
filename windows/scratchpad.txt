@@ -257,3 +257,14 @@ begin
   if CurStep = ssInstall then
      MsgBox('Installing', mbInformation, MB_OK);
 end;}
+
+
+
+		for (map<tstring, tstring>::iterator i = cookies.begin(); i != cookies.end(); i++)
+		{
+			tstring cookieurl = i->first;
+			tstring cookievalue = i->second;
+			//InternetSetCookie(TEXT(cookieurl.c_str()), NULL, TEXT(cookievalue.c_str()));
+		}
+
+		//InternetSetCookie(TEXT("http://access.redhat.com/"), NULL, TEXT("TestData = Foo"));

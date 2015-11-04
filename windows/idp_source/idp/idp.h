@@ -7,6 +7,7 @@
 extern "C"
 {
 void idpAddFile(_TCHAR *url, _TCHAR *filename);
+void idpSetCookie(_TCHAR *url, _TCHAR *domainurl, _TCHAR *cookievalue);
 void idpAddFileSize(_TCHAR *url, _TCHAR *filename, DWORDLONG size);
 void idpAddFileSize32(_TCHAR *url, _TCHAR *filename, DWORD size);
 void idpAddFileComp(_TCHAR *url, _TCHAR *filename, _TCHAR *components);
