@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\idp">
+      <UniqueIdentifier>{a6e26b2b-bd10-4a88-9865-ca244df90713}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\downloader.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\errordialog.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\file.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\ftpdir.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\internetoptions.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\netfile.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\timer.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\trace.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\tstring.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\ui.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\idp\url.cpp">
+      <Filter>Source Files\idp</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
