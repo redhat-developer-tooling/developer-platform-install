@@ -89,6 +89,9 @@ var
   // Flag indicating whether the user has authenticated successfully
   IsAuthenticated: Boolean;
 
+  // rh_sso cookie value for downloading JBDS
+  RHSSOCookieValue: String;
+
 // Converts a color String in the format '$rrggbb' to a TColor value
 function StringToColor(Color: String): TColor;
 var
@@ -319,7 +322,7 @@ begin
     // Tidy up the response to make it valid XML so we can parse it
     ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
-    //MsgBox('Got response: ' + ResponseText, mbInformation, MB_OK);
+    Log('Got response: ' + ResponseText);
 
     // Parse the now-valid XML response and extract the values we're interested in
     SAMLValues := ExtractSAMLFormValues(ResponseText);
@@ -334,7 +337,7 @@ begin
     WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
     WinHttpReq.Send(RequestText);
 
-    //MsgBox('Sending request: ' + RequestText, mbInformation, MB_OK);
+    Log('Sending request: ' + RequestText);
 
     if WinHttpReq.Status <> 200 then
     begin
@@ -345,21 +348,19 @@ begin
       // Tidy up the response to make it valid XML so we can parse it
       ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
-      //MsgBox('Got response: ' + ResponseText, mbInformation, MB_OK);
+      Log('Got response: ' + ResponseText);
 
       // Extract the Action, SAMLResponse and RelayState parameter values from the response
       SAMLValues := ExtractSAMLFormValues(ResponseText);
 
-      {MsgBox('Posting SAMLResponse to ' + SAMLValues.Action + ', Request length: ' + 
+      Log('Posting SAMLResponse to ' + SAMLValues.Action + ', Request length: ' + 
              IntToStr(Length(SAMLValues.SAMLResponse)) + 
              ', SAMLResponse: ' + Copy(SAMLValues.SAMLResponse, 1, 1000) +             
-             ', RelayState: ' + SAMLValues.RelayState, 
-             mbInformation, MB_OK);}
+             ', RelayState: ' + SAMLValues.RelayState);
 
       RequestText := 'SAMLResponse=' + URLEncode(SAMLValues.SAMLResponse) + 
                      '&RelayState=' + URLEncode(SAMLValues.RelayState);
 
-      //MsgBox('Sending request: ' + Copy(RequestText, 0, 1000), mbInformation, MB_OK);
       WinHttpReq.Open('POST', SAMLValues.Action, false);
 
       // Do not follow redirects here
@@ -375,8 +376,8 @@ begin
         AuthLabel.Font.Color := clRed;
         Exit;
       end else begin        
-        MsgBox('Got rh_sso cookie: ' + 
-          GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso'), mbInformation, MB_OK);
+        RHSSOCookieValue := GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso')
+        Log('Got rh_sso cookie: ' + RHSSOCookieValue);
       end;
     end;
 

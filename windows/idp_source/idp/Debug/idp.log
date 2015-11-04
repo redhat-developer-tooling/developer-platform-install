@@ -1,0 +1,53 @@
+﻿Build started 4/11/2015 4:36:09 PM.
+     1>Project "C:\project\developer-platform-install\windows\idp_source\idp\idp.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D IDP_EXPORTS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NON_CONFORMING_SWPRINTFS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt downloader.cpp errordialog.cpp file.cpp ftpdir.cpp idp.cpp internetoptions.cpp netfile.cpp timer.cpp trace.cpp tstring.cpp ui.cpp url.cpp
+         url.cpp
+     1>c:\project\developer-platform-install\windows\idp_source\idp\ui.h(3): warning C4005: '_WIN32_WINNT': macro redefinition
+         c:\program files (x86)\windows kits\8.1\include\shared\sdkddkver.h(200): note: see previous definition of '_WIN32_WINNT'
+         ui.cpp
+         tstring.cpp
+         trace.cpp
+         timer.cpp
+         netfile.cpp
+         internetoptions.cpp
+         idp.cpp
+     1>c:\project\developer-platform-install\windows\idp_source\idp\ui.h(3): warning C4005: '_WIN32_WINNT': macro redefinition
+         c:\program files (x86)\windows kits\8.1\include\shared\sdkddkver.h(200): note: see previous definition of '_WIN32_WINNT'
+         ftpdir.cpp
+         file.cpp
+         errordialog.cpp
+     1>c:\project\developer-platform-install\windows\idp_source\idp\ui.h(3): warning C4005: '_WIN32_WINNT': macro redefinition
+         c:\program files (x86)\windows kits\8.1\include\shared\sdkddkver.h(200): note: see previous definition of '_WIN32_WINNT'
+         downloader.cpp
+     1>c:\project\developer-platform-install\windows\idp_source\idp\ui.h(3): warning C4005: '_WIN32_WINNT': macro redefinition
+         c:\program files (x86)\windows kits\8.1\include\shared\sdkddkver.h(200): note: see previous definition of '_WIN32_WINNT'
+         Generating Code...
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Debug\idp.res" idp.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.dll" /INCREMENTAL /NOLOGO wininet.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"idp.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.lib" /MACHINE:X86 /SAFESEH /DLL Debug\idp.res
+         Debug\downloader.obj
+         Debug\errordialog.obj
+         Debug\file.obj
+         Debug\ftpdir.obj
+         Debug\idp.obj
+         Debug\internetoptions.obj
+         Debug\netfile.obj
+         Debug\timer.obj
+         Debug\trace.obj
+         Debug\tstring.obj
+         Debug\ui.obj
+         Debug\url.obj
+     1>downloader.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+            Creating library C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.lib and object C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.exp
+         idp.vcxproj -> C:\project\developer-platform-install\windows\idp_source\\unicode debug\idp.dll
+       PostBuildEvent:
+         copy "..\unicode debug\idp.dll" "..\tests\debug"
+         :VCEnd
+                 1 file(s) copied.
+     1>Done Building Project "C:\project\developer-platform-install\windows\idp_source\idp\idp.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:09.26
