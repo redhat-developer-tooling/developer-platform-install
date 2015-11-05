@@ -16,7 +16,7 @@
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "scripts": {
     "start": "node_modules/.bin/electron .",
-    "package": "node_modules/.bin/electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.1 --out=./dist/ --overwrite",
+    "package": "node_modules/.bin/electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.33.9 --out=./dist/win32_x64/exploded/ --overwrite --asar=true",
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "dependencies": {
@@ -27,7 +27,7 @@
     "babel": "^5.8.23",
     "del": "^2.0.2",
     "electron-packager": "^5.1.0",
-    "electron-prebuilt": "^0.33.1",
+    "electron-prebuilt": "^0.33.9",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-rename": "^1.2.2",
