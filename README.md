@@ -25,6 +25,16 @@ You can run the application using `npm start` or `gulp run`.
 Alternatively, you can build a Windows binary and run it
 
 ```
-gulp package
+gulp generate
 dist/DeveloperPlatform-win32-x64/DeveloperPlatform.exe
 ```
+
+Building on Windows
+===================
+
+* Install Node for windows 0.12.x
+* Install Python 2.x
+* Install MS VS Express 2013 -http://www.microsoft.com/en-gb/download/confirmation.aspx?id=44914
+* Install Windows SDK for O/S version
+* Run `& "C:\Program Files\Microsoft SDKs\Windows\v7.1\bin\Setenv.cmd" /Release /x64`
+* npm install

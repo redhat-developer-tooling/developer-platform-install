@@ -21,8 +21,8 @@ gulp.task('copy:app', ['clean', 'transpile:app'], function() {
         .pipe(gulp.dest('build'));
 });
 
-gulp.task('package', ['copy:app'], function(cb) {
-  exec('npm run-script package', function(err, stdout, stderr) {
+gulp.task('generate', ['copy:app'], function(cb) {
+  exec('npm run-script generate', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
@@ -36,6 +36,13 @@ gulp.task('run', ['transpile:app'], function() {
   });
 });
 
+gulp.task('package', function(cb) {
+  exec('npm run-script package', function(err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+  });
+});
+
 gulp.task('default', function() {
-  return runSequence('clean', 'transpile:app', 'copy:app', 'package');
+  return runSequence('clean', 'transpile:app', 'copy:app', 'generate');
 });
