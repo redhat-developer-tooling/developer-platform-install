@@ -3,6 +3,8 @@ dist/
 windows/idp_source/.vs/InnoDownloadPlugin/v14/.suo
 windows/idp_source/InnoDownloadPlugin.sdf
 windows/idp_source/InnoDownloadPlugin.workspace
+windows/idp_source/ansi debug
+windows/idp_source/tests
 windows/idp_source/idp/Debug
 windows/idp_source/idp/Release/
 windows/idp_source/idp/Release ANSI/
