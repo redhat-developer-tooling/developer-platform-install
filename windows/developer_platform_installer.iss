@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define AppName "Red Hat Developer Platform"
-#define AppVersion "1.0"
+#define AppVersion "1.0.Alpha1"
 #define AppPublisher "Red Hat"
 #define AppURL "http://www.redhat.com/"
 
@@ -35,6 +35,7 @@ ExtraDiskSpaceRequired=1048576
 
 [Files]
 Source: "EfTidy.dll"; Flags: dontcopy;
+Source: "InstallConfigRecord.xml"; Flags: dontcopy;
 
 #include "idp_source\idp.iss"
 
@@ -47,6 +48,11 @@ Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Red Hat\{#AppName}"; ValueType: string; ValueName: "InstallDir"; ValueData: "{app}"
 
 [Code]
+#IFDEF UNICODE
+  #DEFINE AW "W"
+#ELSE
+  #DEFINE AW "A"
+#ENDIF
 
 type
   ComponentGroup = record
@@ -68,8 +74,29 @@ type
     RelayState: String;
   end;
 
+  TShellExecuteInfo = record
+    cbSize: DWORD;
+    fMask: Cardinal;
+    Wnd: HWND;
+    lpVerb: string;
+    lpFile: string;
+    lpParameters: string;
+    lpDirectory: string;
+    nShow: Integer;
+    hInstApp: THandle;    
+    lpIDList: DWORD;
+    lpClass: string;
+    hkeyClass: THandle;
+    dwHotKey: DWORD;
+    hMonitor: THandle;
+    hProcess: THandle;
+  end;
+
 const
   JBDS_URL = 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
+  JBDS_FILENAME = 'jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar';
+  WAIT_TIMEOUT = $00000102;
+  SEE_MASK_NOCLOSEPROCESS = $00000040;  
 
 var 
   // Page IDs
@@ -94,6 +121,15 @@ var
 
   // cookie values for downloading JBDS
   RHSSOCookieValue, JSessionIdCookieValue: String;
+
+function ShellExecuteEx(var lpExecInfo: TShellExecuteInfo): BOOL; 
+  external 'ShellExecuteEx{#AW}@shell32.dll stdcall';
+
+function WaitForSingleObject(hHandle: THandle; dwMilliseconds: DWORD): DWORD; 
+  external 'WaitForSingleObject@kernel32.dll stdcall';
+
+function TerminateProcess(hProcess: THandle; uExitCode: UINT): BOOL;
+  external 'TerminateProcess@kernel32.dll stdcall';
 
 // Converts a color String in the format '$rrggbb' to a TColor value
 function StringToColor(Color: String): TColor;
@@ -207,6 +243,34 @@ begin
   end;
 end;
 
+// Replaces a String value in a file
+function FileReplaceString(const FileName, SearchString, ReplaceString: string): boolean;
+var
+  MyFile : TStrings;
+  MyText : string;
+begin
+  MyFile := TStringList.Create;
+
+  try
+    result := true;
+
+    try
+      MyFile.LoadFromFile(FileName);
+      MyText := MyFile.Text;
+
+      if StringChangeEx(MyText, SearchString, ReplaceString, True) > 0 then //Only save if text has been changed.
+      begin;
+        MyFile.Text := MyText;
+        MyFile.SaveToFile(FileName);
+      end;
+    except
+      result := false;
+    end;
+  finally
+    MyFile.Free;
+  end;
+end;
+
 // Extracts a particular cookie value from the Set-Cookie response header
 function GetCookieValue(const CookieText: String; const CookieName: String): String;  
 var
@@ -315,79 +379,85 @@ begin
     ExtractTemporaryFile('EfTidy.dll');
     RegisterServer(True, ExpandConstant('{tmp}\EfTidy.dll'), False);
 
-    // We are going to tidy up the (non well-formed) response with EfTidy -
-    // the first step is to create the EfTidy object
-    EfTidy := CreateOleObject('EfTidy.tidyCom');
-    EfTidy.Option.Clean := True;
-    EfTidy.Option.OutputType := 1; // XhtmlOut
-    EfTidy.Option.DoctypeMode := 3; // DoctypeLoose
+    Try 
+      // We are going to tidy up the (non well-formed) response with EfTidy -
+      // the first step is to create the EfTidy object
 
-    // Tidy up the response to make it valid XML so we can parse it
-    ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
+      EfTidy := CreateOleObject('EfTidy.tidyCom');
+      EfTidy.Option.Clean := True;
+      EfTidy.Option.OutputType := 1; // XhtmlOut
+      EfTidy.Option.DoctypeMode := 3; // DoctypeLoose
 
-    Log('Got response: ' + ResponseText);
-
-    // Parse the now-valid XML response and extract the values we're interested in
-    SAMLValues := ExtractSAMLFormValues(ResponseText);
-
-    RequestText := 'SAMLRequest=' + URLEncode(SAMLValues.SAMLRequest) + 
-                   '&RelayState=' + URLEncode(SAMLValues.RelayState);
-
-    // POST the SAMLRequest and RelayState to the URL specified in the returned action attribute,
-    // which in this case should be the IdP
-    WinHttpReq.Open('POST', SAMLValues.Action, false);
-    WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
-    WinHttpReq.Send(RequestText);
-
-    Log('Sending request: ' + RequestText);
-
-    if WinHttpReq.Status <> 200 then
-    begin
-      AuthLabel.Caption := 'Authentication Failed.';
-      AuthLabel.Font.Color := clRed;
-      Exit;    
-    end else begin
       // Tidy up the response to make it valid XML so we can parse it
       ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
       Log('Got response: ' + ResponseText);
 
-      // Extract the Action, SAMLResponse and RelayState parameter values from the response
+      // Parse the now-valid XML response and extract the values we're interested in
       SAMLValues := ExtractSAMLFormValues(ResponseText);
 
-      Log('Posting SAMLResponse to ' + SAMLValues.Action + ', Request length: ' + 
-             IntToStr(Length(SAMLValues.SAMLResponse)) + 
-             ', SAMLResponse: ' + Copy(SAMLValues.SAMLResponse, 1, 1000) +             
-             ', RelayState: ' + SAMLValues.RelayState);
-
-      RequestText := 'SAMLResponse=' + URLEncode(SAMLValues.SAMLResponse) + 
+      RequestText := 'SAMLRequest=' + URLEncode(SAMLValues.SAMLRequest) + 
                      '&RelayState=' + URLEncode(SAMLValues.RelayState);
 
+      // POST the SAMLRequest and RelayState to the URL specified in the returned action attribute,
+      // which in this case should be the IdP
       WinHttpReq.Open('POST', SAMLValues.Action, false);
-
-      // Do not follow redirects here
-      WinHttpReq.Option(6) := False;
-
       WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
       WinHttpReq.Send(RequestText);
 
-      if WinHttpReq.Status <> 302 then
+      Log('Sending request: ' + RequestText);
+
+      if WinHttpReq.Status <> 200 then
       begin
         AuthLabel.Caption := 'Authentication Failed.';
         AuthLabel.Font.Color := clRed;
-        Exit;
-      end else begin        
-        RHSSOCookieValue := 'rh_sso=' + GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso');    
-        Log('Got rh_sso cookie: ' + RHSSOCookieValue);
+        Exit;    
+      end else begin
+        // Tidy up the response to make it valid XML so we can parse it
+        ResponseText := EfTidy.TidyMemToMem(WinHttpReq.ResponseText);
 
-        idpAddFile(JBDS_URL, ExpandConstant('{tmp}\jboss-devstudio-9.0.0.GA-installer-standalone.jar'));
-        idpSetCookie(JBDS_URL, 'http://access.redhat.com/', JSessionIdCookieValue);
-        idpSetCookie(JBDS_URL, 'http://access.redhat.com/', RHSSOCookieValue);
-        
+        Log('Got response: ' + ResponseText);
+
+        // Extract the Action, SAMLResponse and RelayState parameter values from the response
+        SAMLValues := ExtractSAMLFormValues(ResponseText);
+
+        Log('Posting SAMLResponse to ' + SAMLValues.Action + ', Request length: ' + 
+               IntToStr(Length(SAMLValues.SAMLResponse)) + 
+               ', SAMLResponse: ' + Copy(SAMLValues.SAMLResponse, 1, 1000) +             
+               ', RelayState: ' + SAMLValues.RelayState);
+
+        RequestText := 'SAMLResponse=' + URLEncode(SAMLValues.SAMLResponse) + 
+                       '&RelayState=' + URLEncode(SAMLValues.RelayState);
+
+        WinHttpReq.Open('POST', SAMLValues.Action, false);
+
+        // Do not follow redirects here
+        WinHttpReq.Option(6) := False;
+
+        WinHttpReq.SetRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        WinHttpReq.SetRequestHeader('Content-Length', IntToStr(Length(RequestText)));
+        WinHttpReq.Send(RequestText);
+
+        if WinHttpReq.Status <> 302 then
+        begin
+          AuthLabel.Caption := 'Authentication Failed.';
+          AuthLabel.Font.Color := clRed;
+          Exit;
+        end else begin        
+          RHSSOCookieValue := 'rh_sso=' + GetCookieValue(WinHttpReq.getResponseHeader('Set-Cookie'), 'rh_sso');    
+          Log('Got rh_sso cookie: ' + RHSSOCookieValue);
+
+          //idpAddFile(JBDS_URL, ExpandConstant('{tmp}\jboss-devstudio-9.0.0.GA-installer-standalone.jar'));
+          //idpSetCookie(JBDS_URL, 'http://access.redhat.com/', JSessionIdCookieValue);
+          //idpSetCookie(JBDS_URL, 'http://access.redhat.com/', RHSSOCookieValue);
+          
+        end;
       end;
-    end;
+    Finally
+      UnregisterServer(True, ExpandConstant('{tmp}\EfTidy.dll'), False);
+      CoFreeUnusedLibraries();
+    End;
 
     // Simulate a click of the Next button
     WizardForm.NextButton.OnClick(nil);
@@ -915,12 +985,39 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ErrorCode: Integer;
+  ExecInfo: TShellExecuteInfo;
 begin
   if CurStep = ssInstall then
   begin
     // Install Zulu JDK
-    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_60-8.9.0.4-win64.msi INSTALLDIR="{app}\zulu-8" /passive /norestart'), 
-        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_60-8.9.0.4-win64.msi INSTALLDIR="{app}\zulu-8" /passive /norestart'), 
+    //    '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+
+    // Extract the install config and batch file for JBDS
+    ExtractTemporaryFile('InstallConfigRecord.xml');
+
+    // Replace the {installDir} token in the XML config file with the application directory
+    FileReplaceString(ExpandConstant('{tmp}\InstallConfigRecord.xml'), '{installDir}', ExpandConstant('{app}'));
+
+    // Install JBDS
+    ExecInfo.cbSize := SizeOf(ExecInfo);
+    ExecInfo.fMask := SEE_MASK_NOCLOSEPROCESS;
+    ExecInfo.Wnd := 0;
+
+    ExecInfo.lpFile := ExpandConstant('{app}\zulu-8\bin\javaw.exe');
+    ExecInfo.lpParameters := ExpandConstant('-jar {tmp}\' + JBDS_FILENAME + ' {tmp}\InstallConfigRecord.xml');
+
+    ExecInfo.nShow := SW_SHOW; // SW_HIDE
+
+    if ShellExecuteEx(ExecInfo) then
+    begin
+      if WaitForSingleObject(ExecInfo.hProcess, 10 * 60 * 1000 {10 minutes}) = WAIT_TIMEOUT then
+      begin
+        TerminateProcess(ExecInfo.hProcess, 666);
+        Log('JBoss Developer Studio Installer Failed');
+      end;
+    end;
+
 
     // Extract the VirtualBox msi files from the downloaded exe
     Shellexec('', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'), ExpandConstant('--extract -path {tmp} --silent'),
@@ -1033,16 +1130,21 @@ begin
   idpSetOption('DetailsButton', '0');
 
   // Zulu
-  //idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  //idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
+  idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
+  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
   //idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
+
+  // JBDS - JBoss Developer Studio
+  idpAddFile('https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar',
+             ExpandConstant('{tmp}\jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar'));
+  //idpAddFile('http://192.168.1.114/~shane/' + JBDS_FILENAME, ExpandConstant('{tmp}\') + JBDS_FILENAME);
                
   // VirtualBox
-  //idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
+  idpAddFile('http://download.virtualbox.org/virtualbox/5.0.2/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   //idpAddFile('http://192.168.1.114/~shane/VirtualBox-5.0.2-102096-Win.exe', ExpandConstant('{tmp}\VirtualBox-5.0.2-102096-Win.exe'));
   
   // Vagrant
-  //idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
+  idpAddFile('https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
   //idpAddFile('http://192.168.1.114/~shane/vagrant_1.7.4.msi', ExpandConstant('{tmp}\vagrant_1.7.4.msi'));
 
   idpDownloadAfter(wpReady);
