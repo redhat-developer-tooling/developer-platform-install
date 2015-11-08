@@ -94,7 +94,7 @@ type
 
 const
   JBDS_URL = 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
-  JBDS_FILENAME = 'jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar';
+  JBDS_FILENAME = 'jboss-devstudio-9.0.1.Beta1-v20151108-1849-B135-installer-standalone.jar';
   WAIT_TIMEOUT = $00000102;
   SEE_MASK_NOCLOSEPROCESS = $00000040;  
 
@@ -1135,8 +1135,8 @@ begin
   //idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
 
   // JBDS - JBoss Developer Studio
-  idpAddFile('https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar',
-             ExpandConstant('{tmp}\jboss-devstudio-9.0.1.Beta1-v20151105-0411-B134-installer-standalone.jar'));
+  idpAddFile('https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.0.1.Beta1-v20151108-1849-B135-installer-standalone.jar',
+             ExpandConstant('{tmp}\jboss-devstudio-9.0.1.Beta1-v20151108-1849-B135-installer-standalone.jar'));
   //idpAddFile('http://192.168.1.114/~shane/' + JBDS_FILENAME, ExpandConstant('{tmp}\') + JBDS_FILENAME);
                
   // VirtualBox
