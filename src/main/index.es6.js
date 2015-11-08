@@ -50,7 +50,11 @@ app.on('window-all-closed', function() {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 1000, height: 600 });
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 600,
+    'auto-hide-menu-bar': true
+  });
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/../browser/index.html');
