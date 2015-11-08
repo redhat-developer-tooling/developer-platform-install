@@ -3,7 +3,7 @@ import * as tmp from 'tmp';
 import * as fs from 'fs';
 import rmdir from 'rimraf';
 
-import { jdkInstall } from '../../main/jdk-install';
+import { jdkInstall } from '../../src/main/jdk-install';
 
 describe('JDK installer', function () {
   let jdkInstallationPath;

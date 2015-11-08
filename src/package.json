@@ -1,0 +1,28 @@
+{
+  "name": "developer-platform-install",
+  "productName": "Red Hat Developer Platform installer",
+  "version": "0.0.1",
+  "description": "Installer for Red Hat Developer Platform",
+  "main": "main/index.js",
+  "author": "Red Hat Developer Tooling Group",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "patternfly": "^2.5.0"
+  },
+  "jspm": {
+    "directories": {
+      "baseURL": "browser"
+    },
+    "dependencies": {
+      "angular": "github:angular/bower-angular@^1.4.6",
+      "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
+      "patternfly": "npm:patternfly@^2.5.0"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}

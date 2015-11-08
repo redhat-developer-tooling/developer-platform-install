@@ -15,14 +15,11 @@
   },
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "scripts": {
-    "start": "node_modules/.bin/electron .",
-    "generate": "node_modules/.bin/electron-packager ./build/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.34.2 --out=./dist/win/ --overwrite",
-    "package": "node_modules/.bin/electron-installer-squirrel-windows ./dist/win/DeveloperPlatform-win32-x64 --out=./dist/win/ --name=developer_platform --exe=DeveloperPlatform.exe --overwrite --debug --authors=\"Red Hat Developer Tooling Group\"",
+    "postinstall": "(cd src && npm install && jspm install --yes)",
+    "start": "node_modules/.bin/electron ./src",
+    "generate": "node_modules/.bin/electron-packager ./src/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.34.2 --out=./dist/win/ --overwrite",
+    "package": "node_modules/.bin/electron-installer-squirrel-windows ./dist/win/DeveloperPlatform-win32-x64 --out=./dist/win/ --name=developer_platform --exe=DeveloperPlatform.exe --overwrite --authors=\"Red Hat Developer Tooling Group\"",
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
-  },
-  "dependencies": {
-    "adm-zip": "^0.4.7",
-    "patternfly": "^2.2.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
@@ -38,20 +35,5 @@
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
     "tmp": "0.0.28"
-  },
-  "jspm": {
-    "directories": {
-      "baseURL": "browser"
-    },
-    "dependencies": {
-      "angular": "github:angular/bower-angular@^1.4.6",
-      "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
-      "patternfly": "npm:patternfly@^2.2.0"
-    },
-    "devDependencies": {
-      "babel": "npm:babel-core@^5.8.24",
-      "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
-    }
   }
 }

@@ -16,7 +16,6 @@ Then, you need to install all dependencies and compile ES6 scripts
 
 ```
 npm install
-jspm install --yes
 gulp transpile:app
 ```
 
@@ -36,5 +35,4 @@ Building on Windows
 * Install Python 2.x
 * Install MS VS Express 2013 -http://www.microsoft.com/en-gb/download/confirmation.aspx?id=44914
 * Install Windows SDK for O/S version
-* Run `& "C:\Program Files\Microsoft SDKs\Windows\v7.1\bin\Setenv.cmd" /Release /x64`
 * npm install

@@ -6,22 +6,17 @@ var gulp = require('gulp'),
   exec = require('child_process').exec;
 
 gulp.task('transpile:app', function() {
-  return gulp.src('main/index.es6.js')
+  return gulp.src('./src/main/index.es6.js')
     .pipe(babel())
     .pipe(rename('index.js'))
-    .pipe(gulp.dest('main'));
+    .pipe(gulp.dest('./src/main'));
 });
 
 gulp.task('clean', function() {
-    return del(['build', 'dist', 'install'], {force: true});
+    return del(['dist'], {force: true});
 });
 
-gulp.task('copy:app', ['clean', 'transpile:app'], function() {
-    return gulp.src(['main/**/*', 'browser/**/*', 'installs/**/*', 'package.json'], {base: '.'})
-        .pipe(gulp.dest('build'));
-});
-
-gulp.task('generate', ['copy:app'], function(cb) {
+gulp.task('generate', ['transpile:app'], function(cb) {
   exec('npm run-script generate', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
@@ -44,5 +39,5 @@ gulp.task('package', function(cb) {
 });
 
 gulp.task('default', function() {
-  return runSequence('clean', 'transpile:app', 'copy:app', 'generate');
+  return runSequence('clean', 'transpile:app', 'generate');
 });
