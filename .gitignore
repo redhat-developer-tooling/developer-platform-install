@@ -3,5 +3,5 @@ dist
 jspm_packages
 package
 build
-main/index.js
-browser/config.js
+src/main/index.js
+src/browser/config.js
