@@ -17,8 +17,8 @@
   "scripts": {
     "postinstall": "(cd src && npm install && jspm install --yes)",
     "start": "node_modules/.bin/electron ./src",
-    "generate": "node_modules/.bin/electron-packager ./src/ DeveloperPlatform --platform=win32 --arch=x64 --version=0.34.2 --out=./dist/win/ --overwrite",
-    "package": "node_modules/.bin/electron-installer-squirrel-windows ./dist/win/DeveloperPlatform-win32-x64 --out=./dist/win/ --name=developer_platform --exe=DeveloperPlatform.exe --overwrite --authors=\"Red Hat Developer Tooling Group\"",
+    "generate": "node_modules/.bin/electron-packager ./src/ DeveloperPlatformInstaller --platform=win32 --arch=x64 --version=0.34.2 --out=./dist/win/ --overwrite --asar",
+    "package": "node_modules/.bin/electron-installer-squirrel-windows ./dist/win/DeveloperPlatform-win32-x64 --out=./dist/win/ --name=developer_platform --exe=DeveloperPlatformInstaller.exe --overwrite --authors=\"Red Hat Developer Tooling Group\"",
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "devDependencies": {
