@@ -16,7 +16,7 @@ gulp.task('clean', function() {
     return del(['dist'], {force: true});
 });
 
-gulp.task('generate', ['transpile:app'], function(cb) {
+gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   exec('npm run-script generate', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
