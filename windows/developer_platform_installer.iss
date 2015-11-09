@@ -990,8 +990,8 @@ begin
   if CurStep = ssInstall then
   begin
     // Install Zulu JDK
-    //ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_60-8.9.0.4-win64.msi INSTALLDIR="{app}\zulu-8" /passive /norestart'), 
-    //    '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
+    ShellExec('', 'msiexec', ExpandConstant('/i {tmp}\zulu1.8.0_60-8.9.0.4-win64.msi INSTALLDIR="{app}\zulu-8" /passive /norestart'), 
+        '', SW_SHOW, ewWaitUntilTerminated, ErrorCode);
 
     // Extract the install config and batch file for JBDS
     ExtractTemporaryFile('InstallConfigRecord.xml');
@@ -1131,7 +1131,7 @@ begin
 
   // Zulu
   idpSetOption('Referer', 'http://www.azulsystems.com/products/zulu/downloads');
-  idpAddFile('http://cdn.azulsystems.com/zulu/2015-07-8.8-bin/zulu1.8.0_51-8.8.0.3-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_51-8.8.0.3-win64.msi'));
+  idpAddFile('http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
   //idpAddFile('http://192.168.1.114/~shane/zulu1.8.0_60-8.9.0.4-win64.msi', ExpandConstant('{tmp}\zulu1.8.0_60-8.9.0.4-win64.msi'));
 
   // JBDS - JBoss Developer Studio
