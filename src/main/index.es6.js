@@ -3,9 +3,11 @@
 var app = require('app'); // Module to control application life.
 var ipc = require('ipc');
 var fs = require('fs');
+var os = require('os');
 var crashReporter = require('crash-reporter');
 var BrowserWindow = require('browser-window'); // Module to create native browser window.
 var jdkInstall = require('./jdk-install');
+var vboxInstall = require('./vbox-install');
 
 // Report crashes to our server.
 crashReporter.start({
@@ -26,11 +28,19 @@ ipc.on('install', function(event) {
     installRoot = process.env.HOME + '/DeveloperPlatform';
   }
 
-  jdkInstall(installRoot, __dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip',
-    function(err) {
-      console.log(err);
-    });
-  event.sender.send('install-complete');
+  var tempDir = os.tmpdir();
+
+  // jdkInstall(installRoot, __dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip',
+  //   function(err) {
+  //     console.log(err);
+  //   });
+
+  vboxInstall(installRoot, tempDir, 'http://download.virtualbox.org/virtualbox/5.0.8/VirtualBox-5.0.8-103449-Win.exe',
+    function() {
+      event.sender.send('install-complete');
+    }
+  );
+
 });
 
 ipc.on('crash', function(event, arg) {
