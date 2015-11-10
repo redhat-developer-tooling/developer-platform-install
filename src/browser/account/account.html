@@ -16,7 +16,7 @@
       <div class="col-sm-4">
         <input type="text" name="username" class="form-control" ng-model="acctCtrl.username" placeholder="Red Hat login" required/>
         <div ng-show="accountForm.$submitted || accountForm.username.$touched">
-          <div ng-show="accountForm.username.$error.required">Please enter a username.</div>
+          <div ng-show="accountForm.username.$error.required" class="help-block has-error">Please enter a username.</div>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
       <div class="col-sm-4">
         <input type="password" name="password" class="form-control" ng-model="acctCtrl.password" placeholder="Password" required/>
         <div ng-show="accountForm.$submitted || accountForm.password.$touched">
-          <div ng-show="accountForm.password.$error.required">Please enter a password.</div>
+          <div ng-show="accountForm.password.$error.required" class="help-block has-error">Please enter a password.</div>
         </div>
       </div>
     </div>
@@ -33,6 +33,9 @@
         <button type="submit" class="btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">LOG IN</button>
         <div class="pull-right">
           <a href="#">Forgot your login or password?</a>
+        </div>
+        <div ng-show="accountForm.$submitted && acctCtrl.authFailed">
+          <div class="help-block has-error">Invalid account information, please try again.</div>
         </div>
       </div>
     </div>

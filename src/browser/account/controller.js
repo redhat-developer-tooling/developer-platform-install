@@ -5,9 +5,12 @@ class AccountController {
 
     this.username = "";
     this.password = "";
+    this.authFailed = false;
   }
 
   login() {
+    this.authFailed = false;
+
     var req = {
       method: 'GET',
       url: 'https://idp.redhat.com/idp/authUser?' +
@@ -19,14 +22,13 @@ class AccountController {
     this.http(req)
       .then(result => {
         if (result.status == 200) {
-          console.log(result.data)
           this.router.go('confirm');
         } else {
-          console.log('Failed to authenticate')
+          this.authFailed = true;
         }
       },
       failure => {
-        console.log('Failed to authenticate')
+        this.authFailed = true;
       });
   }
 }
