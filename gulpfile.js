@@ -6,9 +6,11 @@ var gulp = require('gulp'),
   exec = require('child_process').exec;
 
 gulp.task('transpile:app', function() {
-  return gulp.src('./src/main/index.es6.js')
+  return gulp.src(['./src/main/*.es6.js'])
     .pipe(babel())
-    .pipe(rename('index.js'))
+    .pipe(rename(function (path) {
+      path.basename = path.basename.substring(0, path.basename.length - 4)
+    }))
     .pipe(gulp.dest('./src/main'));
 });
 

@@ -1,11 +1,11 @@
 'use strict';
 
-var fs = require('fs');
-var request = require('request');
-var util = require('./util.js');
-var path = require('path');
+import fs from 'fs';
+import request from 'request';
+import execFile from './util.js';
+import path from 'path';
 
-module.exports = function(installRoot, tmpDir, url, callback) {
+export default function installVirtualBox(installRoot, tmpDir, url, callback) {
   var vboxDownload = path.join(tmpDir, 'virtualBox.exe');
 
   request
@@ -15,14 +15,14 @@ module.exports = function(installRoot, tmpDir, url, callback) {
     })
     .pipe(fs.createWriteStream(vboxDownload))
     .on('close', function() {
-      util.execFile(
+      execFile(
         vboxDownload,
         ['--extract',
           '-path',
           tmpDir,
           '--silent'],
         function() {
-          util.execFile(
+          execFile(
             'msiexec',
             [
               '/i',

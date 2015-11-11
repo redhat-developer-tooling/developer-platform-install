@@ -1,9 +1,9 @@
 'use strict';
 
-var AdmZip = require('adm-zip');
-var fs = require('fs');
+import AdmZip from 'adm-zip';
+import fs from 'fs';
 
-module.exports = function(installRoot, zipPath, callback) {
+export default function jdkInstall(installRoot, zipPath, callback) {
   var jdkInstallationZip = new AdmZip(zipPath);
   jdkInstallationZip.extractAllTo(installRoot, true);
 

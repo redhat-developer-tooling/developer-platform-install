@@ -1,13 +1,13 @@
 'use strict';
 
-var app = require('app'); // Module to control application life.
-var ipc = require('ipc');
-var fs = require('fs');
-var os = require('os');
-var crashReporter = require('crash-reporter');
-var BrowserWindow = require('browser-window'); // Module to create native browser window.
-var jdkInstall = require('./jdk-install');
-var vboxInstall = require('./vbox-install');
+import app from 'app'; // Module to control application life.
+import ipc from 'ipc';
+import fs from 'fs';
+import os from 'os';
+import crashReporter from 'crash-reporter';
+import BrowserWindow from 'browser-window'; // Module to create native browser window.
+import jdkInstall from './jdk-install';
+import vboxInstall from './vbox-install';
 
 // Report crashes to our server.
 crashReporter.start({
@@ -18,17 +18,17 @@ crashReporter.start({
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-var mainWindow = null;
+let mainWindow = null;
 
 ipc.on('install', function(event) {
-  var installRoot;
+  let installRoot;
   if (process.platform === 'win32') {
     installRoot = 'c:\\DeveloperPlatform';
   } else {
     installRoot = process.env.HOME + '/DeveloperPlatform';
   }
 
-  var tempDir = os.tmpdir();
+  const tempDir = os.tmpdir();
 
   // jdkInstall(installRoot, __dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip',
   //   function(err) {
