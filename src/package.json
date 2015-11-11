@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "patternfly": "^2.5.0",
+    "patternfly": "2.6.0",
     "request": "^2.65.0"
   },
   "jspm": {
@@ -18,7 +18,7 @@
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.4.6",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
-      "patternfly": "npm:patternfly@^2.5.0"
+      "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
