@@ -22,7 +22,7 @@
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babel": "^5.8.29",
     "del": "^2.0.2",
     "electron-installer-squirrel-windows": "^0.4.0",
     "electron-packager": "^5.1.0",

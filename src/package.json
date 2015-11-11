@@ -16,14 +16,14 @@
       "baseURL": "browser"
     },
     "dependencies": {
-      "angular": "github:angular/bower-angular@^1.4.6",
+      "angular": "github:angular/bower-angular@^1.4.7",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
       "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@^5.8.24",
-      "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "babel": "npm:babel-core@^5.8.29",
+      "babel-runtime": "npm:babel-runtime@^5.8.29",
+      "core-js": "npm:core-js@^1.2.6"
     }
   }
 }
