@@ -8,6 +8,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "bluebird": "^3.0.5",
     "patternfly": "2.6.0",
     "request": "^2.65.0"
   },
