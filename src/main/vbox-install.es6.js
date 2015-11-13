@@ -2,40 +2,85 @@
 
 import fs from 'fs';
 import request from 'request';
-import execFile from './util.js';
 import path from 'path';
 
-export default function installVirtualBox(installRoot, tmpDir, url, callback) {
-  var vboxDownload = path.join(tmpDir, 'virtualBox.exe');
+import execFile from './util.js';
+import InstallableItem from './model';
 
-  request
-    .get(url)
-    .on('error', function(err) {
-      console.log(err)
-    })
-    .pipe(fs.createWriteStream(vboxDownload))
-    .on('close', function() {
-      execFile(
-        vboxDownload,
-        ['--extract',
-          '-path',
-          tmpDir,
-          '--silent'],
-        function() {
-          execFile(
-            'msiexec',
-            [
-              '/i',
-              path.join(tmpDir, '/VirtualBox-5.0.8-r103449-MultiArch_amd64.msi'),
-              'INSTALLDIR=' + path.join(installRoot, '/VirtualBox'),
-              '/quiet',
-              '/passive',
-              '/norestart'
-            ],
-            function() {
-              callback();
-            }
-          );
-        });
-    });
-};
+class VirtualBoxInstall extends InstallableItem {
+  constructor(version, revision, installRoot, tempDir, downloadUrl, installFile) {
+    super(installRoot, tempDir, downloadUrl, installFile);
+
+    this.version = version;
+    this.revision = revision;
+    this.downloadedFile = path.join(this.tempDir, 'virtualBox-' + this.version + '.exe');
+
+    this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
+    this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
+
+    this.msiFile = path.join(this.tempDir, '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
+  }
+
+  checkForExistingInstall() {
+  }
+
+  downloadInstaller(success, failure) {
+    // Need to download the file
+    let writeStream = fs.createWriteStream(this.downloadedFile);
+
+    request
+      .get(this.downloadUrl)
+      .on('error', (err) => {
+        writeStream.close();
+        failure(err);
+      })
+      .on('response', (response) => {
+        // TODO Send total size to UI
+        console.log(response.headers['content-length']);
+      })
+      .on('data', (data) => {
+        // TODO send updates to UI
+        // console.log(data.length);
+      })
+      .on('end', () => {
+        writeStream.end();
+      })
+      .pipe(writeStream)
+      .on('close', () => {
+        return success();
+      });
+  }
+
+  install(success, failure) {
+    execFile(
+      this.downloadedFile,
+      ['--extract',
+        '-path',
+        this.tempDir,
+        '--silent'],
+      () => {
+        execFile(
+          'msiexec',
+          [
+            '/i',
+            this.msiFile,
+            'INSTALLDIR=' + path.join(this.installRoot, '/VirtualBox'),
+            '/quiet',
+            '/passive',
+            '/norestart'
+          ],
+          () => {
+            success();
+          },
+          () => {
+            failure();
+          }
+        );
+      },
+      () => {
+        failure();
+      });
+  }
+}
+
+export default VirtualBoxInstall;

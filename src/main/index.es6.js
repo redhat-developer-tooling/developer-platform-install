@@ -6,8 +6,9 @@ import fs from 'fs';
 import os from 'os';
 import crashReporter from 'crash-reporter';
 import BrowserWindow from 'browser-window'; // Module to create native browser window.
+
 import jdkInstall from './jdk-install';
-import vboxInstall from './vbox-install';
+import VirtualBoxInstall from './vbox-install';
 
 // Report crashes to our server.
 crashReporter.start({
@@ -20,27 +21,39 @@ crashReporter.start({
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow = null;
 
+let installableItems = new Set();
+const tempDir = os.tmpdir();
+
+let installRoot;
+if (process.platform === 'win32') {
+  installRoot = 'c:\\DeveloperPlatform';
+} else {
+  installRoot = process.env.HOME + '/DeveloperPlatform';
+}
+
+installableItems.add(
+  new VirtualBoxInstall('5.0.8',
+                        '103449',
+                        installRoot,
+                        tempDir,
+                        'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                        null)
+);
+
 ipc.on('install', function(event) {
-  let installRoot;
-  if (process.platform === 'win32') {
-    installRoot = 'c:\\DeveloperPlatform';
-  } else {
-    installRoot = process.env.HOME + '/DeveloperPlatform';
-  }
-
-  const tempDir = os.tmpdir();
-
-  // jdkInstall(installRoot, __dirname + '/../installs/jdk/openjdk8-win-8u60-b24-x86_64.zip',
-  //   function(err) {
-  //     console.log(err);
-  //   });
-
-  vboxInstall(installRoot, tempDir, 'http://download.virtualbox.org/virtualbox/5.0.8/VirtualBox-5.0.8-103449-Win.exe',
-    function() {
-      event.sender.send('install-complete');
-    }
-  );
-
+  installableItems.forEach(value => {
+    value.downloadInstaller(() => {
+      value.install(() => {
+        event.sender.send('install-complete');
+      },
+      (error) => {
+        console.log(error);
+      });
+    },
+    (error) => {
+      console.log(error);
+    });
+  });
 });
 
 ipc.on('crash', function(event, arg) {
@@ -70,6 +83,10 @@ app.on('ready', function() {
   mainWindow.loadUrl('file://' + __dirname + '/../browser/index.html');
 
   //mainWindow.openDevTools();
+
+  installableItems.forEach(value => {
+    value.checkForExistingInstall();
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
