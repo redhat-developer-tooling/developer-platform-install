@@ -2,37 +2,42 @@
 
 Red Hat Developer Platform Installer
 ====================================
+
+Architecture
+------------
+
 This installer is built on Windows using [Electron 0.33](http://electron.atom.io/).
 
 You will also require the [Node.js, NPM](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [jspm](http://jspm.io/).
 
-After installing Node.js (and NPM), install Gulp and jspm:
+Building the installer
+----------------------
 
-```
-npm install -g gulp jspm
-```
+In order to build the installer, you'll need to install some tools.
 
-Then, you need to install all dependencies and compile ES6 scripts
+1. Download and install Node for Windows from <https://nodejs.org/en/download/>. Pick the MSI installer.
+2. Download and install MS Visual Studio Express 2015 from <https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx>. Pick the Express for Desktop installer.
+3. Download and install Python 2.7.x for Windows from <https://www.python.org/downloads/release/>
+4. Edit your "Path" by going to the "System" Control Panel, "Advanced system settings", "Environment Variables". Add _C:\Program Files\nodejs;C:\Users\<username>\App Data\Roaming\npm_ to the "Variable value"
+5. Install Gulp and jspm:
+    ```
+    npm install -g gulp jspm
+   ```
 
-```
-npm install
-gulp transpile:app
-```
+6. Install all dependencies and compile ES6 scripts
+    ```
+    npm install
+    gulp transpile:app
+   ```
 
-You can run the application using `npm start` or `gulp run`.
+7. Run the application using `npm start` or `gulp run`.
+8. Build a Windows binary and run it:
+    ```
+   gulp generate
+   dist/DeveloperPlatform-win32-x64/DeveloperPlatform.exe
+    ```
 
-Alternatively, you can build a Windows binary and run it
+Releasing the installer
+-----------------------
 
-```
-gulp generate
-dist/DeveloperPlatform-win32-x64/DeveloperPlatform.exe
-```
-
-Building on Windows
-===================
-
-* Install Node for windows 0.12.x
-* Install Python 2.x
-* Install MS VS Express 2013 -http://www.microsoft.com/en-gb/download/confirmation.aspx?id=44914
-* Install Windows SDK for O/S version
-* npm install
+TODO
