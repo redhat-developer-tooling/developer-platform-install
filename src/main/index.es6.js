@@ -82,7 +82,7 @@ app.on('ready', function() {
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/../browser/index.html');
 
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
 
   installableItems.forEach(value => {
     value.checkForExistingInstall();
