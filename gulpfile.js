@@ -3,7 +3,10 @@ var gulp = require('gulp'),
   runSequence = require('run-sequence'),
   rename = require('gulp-rename'),
   del = require('del'),
-  exec = require('child_process').exec;
+  exec = require('child_process').exec,
+  pjson = require('./package.json');
+
+var artifactName = 'DeveloperPlatformInstaller';
 
 gulp.task('transpile:app', function() {
   return gulp.src(['./src/main/*.es6.js'])
@@ -19,24 +22,34 @@ gulp.task('clean', function() {
 });
 
 gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
-  exec('npm run-script generate', function(err, stdout, stderr) {
+  var electronVersion = pjson.devDependencies['electron-prebuilt'];
+  var cmd = 'electron-packager ./src/ ' + artifactName + ' --platform=win32 --arch=x64';
+  cmd += ' --version=' + electronVersion + ' --out=./dist/win/ --overwrite --asar=true';
+
+  exec(cmd, function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
 });
 
-gulp.task('run', ['transpile:app'], function() {
-  exec('npm start', function(err, stdout, stderr) {
+gulp.task('run', ['transpile:app'], function(cb) {
+  exec('electron ./src', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
+    cb(err);
   });
 });
 
 gulp.task('package', function(cb) {
-  exec('npm run-script package', function(err, stdout, stderr) {
+  var cmd = 'electron-installer-squirrel-windows ./dist/win/' + artifactName + '-win32-x64';
+  cmd += ' --out=./dist/win/ --name=developer_platform --exe=' + artifactName + '.exe';
+  cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
+
+  exec(cmd, function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
+    cb(err);
   });
 });
 

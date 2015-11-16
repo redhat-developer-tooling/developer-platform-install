@@ -15,10 +15,10 @@
   },
   "homepage": "https://github.com/redhat-developer/developer-platform-install#readme",
   "scripts": {
-    "postinstall": "(cd src && npm install && jspm install --yes)",
-    "start": "node_modules/.bin/electron ./src",
-    "generate": "node_modules/.bin/electron-packager ./src/ DeveloperPlatformInstaller --platform=win32 --arch=x64 --version=0.34.2 --out=./dist/win/ --overwrite --asar=true",
-    "package": "node_modules/.bin/electron-installer-squirrel-windows ./dist/win/DeveloperPlatformInstaller-win32-x64 --out=./dist/win/ --name=developer_platform --exe=DeveloperPlatformInstaller.exe --overwrite --authors=\"Red Hat Developer Tooling Group\"",
+    "postinstall": "cd src && npm install && jspm install --yes",
+    "start": "gulp run",
+    "generate": "gulp generate",
+    "package": "gulp package",
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "del": "^2.0.2",
     "electron-installer-squirrel-windows": "^0.4.0",
     "electron-packager": "^5.1.0",
-    "electron-prebuilt": "^0.34.2",
+    "electron-prebuilt": "0.34.2",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-rename": "^1.2.2",
