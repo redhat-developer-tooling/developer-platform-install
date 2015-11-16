@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "babel": "^5.8.29",
+    "chai": "^3.4.1",
     "del": "^2.0.2",
     "electron-installer-squirrel-windows": "^0.4.0",
     "electron-packager": "^5.1.0",
@@ -32,6 +33,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.11",
     "jspm": "^0.16.10",
+    "mocha": "^2.3.4",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
     "tmp": "0.0.28"
