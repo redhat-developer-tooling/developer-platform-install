@@ -1,3 +1,5 @@
+'use strict'
+
 class AccountController {
   constructor($state, $http) {
     this.router = $state;
