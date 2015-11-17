@@ -34,6 +34,22 @@ class InstallableItem {
     return this.existingInstall;
   }
 
+  existingInstallLocation() {
+    return this.existingInstallLocation;
+  }
+
+  isDownloadRequired() {
+    return this.useDownload;
+  }
+
+  setDownloadComplete() {
+    this.downloaded = true;
+  }
+
+  setInstallComplete() {
+    this.installed = true;
+  }
+
   checkForExistingInstall() {
     // To be overridden
   }

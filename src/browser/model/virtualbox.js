@@ -1,11 +1,11 @@
 'use strict';
 
-import fs from 'fs';
-import request from 'request';
-import path from 'path';
+let fs = require('fs');
+let request = require('request');
+let path = require('path');
+let execFile = require('remote').require('../main/util');
 
-import execFile from './util.js';
-import InstallableItem from './model';
+import InstallableItem from './installable-item';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installRoot, tempDir, downloadUrl, installFile) {
