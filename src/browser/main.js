@@ -1,3 +1,5 @@
+'use strict';
+
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 
@@ -5,6 +7,10 @@ import acctCtrl from './account/controller';
 import confCtrl from './confirm/controller';
 import instCtrl from './install/controller';
 import startCtrl from './start/controller';
+import InstallerDataService from './services/data';
+import VirtualBoxInstall from './model/virtualbox';
+
+let env = require('remote').require('../main/env');
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router'])
@@ -12,6 +18,7 @@ let mainModule =
           .controller(confCtrl.name, confCtrl)
           .controller(instCtrl.name, instCtrl)
           .controller(startCtrl.name, startCtrl)
+          .factory('installerDataSvc', InstallerDataService.factory)
           .config( ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) => {
             $urlRouterProvider.otherwise('/account');
 
@@ -36,6 +43,16 @@ let mainModule =
                 controller: 'StartController as startCtrl',
                 templateUrl: 'start/start.html'
               });
+          }])
+          .run( ['$rootScope', '$location', 'installerDataSvc', ($rootScope, $location, installerDataSvc) => {
+            installerDataSvc.addItemToInstall(
+                'virtualbox',
+                new VirtualBoxInstall('5.0.8',
+                                      '103449',
+                                      env.installRoot(),
+                                      env.tempDir(),
+                                      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                                      null));
           }]);
 
 export default mainModule;
