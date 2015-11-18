@@ -1,7 +1,7 @@
 'use strict';
 
 import app from 'app'; // Module to control application life.
-import ipc from 'ipc';
+import { ipcMain } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import crashReporter from 'crash-reporter';
@@ -20,11 +20,11 @@ crashReporter.start({
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow = null;
 
-ipc.on('crash', function(event, arg) {
+ipcMain.on('crash', function(event, arg) {
   process.crash(arg);
 });
 
-ipc.on('devTools', function(event, arg) {
+ipcMain.on('devTools', function(event, arg) {
   mainWindow.openDevTools();
 });
 
@@ -44,7 +44,7 @@ app.on('ready', function() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/../browser/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/../browser/index.html');
 
   //mainWindow.openDevTools();
 
