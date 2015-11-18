@@ -24,9 +24,13 @@ class VirtualBoxInstall extends InstallableItem {
   checkForExistingInstall() {
   }
 
-  downloadInstaller(success, failure) {
+  downloadInstaller(progress, success, failure) {
+    progress.setDesc('Downloading VirtualBox ' + this.version);
+
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
+    let downloadSize = 0;
+    let currentSize = 0;
 
     request
       .get(this.downloadUrl)
@@ -35,12 +39,12 @@ class VirtualBoxInstall extends InstallableItem {
         failure(err);
       })
       .on('response', (response) => {
-        // TODO Send total size to UI
-        console.log(response.headers['content-length']);
+        downloadSize = response.headers['content-length'];
       })
       .on('data', (data) => {
-        // TODO send updates to UI
-        // console.log(data.length);
+        currentSize += data.length;
+        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
+        progress.setLabel(progress.current + "% complete");
       })
       .on('end', () => {
         writeStream.end();
@@ -51,7 +55,9 @@ class VirtualBoxInstall extends InstallableItem {
       });
   }
 
-  install(success, failure) {
+  install(progress, success, failure) {
+    progress.setDesc('Installing VirtualBox ' + this.version);
+
     execFile(
       this.downloadedFile,
       ['--extract',

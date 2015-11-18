@@ -3,30 +3,17 @@
 let ipc = require('ipc');
 
 class ConfirmController {
-  constructor($state, installerDataSvc) {
+  constructor($state) {
     this.router = $state;
-    this.installerDataSvc = installerDataSvc;
   }
 
   install() {
-    this.router.go('install');
+    //TODO This needs to handle changes to install location, etc
 
-    this.installerDataSvc.allInstallables().forEach((value, key, map) => {
-      if (value.isDownloadRequired() && !value.isDownloaded()) {
-        this.installerDataSvc.startDownload(key);
-        value.downloadInstaller(() => {
-          this.installerDataSvc.downloadDone(key);
-        });
-      } else if (!value.hasExistingInstall()) {
-        this.installerDataSvc.startInstall(key);
-        value.install(() => {
-          this.installerDataSvc.installDone(key);
-        });
-      }
-    });
+    this.router.go('install');
   }
 }
 
-ConfirmController.$inject = ['$state', 'installerDataSvc'];
+ConfirmController.$inject = ['$state'];
 
 export default ConfirmController;

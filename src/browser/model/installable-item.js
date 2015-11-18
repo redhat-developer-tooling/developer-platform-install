@@ -54,12 +54,12 @@ class InstallableItem {
     // To be overridden
   }
 
-  downloadInstaller(success, failure) {
+  downloadInstaller(progress, success, failure) {
     // To be overridden
     success();
   }
 
-  install(success, failure) {
+  install(progress, success, failure) {
     // To be overridden
     success();
   }

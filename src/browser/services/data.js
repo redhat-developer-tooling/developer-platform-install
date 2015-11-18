@@ -40,7 +40,7 @@ class InstallerDataService {
     this.toDownload.add(key);
   }
 
-  downloadDone(key) {
+  downloadDone(progress, key) {
     let item = this.getInstallable(key);
     item.setDownloadComplete();
 
@@ -50,9 +50,11 @@ class InstallerDataService {
     }
 
     this.startInstall(key);
-    return item.install(() => {
-      this.installDone(key);
-    });
+    return item.install(progress,
+      () => {
+        this.installDone(key);
+      }
+    );
   }
 
   startInstall(key) {
