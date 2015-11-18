@@ -7,6 +7,7 @@ import acctCtrl from './account/controller';
 import confCtrl from './confirm/controller';
 import instCtrl from './install/controller';
 import startCtrl from './start/controller';
+import progressBar from './directives/progressBar.js';
 import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
 
@@ -19,6 +20,7 @@ let mainModule =
           .controller(instCtrl.name, instCtrl)
           .controller(startCtrl.name, startCtrl)
           .factory('installerDataSvc', InstallerDataService.factory)
+          .directive(progressBar.name, progressBar)
           .config( ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) => {
             $urlRouterProvider.otherwise('/account');
 

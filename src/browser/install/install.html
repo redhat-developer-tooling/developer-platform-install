@@ -9,6 +9,9 @@
   </ul>
 </header>
 
-<main class="col-sm-offset-1 col-sm-10">
-  <progress-bar name="virtualbox-download" current="" min="0" max="100" label="" />
+<main class="col-sm-12">
+  <div class="col-sm-4">
+    <progress-bar name="virtualbox" current="instCtrl.current('virtualbox')" min="0" max="100" label="instCtrl.label('virtualbox')" desc="instCtrl.desc('virtualbox')">
+    </progress-bar>
+  </div>
 </main>
