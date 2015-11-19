@@ -1,7 +1,5 @@
 'use strict';
 
-let ipc = require('ipc');
-
 class ConfirmController {
   constructor($state) {
     this.router = $state;
