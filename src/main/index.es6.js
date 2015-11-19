@@ -36,7 +36,7 @@ app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000,
-    height: 600,
+    height: 650,
     'auto-hide-menu-bar': true
   });
 
