@@ -1,11 +1,8 @@
 'use strict';
 
-import app from 'app'; // Module to control application life.
-import { ipcMain } from 'electron';
+import { app, ipcMain, BrowserWindow, crashReporter } from 'electron';
 import fs from 'fs';
 import os from 'os';
-import crashReporter from 'crash-reporter';
-import BrowserWindow from 'browser-window'; // Module to create native browser window.
 
 import jdkInstall from './jdk-install';
 
