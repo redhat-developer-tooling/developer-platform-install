@@ -10,12 +10,12 @@ var gulp = require('gulp'),
 var artifactName = 'DeveloperPlatformInstaller';
 
 gulp.task('transpile:app', function() {
-  return gulp.src(['./src/main/*.es6.js'])
+  return gulp.src(['./main/*.es6.js'])
     .pipe(babel())
     .pipe(rename(function (path) {
       path.basename = path.basename.substring(0, path.basename.length - 4)
     }))
-    .pipe(gulp.dest('./src/main'));
+    .pipe(gulp.dest('./main'));
 });
 
 gulp.task('clean', function() {
@@ -24,8 +24,9 @@ gulp.task('clean', function() {
 
 gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager ./src/ ' + artifactName + ' --platform=win32 --arch=x64';
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=win32 --arch=x64';
   cmd += ' --version=' + electronVersion + ' --out=./dist/win/ --overwrite --asar=true';
+  cmd += ' --prune --ignore=node_modules/\.bin --ignore=test';
 
   exec(cmd, function(err, stdout, stderr) {
     console.log(stdout);
@@ -35,7 +36,7 @@ gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
 });
 
 gulp.task('run', ['transpile:app'], function(cb) {
-  exec(path.join('node_modules', '.bin') + path.sep + 'electron ./src', function(err, stdout, stderr) {
+  exec(path.join('node_modules', '.bin') + path.sep + 'electron .', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
