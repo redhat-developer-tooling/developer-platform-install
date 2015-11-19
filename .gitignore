@@ -3,6 +3,6 @@ dist
 jspm_packages
 package
 build
-src/main/*.js
-!src/main/*.es6.js
-src/browser/config.js
+main/*.js
+!main/*.es6.js
+browser/config.js
