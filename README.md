@@ -20,20 +20,23 @@ In order to build the installer, you'll need to install some tools.
 3. Download and install Python 2.7.x for Windows from <https://www.python.org/downloads/release/>
 4. Edit your "Path" by going to the "System" Control Panel, "Advanced system settings", "Environment Variables". Add _C:\Program Files\nodejs;C:\Users\<username>\App Data\Roaming\npm_ to the "Variable value"
 5. Install Gulp and jspm:
+
     ```
     npm install -g gulp jspm
-   ```
-
+    ```
+    
 6. Install all dependencies:
+
     ```
     npm install
-   ```
+    ```
 
 7. Run the application using `npm start` or `gulp run`.
 8. Build a Windows binary and run it:
+
     ```
-   gulp generate
-   dist/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
+    gulp
+    dist/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
     ```
 
 Releasing the installer
