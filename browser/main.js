@@ -3,10 +3,10 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 
-import acctCtrl from './account/controller';
-import confCtrl from './confirm/controller';
-import instCtrl from './install/controller';
-import startCtrl from './start/controller';
+import acctCtrl from './pages/account/controller';
+import confCtrl from './pages/confirm/controller';
+import instCtrl from './pages/install/controller';
+import startCtrl from './pages/start/controller';
 import progressBar from './directives/progressBar.js';
 import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
@@ -29,22 +29,22 @@ let mainModule =
               .state('account', {
                 url: '/account',
                 controller: 'AccountController as acctCtrl',
-                templateUrl: 'account/account.html'
+                templateUrl: 'pages/account/account.html'
               })
               .state('confirm', {
                 url: '/confirm',
                 controller: 'ConfirmController as confCtrl',
-                templateUrl: 'confirm/confirm.html'
+                templateUrl: 'pages/confirm/confirm.html'
               })
               .state('install', {
                 url: '/install',
                 controller: 'InstallController as instCtrl',
-                templateUrl: 'install/install.html'
+                templateUrl: 'pages/install/install.html'
               })
               .state('start', {
                 url: '/start',
                 controller: 'StartController as startCtrl',
-                templateUrl: 'start/start.html'
+                templateUrl: 'pages/start/start.html'
               });
           }])
           .run( ['$rootScope', '$location', 'installerDataSvc', ($rootScope, $location, installerDataSvc) => {
