@@ -31,7 +31,6 @@ app.on('window-all-closed', function() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-  var app = require('app');
 
   // Handle squirrel events before opening the browser
   var handleStartupEvent = function() {
