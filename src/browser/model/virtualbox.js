@@ -44,7 +44,7 @@ class VirtualBoxInstall extends InstallableItem {
       .on('data', (data) => {
         currentSize += data.length;
         progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "% complete");
+        progress.setLabel(progress.current + "%");
       })
       .on('end', () => {
         writeStream.end();
@@ -76,6 +76,7 @@ class VirtualBoxInstall extends InstallableItem {
             '/norestart'
           ],
           () => {
+            progress.setComplete("Complete");
             success();
           },
           () => {

@@ -10,6 +10,7 @@ import startCtrl from './start/controller';
 import progressBar from './directives/progressBar.js';
 import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
+import JdkInstall from './model/jdk-install';
 
 let env = require('remote').require('../main/env');
 
@@ -54,7 +55,16 @@ let mainModule =
                                       env.installRoot(),
                                       env.tempDir(),
                                       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
-                                      null));
+                                      null)
+            );
+
+            installerDataSvc.addItemToInstall(
+                'jdk',
+                new JdkInstall(env.installRoot(),
+                               env.tempDir(),
+                               'http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_66-8.11.0.1-win64.zip',
+                               null)
+            );
           }]);
 
 export default mainModule;

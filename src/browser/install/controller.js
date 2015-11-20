@@ -81,6 +81,13 @@ class ProgressState {
 
     this.desc = newDesc;
   }
+
+  setComplete(newLabel) {
+    this.$scope.$apply(() => {
+      this.current = 100;
+      this.label = newLabel;
+    });
+  }
 }
 
 InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc'];

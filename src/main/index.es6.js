@@ -4,8 +4,6 @@ import { app, ipcMain, BrowserWindow, crashReporter } from 'electron';
 import fs from 'fs';
 import os from 'os';
 
-import jdkInstall from './jdk-install';
-
 // Report crashes to our server.
 crashReporter.start({
   productName: 'Developer Platform Install',
