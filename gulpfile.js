@@ -56,5 +56,5 @@ gulp.task('package', function(cb) {
 });
 
 gulp.task('default', function() {
-  return runSequence('clean', 'transpile:app', 'generate');
+  return runSequence('generate');
 });
