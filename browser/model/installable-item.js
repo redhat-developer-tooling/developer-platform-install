@@ -1,15 +1,13 @@
 'use strict';
 
 class InstallableItem {
-  constructor(installRoot, tempDir, downloadUrl, installFile) {
+  constructor(downloadUrl, installFile) {
     this.existingInstall = false;
     this.existingInstallLocation = "";
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
 
-    this.installRoot = installRoot;
-    this.tempDir = tempDir;
     this.downloadUrl = downloadUrl;
 
     if (installFile != null && installFile != '') {

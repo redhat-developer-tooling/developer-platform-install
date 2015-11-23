@@ -8,10 +8,12 @@ let request = require('request');
 import InstallableItem from './installable-item';
 
 class JdkInstall extends InstallableItem {
-  constructor(installRoot, tempDir, downloadUrl, installFile) {
-    super(installRoot, tempDir, downloadUrl, installFile);
+  constructor(installerDataSvc, downloadUrl, installFile) {
+    super(downloadUrl, installFile);
 
-    this.downloadedFile = path.join(this.tempDir, 'jdk8.zip');
+    this.installerDataSvc = installerDataSvc;
+
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jdk8.zip');
   }
 
   checkForExistingInstall() {
@@ -58,16 +60,17 @@ class JdkInstall extends InstallableItem {
     progress.setDesc('Installing JDK 8');
 
     let jdkInstallationZip = new AdmZip(this.downloadedFile);
-    jdkInstallationZip.extractAllTo(this.installRoot, true);
+    jdkInstallationZip.extractAllTo(this.installerDataSvc.installDir(), true);
 
-    let tempInstallRoot = this.installRoot;
+    let tempInstallRoot = this.installerDataSvc.installDir();
+    let tempJdkRoot = this.installerDataSvc.jdkDir();
 
-    fs.readdir(this.installRoot, function(err, fileList) {
+    fs.readdir(this.installerDataSvc.installDir(), function(err, fileList) {
       if (err) { failure(err); }
 
       for (let dirName of fileList) {
         if (dirName.startsWith('zulu')) {
-          return fs.rename(tempInstallRoot + '/' + dirName, tempInstallRoot + '/jdk8', function(err) {
+          return fs.rename(tempInstallRoot + '/' + dirName, tempJdkRoot, function(err) {
             if (err) { failure(err); }
             else {
               progress.setComplete("Complete");

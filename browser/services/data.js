@@ -1,6 +1,9 @@
 'use strict';
 
 import InstallableItem from '../model/installable-item';
+let path = require('path');
+
+let env = require('remote').require('../main/env');
 
 class InstallerDataService {
   constructor($state) {
@@ -11,6 +14,13 @@ class InstallerDataService {
     this.toInstall = new Set();
     this.downloading = false;
     this.installing = false;
+
+    this.installRoot = env.installRoot();
+    this.tmpDir = env.tempDir();
+
+    this.vboxRoot = path.join(this.installRoot, 'VirtualBox');
+    this.jdkRoot = path.join(this.installRoot, 'JDK8');
+    this.jbdsRoot = path.join(this.installRoot, 'JBDS');
   }
 
   addItemToInstall(key, item) {
@@ -23,6 +33,26 @@ class InstallerDataService {
 
   allInstallables() {
     return this.installableItems;
+  }
+
+  virtualBoxDir() {
+    return this.vboxRoot;
+  }
+
+  jdkDir() {
+    return this.jdkRoot;
+  }
+
+  jbdsDir() {
+    return this.jbdsRoot;
+  }
+
+  installDir() {
+    return this.installRoot;
+  }
+
+  tempDir() {
+    return this.tmpDir;
   }
 
   isDownloading() {
@@ -53,6 +83,9 @@ class InstallerDataService {
     return item.install(progress,
       () => {
         this.installDone(key);
+      },
+      (error) => {
+        alert(error);
       }
     );
   }
@@ -69,7 +102,7 @@ class InstallerDataService {
     item.setInstallComplete();
 
     this.toInstall.delete(key);
-    if (this.isInstalling() && this.toInstall.size == 0) {
+    if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
       this.installing = false;
       this.router.go('start');
     }

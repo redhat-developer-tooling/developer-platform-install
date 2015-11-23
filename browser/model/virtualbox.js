@@ -8,17 +8,19 @@ let execFile = require('remote').require('../main/util');
 import InstallableItem from './installable-item';
 
 class VirtualBoxInstall extends InstallableItem {
-  constructor(version, revision, installRoot, tempDir, downloadUrl, installFile) {
-    super(installRoot, tempDir, downloadUrl, installFile);
+  constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
+    super(downloadUrl, installFile);
+
+    this.installerDataSvc = installerDataSvc;
 
     this.version = version;
     this.revision = revision;
-    this.downloadedFile = path.join(this.tempDir, 'virtualBox-' + this.version + '.exe');
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'virtualBox-' + this.version + '.exe');
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
-    this.msiFile = path.join(this.tempDir, '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
+    this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
   }
 
   checkForExistingInstall() {
@@ -70,7 +72,7 @@ class VirtualBoxInstall extends InstallableItem {
           [
             '/i',
             this.msiFile,
-            'INSTALLDIR=' + path.join(this.installRoot, '/VirtualBox'),
+            'INSTALLDIR=' + this.installerDataSvc.vboxRoot(),
             '/quiet',
             '/passive',
             '/norestart'
