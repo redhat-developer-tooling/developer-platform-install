@@ -11,8 +11,7 @@ import progressBar from './directives/progressBar.js';
 import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
-
-let env = require('remote').require('../main/env');
+import JbdsInstall from './model/jbds';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router'])
@@ -52,18 +51,23 @@ let mainModule =
                 'virtualbox',
                 new VirtualBoxInstall('5.0.8',
                                       '103449',
-                                      env.installRoot(),
-                                      env.tempDir(),
+                                      installerDataSvc,
                                       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
                                       null)
             );
 
             installerDataSvc.addItemToInstall(
                 'jdk',
-                new JdkInstall(env.installRoot(),
-                               env.tempDir(),
+                new JdkInstall(installerDataSvc,
                                'http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_66-8.11.0.1-win64.zip',
                                null)
+            );
+
+            installerDataSvc.addItemToInstall(
+                'jbds',
+                new JbdsInstall(installerDataSvc,
+                                'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.Beta1-v20151122-1948-B143-installer-standalone.jar',
+                                null)
             );
           }]);
 
