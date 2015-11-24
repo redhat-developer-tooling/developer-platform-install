@@ -47,6 +47,7 @@ gulp.task('package', function(cb) {
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./dist/win/' + artifactName + '-win32-x64';
   cmd += ' --out=./dist/win/ --name=developer_platform --exe=' + artifactName + '.exe';
   cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
+  cmd += ' --loading_gif=./resources/loading.gif';
 
   exec(cmd, function(err, stdout, stderr) {
     console.log(stdout);
