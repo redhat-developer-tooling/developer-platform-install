@@ -13,6 +13,7 @@ import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
 import JbdsInstall from './model/jbds';
+import VagrantInstall from './model/vagrant';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router'])
@@ -61,6 +62,13 @@ let mainModule =
               });
           }])
           .run( ['$rootScope', '$location', 'installerDataSvc', ($rootScope, $location, installerDataSvc) => {
+            installerDataSvc.addItemToInstall(
+                'vagrant',
+                new VagrantInstall(installerDataSvc,
+                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/master.zip',
+                                    null)
+            );
+
             installerDataSvc.addItemToInstall(
                 'virtualbox',
                 new VirtualBoxInstall('5.0.8',

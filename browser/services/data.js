@@ -21,6 +21,7 @@ class InstallerDataService {
     this.vboxRoot = path.join(this.installRoot, 'VirtualBox');
     this.jdkRoot = path.join(this.installRoot, 'JDK8');
     this.jbdsRoot = path.join(this.installRoot, 'JBDS');
+    this.vagrantRoot = path.join(this.installRoot, 'Vagrant');
   }
 
   addItemToInstall(key, item) {
@@ -45,6 +46,10 @@ class InstallerDataService {
 
   jbdsDir() {
     return this.jbdsRoot;
+  }
+
+  vagrantDir() {
+    return this.vagrantRoot;
   }
 
   installDir() {
