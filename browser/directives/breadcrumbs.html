@@ -1,0 +1,5 @@
+<ul class="breadcrumbs">
+  <li ng-repeat="state in $navItems | filter:show" ng-class="[{ 'active' : isCurrent(state) }, { 'end' : $last }]">
+    <span>{{state.data.displayName}}</span>
+  </li>
+</ul>

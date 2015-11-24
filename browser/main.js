@@ -7,7 +7,8 @@ import acctCtrl from './pages/account/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';
 import startCtrl from './pages/start/controller';
-import progressBar from './directives/progressBar.js';
+import progressBar from './directives/progressBar';
+import breadcrumb from './directives/breadcrumb';
 import InstallerDataService from './services/data';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
@@ -21,6 +22,7 @@ let mainModule =
           .controller(startCtrl.name, startCtrl)
           .factory('installerDataSvc', InstallerDataService.factory)
           .directive(progressBar.name, progressBar)
+          .directive(breadcrumb.name, ['$state', breadcrumb])
           .config( ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) => {
             $urlRouterProvider.otherwise('/account');
 
@@ -28,22 +30,34 @@ let mainModule =
               .state('account', {
                 url: '/account',
                 controller: 'AccountController as acctCtrl',
-                templateUrl: 'pages/account/account.html'
+                templateUrl: 'pages/account/account.html',
+                data: {
+                  displayName: 'Install Setup'
+                }
               })
               .state('confirm', {
                 url: '/confirm',
                 controller: 'ConfirmController as confCtrl',
-                templateUrl: 'pages/confirm/confirm.html'
+                templateUrl: 'pages/confirm/confirm.html',
+                data: {
+                  displayName: 'Confirmation'
+                }
               })
               .state('install', {
                 url: '/install',
                 controller: 'InstallController as instCtrl',
-                templateUrl: 'pages/install/install.html'
+                templateUrl: 'pages/install/install.html',
+                data: {
+                  displayName: 'Download & Install'
+                }
               })
               .state('start', {
                 url: '/start',
                 controller: 'StartController as startCtrl',
-                templateUrl: 'pages/start/start.html'
+                templateUrl: 'pages/start/start.html',
+                data: {
+                  displayName: 'Get Started'
+                }
               });
           }])
           .run( ['$rootScope', '$location', 'installerDataSvc', ($rootScope, $location, installerDataSvc) => {
