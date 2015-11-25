@@ -64,7 +64,7 @@ class VirtualBoxInstall extends InstallableItem {
       this.downloadedFile,
       ['--extract',
         '-path',
-        this.tempDir,
+        this.installerDataSvc.tempDir(),
         '--silent'],
       () => {
         execFile(
@@ -72,7 +72,7 @@ class VirtualBoxInstall extends InstallableItem {
           [
             '/i',
             this.msiFile,
-            'INSTALLDIR=' + this.installerDataSvc.vboxRoot(),
+            'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
             '/quiet',
             '/passive',
             '/norestart'
