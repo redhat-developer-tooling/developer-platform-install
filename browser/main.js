@@ -65,7 +65,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 'vagrant',
                 new VagrantInstall(installerDataSvc,
-                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/master.zip',
+                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
                                     null)
             );
 
