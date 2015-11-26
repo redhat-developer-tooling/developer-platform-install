@@ -88,6 +88,9 @@ class VagrantInstall extends InstallableItem {
               .execFile(
                 'powershell',
                 [
+                  '-ExecutionPolicy',
+                  'ByPass',
+                  '-File',
                   this.vagrantPathScript
                 ],
                 (error, stdout, stderr) => {
