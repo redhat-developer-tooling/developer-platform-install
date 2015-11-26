@@ -3,8 +3,6 @@
 import InstallableItem from '../model/installable-item';
 let path = require('path');
 
-let env = require('remote').require('../main/env');
-
 class InstallerDataService {
   constructor($state) {
     this.router = $state;
@@ -15,6 +13,7 @@ class InstallerDataService {
     this.downloading = false;
     this.installing = false;
 
+    let env = require('remote').require('../main/env');
     this.installRoot = env.installRoot();
     this.tmpDir = env.tempDir();
 

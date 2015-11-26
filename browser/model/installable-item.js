@@ -8,6 +8,10 @@ class InstallableItem {
     this.downloaded = false;
     this.installed = false;
 
+    if (downloadUrl == null || downloadUrl == '') {
+    	throw('No download URL set');
+    }
+    
     this.downloadUrl = downloadUrl;
 
     if (installFile != null && installFile != '') {
