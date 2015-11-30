@@ -22,11 +22,11 @@
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
   },
   "dependencies": {
-    "adm-zip": "0.4.7",
     "bluebird": "3.0.5",
     "fs-extra": "0.26.2",
     "patternfly": "2.6.0",
-    "request": "2.67.0"
+    "request": "2.67.0",
+    "unzip": "0.1.11"
   },
   "devDependencies": {
     "babel": "^5.8.29",

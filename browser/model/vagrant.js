@@ -1,6 +1,6 @@
 'use strict';
 
-let AdmZip = require('adm-zip');
+let unzip = require('unzip');
 let request = require('request');
 let path = require('path');
 let fs = require('fs-extra');
@@ -54,59 +54,60 @@ class VagrantInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing Vagrant');
 
-    let vagrantZip = new AdmZip(this.downloadedFile);
-    vagrantZip.extractAllTo(this.installerDataSvc.tempDir(), true);
+    fs.createReadStream(this.downloadedFile)
+      .pipe(unzip.Extract({path: this.installerDataSvc.tempDir()}))
+      .on('close', () => {
+        let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
 
-    let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
+        fs.move(vagrantExploded, this.installerDataSvc.vagrantDir(), (err) => {
+          if (err) return failure(err);
 
-    fs.move(vagrantExploded, this.installerDataSvc.vagrantDir(), (err) => {
-      if (err) return failure(err);
+          // Set required paths
+          let data = [
+            '$newPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '";',
+            '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+            '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
+            '[Environment]::Exit(0)'
+          ].join('\r\n');
+          fs.writeFileSync(this.vagrantPathScript, data);
 
-      // Set required paths
-      let data = [
-        '$newPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '";',
-        '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-        '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
-        '[Environment]::Exit(0)'
-      ].join('\r\n');
-      fs.writeFileSync(this.vagrantPathScript, data);
-
-      require('child_process')
-        .exec(
-          [
-            'setx RUBYLIB "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', '2.1.0') + '"',
-            'setx GEM_HOME "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', 'gems') + '"'
-          ].join(' && '),
-          (error, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            if (error !== null) {
-              failure(error);
-            }
-
-            require('child_process')
-              .execFile(
-                'powershell',
-                [
-                  '-ExecutionPolicy',
-                  'ByPass',
-                  '-File',
-                  this.vagrantPathScript
-                ],
-                (error, stdout, stderr) => {
-                  console.log(stdout);
-                  console.log(stderr);
-                  if (error !== null) {
-                    failure(error);
-                  }
-
-                  progress.setComplete("Complete");
-                  success();
+          require('child_process')
+            .exec(
+              [
+                'setx RUBYLIB "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', '2.1.0') + '"',
+                'setx GEM_HOME "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', 'gems') + '"'
+              ].join(' && '),
+              (error, stdout, stderr) => {
+                console.log(stdout);
+                console.log(stderr);
+                if (error !== null) {
+                  failure(error);
                 }
-              );
-          }
-        );
-    });
+
+                require('child_process')
+                  .execFile(
+                    'powershell',
+                    [
+                      '-ExecutionPolicy',
+                      'ByPass',
+                      '-File',
+                      this.vagrantPathScript
+                    ],
+                    (error, stdout, stderr) => {
+                      console.log(stdout);
+                      console.log(stderr);
+                      if (error !== null) {
+                        failure(error);
+                      }
+
+                      progress.setComplete("Complete");
+                      success();
+                    }
+                  );
+              }
+            );
+        });
+      });
   }
 }
 

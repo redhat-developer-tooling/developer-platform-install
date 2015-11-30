@@ -1,6 +1,6 @@
 'use strict';
 
-let AdmZip = require('adm-zip');
+let unzip = require('unzip');
 let fs = require('fs');
 let path = require('path');
 let request = require('request');
@@ -59,30 +59,31 @@ class JdkInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing JDK 8');
 
-    let jdkInstallationZip = new AdmZip(this.downloadedFile);
-    jdkInstallationZip.extractAllTo(this.installerDataSvc.installDir(), true);
+    fs.createReadStream(this.downloadedFile)
+      .pipe(unzip.Extract({path: this.installerDataSvc.installDir()}))
+      .on('close', () => {
+        let tempInstallRoot = this.installerDataSvc.installDir();
+        let tempJdkRoot = this.installerDataSvc.jdkDir();
 
-    let tempInstallRoot = this.installerDataSvc.installDir();
-    let tempJdkRoot = this.installerDataSvc.jdkDir();
+        fs.readdir(this.installerDataSvc.installDir(), function(err, fileList) {
+          if (err) { failure(err); }
 
-    fs.readdir(this.installerDataSvc.installDir(), function(err, fileList) {
-      if (err) { failure(err); }
-
-      for (let dirName of fileList) {
-        if (dirName.startsWith('zulu')) {
-          return fs.rename(tempInstallRoot + '/' + dirName, tempJdkRoot, function(err) {
-            if (err) { failure(err); }
-            else {
-              progress.setComplete("Complete");
-              success();
+          for (let dirName of fileList) {
+            if (dirName.startsWith('zulu')) {
+              return fs.rename(tempInstallRoot + '/' + dirName, tempJdkRoot, function(err) {
+                if (err) { failure(err); }
+                else {
+                  progress.setComplete("Complete");
+                  success();
+                }
+              });
+            } else {
+              continue;
             }
-          });
-        } else {
-          continue;
-        }
-      }
-      failure('Extracted zip did not create directory with name starting "zulu"');
-    });
+          }
+          failure('Extracted zip did not create directory with name starting "zulu"');
+        });
+      });
   }
 }
 
