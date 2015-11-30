@@ -22,6 +22,7 @@ class InstallerDataService {
     this.jdkRoot = path.join(this.installRoot, 'JDK8');
     this.jbdsRoot = path.join(this.installRoot, 'JBDS');
     this.vagrantRoot = path.join(this.installRoot, 'Vagrant');
+    this.cygwinRoot = path.join(this.installRoot, 'cygwin');
   }
 
   addItemToInstall(key, item) {
@@ -50,6 +51,10 @@ class InstallerDataService {
 
   vagrantDir() {
     return this.vagrantRoot;
+  }
+
+  cygwinDir() {
+    return this.cygwinRoot;
   }
 
   installDir() {
