@@ -1,12 +1,19 @@
 'use strict';
 
 import InstallableItem from '../model/installable-item';
+let os = require('os');
 let path = require('path');
-
-let env = require('remote').require('../main/env');
 
 class InstallerDataService {
   constructor($state) {
+	this.tmpDir = os.tmpdir();
+	
+	if (process.platform === 'win32') {
+	  this.installRoot = 'c:\\DeveloperPlatform';
+	} else {
+	  this.installRoot = process.env.HOME + '/DeveloperPlatform';
+	}  
+	
     this.router = $state;
 
     this.installableItems = new Map();
@@ -14,9 +21,6 @@ class InstallerDataService {
     this.toInstall = new Set();
     this.downloading = false;
     this.installing = false;
-
-    this.installRoot = env.installRoot();
-    this.tmpDir = env.tempDir();
 
     this.vboxRoot = path.join(this.installRoot, 'VirtualBox');
     this.jdkRoot = path.join(this.installRoot, 'JDK8');
