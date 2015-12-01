@@ -52,6 +52,7 @@
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.4.7",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
+      "angular-base64": "github:ninjatronic/angular-base64@^2.0.5",
       "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {

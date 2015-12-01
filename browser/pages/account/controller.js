@@ -1,33 +1,41 @@
 'use strict'
 
 class AccountController {
-  constructor($state, $http) {
+  constructor($state, $http, $base64) {
     this.router = $state;
     this.http = $http;
+    this.base64 = $base64;
 
     this.username = "";
     this.password = "";
     this.authFailed = false;
+    this.tandcNotSigned = false;
   }
 
   login() {
     this.authFailed = false;
+    this.tandcNotSigned = false;
 
     var req = {
       method: 'GET',
-      url: 'https://idp.redhat.com/idp/authUser?' +
-        'j_username=' + this.username +
-        '&j_password=' + this.password +
-        '&redirect=https://access.redhat.com/jbossnetwork/restricted/listSoftware.html'
+      url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip',
+      headers: {
+        'Authorization': 'Basic ' + this.base64.encode(this.username + ':' + this.password)
+      }
     };
 
     this.http(req)
       .then(result => {
         if (result.status == 200) {
-          this.router.go('confirm');
-        } else {
-          this.authFailed = true;
+          if (result.data == true) {
+            this.router.go('confirm');
+            return;
+          } else if (result.data == false) {
+            this.tandcNotSigned = true;
+            return;
+          }
         }
+        this.authFailed = true;
       },
       failure => {
         this.authFailed = true;
@@ -35,6 +43,6 @@ class AccountController {
   }
 }
 
-AccountController.$inject = ['$state', '$http'];
+AccountController.$inject = ['$state', '$http', '$base64'];
 
 export default AccountController;

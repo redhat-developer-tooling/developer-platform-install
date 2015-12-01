@@ -2,6 +2,7 @@
 
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
+import base64 from 'angular-base64';
 
 import acctCtrl from './pages/account/controller';
 import confCtrl from './pages/confirm/controller';
@@ -17,7 +18,7 @@ import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
 
 let mainModule =
-      angular.module('devPlatInstaller', ['ui.router'])
+      angular.module('devPlatInstaller', ['ui.router', 'base64'])
           .controller(acctCtrl.name, acctCtrl)
           .controller(confCtrl.name, confCtrl)
           .controller(instCtrl.name, instCtrl)

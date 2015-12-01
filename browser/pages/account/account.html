@@ -33,6 +33,7 @@
                   <a href="#">Forgot your login or password?</a>
                 </div>
                 <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block has-error">Invalid account information, please try again.</div>
+                <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block has-error">Terms and Conditions for CDK have not been signed.</div>
             </div>
           </form>
         </div>
