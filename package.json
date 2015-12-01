@@ -34,7 +34,7 @@
     "del": "^2.0.2",
     "electron-installer-squirrel-windows": "^1.2.2",
     "electron-packager": "^5.1.0",
-    "electron-prebuilt": "0.35.1",
+    "electron-prebuilt": "0.35.2",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-rename": "^1.2.2",
