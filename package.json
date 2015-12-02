@@ -19,7 +19,7 @@
     "start": "gulp run",
     "generate": "gulp generate",
     "package": "gulp package",
-    "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register"
+    "test": "NODE_PATH=./browser node_modules/.bin/mocha --recursive --compilers js:babel/register test/unit"
   },
   "dependencies": {
     "bluebird": "3.0.5",
@@ -43,6 +43,9 @@
     "mocha": "^2.3.4",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
+    "sinon": "^1.17.2",
+    "sinon-as-promised": "^4.0.0",
+    "sinon-chai": "^2.8.0",
     "tmp": "0.0.28"
   },
   "jspm": {
@@ -51,8 +54,8 @@
     },
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.4.7",
-      "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
       "angular-base64": "github:ninjatronic/angular-base64@^2.0.5",
+      "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
       "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {
