@@ -6,14 +6,14 @@ let path = require('path');
 
 class InstallerDataService {
   constructor($state) {
-	this.tmpDir = os.tmpdir();
-	
-	if (process.platform === 'win32') {
-	  this.installRoot = 'c:\\DeveloperPlatform';
-	} else {
-	  this.installRoot = process.env.HOME + '/DeveloperPlatform';
-	}  
-	
+    this.tmpDir = os.tmpdir();
+
+    if (process.platform === 'win32') {
+      this.installRoot = 'c:\\DeveloperPlatform';
+    } else {
+      this.installRoot = process.env.HOME + '/DeveloperPlatform';
+  	}
+
     this.router = $state;
 
     this.installableItems = new Map();
