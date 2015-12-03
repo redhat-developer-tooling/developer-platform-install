@@ -19,8 +19,10 @@ ipcMain.on('crash', function(event, arg) {
   process.crash(arg);
 });
 
-ipcMain.on('devTools', function(event, arg) {
-  mainWindow.openDevTools();
+// Rebroadcasts installComplete event from Renderer back to Renderer.
+// Bit of a hack, but it enables async messaging in UI.
+ipcMain.on('installComplete', (event, arg) => {
+  event.sender.send('installComplete', arg);
 });
 
 // Quit when all windows are closed.
@@ -47,9 +49,9 @@ app.on('ready', function() {
   };
 
   if (handleStartupEvent()) {
-	return;
+	   return;
   }
-	
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000,

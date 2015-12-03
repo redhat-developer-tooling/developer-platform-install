@@ -16,6 +16,7 @@ import JdkInstall from './model/jdk-install';
 import JbdsInstall from './model/jbds';
 import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
+import CDKInstall from './model/cdk';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router', 'base64'])
@@ -63,7 +64,16 @@ let mainModule =
                 }
               });
           }])
-          .run( ['$rootScope', '$location', 'installerDataSvc', ($rootScope, $location, installerDataSvc) => {
+          .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
+            installerDataSvc.addItemToInstall(
+                'cdk',
+                new CDKInstall(installerDataSvc,
+                                $timeout,
+                                'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
+                                'https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box?workflow=direct',
+                                null)
+            );
+
             installerDataSvc.addItemToInstall(
                 'vagrant',
                 new VagrantInstall(installerDataSvc,

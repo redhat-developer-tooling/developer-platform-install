@@ -3,6 +3,7 @@
 import InstallableItem from '../model/installable-item';
 let os = require('os');
 let path = require('path');
+let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallerDataService {
   constructor($state) {
@@ -16,6 +17,9 @@ class InstallerDataService {
 
     this.router = $state;
 
+    this.username = '';
+    this.password = '';
+
     this.installableItems = new Map();
     this.toDownload = new Set();
     this.toInstall = new Set();
@@ -27,6 +31,8 @@ class InstallerDataService {
     this.jbdsRoot = path.join(this.installRoot, 'JBDS');
     this.vagrantRoot = path.join(this.installRoot, 'Vagrant');
     this.cygwinRoot = path.join(this.installRoot, 'cygwin');
+    this.cdkRoot = path.join(this.installRoot, 'cdk');
+    this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
   }
 
   addItemToInstall(key, item) {
@@ -39,6 +45,19 @@ class InstallerDataService {
 
   allInstallables() {
     return this.installableItems;
+  }
+
+  getUsername() {
+    return this.username;
+  }
+
+  getPassword() {
+    return this.password;
+  }
+
+  setCredentials(username, password) {
+    this.username = username;
+    this.password = password;
   }
 
   virtualBoxDir() {
@@ -59,6 +78,14 @@ class InstallerDataService {
 
   cygwinDir() {
     return this.cygwinRoot;
+  }
+
+  cdkDir() {
+    return this.cdkRoot;
+  }
+
+  cdkBoxDir() {
+    return this.cdkBoxRoot;
   }
 
   installDir() {
@@ -114,6 +141,8 @@ class InstallerDataService {
   installDone(key) {
     let item = this.getInstallable(key);
     item.setInstallComplete();
+
+    ipcRenderer.send('installComplete', key);
 
     this.toInstall.delete(key);
     if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
