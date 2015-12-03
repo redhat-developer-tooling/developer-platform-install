@@ -1,10 +1,11 @@
 'use strict'
 
 class AccountController {
-  constructor($state, $http, $base64) {
+  constructor($state, $http, $base64, installerDataSvc) {
     this.router = $state;
     this.http = $http;
     this.base64 = $base64;
+    this.installerDataSvc = installerDataSvc;
 
     this.username = "";
     this.password = "";
@@ -28,6 +29,7 @@ class AccountController {
       .then(result => {
         if (result.status == 200) {
           if (result.data == true) {
+            this.installerDataSvc.setCredentials(this.username, this.password);
             this.router.go('confirm');
             return;
           } else if (result.data == false) {
@@ -43,6 +45,6 @@ class AccountController {
   }
 }
 
-AccountController.$inject = ['$state', '$http', '$base64'];
+AccountController.$inject = ['$state', '$http', '$base64', 'installerDataSvc'];
 
 export default AccountController;
