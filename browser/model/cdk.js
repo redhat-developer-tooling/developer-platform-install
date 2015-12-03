@@ -9,16 +9,19 @@ let ipcRenderer = require('electron').ipcRenderer;
 import InstallableItem from './installable-item';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, installFile) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile) {
     super(cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
+    this.ocUrl = ocUrl;
+
     this.boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
 
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'cdk.zip');
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
+    this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'oc.zip');
   }
 
   checkForExistingInstall() {
@@ -29,9 +32,10 @@ class CDKInstall extends InstallableItem {
 
     let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
     let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
-    let downloadSize = 849890979;
+    let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
+    let downloadSize = 869233469;
     let currentSize = 0;
-    let totalDownloads = 1;
+    let totalDownloads = 3;
 
     let completion = () => {
       if (--totalDownloads == 0) {
@@ -39,28 +43,28 @@ class CDKInstall extends InstallableItem {
       }
     };
 
-    // request
-    //   ({
-    //     url: this.cdkBoxUrl,
-    //     rejectUnauthorized: false
-    //   })
-    //   .auth(this.installerDataSvc.getUsername(), this.installerDataSvc.getPassword())
-    //   .on('error', (err) => {
-    //     cdkBoxWriteStream.close();
-    //     failure(err);
-    //   })
-    //   .on('data', (data) => {
-    //     currentSize += data.length;
-    //     progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-    //     progress.setLabel(progress.current + "%");
-    //   })
-    //   .on('end', () => {
-    //     cdkBoxWriteStream.end();
-    //   })
-    //   .pipe(cdkBoxWriteStream)
-    //   .on('close', () => {
-    //     return completion();
-    //   });
+    request
+      ({
+        url: this.cdkBoxUrl,
+        rejectUnauthorized: false
+      })
+      .auth(this.installerDataSvc.getUsername(), this.installerDataSvc.getPassword())
+      .on('error', (err) => {
+        cdkBoxWriteStream.close();
+        failure(err);
+      })
+      .on('data', (data) => {
+        currentSize += data.length;
+        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
+        progress.setLabel(progress.current + "%");
+      })
+      .on('end', () => {
+        cdkBoxWriteStream.end();
+      })
+      .pipe(cdkBoxWriteStream)
+      .on('close', () => {
+        return completion();
+      });
 
     request
       ({
@@ -84,6 +88,25 @@ class CDKInstall extends InstallableItem {
       .on('close', () => {
         return completion();
       });
+
+    request
+      .get(this.ocUrl)
+      .on('error', (err) => {
+        ocWriteStream.close();
+        failure(err);
+      })
+      .on('data', (data) => {
+        currentSize += data.length;
+        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
+        progress.setLabel(progress.current + "%");
+      })
+      .on('end', () => {
+        ocWriteStream.end();
+      })
+      .pipe(ocWriteStream)
+      .on('close', () => {
+        return completion();
+      });
   }
 
   install(progress, success, failure) {
@@ -93,11 +116,15 @@ class CDKInstall extends InstallableItem {
       .pipe(unzip.Extract({path: this.installerDataSvc.installDir()}))
       .on('close', () => {
         fs.move(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), (err) => {
-          ipcRenderer.on('installComplete', (event, arg) => {
-            if (arg == 'vagrant') {
-              this.postVagrantSetup(progress, success, failure);
-            }
-          });
+          fs.createReadStream(this.ocDownloadedFile)
+            .pipe(unzip.Extract({path: this.installerDataSvc.ocDir()}))
+            .on('close', () => {
+              ipcRenderer.on('installComplete', (event, arg) => {
+                if (arg == 'vagrant') {
+                  this.postVagrantSetup(progress, success, failure);
+                }
+              });
+            });
         });
       });
   }

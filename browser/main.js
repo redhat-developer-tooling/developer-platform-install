@@ -71,6 +71,7 @@ let mainModule =
                                 $timeout,
                                 'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
                                 'https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box?workflow=direct',
+                                'https://github.com/openshift/origin/releases/download/v1.1.0.1/openshift-origin-v1.1.0.1-bf56e23-windows-amd64.zip',
                                 null)
             );
 

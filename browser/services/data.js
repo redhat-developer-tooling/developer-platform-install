@@ -33,6 +33,7 @@ class InstallerDataService {
     this.cygwinRoot = path.join(this.installRoot, 'cygwin');
     this.cdkRoot = path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
+    this.ocBinRoot = path.join(this.cdkRoot, 'bin');
   }
 
   addItemToInstall(key, item) {
@@ -86,6 +87,10 @@ class InstallerDataService {
 
   cdkBoxDir() {
     return this.cdkBoxRoot;
+  }
+
+  ocDir() {
+    return this.ocBinRoot;
   }
 
   installDir() {
