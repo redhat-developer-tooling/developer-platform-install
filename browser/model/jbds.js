@@ -4,6 +4,7 @@ let request = require('request');
 let path = require('path');
 let fs = require('fs');
 let execFile = require('remote').require('../main/util');
+let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 
@@ -67,6 +68,20 @@ class JbdsInstall extends InstallableItem {
 
     fs.writeFileSync(this.installConfigFile, data);
 
+    let jdkInstall = this.installerDataSvc.getInstallable('jdk');
+
+    if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
+      this.postJDKInstall(progress, success, failure);
+    } else {
+      ipcRenderer.on('installComplete', (event, arg) => {
+        if (arg == 'jdk') {
+          this.postJDKInstall(progress, success, failure);
+        }
+      });
+    }
+  }
+
+  postJDKInstall(progress, success, failure) {
     execFile(
       path.join(this.installerDataSvc.jdkDir(), 'bin', 'java.exe'),
       [
@@ -75,8 +90,17 @@ class JbdsInstall extends InstallableItem {
         this.installConfigFile
       ],
       () => {
-        progress.setComplete("Complete");
-        success();
+        // Add CDK vagrantfile location to runtime server scan list
+        fs.appendFile(
+          path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_location.properties'),
+          'CDKServer=' + this.installerDataSvc.cdkVagrantfileDir() + ',true',
+          (err) => {
+            if (err) throw err;
+
+            progress.setComplete("Complete");
+            success();
+          }
+        );
       },
       (err) => {
         failure(err);
