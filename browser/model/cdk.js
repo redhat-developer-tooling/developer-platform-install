@@ -36,7 +36,7 @@ class CDKInstall extends InstallableItem {
     let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
     let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
     let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
-    let downloadSize = 869233469;
+    let downloadSize = 869245757;
     let currentSize = 0;
     let totalDownloads = 4;
 
@@ -157,11 +157,17 @@ class CDKInstall extends InstallableItem {
                       ].join('\r\n');
                       fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
 
-                      ipcRenderer.on('installComplete', (event, arg) => {
-                        if (arg == 'vagrant') {
-                          this.postVagrantSetup(progress, success, failure);
-                        }
-                      });
+                      let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+
+                      if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
+                        this.postVagrantSetup(progress, success, failure);
+                      } else {
+                        ipcRenderer.on('installComplete', (event, arg) => {
+                          if (arg == 'vagrant') {
+                            this.postVagrantSetup(progress, success, failure);
+                          }
+                        });
+                      }
                   });
                 });
             });
