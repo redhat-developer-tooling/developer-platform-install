@@ -64,7 +64,7 @@ class VagrantInstall extends InstallableItem {
 
           // Set required paths
           let data = [
-            '$newPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '";',
+            '$newPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '";' + path.join(this.installerDataSvc.vagrantDir(), 'mingw', 'bin') + ';',
             '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
             '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
             '[Environment]::Exit(0)'
