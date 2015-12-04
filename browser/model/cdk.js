@@ -9,19 +9,21 @@ let ipcRenderer = require('electron').ipcRenderer;
 import InstallableItem from './installable-item';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, installFile) {
     super(cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
+    this.vagrantFileUrl = vagrantFileUrl;
 
     this.boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
 
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'cdk.zip');
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
     this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'oc.zip');
+    this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'vagrantfile.zip');
   }
 
   checkForExistingInstall() {
@@ -33,9 +35,10 @@ class CDKInstall extends InstallableItem {
     let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
     let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
     let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
+    let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
     let downloadSize = 869233469;
     let currentSize = 0;
-    let totalDownloads = 3;
+    let totalDownloads = 4;
 
     let completion = () => {
       if (--totalDownloads == 0) {
@@ -107,6 +110,25 @@ class CDKInstall extends InstallableItem {
       .on('close', () => {
         return completion();
       });
+
+    request
+      .get(this.vagrantFileUrl)
+      .on('error', (err) => {
+        vagrantFileWriteStream.close();
+        failure(err);
+      })
+      .on('data', (data) => {
+        currentSize += data.length;
+        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
+        progress.setLabel(progress.current + "%");
+      })
+      .on('end', () => {
+        vagrantFileWriteStream.end();
+      })
+      .pipe(vagrantFileWriteStream)
+      .on('close', () => {
+        return completion();
+      });
   }
 
   install(progress, success, failure) {
@@ -119,11 +141,20 @@ class CDKInstall extends InstallableItem {
           fs.createReadStream(this.ocDownloadedFile)
             .pipe(unzip.Extract({path: this.installerDataSvc.ocDir()}))
             .on('close', () => {
-              ipcRenderer.on('installComplete', (event, arg) => {
-                if (arg == 'vagrant') {
-                  this.postVagrantSetup(progress, success, failure);
-                }
-              });
+              fs.createReadStream(this.vagrantDownloadedFile)
+                .pipe(unzip.Extract({path: this.installerDataSvc.tempDir()}))
+                .on('close', () => {
+                  fs.move(
+                    path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'),
+                    path.join(this.installerDataSvc.cdkDir(), 'openshift-vagrant'),
+                    (err) => {
+                      ipcRenderer.on('installComplete', (event, arg) => {
+                        if (arg == 'vagrant') {
+                          this.postVagrantSetup(progress, success, failure);
+                        }
+                      });
+                  });
+                });
             });
         });
       });
