@@ -34,7 +34,7 @@ class JdkInstall extends InstallableItem {
       }
     };
 
-    request(options)
+    request.get(options)
       .on('error', (err) => {
         writeStream.close();
         failure(err);
