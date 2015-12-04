@@ -26,10 +26,10 @@ class InstallerDataService {
     this.downloading = false;
     this.installing = false;
 
-    this.vboxRoot = path.join(this.installRoot, 'VirtualBox');
-    this.jdkRoot = path.join(this.installRoot, 'JDK8');
-    this.jbdsRoot = path.join(this.installRoot, 'JBDS');
-    this.vagrantRoot = path.join(this.installRoot, 'Vagrant');
+    this.vboxRoot = path.join(this.installRoot, 'virtualbox');
+    this.jdkRoot = path.join(this.installRoot, 'jdk8');
+    this.jbdsRoot = path.join(this.installRoot, 'DeveloperStudio');
+    this.vagrantRoot = path.join(this.installRoot, 'vagrant');
     this.cygwinRoot = path.join(this.installRoot, 'cygwin');
     this.cdkRoot = path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
