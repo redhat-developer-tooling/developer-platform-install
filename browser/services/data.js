@@ -34,6 +34,8 @@ class InstallerDataService {
     this.cdkRoot = path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
+    this.cdkVagrantRoot = path.join(this.cdkRoot, 'openshift-vagrant');
+    this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
   }
 
   addItemToInstall(key, item) {
@@ -87,6 +89,14 @@ class InstallerDataService {
 
   cdkBoxDir() {
     return this.cdkBoxRoot;
+  }
+
+  cdkVagrantfileDir() {
+    return this.cdkVagrantRoot;
+  }
+
+  cdkMarker() {
+    return this.cdkMarkerFile;
   }
 
   ocDir() {

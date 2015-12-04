@@ -146,8 +146,17 @@ class CDKInstall extends InstallableItem {
                 .on('close', () => {
                   fs.move(
                     path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'),
-                    path.join(this.installerDataSvc.cdkDir(), 'openshift-vagrant'),
+                    this.installerDataSvc.cdkVagrantfileDir(),
                     (err) => {
+                      let markerContent = [
+                        'openshift.auth.scheme=Basic',
+                        'openshift.auth.username=test-admin',
+                        'vagrant.binary.path=' + path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+                        'oc.binary.path=' + this.installerDataSvc.ocDir(),
+                        'rhel.subscription.username=' + this.installerDataSvc.getUsername()
+                      ].join('\r\n');
+                      fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
+
                       ipcRenderer.on('installComplete', (event, arg) => {
                         if (arg == 'vagrant') {
                           this.postVagrantSetup(progress, success, failure);
