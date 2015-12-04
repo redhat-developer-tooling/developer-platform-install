@@ -9,7 +9,7 @@ let ipcRenderer = require('electron').ipcRenderer;
 import InstallableItem from './installable-item';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, installFile) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
     super(cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -17,6 +17,7 @@ class CDKInstall extends InstallableItem {
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
     this.vagrantFileUrl = vagrantFileUrl;
+    this.pscpUrl = pscpUrl;
 
     this.boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
 
@@ -24,6 +25,8 @@ class CDKInstall extends InstallableItem {
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
     this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'oc.zip');
     this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'vagrantfile.zip');
+    this.pscpDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'pscp.exe');
+    this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
   }
 
   checkForExistingInstall() {
@@ -36,9 +39,10 @@ class CDKInstall extends InstallableItem {
     let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
     let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
     let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
-    let downloadSize = 869245757;
+    let pscpWriteStream = fs.createWriteStream(this.pscpDownloadedFile);
+    let downloadSize = 869598013;
     let currentSize = 0;
-    let totalDownloads = 4;
+    let totalDownloads = 5;
 
     let completion = () => {
       if (--totalDownloads == 0) {
@@ -129,6 +133,25 @@ class CDKInstall extends InstallableItem {
       .on('close', () => {
         return completion();
       });
+
+      request
+        .get(this.pscpUrl)
+        .on('error', (err) => {
+          pscpWriteStream.close();
+          failure(err);
+        })
+        .on('data', (data) => {
+          currentSize += data.length;
+          progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
+          progress.setLabel(progress.current + "%");
+        })
+        .on('end', () => {
+          pscpWriteStream.end();
+        })
+        .pipe(pscpWriteStream)
+        .on('close', () => {
+          return completion();
+        });
   }
 
   install(progress, success, failure) {
@@ -148,26 +171,59 @@ class CDKInstall extends InstallableItem {
                     path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'),
                     this.installerDataSvc.cdkVagrantfileDir(),
                     (err) => {
-                      let markerContent = [
-                        'openshift.auth.scheme=Basic',
-                        'openshift.auth.username=test-admin',
-                        'vagrant.binary.path=' + path.join(this.installerDataSvc.vagrantDir(), 'bin'),
-                        'oc.binary.path=' + this.installerDataSvc.ocDir(),
-                        'rhel.subscription.username=' + this.installerDataSvc.getUsername()
-                      ].join('\r\n');
-                      fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
+                      fs.move(
+                        this.pscpDownloadedFile,
+                        path.join(this.installerDataSvc.ocDir(), 'pscp.exe'),
+                        (err) => {
+                          // Set required paths
+                          let data = [
+                            '$newPath = "' + this.installerDataSvc.ocDir() + '";',
+                            '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+                            '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
+                            '[Environment]::Exit(0)'
+                          ].join('\r\n');
+                          fs.writeFileSync(this.pscpPathScript, data);
 
-                      let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+                          require('child_process')
+                            .execFile(
+                              'powershell',
+                              [
+                                '-ExecutionPolicy',
+                                'ByPass',
+                                '-File',
+                                this.pscpPathScript
+                              ],
+                              (error, stdout, stderr) => {
+                                console.log(stdout);
+                                console.log(stderr);
+                                if (error !== null) {
+                                  failure(error);
+                                }
 
-                      if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
-                        this.postVagrantSetup(progress, success, failure);
-                      } else {
-                        ipcRenderer.on('installComplete', (event, arg) => {
-                          if (arg == 'vagrant') {
-                            this.postVagrantSetup(progress, success, failure);
-                          }
-                        });
-                      }
+                                let markerContent = [
+                                  'openshift.auth.scheme=Basic',
+                                  'openshift.auth.username=test-admin',
+                                  'vagrant.binary.path=' + path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+                                  'oc.binary.path=' + this.installerDataSvc.ocDir(),
+                                  'rhel.subscription.username=' + this.installerDataSvc.getUsername()
+                                ].join('\r\n');
+                                fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
+
+                                let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+
+                                if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
+                                  this.postVagrantSetup(progress, success, failure);
+                                } else {
+                                  ipcRenderer.on('installComplete', (event, arg) => {
+                                    if (arg == 'vagrant') {
+                                      this.postVagrantSetup(progress, success, failure);
+                                    }
+                                  });
+                                }
+                              }
+                            );
+                        }
+                      );
                   });
                 });
             });
