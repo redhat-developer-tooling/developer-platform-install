@@ -27,7 +27,7 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading VirtualBox ' + this.version);
+    progress.setDesc('Downloading VirtualBox');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -58,7 +58,7 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing VirtualBox ' + this.version);
+    progress.setDesc('Installing VirtualBox');
 
     execFile(
       this.downloadedFile,
