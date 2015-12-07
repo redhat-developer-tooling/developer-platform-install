@@ -6,6 +6,7 @@ let fs = require('fs');
 let execFile = require('remote').require('../main/util');
 let ipcRenderer = require('electron').ipcRenderer;
 
+import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
 
 class JbdsInstall extends InstallableItem {
@@ -16,6 +17,7 @@ class JbdsInstall extends InstallableItem {
 
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
+    this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir());
   }
 
   checkForExistingInstall() {
@@ -61,10 +63,7 @@ class JbdsInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing JBDS');
 
-    let data = fs.readFileSync('./browser/model/jbds-autoinstall.xml', 'utf-8');
-
-    data = data.split('${jbdsInstallDir}').join(this.installerDataSvc.jbdsDir());
-    data = data.split('${jdkInstallDir}').join(this.installerDataSvc.jdkDir());
+    let data = this.installGenerator.fileContent();
 
     fs.writeFileSync(this.installConfigFile, data);
 
