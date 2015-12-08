@@ -64,9 +64,10 @@ class VagrantInstall extends InstallableItem {
 
           // Set required paths
           let data = [
-            '$newPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '";' + path.join(this.installerDataSvc.vagrantDir(), 'mingw', 'bin') + ';',
+            '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
+            '$mingwPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'mingw', 'bin') + '"',
             '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-            '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
+            '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$mingwPath;$oldPath", "User");',
             '[Environment]::Exit(0)'
           ].join('\r\n');
           fs.writeFileSync(this.vagrantPathScript, data);
