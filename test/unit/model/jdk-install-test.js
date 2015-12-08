@@ -147,7 +147,7 @@ describe('when downloading the jdk zip', function() {
         stub.installDir.returns(null);
         installer.install(fakeProgress, null, null);
       }
-      expect(throwsWithNull).to.throw('Object [object global] has no method');
+      expect(throwsWithNull).to.throw();
       done();
     });
 
@@ -157,7 +157,7 @@ describe('when downloading the jdk zip', function() {
         stub.installDir.returns('');
         installer.install(fakeProgress, null, null);
       }
-      expect(throwsWithEmpty).to.throw('Object [object global] has no method');
+      expect(throwsWithEmpty).to.throw();
       done();
     });
   });
