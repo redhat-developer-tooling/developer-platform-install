@@ -3,6 +3,8 @@
 Red Hat Developer Platform Installer
 ====================================
 
+[![Build Status](https://travis-ci.org/redhat-developer-tooling/developer-platform-install.svg?branch=travis)](https://travis-ci.org/redhat-developer-tooling/developer-platform-install)
+
 Architecture
 ------------
 
@@ -24,7 +26,7 @@ In order to build the installer, you'll need to install some tools.
     ```
     npm install -g gulp jspm
     ```
-    
+
 6. Install all dependencies:
 
     ```
