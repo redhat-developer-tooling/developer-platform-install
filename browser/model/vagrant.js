@@ -25,7 +25,7 @@ class VagrantInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 0;
+    let downloadSize = 160015744;
     let currentSize = 0;
 
     request
@@ -35,7 +35,10 @@ class VagrantInstall extends InstallableItem {
         failure(err);
       })
       .on('response', (response) => {
-        downloadSize = response.headers['content-length'];
+        let tempSize = response.headers['content-length'];
+        if (tempSize !== undefined && tempSize > 0) {
+          downloadSize = tempSize;
+        }
       })
       .on('data', (data) => {
         currentSize += data.length;
