@@ -30,7 +30,7 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">LOG IN</button>
                 <div class="pull-right">
-                  <a href="#">Forgot your login or password?</a>
+                  <a href="" ng-click="acctCtrl.forgotPassword()">Forgot your login or password?</a>
                 </div>
                 <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block has-error">Invalid account information, please try again.</div>
                 <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block has-error">Terms and Conditions for CDK have not been signed.</div>
@@ -40,7 +40,7 @@
       </div>
       <div class="row">
         <div class="col-sm-12">
-          Don't have an account? <a target="_blank" href="https://developers.redhat.com/auth/realms/rhd/account">Create</a> one today!
+          Don't have an account? <a href="" ng-click="acctCtrl.createAccount()">Create</a> one today!
         </div>
       </div>
     </div>

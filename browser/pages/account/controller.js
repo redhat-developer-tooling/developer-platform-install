@@ -1,5 +1,7 @@
 'use strict'
 
+const shell = require('electron').shell;
+
 class AccountController {
   constructor($state, $http, $base64, installerDataSvc) {
     this.router = $state;
@@ -42,6 +44,14 @@ class AccountController {
       failure => {
         this.authFailed = true;
       });
+  }
+
+  forgotPassword() {
+    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
+  }
+
+  createAccount() {
+    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
   }
 }
 
