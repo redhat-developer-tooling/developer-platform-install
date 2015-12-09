@@ -8,41 +8,53 @@ class InstallController {
 
     this.data = Object.create(null);
 
-    this.installerDataSvc.allInstallables().forEach((value, key, map) => {
-      let itemProgress = new ProgressState(this.$scope);
-      Object.defineProperty(this.data, key, {
-        enumerable: true,
-        writable: true,
-        value: itemProgress
-      });
+    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      this.processInstallable(key, value);
+    }
+  }
 
-      if (value.isDownloadRequired() && !value.isDownloaded()) {
-        this.installerDataSvc.startDownload(key);
+  processInstallable(key, value) {
+    let itemProgress = new ProgressState(this.$scope);
 
-        $timeout(
-          value.downloadInstaller(itemProgress,
-            () => {
-              $timeout(this.installerDataSvc.downloadDone(itemProgress, key));
-            },
-            (error) => {
-              alert(error);
-            }
-          )
-        );
-      } else if (!value.hasExistingInstall()) {
-        this.installerDataSvc.startInstall(key);
-        $timeout(
-          value.install(itemProgress,
-            () => {
-              this.installerDataSvc.installDone(key);
-            },
-            (error) => {
-              alert(error);
-            }
-          )
-        );
-      }
+    Object.defineProperty(this.data, key, {
+      enumerable: true,
+      writable: true,
+      value: itemProgress
     });
+
+    if (value.isDownloadRequired() && !value.isDownloaded()) {
+      this.$timeout(this.triggerDownload(key, value, itemProgress));
+    } else if (!value.hasExistingInstall()) {
+      this.$timeout(this.triggerInstall(key, value, itemProgress));
+    }
+  }
+
+  triggerDownload(installableKey, installableValue, progress) {
+    this.installerDataSvc.startDownload(installableKey);
+
+    installableValue.downloadInstaller(progress,
+      () => {
+        this.$timeout(this.installerDataSvc.downloadDone(progress, installableKey));
+      },
+      (error) => {
+        //TODO Proper error reporting
+        alert(error);
+      }
+    )
+  }
+
+  triggerInstall(installableKey, installableValue, progress) {
+    this.installerDataSvc.startInstall(installableKey);
+
+    installableValue.install(progress,
+      () => {
+        this.installerDataSvc.installDone(installableKey);
+      },
+      (error) => {
+        //TODO Proper error reporting
+        alert(error);
+      }
+    )
   }
 
   current(key) {
