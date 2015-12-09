@@ -3,6 +3,7 @@
 import InstallableItem from '../model/installable-item';
 let os = require('os');
 let path = require('path');
+let fs = require('fs');
 let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallerDataService {
@@ -14,6 +15,8 @@ class InstallerDataService {
     } else {
       this.installRoot = process.env.HOME + '/DeveloperPlatform';
   	}
+
+    fs.mkdirSync(this.installRoot);
 
     this.router = $state;
 
