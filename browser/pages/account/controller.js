@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const shell = require('electron').shell;
 
@@ -28,22 +28,8 @@ class AccountController {
     };
 
     this.http(req)
-      .then(result => {
-        if (result.status == 200) {
-          if (result.data == true) {
-            this.installerDataSvc.setCredentials(this.username, this.password);
-            this.router.go('confirm');
-            return;
-          } else if (result.data == false) {
-            this.tandcNotSigned = true;
-            return;
-          }
-        }
-        this.authFailed = true;
-      },
-      failure => {
-        this.authFailed = true;
-      });
+      .then(this.handleHttpSuccess.bind(this))
+      .catch(this.handleHttpFailure.bind(this));
   }
 
   forgotPassword() {
@@ -52,6 +38,24 @@ class AccountController {
 
   createAccount() {
     shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
+  }
+
+  handleHttpSuccess(result) {
+    if (result.status == 200) {
+      if (result.data == true) {
+        this.installerDataSvc.setCredentials(this.username, this.password);
+        this.router.go('confirm');
+        return;
+      } else if (result.data == false) {
+        this.tandcNotSigned = true;
+        return;
+      }
+    }
+    this.authFailed = true;
+  }
+
+  handleHttpFailure() {
+    this.authFailed = true;
   }
 }
 

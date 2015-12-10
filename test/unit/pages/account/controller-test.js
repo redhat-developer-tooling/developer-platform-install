@@ -4,8 +4,10 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import 'sinon-as-promised';
-import AccountController from 'pages/account/controller';
+import AccountController from 'pages/account/controller.js';
 chai.use(sinonChai);
+
+import { shell } from 'electron';
 
 describe('Login controller', function(){
 
@@ -43,21 +45,20 @@ describe('Login controller', function(){
     let http, base64;
 
     beforeEach(function() {
-      http = sinon.stub();
       base64 = { encode: function() {}};
     });
 
     it('should make an HTTP request', function(){
-      http.returns(Promise.resolve('success'));
+      http = sinon.stub().resolves('success');
 
       controller = new AccountController({}, http, base64);
       controller.login();
 
-      expect(http).to.have.been.called.once;
+      expect(http).to.have.been.calledOnce;
     });
 
     it('should make a GET request with correct username and password', function(){
-      http.returns(Promise.resolve('success'));
+      http = sinon.stub().resolves('success');
       base64 = { encode: function(input) { return input }};
 
       let req = {
@@ -74,60 +75,95 @@ describe('Login controller', function(){
       controller.login();
 
       expect(http).to.have.been.calledWith(req);
-      expect(http).to.have.been.called.once;
+      expect(http).to.have.been.calledOnce;
     });
 
+    it('should call handleHttpFailure on HTTP failure', function(){
+      http = function() { return Promise.reject('serious error')};
+      controller = new AccountController({}, http, base64);
+      let spy = sinon.spy(controller, 'handleHttpFailure');
+
+      controller.login();
+
+      return http().then(function() {
+        expect.fail();
+      }).catch(function() {
+        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWith('serious error');
+      });
+    });
+
+    it('should call handleHttpSuccess on successful HTTP request', function(){
+      http = function() { return Promise.resolve({ status: 404 })};
+      controller = new AccountController({}, http, base64);
+      let spy = sinon.spy(controller, 'handleHttpSuccess');
+
+      controller.login();
+
+      return http().then(function() {
+        expect.fail();
+      }).catch(function() {
+        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWith({ status: 404 });
+      });
+    });
+  });
+
+  describe('handleHttpFailure', function() {
     it('should set authFailed after failure', function(){
-      http.rejects('failure');
+      controller = new AccountController();
+      controller.handleHttpFailure('some error');
 
-      controller = new AccountController({}, http, base64);
-      controller.login();
-
-      http().then(function() {
-        expect(controller.authFailed).to.be.defined;
-        expect(controller.authFailed).to.be.true;
-      });
+      expect(controller.authFailed).to.be.true;
+      expect(controller.tandcNotSigned).to.be.false;
     });
+  });
 
+  describe('handleHttpSuccess', function() {
     it('should set authFailed when return code of HTTP request is not 200', function(){
-      http.resolves({ status: 404 });
+      controller = new AccountController();
+      controller.handleHttpSuccess({ status: 404 });
 
-      controller = new AccountController({}, http, base64);
-      controller.login();
-
-      http().then(function() {
-        expect(http).to.have.been.called.once;
-        expect(controller.authFailed).to.be.true;
-      });
+      expect(controller.authFailed).to.be.true;
+      expect(controller.tandcNotSigned).to.be.false;
     });
 
     it('should set tandcNotSigned when no data returned', function(){
-      http.resolves({ status: 200, data: false });
+      controller = new AccountController({});
+      controller.handleHttpSuccess({ status: 200, data: false });
 
-      controller = new AccountController({}, http, base64);
-      controller.login();
-
-      http().then(function() {
-        expect(controller.tandcNotSigned).to.be.true;
-        expect(controller.authFailed).to.be.false;
-      });
+      expect(controller.authFailed).to.be.false;
+      expect(controller.tandcNotSigned).to.be.true;
     });
 
     it('should go to the page "confirm" when everything is OK', function(){
-      http.resolves({ status: 200, data: true });
       let router = { go: function() {} };
       let spy = sinon.spy(router, 'go');
+      let installerDataSvc = { setCredentials: function() {} };
 
-      controller = new AccountController(router, http, base64);
-      controller.login();
+      controller = new AccountController(router, null, null, installerDataSvc);
+      controller.handleHttpSuccess({ status: 200, data: true });
 
-      http().then(function() {
-        expect(spy).to.have.been.called.once;
-        expect(spy).to.have.been.calledWith('confirm');
-        expect(controller.tandcNotSigned).to.be.false;
-        expect(controller.authFailed).to.be.false;
-      });
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('confirm');
+      expect(controller.tandcNotSigned).to.be.false;
+      expect(controller.authFailed).to.be.false;
     });
 
+    it('should save credentials for later use when everything is OK', function(){
+      let router = { go: function() {} };
+      let installerDataSvc = { setCredentials: function() {} };
+      let spy = sinon.spy(installerDataSvc, 'setCredentials');
+
+      controller = new AccountController(router, null, null, installerDataSvc);
+      controller.username = 'Frank';
+      controller.password = 'p@ssw0rd';
+      controller.handleHttpSuccess({ status: 200, data: true });
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('Frank', 'p@ssw0rd');
+      expect(controller.tandcNotSigned).to.be.false;
+      expect(controller.authFailed).to.be.false;
+    });
   });
 })
