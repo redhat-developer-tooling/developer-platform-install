@@ -1,6 +1,8 @@
 'use strict';
 
 import InstallableItem from '../model/installable-item';
+import Logger from './logger';
+
 let os = require('os');
 let path = require('path');
 let fs = require('fs');
@@ -15,6 +17,8 @@ class InstallerDataService {
     } else {
       this.installRoot = process.env.HOME + '/DeveloperPlatform';
   	}
+
+    Logger.initialize(this.installRoot);
 
     fs.mkdirSync(this.installRoot);
 
@@ -123,6 +127,8 @@ class InstallerDataService {
   }
 
   startDownload(key) {
+    Logger.info('Download started for: ' + key);
+
     if (!this.isDownloading()) {
       this.downloading = true;
     }
@@ -130,6 +136,8 @@ class InstallerDataService {
   }
 
   downloadDone(progress, key) {
+    Logger.info('Download finished for: ' + key);
+
     let item = this.getInstallable(key);
     item.setDownloadComplete();
 
@@ -144,12 +152,14 @@ class InstallerDataService {
         this.installDone(key);
       },
       (error) => {
-        alert(error);
+        Logger.error(installableKey + ' failed to install: ' + error);
       }
     );
   }
 
   startInstall(key) {
+    Logger.info('Install started for: ' + key);
+
     if (!this.isInstalling()) {
       this.installing = true;
     }
@@ -157,6 +167,8 @@ class InstallerDataService {
   }
 
   installDone(key) {
+    Logger.info('Install finished for: ' + key);
+
     let item = this.getInstallable(key);
     item.setInstallComplete();
 
@@ -164,6 +176,8 @@ class InstallerDataService {
 
     this.toInstall.delete(key);
     if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
+      Logger.info('All installs complete');
+
       this.installing = false;
       this.router.go('start');
     }

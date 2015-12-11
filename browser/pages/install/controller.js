@@ -1,5 +1,7 @@
 'use strict';
 
+import Logger from '../../services/logger';
+
 class InstallController {
   constructor($scope, $timeout, installerDataSvc) {
     this.$scope = $scope;
@@ -37,8 +39,7 @@ class InstallController {
         this.$timeout(this.installerDataSvc.downloadDone(progress, installableKey));
       },
       (error) => {
-        //TODO Proper error reporting
-        alert(error);
+        Logger.error(installableKey + ' failed to download: ' + error);
       }
     )
   }
@@ -51,8 +52,7 @@ class InstallController {
         this.installerDataSvc.installDone(installableKey);
       },
       (error) => {
-        //TODO Proper error reporting
-        alert(error);
+        Logger.error(installableKey + ' failed to install: ' + error);
       }
     )
   }

@@ -3,6 +3,7 @@
 import { app, ipcMain, BrowserWindow, crashReporter } from 'electron';
 import fs from 'fs';
 import os from 'os';
+import * as logger from './logging';
 
 // Report crashes to our server.
 crashReporter.start({
@@ -24,6 +25,14 @@ ipcMain.on('crash', function(event, arg) {
 ipcMain.on('installComplete', (event, arg) => {
   event.sender.send('installComplete', arg);
 });
+
+// Setup logging listeners
+ipcMain.on('install-root', (event, arg) => {
+  logger.init(arg);
+});
+ipcMain.on('log', (event, arg) => {
+  logger.log(arg);
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
