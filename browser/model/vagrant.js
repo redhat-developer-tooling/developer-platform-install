@@ -6,6 +6,7 @@ let path = require('path');
 let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
+import Downloader from './handler/downloader';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -26,32 +27,10 @@ class VagrantInstall extends InstallableItem {
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
     let downloadSize = 160015744;
-    let currentSize = 0;
 
-    request
-      .get(this.downloadUrl)
-      .on('error', (err) => {
-        writeStream.close();
-        failure(err);
-      })
-      .on('response', (response) => {
-        let tempSize = response.headers['content-length'];
-        if (tempSize !== undefined && tempSize > 0) {
-          downloadSize = tempSize;
-        }
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        writeStream.end();
-      })
-      .pipe(writeStream)
-      .on('close', () => {
-        return success();
-      });
+    let downloader = new Downloader(progress, success, failure, downloadSize);
+    downloader.setWriteStream(writeStream);
+    downloader.download(this.downloadUrl);
   }
 
   install(progress, success, failure) {

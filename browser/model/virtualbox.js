@@ -6,6 +6,7 @@ let path = require('path');
 let execFile = require('remote').require('../main/util');
 
 import InstallableItem from './installable-item';
+import Downloader from './handler/downloader';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
@@ -31,30 +32,10 @@ class VirtualBoxInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 0;
-    let currentSize = 0;
 
-    request
-      .get(this.downloadUrl)
-      .on('error', (err) => {
-        writeStream.close();
-        failure(err);
-      })
-      .on('response', (response) => {
-        downloadSize = response.headers['content-length'];
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        writeStream.end();
-      })
-      .pipe(writeStream)
-      .on('close', () => {
-        return success();
-      });
+    let downloader = new Downloader(progress, success, failure);
+    downloader.setWriteStream(writeStream);
+    downloader.download(this.downloadUrl);
   }
 
   install(progress, success, failure) {

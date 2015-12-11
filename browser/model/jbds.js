@@ -8,6 +8,7 @@ let ipcRenderer = require('electron').ipcRenderer;
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
+import Downloader from './handler/downloader';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -28,8 +29,6 @@ class JbdsInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 0;
-    let currentSize = 0;
 
     let options = {
       url: this.downloadUrl,
@@ -38,26 +37,9 @@ class JbdsInstall extends InstallableItem {
       }
     };
 
-    request(options)
-      .on('error', (err) => {
-        writeStream.close();
-        failure(err);
-      })
-      .on('response', (response) => {
-        downloadSize = response.headers['content-length'];
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        writeStream.end();
-      })
-      .pipe(writeStream)
-      .on('close', () => {
-        return success();
-      });
+    let downloader = new Downloader(progress, success, failure);
+    downloader.setWriteStream(writeStream);
+    downloader.download(options);
   }
 
   install(progress, success, failure) {

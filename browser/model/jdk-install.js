@@ -6,6 +6,7 @@ let path = require('path');
 let request = require('request');
 
 import InstallableItem from './installable-item';
+import Downloader from './handler/downloader';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -24,8 +25,6 @@ class JdkInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 0;
-    let currentSize = 0;
 
     let options = {
       url: this.downloadUrl,
@@ -34,26 +33,9 @@ class JdkInstall extends InstallableItem {
       }
     };
 
-    request.get(options)
-      .on('error', (err) => {
-        writeStream.close();
-        failure(err);
-      })
-      .on('response', (response) => {
-        downloadSize = response.headers['content-length'];
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        writeStream.end();
-      })
-      .pipe(writeStream)
-      .on('close', () => {
-        return success();
-      });
+    let downloader = new Downloader(progress, success, failure);
+    downloader.setWriteStream(writeStream);
+    downloader.download(options);
   }
 
   install(progress, success, failure) {
