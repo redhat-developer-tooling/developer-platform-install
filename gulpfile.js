@@ -5,7 +5,9 @@ var gulp = require('gulp'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
-  path = require('path');
+  path = require('path'),
+  mocha = require('gulp-spawn-mocha'),
+  symlink = require('gulp-symlink');
 
 var artifactName = 'DeveloperPlatformInstaller';
 
@@ -54,6 +56,26 @@ gulp.task('package', function(cb) {
     console.log(stderr);
     cb(err);
   });
+});
+
+gulp.task('test', function() {
+  return runSequence('create-electron-symlink', 'unit-test', function() {
+    del(['node_modules/electron'], { force: true });
+  });
+});
+
+gulp.task('create-electron-symlink', function() {
+  return gulp.src('node_modules/electron-prebuilt')
+    .pipe(symlink('node_modules/electron', { force: true }));
+});
+
+gulp.task('unit-test', function () {
+  return gulp.src(['test/unit/**/*.js'], {read: false})
+    .pipe(mocha({
+      recursive: true,
+      compilers: 'js:babel/register',
+      env: { NODE_PATH: './browser' }
+    }));
 });
 
 gulp.task('default', function() {

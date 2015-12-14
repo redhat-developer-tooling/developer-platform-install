@@ -19,7 +19,7 @@
     "start": "gulp run",
     "generate": "gulp generate",
     "package": "gulp package",
-    "test": "NODE_PATH=./browser node_modules/.bin/mocha --recursive --compilers js:babel/register test/unit"
+    "test": "gulp test"
   },
   "dependencies": {
     "fs-extra": "0.26.2",
@@ -38,6 +38,8 @@
     "gulp-babel": "^5.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.11",
+    "gulp-spawn-mocha": "^2.2.1",
+    "gulp-symlink": "^2.1.3",
     "jspm": "^0.16.10",
     "mocha": "^2.3.4",
     "mock-fs": "^3.5.0",
