@@ -22,7 +22,6 @@
     "test": "NODE_PATH=./browser node_modules/.bin/mocha --recursive --compilers js:babel/register test/unit"
   },
   "dependencies": {
-    "bluebird": "3.0.5",
     "fs-extra": "0.26.2",
     "patternfly": "2.6.0",
     "request": "2.67.0",
