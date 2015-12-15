@@ -7,6 +7,7 @@ let unzip = require('unzip');
 let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
+import Downloader from './handler/downloader';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
@@ -41,117 +42,34 @@ class CDKInstall extends InstallableItem {
     let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
     let pscpWriteStream = fs.createWriteStream(this.pscpDownloadedFile);
     let downloadSize = 869598013;
-    let currentSize = 0;
     let totalDownloads = 5;
 
-    let completion = () => {
-      if (--totalDownloads == 0) {
-        return success();
-      }
-    };
+    let downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
+    let username = this.installerDataSvc.getUsername(),
+        password = this.installerDataSvc.getPassword();
 
-    request
+    downloader.setWriteStream(cdkBoxWriteStream);
+    downloader.downloadAuth
       ({
         url: this.cdkBoxUrl,
         rejectUnauthorized: false
-      })
-      .auth(this.installerDataSvc.getUsername(), this.installerDataSvc.getPassword())
-      .on('error', (err) => {
-        cdkBoxWriteStream.close();
-        failure(err);
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        cdkBoxWriteStream.end();
-      })
-      .pipe(cdkBoxWriteStream)
-      .on('close', () => {
-        return completion();
-      });
+      }, username, password);
 
-    request
+    downloader.setWriteStream(cdkWriteStream);
+    downloader.downloadAuth
       ({
         url: this.getDownloadUrl(),
         rejectUnauthorized: false
-      })
-      .auth(this.installerDataSvc.getUsername(), this.installerDataSvc.getPassword())
-      .on('error', (err) => {
-        cdkWriteStream.close();
-        failure(err);
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        cdkWriteStream.end();
-      })
-      .pipe(cdkWriteStream)
-      .on('close', () => {
-        return completion();
-      });
+      }, username, password);
 
-    request
-      .get(this.ocUrl)
-      .on('error', (err) => {
-        ocWriteStream.close();
-        failure(err);
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        ocWriteStream.end();
-      })
-      .pipe(ocWriteStream)
-      .on('close', () => {
-        return completion();
-      });
+    downloader.setWriteStream(ocWriteStream);
+    downloader.download(this.ocUrl);
 
-    request
-      .get(this.vagrantFileUrl)
-      .on('error', (err) => {
-        vagrantFileWriteStream.close();
-        failure(err);
-      })
-      .on('data', (data) => {
-        currentSize += data.length;
-        progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-        progress.setLabel(progress.current + "%");
-      })
-      .on('end', () => {
-        vagrantFileWriteStream.end();
-      })
-      .pipe(vagrantFileWriteStream)
-      .on('close', () => {
-        return completion();
-      });
+    downloader.setWriteStream(vagrantFileWriteStream);
+    downloader.download(this.vagrantFileUrl)
 
-      request
-        .get(this.pscpUrl)
-        .on('error', (err) => {
-          pscpWriteStream.close();
-          failure(err);
-        })
-        .on('data', (data) => {
-          currentSize += data.length;
-          progress.setCurrent(Math.round((currentSize / downloadSize) * 100));
-          progress.setLabel(progress.current + "%");
-        })
-        .on('end', () => {
-          pscpWriteStream.end();
-        })
-        .pipe(pscpWriteStream)
-        .on('close', () => {
-          return completion();
-        });
+    downloader.setWriteStream(pscpWriteStream);
+    downloader.download(this.pscpUrl)
   }
 
   install(progress, success, failure) {
