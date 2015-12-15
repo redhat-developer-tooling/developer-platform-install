@@ -66,7 +66,7 @@ let mainModule =
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
             installerDataSvc.addItemToInstall(
-                'cdk',
+                CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
                                 'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
@@ -78,14 +78,14 @@ let mainModule =
             );
 
             installerDataSvc.addItemToInstall(
-                'vagrant',
+                VagrantInstall.key(),
                 new VagrantInstall(installerDataSvc,
                                     'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
                                     null)
             );
 
             installerDataSvc.addItemToInstall(
-                'virtualbox',
+                VirtualBoxInstall.key(),
                 new VirtualBoxInstall('5.0.8',
                                       '103449',
                                       installerDataSvc,
@@ -94,21 +94,21 @@ let mainModule =
             );
 
             installerDataSvc.addItemToInstall(
-                'jdk',
+                JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
                                'http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_66-8.11.0.1-win64.zip',
                                null)
             );
 
             installerDataSvc.addItemToInstall(
-                'jbds',
+                JbdsInstall.key(),
                 new JbdsInstall(installerDataSvc,
                                 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
                                 null)
             );
 
             installerDataSvc.addItemToInstall(
-                'cygwin',
+                CygwinInstall.key(),
                 new CygwinInstall(installerDataSvc,
                                   'https://cygwin.com/setup-x86_64.exe',
                                   null)
