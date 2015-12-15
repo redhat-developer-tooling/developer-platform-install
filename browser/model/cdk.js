@@ -235,9 +235,7 @@ class CDKInstall extends InstallableItem {
     let env = {};
 
     //TODO Need to get this info from VagrantInstaller rather than hard code
-    env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';' + path.join(this.installerDataSvc.vagrantDir(), 'mingw', 'bin') + ';' + process.env['path'];
-    env['RUBYLIB'] = path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', '2.1.0');
-    env['GEM_HOME'] = path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', 'gems');
+    env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';';
 
     return env;
   }

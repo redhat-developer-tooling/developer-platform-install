@@ -25,7 +25,7 @@ class VagrantInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 160015744;
+    let downloadSize = 188346368;
     let currentSize = 0;
 
     request
@@ -68,19 +68,21 @@ class VagrantInstall extends InstallableItem {
           // Set required paths
           let data = [
             '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
-            '$mingwPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'mingw', 'bin') + '"',
             '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-            '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$mingwPath;$oldPath", "User");',
+            '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
             '[Environment]::Exit(0)'
           ].join('\r\n');
           fs.writeFileSync(this.vagrantPathScript, data);
 
           require('child_process')
-            .exec(
+            .execFile(
+              'powershell',
               [
-                'setx RUBYLIB "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', '2.1.0') + '"',
-                'setx GEM_HOME "' + path.join(this.installerDataSvc.vagrantDir(), 'lib', 'ruby', 'gems') + '"'
-              ].join(' && '),
+                '-ExecutionPolicy',
+                'ByPass',
+                '-File',
+                this.vagrantPathScript
+              ],
               (error, stdout, stderr) => {
                 console.log(stdout);
                 console.log(stderr);
@@ -88,26 +90,8 @@ class VagrantInstall extends InstallableItem {
                   failure(error);
                 }
 
-                require('child_process')
-                  .execFile(
-                    'powershell',
-                    [
-                      '-ExecutionPolicy',
-                      'ByPass',
-                      '-File',
-                      this.vagrantPathScript
-                    ],
-                    (error, stdout, stderr) => {
-                      console.log(stdout);
-                      console.log(stderr);
-                      if (error !== null) {
-                        failure(error);
-                      }
-
-                      progress.setComplete("Complete");
-                      success();
-                    }
-                  );
+                progress.setComplete("Complete");
+                success();
               }
             );
         });
