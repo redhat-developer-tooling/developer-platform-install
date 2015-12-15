@@ -3,10 +3,10 @@
 let fs = require('fs');
 let request = require('request');
 let path = require('path');
-let execFile = require('remote').require('../main/util');
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
+import Logger from '../services/logger';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
@@ -22,6 +22,10 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
     this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
+  }
+
+  static key() {
+    return 'virtualbox';
   }
 
   checkForExistingInstall() {
@@ -41,35 +45,57 @@ class VirtualBoxInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing VirtualBox');
 
-    execFile(
-      this.downloadedFile,
-      ['--extract',
-        '-path',
-        this.installerDataSvc.tempDir(),
-        '--silent'],
-      () => {
-        execFile(
-          'msiexec',
-          [
-            '/i',
-            this.msiFile,
-            'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-            '/quiet',
-            '/passive',
-            '/norestart'
-          ],
-          () => {
-            progress.setComplete("Complete");
-            success();
-          },
-          () => {
-            failure();
+    Logger.info(VirtualBoxInstall.key() + ' - Extract virtualbox msi files');
+
+    require('child_process')
+      .execFile(
+        this.downloadedFile,
+        ['--extract',
+          '-path',
+          this.installerDataSvc.tempDir(),
+          '--silent'],
+        (error, stdout, stderr) => {
+          if (error && error != '') {
+            Logger.error(VirtualBoxInstall.key() + ' - ' + error);
+            Logger.error(VirtualBoxInstall.key() + ' - ' + stderr);
+            return failure(error);
           }
-        );
-      },
-      () => {
-        failure();
-      });
+
+          if (stdout && stdout != '') {
+            Logger.info(VirtualBoxInstall.key() + ' - ' + stdout);
+          }
+          Logger.info(VirtualBoxInstall.key() + ' - Extract virtualbox msi files SUCCESS');
+
+          Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox');
+          require('child_process')
+            .execFile(
+              'msiexec',
+              [
+                '/i',
+                this.msiFile,
+                'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
+                '/quiet',
+                '/passive',
+                '/norestart'
+              ],
+              (error, stdout, stderr) => {
+                if (error && error != '') {
+                  Logger.error(VirtualBoxInstall.key() + ' - ' + error);
+                  Logger.error(VirtualBoxInstall.key() + ' - ' + stderr);
+                  return failure(error);
+                }
+
+                if (stdout && stdout != '') {
+                  Logger.info(VirtualBoxInstall.key() + ' - ' + stdout);
+                }
+                Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox SUCCESS');
+
+                progress.setComplete("Complete");
+                success();
+              }
+            );
+        }
+      );
   }
 }
 

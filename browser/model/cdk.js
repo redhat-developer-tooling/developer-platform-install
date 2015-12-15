@@ -8,6 +8,8 @@ let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
+import Logger from '../services/logger';
+import VagrantInstall from './vagrant';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
@@ -28,6 +30,10 @@ class CDKInstall extends InstallableItem {
     this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'vagrantfile.zip');
     this.pscpDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'pscp.exe');
     this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
+  }
+
+  static key() {
+    return 'cdk';
   }
 
   checkForExistingInstall() {
@@ -75,24 +81,63 @@ class CDKInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing CDK');
 
+    Logger.info(CDKInstall.key() + ' - Extract CDK zip to ' + this.installerDataSvc.installDir());
+
     fs.createReadStream(this.cdkDownloadedFile)
       .pipe(unzip.Extract({path: this.installerDataSvc.installDir()}))
       .on('close', () => {
+        Logger.info(CDKInstall.key() + ' - Extract CDK zip to ' + this.installerDataSvc.installDir() + ' SUCCESS');
+
+        Logger.info(CDKInstall.key() + ' - Move CDK Vagrant Box to ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName));
+
         fs.move(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), (err) => {
+          if (err) {
+            Logger.error(CDKInstall.key() + ' - ' + err);
+            return failure(err);
+          }
+
+          Logger.info(CDKInstall.key() + ' - Move CDK Vagrant Box to ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName) + ' SUCCESS');
+
+          Logger.info(CDKInstall.key() + ' - Extract OpenShift Client Binary to ' + this.installerDataSvc.ocDir());
+
           fs.createReadStream(this.ocDownloadedFile)
             .pipe(unzip.Extract({path: this.installerDataSvc.ocDir()}))
             .on('close', () => {
+              Logger.info(CDKInstall.key() + ' - Extract OpenShift Client Binary to ' + this.installerDataSvc.ocDir() + ' SUCCESS');
+
+              Logger.info(CDKInstall.key() + ' - Extract Vagrantfile for OpenShift to ' + this.installerDataSvc.tempDir());
+
               fs.createReadStream(this.vagrantDownloadedFile)
                 .pipe(unzip.Extract({path: this.installerDataSvc.tempDir()}))
                 .on('close', () => {
+                  Logger.info(CDKInstall.key() + ' - Extract Vagrantfile for OpenShift to ' + this.installerDataSvc.tempDir() + ' SUCCESS');
+
+                  Logger.info(CDKInstall.key() + ' - Move Vagrantfile for OpenShift to ' + this.installerDataSvc.cdkVagrantfileDir());
+
                   fs.move(
                     path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'),
                     this.installerDataSvc.cdkVagrantfileDir(),
                     (err) => {
+                      if (err) {
+                        Logger.error(CDKInstall.key() + ' - ' + err);
+                        return failure(err);
+                      }
+
+                      Logger.info(CDKInstall.key() + ' - Move Vagrantfile for OpenShift to ' + this.installerDataSvc.cdkVagrantfileDir() + ' SUCCESS');
+
+                      Logger.info(CDKInstall.key() + ' - Move pscp.exe to ' + this.installerDataSvc.ocDir());
+
                       fs.move(
                         this.pscpDownloadedFile,
                         path.join(this.installerDataSvc.ocDir(), 'pscp.exe'),
                         (err) => {
+                          if (err) {
+                            Logger.error(CDKInstall.key() + ' - ' + err);
+                            return failure(err);
+                          }
+
+                          Logger.info(CDKInstall.key() + ' - Move pscp.exe to ' + this.installerDataSvc.ocDir() + ' SUCCESS');
+
                           // Set required paths
                           let data = [
                             '$newPath = "' + this.installerDataSvc.ocDir() + '";',
@@ -100,7 +145,12 @@ class CDKInstall extends InstallableItem {
                             '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
                             '[Environment]::Exit(0)'
                           ].join('\r\n');
+
+                          Logger.info(CDKInstall.key() + ' - Write path script file to ' + this.pscpPathScript);
                           fs.writeFileSync(this.pscpPathScript, data);
+                          Logger.info(CDKInstall.key() + ' - Write path script file to ' + this.pscpPathScript + ' SUCCESS');
+
+                          Logger.info(CDKInstall.key() + ' - Execute path script file ' + this.pscpPathScript);
 
                           require('child_process')
                             .execFile(
@@ -112,11 +162,16 @@ class CDKInstall extends InstallableItem {
                                 this.pscpPathScript
                               ],
                               (error, stdout, stderr) => {
-                                console.log(stdout);
-                                console.log(stderr);
-                                if (error !== null) {
-                                  failure(error);
+                                if (error && error != '') {
+                                  Logger.error(CDKInstall.key() + ' - ' + error);
+                                  Logger.error(CDKInstall.key() + ' - ' + stderr);
+                                  return failure(error);
                                 }
+
+                                if (stdout && stdout != '') {
+                                  Logger.info(CDKInstall.key() + ' - ' + stdout);
+                                }
+                                Logger.info(CDKInstall.key() + ' - Execute path script file ' + this.pscpPathScript + ' SUCCESS');
 
                                 let markerContent = [
                                   'openshift.auth.scheme=Basic',
@@ -125,15 +180,19 @@ class CDKInstall extends InstallableItem {
                                   'oc.binary.path=' + this.installerDataSvc.ocDir(),
                                   'rhel.subscription.username=' + this.installerDataSvc.getUsername()
                                 ].join('\r\n');
-                                fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
 
-                                let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+                                Logger.info(CDKInstall.key() + ' - Write .cdk marker content to ' + this.installerDataSvc.cdkMarker());
+                                fs.writeFileSync(this.installerDataSvc.cdkMarker(), markerContent);
+                                Logger.info(CDKInstall.key() + ' - Write .cdk marker content to ' + this.installerDataSvc.cdkMarker() + ' SUCCESS');
+
+                                let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
 
                                 if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
                                   this.postVagrantSetup(progress, success, failure);
                                 } else {
+                                  Logger.info(CDKInstall.key() + ' - Vagrant has not finished installing, listener created to be called when it has.');
                                   ipcRenderer.on('installComplete', (event, arg) => {
-                                    if (arg == 'vagrant') {
+                                    if (arg == VagrantInstall.key()) {
                                       this.postVagrantSetup(progress, success, failure);
                                     }
                                   });
@@ -159,65 +218,85 @@ class CDKInstall extends InstallableItem {
   }
 
   postVagrantSetup(progress, success, failure) {
-    let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+    Logger.info(CDKInstall.key() + ' - postVagrantSetup() called');
 
-    if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
-      // Vagrant is installed, add CDK bits
-      let env = this.createEnvironment();
-      require('child_process')
-        .exec(
-          'vagrant plugin install ' +
-          path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.0.0.gem'),
-          {
-            cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
-            env: env
-          },
-          (error, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            if (error !== null) {
-              return failure(error);
-            }
+    // Vagrant is installed, add CDK bits
+    let env = this.createEnvironment();
 
-            require('child_process')
-              .exec(
-                'vagrant plugin install ' +
-                path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-adbinfo-0.0.5.gem'),
-                {
-                  cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
-                  env: env
-                },
-                (error, stdout, stderr) => {
-                  console.log(stdout);
-                  console.log(stderr);
-                  if (error !== null) {
-                    return failure(error);
-                  }
+    Logger.info(CDKInstall.key() + ' - Install registration plugin to vagrant');
 
-                  require('child_process')
-                    .exec(
-                      'vagrant box add --name cdk_v2 ' +
-                      path.join(this.installerDataSvc.cdkBoxDir(), this.boxName),
-                      {
-                        cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
-                        env: env
-                      },
-                      (error, stdout, stderr) => {
-                        console.log(stdout);
-                        console.log(stderr);
-                        if (error !== null) {
-                          return failure(error);
-                        }
-
-                        progress.setComplete("Complete");
-                        success();
-                      }
-                    );
-                }
-              );
+    require('child_process')
+      .exec(
+        'vagrant plugin install ' +
+        path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.0.0.gem'),
+        {
+          cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+          env: env
+        },
+        (error, stdout, stderr) => {
+          if (error && error != '') {
+            Logger.error(CDKInstall.key() + ' - ' + error);
+            Logger.error(CDKInstall.key() + ' - ' + stderr);
+            return failure(error);
           }
-        );
-    }
+
+          if (stdout && stdout != '') {
+            Logger.info(CDKInstall.key() + ' - ' + stdout);
+          }
+          Logger.info(CDKInstall.key() + ' - Install registration plugin to vagrant SUCCESS');
+
+          Logger.info(CDKInstall.key() + ' - Install adbinfo plugin to vagrant');
+
+          require('child_process')
+            .exec(
+              'vagrant plugin install ' +
+              path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-adbinfo-0.0.5.gem'),
+              {
+                cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+                env: env
+              },
+              (error, stdout, stderr) => {
+                if (error && error != '') {
+                  Logger.error(CDKInstall.key() + ' - ' + error);
+                  Logger.error(CDKInstall.key() + ' - ' + stderr);
+                  return failure(error);
+                }
+
+                if (stdout && stdout != '') {
+                  Logger.info(CDKInstall.key() + ' - ' + stdout);
+                }
+                Logger.info(CDKInstall.key() + ' - Install adbinfo plugin to vagrant SUCCESS');
+
+                Logger.info(CDKInstall.key() + ' - Install cdk_v2 box to vagrant');
+
+                require('child_process')
+                  .exec(
+                    'vagrant box add --name cdk_v2 ' +
+                    path.join(this.installerDataSvc.cdkBoxDir(), this.boxName),
+                    {
+                      cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+                      env: env
+                    },
+                    (error, stdout, stderr) => {
+                      if (error && error != '') {
+                        Logger.error(CDKInstall.key() + ' - ' + error);
+                        Logger.error(CDKInstall.key() + ' - ' + stderr);
+                        return failure(error);
+                      }
+
+                      if (stdout && stdout != '') {
+                        Logger.info(CDKInstall.key() + ' - ' + stdout);
+                      }
+                      Logger.info(CDKInstall.key() + ' - Install cdk_v2 box to vagrant SUCCESS');
+
+                      progress.setComplete("Complete");
+                      success();
+                    }
+                  );
+              }
+            );
+        }
+      );
   }
 }
 

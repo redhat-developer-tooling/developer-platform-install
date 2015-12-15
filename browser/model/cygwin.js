@@ -3,10 +3,10 @@
 let fs = require('fs');
 let request = require('request');
 let path = require('path');
-let execFile = require('remote').require('../main/util');
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
+import Logger from '../services/logger';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -15,6 +15,10 @@ class CygwinInstall extends InstallableItem {
     this.installerDataSvc = installerDataSvc;
 
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'cygwin.exe');
+  }
+
+  static key() {
+    return 'cygwin';
   }
 
   checkForExistingInstall() {
@@ -34,28 +38,37 @@ class CygwinInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing Cygwin');
 
-    execFile(
-      this.downloadedFile,
-      [
-        '--no-admin',
-        '--quiet-mode',
-        '--only-site',
-        '--site',
-        'http://mirrors.kernel.org/sourceware/cygwin',
-        '--root',
-        this.installerDataSvc.cygwinDir(),
-        '--categories',
-        'Base',
-        '--packages',
-        'openssh,rsync'
-      ],
-      () => {
-        progress.setComplete("Complete");
-        success();
-      },
-      () => {
-        failure();
-      });
+    require('child_process')
+      .execFile(
+        this.downloadedFile,
+        [
+          '--no-admin',
+          '--quiet-mode',
+          '--only-site',
+          '--site',
+          'http://mirrors.kernel.org/sourceware/cygwin',
+          '--root',
+          this.installerDataSvc.cygwinDir(),
+          '--categories',
+          'Base',
+          '--packages',
+          'openssh,rsync'
+        ],
+        (error, stdout, stderr) => {
+          if (error && error != '') {
+            Logger.error(CygwinInstall.key() + ' - ' + error);
+            Logger.error(CygwinInstall.key() + ' - ' + stderr);
+            return failure(error);
+          }
+
+          if (stdout && stdout != '') {
+            Logger.info(CygwinInstall.key() + ' - ' + stdout);
+          }
+
+          progress.setComplete("Complete");
+          success();
+        }
+      );
   }
 }
 

@@ -7,6 +7,7 @@ let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
+import Logger from '../services/logger';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -16,6 +17,10 @@ class VagrantInstall extends InstallableItem {
 
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'vagrant.zip');
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
+  }
+
+  static key() {
+    return 'vagrant';
   }
 
   checkForExistingInstall() {
@@ -36,13 +41,24 @@ class VagrantInstall extends InstallableItem {
   install(progress, success, failure) {
     progress.setDesc('Installing Vagrant');
 
+    Logger.info(VagrantInstall.key() + ' - Extract vagrant zip to ' + this.installerDataSvc.tempDir());
+
     fs.createReadStream(this.downloadedFile)
       .pipe(unzip.Extract({path: this.installerDataSvc.tempDir()}))
       .on('close', () => {
+        Logger.info(VagrantInstall.key() + ' - Extract vagrant zip to ' + this.installerDataSvc.tempDir() + ' SUCCESS');
+
         let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
 
+        Logger.info(VagrantInstall.key() + ' - Move vagrant to ' + this.installerDataSvc.vagrantDir());
+
         fs.move(vagrantExploded, this.installerDataSvc.vagrantDir(), (err) => {
-          if (err) return failure(err);
+          if (err) {
+            Logger.error(VagrantInstall.key() + ' - ' + err);
+            return failure(err);
+          }
+
+          Logger.info(VagrantInstall.key() + ' - Move vagrant to ' + this.installerDataSvc.vagrantDir() + ' SUCCESS');
 
           // Set required paths
           let data = [
@@ -51,8 +67,12 @@ class VagrantInstall extends InstallableItem {
             '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
             '[Environment]::Exit(0)'
           ].join('\r\n');
-          fs.writeFileSync(this.vagrantPathScript, data);
 
+          Logger.info(VagrantInstall.key() + ' - Write vagrant path script to ' + this.vagrantPathScript);
+          fs.writeFileSync(this.vagrantPathScript, data);
+          Logger.info(VagrantInstall.key() + ' - Write vagrant path script to ' + this.vagrantPathScript + ' SUCCESS');
+
+          Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript);
           require('child_process')
             .execFile(
               'powershell',
@@ -63,11 +83,16 @@ class VagrantInstall extends InstallableItem {
                 this.vagrantPathScript
               ],
               (error, stdout, stderr) => {
-                console.log(stdout);
-                console.log(stderr);
-                if (error !== null) {
-                  failure(error);
+                if (error && error != '') {
+                  Logger.error(VagrantInstall.key() + ' - ' + error);
+                  Logger.error(VagrantInstall.key() + ' - ' + stderr);
+                  return failure(error);
                 }
+
+                if (stdout && stdout != '') {
+                  Logger.info(VagrantInstall.key() + ' - ' + stdout);
+                }
+                Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript + ' SUCCESS');
 
                 progress.setComplete("Complete");
                 success();
