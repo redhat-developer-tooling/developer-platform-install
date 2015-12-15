@@ -7,7 +7,7 @@ let unzip = require('unzip');
 let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
-import Downloader from './handler/downloader';
+import Downloader from './helpers/downloader';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {

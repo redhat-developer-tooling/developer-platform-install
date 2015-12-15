@@ -6,7 +6,7 @@ let path = require('path');
 let execFile = require('remote').require('../main/util');
 
 import InstallableItem from './installable-item';
-import Downloader from './handler/downloader';
+import Downloader from './helpers/downloader';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {

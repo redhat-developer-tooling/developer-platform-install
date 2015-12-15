@@ -6,7 +6,7 @@ let path = require('path');
 let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
-import Downloader from './handler/downloader';
+import Downloader from './helpers/downloader';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {

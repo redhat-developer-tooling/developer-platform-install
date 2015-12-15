@@ -8,7 +8,7 @@ let ipcRenderer = require('electron').ipcRenderer;
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
-import Downloader from './handler/downloader';
+import Downloader from './helpers/downloader';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {

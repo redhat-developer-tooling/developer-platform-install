@@ -6,7 +6,7 @@ let path = require('path');
 let request = require('request');
 
 import InstallableItem from './installable-item';
-import Downloader from './handler/downloader';
+import Downloader from './helpers/downloader';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
