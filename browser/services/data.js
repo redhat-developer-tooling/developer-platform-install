@@ -152,7 +152,7 @@ class InstallerDataService {
         this.installDone(key);
       },
       (error) => {
-        Logger.error(installableKey + ' failed to install: ' + error);
+        Logger.error(key + ' failed to install: ' + error);
       }
     );
   }
