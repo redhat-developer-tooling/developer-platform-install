@@ -13,7 +13,7 @@ import VagrantInstall from './vagrant';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
-    super(cdkUrl, installFile);
+    super('CDK', cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;
@@ -40,7 +40,7 @@ class CDKInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading CDK');
+    progress.setStatus('Downloading');
 
     let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
     let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
@@ -79,7 +79,7 @@ class CDKInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing CDK');
+    progress.setStatus('Installing');
 
     Logger.info(CDKInstall.key() + ' - Extract CDK zip to ' + this.installerDataSvc.installDir());
 
@@ -289,7 +289,7 @@ class CDKInstall extends InstallableItem {
                       }
                       Logger.info(CDKInstall.key() + ' - Install cdk_v2 box to vagrant SUCCESS');
 
-                      progress.setComplete("Complete");
+                      progress.setComplete();
                       success();
                     }
                   );

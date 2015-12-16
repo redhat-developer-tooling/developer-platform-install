@@ -43,7 +43,6 @@ class Downloader {
   dataHandler(data) {
     this.currentSize += data.length;
     this.progress.setCurrent(Math.round((this.currentSize / this.downloadSize) * 100));
-    this.progress.setLabel(this.progress.current + "%");
   }
 
   endHandler(stream) {

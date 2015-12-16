@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
-    super(downloadUrl, installFile);
+    super('VirtualBox', downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
@@ -32,7 +32,7 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading VirtualBox');
+    progress.setStatus('Downloading');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -43,7 +43,7 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing VirtualBox');
+    progress.setStatus('Installing');
 
     Logger.info(VirtualBoxInstall.key() + ' - Extract virtualbox msi files');
 
@@ -90,7 +90,7 @@ class VirtualBoxInstall extends InstallableItem {
                 }
                 Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox SUCCESS');
 
-                progress.setComplete("Complete");
+                progress.setComplete();
                 success();
               }
             );

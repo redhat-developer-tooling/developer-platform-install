@@ -13,7 +13,7 @@ import JdkInstall from './jdk-install';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super(downloadUrl, installFile);
+    super('JBDS', downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
@@ -30,7 +30,7 @@ class JbdsInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading JBDS');
+    progress.setStatus('Downloading');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -48,7 +48,7 @@ class JbdsInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing JBDS');
+    progress.setStatus('Installing');
 
     Logger.info(JbdsInstall.key() + ' - Generate JBDS auto install file content');
     let data = this.installGenerator.fileContent();
@@ -108,7 +108,7 @@ class JbdsInstall extends InstallableItem {
 
               Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location SUCCESS');
 
-              progress.setComplete("Complete");
+              progress.setComplete();
               success();
             }
           );

@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super(downloadUrl, installFile);
+    super('Cygwin', downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
@@ -25,7 +25,7 @@ class CygwinInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading Cygwin');
+    progress.setStatus('Downloading');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -36,7 +36,7 @@ class CygwinInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing Cygwin');
+    progress.setStatus('Installing');
 
     require('child_process')
       .execFile(
@@ -65,7 +65,7 @@ class CygwinInstall extends InstallableItem {
             Logger.info(CygwinInstall.key() + ' - ' + stdout);
           }
 
-          progress.setComplete("Complete");
+          progress.setComplete();
           success();
         }
       );

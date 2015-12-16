@@ -11,7 +11,7 @@ import Logger from '../services/logger';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super(downloadUrl, installFile);
+    super('JDK 8', downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
@@ -26,7 +26,7 @@ class JdkInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading JDK 8');
+    progress.setStatus('Downloading');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -44,7 +44,7 @@ class JdkInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing JDK 8');
+    progress.setStatus('Installing');
 
     this.extractZip(this.downloadedFile, this.installerDataSvc.installDir(), progress, success, failure);
   }
@@ -79,7 +79,7 @@ class JdkInstall extends InstallableItem {
             } else {
               Logger.info(JdkInstall.key() + ' - Rename extracted directory to ' + jdkDir + ' SUCCESS');
 
-              progress.setComplete("Complete");
+              progress.setComplete();
               success();
             }
           });

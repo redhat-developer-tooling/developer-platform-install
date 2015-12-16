@@ -16,7 +16,7 @@ class InstallController {
   }
 
   processInstallable(key, value) {
-    let itemProgress = new ProgressState(this.$scope);
+    let itemProgress = new ProgressState(value.getName(), this.$scope);
 
     Object.defineProperty(this.data, key, {
       enumerable: true,
@@ -71,7 +71,8 @@ class InstallController {
 }
 
 class ProgressState {
-  constructor($scope) {
+  constructor(name, $scope) {
+    this.name = name;
     this.$scope = $scope;
     this.current = 0;
     this.label = '';
@@ -83,25 +84,19 @@ class ProgressState {
 
     this.$scope.$apply(() => {
       this.current = newVal;
+      this.label = newVal + '%';
     });
   }
 
-  setLabel(newLabel) {
-    if (newLabel == this.label) return;
-
-    this.label = newLabel;
+  setStatus(newStatus) {
+    this.desc = this.name + ' - ' + newStatus;
   }
 
-  setDesc(newDesc) {
-    if (newDesc == this.desc) return;
-
-    this.desc = newDesc;
-  }
-
-  setComplete(newLabel) {
+  setComplete() {
     this.$scope.$apply(() => {
       this.current = 100;
-      this.label = newLabel;
+      this.label = '100%';
+      this.setStatus('Complete');
     });
   }
 }

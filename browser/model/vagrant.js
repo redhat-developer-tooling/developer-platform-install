@@ -11,7 +11,7 @@ import Logger from '../services/logger';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super(downloadUrl, installFile);
+    super('Vagrant', downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
@@ -27,7 +27,7 @@ class VagrantInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setDesc('Downloading Vagrant');
+    progress.setStatus('Downloading');
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
@@ -39,7 +39,7 @@ class VagrantInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setDesc('Installing Vagrant');
+    progress.setStatus('Installing');
 
     Logger.info(VagrantInstall.key() + ' - Extract vagrant zip to ' + this.installerDataSvc.tempDir());
 
@@ -94,7 +94,7 @@ class VagrantInstall extends InstallableItem {
                 }
                 Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript + ' SUCCESS');
 
-                progress.setComplete("Complete");
+                progress.setComplete();
                 success();
               }
             );

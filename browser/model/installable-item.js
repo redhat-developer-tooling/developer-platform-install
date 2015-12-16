@@ -1,7 +1,8 @@
 'use strict';
 
 class InstallableItem {
-  constructor(downloadUrl, installFile) {
+  constructor(name, downloadUrl, installFile) {
+    this.name = name;
     this.existingInstall = false;
     this.existingInstallLocation = "";
     this.useDownload = true;
@@ -11,13 +12,17 @@ class InstallableItem {
     if (downloadUrl == null || downloadUrl == '') {
     	throw(new Error('No download URL set'));
     }
-    
+
     this.downloadUrl = downloadUrl;
 
     if (installFile != null && installFile != '') {
       this.useDownload = false;
       this.installFile = installFile;
     }
+  }
+
+  getName() {
+    return this.name;
   }
 
   getDownloadUrl() {
