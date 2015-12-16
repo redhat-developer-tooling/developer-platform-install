@@ -31,7 +31,7 @@ class VagrantInstall extends InstallableItem {
 
     // Need to download the file
     let writeStream = fs.createWriteStream(this.downloadedFile);
-    let downloadSize = 188346368;
+    let downloadSize = 199819264;
 
     let downloader = new Downloader(progress, success, failure, downloadSize);
     downloader.setWriteStream(writeStream);
