@@ -27,13 +27,21 @@
                 <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
                 <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="help-block has-error">Please enter a password.</div>
             </div>
+            <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned)" class="form-group has-error">
+                <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
+                  <span class="pficon pficon-error-circle-o"></span>
+                  <strong>Invalid account information, please try again.</strong>
+                </div>
+                <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
+                  <span class="pficon pficon-error-circle-o"></span>
+                  <strong>Terms and Conditions for CDK have not been signed.</strong>
+                </div>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">LOG IN</button>
                 <div class="pull-right">
                   <a href="" ng-click="acctCtrl.forgotPassword()">Forgot your login or password?</a>
                 </div>
-                <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block has-error">Invalid account information, please try again.</div>
-                <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block has-error">Terms and Conditions for CDK have not been signed.</div>
             </div>
           </form>
         </div>
