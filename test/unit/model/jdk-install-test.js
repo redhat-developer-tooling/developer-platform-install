@@ -41,7 +41,7 @@ describe('JDK installer', function() {
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
 
-    fakeProgress = { setDesc: function (desc) { return; },
+    fakeProgress = { setStatus: function (desc) { return; },
     setCurrent: function (val) {},
     setLabel: function (label) {}
   };
@@ -78,11 +78,11 @@ it('should download jdk installer to temporary folder as jdk8.zip', function() {
 
 describe('when downloading the jdk zip', function() {
 
-  it('should set progress to "Downloading JDK 8"', function(done) {
+  it('should set progress to "Downloading"', function(done) {
     let installer = new JdkInstall(stub, 'http://www.azulsystems.com/products/zulu/downloads', null);
-    let spy = sinon.spy(fakeProgress, 'setDesc');
+    let spy = sinon.spy(fakeProgress, 'setStatus');
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
-    expect(spy.withArgs('Downloading JDK 8')).called.once;
+    expect(spy.withArgs('Downloading')).called.once;
     done();
   });
 
@@ -124,11 +124,11 @@ describe('when downloading the jdk zip', function() {
 
   describe('when installing jdk', function() {
 
-    it('should set progress to "Installing JDK 8"', function(done) {
+    it('should set progress to "Installing"', function(done) {
       let installer = new JdkInstall(stub, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let spy = sinon.spy(fakeProgress, 'setDesc');
+      let spy = sinon.spy(fakeProgress, 'setStatus');
       installer.install(fakeProgress, null, null);
-      expect(spy.withArgs('Installing JDK 8')).called.once;
+      expect(spy.withArgs('Installing')).called.once;
       done();
     });
 
