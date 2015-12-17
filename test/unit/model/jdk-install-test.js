@@ -42,10 +42,11 @@ describe('JDK installer', function() {
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
 
-    fakeProgress = { setStatus: function (desc) { return; },
-    setCurrent: function (val) {},
-    setLabel: function (label) {}
-  };
+    fakeProgress = {
+      setStatus: function (desc) { return; },
+      setCurrent: function (val) {},
+      setLabel: function (label) {}
+    };
 
     sandbox.stub(Logger, 'info');
 });
