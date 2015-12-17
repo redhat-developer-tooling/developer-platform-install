@@ -55,11 +55,13 @@ class CDKInstall extends InstallableItem {
         password = this.installerDataSvc.getPassword();
 
     downloader.setWriteStream(cdkBoxWriteStream);
-    downloader.downloadAuth
-      ({
-        url: this.cdkBoxUrl,
-        rejectUnauthorized: false
-      }, username, password);
+    downloader.download(this.cdkBoxUrl);
+    // TODO Switch back to auth download when CDK latest is in Customer Portal
+    // downloader.downloadAuth
+    //   ({
+    //     url: this.cdkBoxUrl,
+    //     rejectUnauthorized: false
+    //   }, username, password);
 
     downloader.setWriteStream(cdkWriteStream);
     downloader.downloadAuth
