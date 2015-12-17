@@ -3,6 +3,7 @@
 import chai, { expect } from 'chai';
 import { default as sinonChai } from 'sinon-chai';
 import JdkInstall from 'model/jdk-install';
+import Logger from 'services/logger';
 chai.use(sinonChai);
 
 let sinon = require('sinon');
@@ -45,6 +46,8 @@ describe('JDK installer', function() {
     setCurrent: function (val) {},
     setLabel: function (label) {}
   };
+
+    sandbox.stub(Logger, 'info');
 });
 
 afterEach(function () {
