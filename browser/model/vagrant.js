@@ -94,8 +94,26 @@ class VagrantInstall extends InstallableItem {
                 }
                 Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript + ' SUCCESS');
 
-                progress.setComplete();
-                success();
+                Logger.info(VagrantInstall.key() + ' - Set VAGRANT_DETECTED_OS environment variable');
+                require('child_process')
+                  .exec(
+                    'setx VAGRANT_DETECTED_OS "cygwin"',
+                    (error, stdout, stderr) => {
+                      if (error && error != '') {
+                        Logger.error(VagrantInstall.key() + ' - ' + error);
+                        Logger.error(VagrantInstall.key() + ' - ' + stderr);
+                        return failure(error);
+                      }
+
+                      if (stdout && stdout != '') {
+                        Logger.info(VagrantInstall.key() + ' - ' + stdout);
+                      }
+                      Logger.info(VagrantInstall.key() + ' - Set VAGRANT_DETECTED_OS environment variable SUCCESS');
+
+                      progress.setComplete();
+                      success();
+                    }
+                  );
               }
             );
         });
