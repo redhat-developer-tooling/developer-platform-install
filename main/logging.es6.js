@@ -6,8 +6,9 @@ import path from 'path';
 
 let logFile = null;
 
-export function init(installRoot) {
+export function init(installRoot, version) {
   logFile = path.join(installRoot, 'install.log');
+  log('Developer Platform installer v' + version);
 }
 
 export function log(message) {
