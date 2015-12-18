@@ -7,8 +7,6 @@ import 'sinon-as-promised';
 import AccountController from 'pages/account/controller.js';
 chai.use(sinonChai);
 
-import { shell } from 'electron';
-
 describe('Login controller', function(){
 
   let controller;
