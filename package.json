@@ -32,7 +32,7 @@
     "chai": "^3.4.1",
     "del": "^2.0.2",
     "electron-installer-squirrel-windows": "^1.2.2",
-    "electron-packager": "^5.1.0",
+    "electron-packager": "^5.2.0",
     "electron-prebuilt": "0.36.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",

@@ -28,7 +28,7 @@ gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=win32 --arch=x64';
   cmd += ' --version=' + electronVersion + ' --out=./dist/win/ --overwrite --asar=true';
-  cmd += ' --prune --ignore=node_modules/\.bin --ignore=test';
+  cmd += ' --prune --ignore=test';
 
   exec(cmd, function(err, stdout, stderr) {
     console.log(stdout);
