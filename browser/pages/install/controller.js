@@ -16,7 +16,7 @@ class InstallController {
   }
 
   processInstallable(key, value) {
-    let itemProgress = new ProgressState(value.getName(), this.$scope);
+    let itemProgress = new ProgressState(value.getName(), value.getInstallTime(), this.$scope, this.$timeout);
 
     Object.defineProperty(this.data, key, {
       enumerable: true,
@@ -47,6 +47,8 @@ class InstallController {
   triggerInstall(installableKey, installableValue, progress) {
     this.installerDataSvc.startInstall(installableKey);
 
+    progress.installTrigger();
+
     installableValue.install(progress,
       () => {
         this.installerDataSvc.installDone(installableKey);
@@ -71,16 +73,51 @@ class InstallController {
 }
 
 class ProgressState {
-  constructor(name, $scope) {
+  constructor(name, installTime, $scope, $timeout) {
     this.name = name;
+    this.installTime = installTime;
     this.$scope = $scope;
+    this.$timeout = $timeout;
     this.current = 0;
+    this.totalDownloadSize = 0;
+    this.downloadedSize = 0;
+    this.timeSpent = 0;
+    this.timeSpentInstall = 0;
+    this.lastInstallTime = 0;
     this.label = '';
     this.desc = '';
   }
 
+  setTotalDownloadSize(totalSize) {
+    this.totalDownloadSize = totalSize;
+  }
+
+  downloaded(amt, time) {
+    this.downloadedSize += amt;
+    this.timeSpent += time;
+    if (time == 0) return;
+    let rate = amt / time;
+    let remainingDownloadTime = (this.totalDownloadSize - this.downloadedSize) / rate;
+    this.setCurrent(Math.round((this.timeSpent / (this.timeSpent + (this.installTime * 1000) + remainingDownloadTime)) * 100));
+  }
+
+  installTrigger() {
+    this.lastInstallTime = Date.now();
+    this.$timeout(this.installUpdate.bind(this), 10000);
+  }
+
+  installUpdate() {
+    let now = Date.now();
+    this.timeSpentInstall += (now - this.lastInstallTime);
+    this.lastInstallTime = now;
+    this.setCurrent(Math.round(((this.timeSpent + this.timeSpentInstall) / (this.timeSpent + (this.installTime * 1000))) * 100));
+
+    this.$timeout(this.installUpdate.bind(this), 5000);
+  }
+
   setCurrent(newVal) {
-    if (newVal == this.current) return;
+    if (newVal <= this.current) return;
+    if (newVal > 99) return;
 
     this.$scope.$apply(() => {
       this.current = newVal;

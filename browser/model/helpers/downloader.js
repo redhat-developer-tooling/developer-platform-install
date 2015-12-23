@@ -11,12 +11,10 @@ class Downloader {
     }
     if (totalDownloads) {
       this.totalDownloads = totalDownloads;
-      this.handleSize = false;
     } else {
       this.totalDownloads = 1;
-      this.handleSize = true;
     }
-    this.currentSize = 0;
+    this.lastTime = 0;
     this.progress = progress;
     this.success = success;
     this.failure = failure;
@@ -32,17 +30,20 @@ class Downloader {
   }
 
   responseHandler(response) {
-    if (this.handleSize) {
+    if (this.downloadSize == 0) {
       let tempSize = response.headers['content-length'];
       if (tempSize !== undefined && tempSize > 0) {
         this.downloadSize = tempSize;
       }
     }
+    this.progress.setTotalDownloadSize(this.downloadSize);
+    this.lastTime = Date.now();
   }
 
   dataHandler(data) {
-    this.currentSize += data.length;
-    this.progress.setCurrent(Math.round((this.currentSize / this.downloadSize) * 100));
+    let current = Date.now();
+    this.progress.downloaded(data.length, current - this.lastTime);
+    this.lastTime = current;
   }
 
   endHandler(stream) {

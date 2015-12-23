@@ -11,7 +11,7 @@ import Logger from '../services/logger';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('Vagrant', downloadUrl, installFile);
+    super('Vagrant', 900, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 

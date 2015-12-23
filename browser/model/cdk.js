@@ -13,7 +13,7 @@ import VagrantInstall from './vagrant';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
-    super('CDK', cdkUrl, installFile);
+    super('CDK', 900, cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;

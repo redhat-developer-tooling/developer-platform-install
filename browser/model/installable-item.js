@@ -1,8 +1,9 @@
 'use strict';
 
 class InstallableItem {
-  constructor(name, downloadUrl, installFile) {
+  constructor(name, installTime, downloadUrl, installFile) {
     this.name = name;
+    this.installTime = installTime;
     this.existingInstall = false;
     this.existingInstallLocation = "";
     this.useDownload = true;
@@ -23,6 +24,10 @@ class InstallableItem {
 
   getName() {
     return this.name;
+  }
+
+  getInstallTime() {
+    return this.installTime;
   }
 
   getDownloadUrl() {

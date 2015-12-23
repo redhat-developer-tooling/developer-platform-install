@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
-    super('VirtualBox', downloadUrl, installFile);
+    super('VirtualBox', 700, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 

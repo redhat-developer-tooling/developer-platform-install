@@ -147,6 +147,8 @@ class InstallerDataService {
     }
 
     this.startInstall(key);
+    progress.installTrigger();
+
     return item.install(progress,
       () => {
         this.installDone(key);

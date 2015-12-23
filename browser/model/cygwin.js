@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('Cygwin', downloadUrl, installFile);
+    super('Cygwin', 720, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 

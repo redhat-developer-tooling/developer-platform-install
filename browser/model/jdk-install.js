@@ -11,7 +11,7 @@ import Logger from '../services/logger';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('JDK 8', downloadUrl, installFile);
+    super('JDK 8', 260, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 

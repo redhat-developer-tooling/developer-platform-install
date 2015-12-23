@@ -13,7 +13,7 @@ import JdkInstall from './jdk-install';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('JBDS', downloadUrl, installFile);
+    super('JBDS', 1600, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
