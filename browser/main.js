@@ -71,7 +71,7 @@ let mainModule =
                                 $timeout,
                                 'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
                                 'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
-                                'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/3012/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1-597-gea98cba-ea98cba-windows.zip',
+                                'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1-632-g99c6de7-99c6de7-windows.zip',
                                 'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
                                 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
                                 null)
