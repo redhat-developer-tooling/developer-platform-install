@@ -4,16 +4,8 @@ let request = require('request');
 
 class Downloader {
   constructor(progress, success, failure, downloadSize, totalDownloads) {
-    if (downloadSize) {
-      this.downloadSize = downloadSize;
-    } else {
-      this.downloadSize = 0;
-    }
-    if (totalDownloads) {
-      this.totalDownloads = totalDownloads;
-    } else {
-      this.totalDownloads = 1;
-    }
+    this.downloadSize = downloadSize || 0;
+    this.totalDownloads = totalDownloads || 1;
     this.lastTime = 0;
     this.progress = progress;
     this.success = success;
