@@ -36,6 +36,7 @@ ExtraDiskSpaceRequired=1048576
 [Files]
 Source: "EfTidy.dll"; Flags: dontcopy;
 Source: "InstallConfigRecord.xml"; Flags: dontcopy;
+Source: "manifest.xml"; Flags: dontcopy;
 
 #include "idp_source\idp.iss"
 
@@ -61,11 +62,14 @@ type
   end;
   BcLabelArray = array[1..4] of TLabel;
 
-  Component = record
-    Name: String;
+  TManifestComponent = record
+    Id: String;
     DownloadUrl: String;
+    Filename: String;
     Install: Boolean;
   end;
+
+  TManifest = array of TManifestComponent;
 
   SAMLFormParams = record
     Action: String;
@@ -93,8 +97,8 @@ type
   end;
 
 const
-  JBDS_URL = 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
-  JBDS_FILENAME = 'jboss-devstudio-installer-standalone.jar';
+  //JBDS_URL = 'https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=40371';
+  //JBDS_FILENAME = 'jboss-devstudio-installer-standalone.jar';
   WAIT_TIMEOUT = $00000102;
   SEE_MASK_NOCLOSEPROCESS = $00000040;  
 
@@ -121,6 +125,9 @@ var
 
   // cookie values for downloading JBDS
   RHSSOCookieValue, JSessionIdCookieValue: String;
+
+  // The manifest is an array of components that may be installed
+  Manifest: TManifest;
 
 // Declaration of external windows function calls, for initiating and managing separate processes
 function ShellExecuteEx(var lpExecInfo: TShellExecuteInfo): BOOL; 
@@ -290,6 +297,46 @@ begin
   end;
 end;
 
+function loadManifest(): boolean;
+var
+  I: Integer;
+  XMLDoc, NodeList, ComponentNode: Variant;
+  Component: TManifestComponent;
+begin
+  Result := False;
+
+  ExtractTemporaryFile('manifest.xml');
+
+  XMLDoc := CreateOleObject('MSXML2.DOMDocument');
+  XMLDoc.async := False;
+  XMLDoc.resolveExternals := False;
+  XMLDoc.validateOnParse := False;
+  XMLDoc.setProperty('ProhibitDTD', False);
+  XMLDoc.load(ExpandConstant('{tmp}\manifest.xml'));
+
+  if XMLDoc.parseError.errorCode <> 0 then
+  begin
+    MsgBox('Error loading manifest at line ' + IntToStr(XMLDoc.parseError.line) + ', position ' +
+      IntToStr(XMLDoc.parseError.linepos) + ': ' + XMLDoc.parseError.reason, mbInformation, MB_OK);
+  end else begin
+    NodeList := XMLDoc.getElementsByTagName('component');
+    
+    SetArrayLength(Manifest, NodeList.length);
+
+    for I := 0 to NodeList.length - 1 do
+    begin
+      ComponentNode := NodeList.item(i);
+      Component.Id := ComponentNode.attributes.getNamedItem('id').nodeValue;
+      Component.DownloadUrl := ComponentNode.attributes.getNamedItem('url').nodeValue;
+      Component.Filename := ComponentNode.attributes.getNamedItem('filename').nodeValue;
+
+      Manifest[I] := Component;
+    end;
+
+    Result := True;
+  end;
+end;
+
 function ExtractSAMLFormValues(ResponseText: String): SAMLFormParams;
 var
   I, J, K: Integer;
@@ -347,8 +394,8 @@ begin
   AuthLabel.Visible := True;
   AuthLabel.Refresh;
 
-  Url := 'https://idp.redhat.com/idp/authUser?j_username=' + UsernameEdit.Text + '&j_password=' + PasswordEdit.Text +
-    '&redirect=' + JBDS_URL;
+  Url := 'https://idp.redhat.com/idp/authUser?j_username=' + UsernameEdit.Text + '&j_password=' + PasswordEdit.Text// +
+//'&redirect=' + JBDS_URL;
 
   // Perform a SAML authentication for redhat.com
   WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
@@ -375,6 +422,9 @@ begin
 
     AuthLabel.Caption := 'Authentication Successful.';
     AuthLabel.Font.Color := clGreen;
+
+    // Exit here, since we're no longer downloading JBDS from access.redhat.com
+    Exit;
 
     // Register the EfTidy dll so that we can call its functions
     ExtractTemporaryFile('EfTidy.dll');
@@ -1006,7 +1056,7 @@ begin
     ExecInfo.Wnd := 0;
 
     ExecInfo.lpFile := ExpandConstant('{app}\zulu-8\bin\javaw.exe');
-    ExecInfo.lpParameters := ExpandConstant('-jar {tmp}\' + JBDS_FILENAME + ' {tmp}\InstallConfigRecord.xml');
+    //ExecInfo.lpParameters := ExpandConstant('-jar {tmp}\' + JBDS_FILENAME + ' {tmp}\InstallConfigRecord.xml');
 
     ExecInfo.nShow := SW_SHOW; // SW_HIDE
 
@@ -1055,6 +1105,8 @@ var
   BackgroundBitmapText: TNewStaticText;
   BitmapFileName: String;
 begin
+  if loadManifest() = False then Exit;
+
   StdColor := StringToColor('$0093d9');
 
   { Custom wizard pages }
