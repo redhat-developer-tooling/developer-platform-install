@@ -127,19 +127,18 @@ class CDKInstall extends InstallableItem {
   }
 
   setupVagrant(installer, result) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      let vagrantInstall = self.installerDataSvc.getInstallable(VagrantInstall.key());
+    return new Promise((resolve, reject) => {
+      let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
 
       if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
-        return self.postVagrantSetup(installer, result)
+        return this.postVagrantSetup(installer, result)
         .then((res) => { return resolve(res); })
         .catch((err) => { return reject(err); });
       } else {
         Logger.info(CDKInstall.key() + ' - Vagrant has not finished installing, listener created to be called when it has.');
         ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == 'vagrant') {
-            return self.postVagrantSetup(installer, result)
+            return this.postVagrantSetup(installer, result)
             .then((res) => { return resolve(res); })
             .catch((err) => { return reject(err); });
           }

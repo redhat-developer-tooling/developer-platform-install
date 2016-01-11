@@ -16,19 +16,18 @@ class Installer {
   }
 
   exec(command, options, result) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      Logger.info(self.key + ' - Execute ' + command);
-      child_process.exec(command, options, function(error, stdout, stderr) {
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Execute ' + command);
+      child_process.exec(command, options, (error, stdout, stderr) => {
         if (error && error !== '') {
-          Logger.error(self.key + ' - ' + error);
-          Logger.error(self.key + ' - ' + stderr);
+          Logger.error(this.key + ' - ' + error);
+          Logger.error(this.key + ' - ' + stderr);
           reject(error);
         } else {
           if (stdout && stdout != '') {
-            Logger.info(self.key + ' - ' + stdout);
+            Logger.info(this.key + ' - ' + stdout);
           }
-          Logger.info(self.key + ' - Execute ' + command + ' SUCCESS');
+          Logger.info(this.key + ' - Execute ' + command + ' SUCCESS');
           resolve(true);
         }
       });
@@ -36,19 +35,18 @@ class Installer {
   }
 
   execFile(file, args, result) {
-    let self = this;
-    return new Promise(function(resolve, reject) {
-      Logger.info(self.key + ' - Execute ' + file + ' ' + args);
-      child_process.execFile(file, args, function(error, stdout, stderr) {
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Execute ' + file + ' ' + args);
+      child_process.execFile(file, args, (error, stdout, stderr) => {
         if (error && error !== '') {
-          Logger.error(self.key + ' - ' + error);
-          Logger.error(self.key + ' - ' + stderr);
+          Logger.error(this.key + ' - ' + error);
+          Logger.error(this.key + ' - ' + stderr);
           reject(error);
         } else {
           if (stdout && stdout != '') {
-            Logger.info(self.key + ' - ' + stdout);
+            Logger.info(this.key + ' - ' + stdout);
           }
-          Logger.info(self.key + ' - Execute ' + file + ' ' + args + ' SUCCESS');
+          Logger.info(this.key + ' - Execute ' + file + ' ' + args + ' SUCCESS');
           resolve(true);
         }
       });
@@ -56,32 +54,30 @@ class Installer {
   }
 
   unzip(zipFile, extractTo, result) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      Logger.info(self.key + ' - Extract ' + zipFile + ' to ' + extractTo);
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
       fs.createReadStream(zipFile)
       .pipe(unzip.Extract({path: extractTo}))
       .on('close', () => {
-        Logger.info(self.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
+        Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
         resolve(true);
       })
       .on('error', (err) => {
-        Logger.error(self.key + ' - ' + err);
+        Logger.error(this.key + ' - ' + err);
         reject(err);
       });
     });
   }
 
   moveFile(source, target, result) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      Logger.info(self.key + ' - Move ' + source + ' to ' + target);
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Move ' + source + ' to ' + target);
       fs.move(source, target, (err) => {
         if (err) {
-          Logger.error(self.key + ' - ' + err);
+          Logger.error(this.key + ' - ' + err);
           reject(err);
         } else {
-          Logger.info(self.key + ' - Move ' + source + ' to ' + target + ' SUCCESS');
+          Logger.info(this.key + ' - Move ' + source + ' to ' + target + ' SUCCESS');
           resolve(true);
         }
       });
@@ -89,15 +85,14 @@ class Installer {
   }
 
   writeFile(file, data, result) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      Logger.info(self.key + ' - Write ' + file);
-      fs.writeFile(file, data, function (err) {
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Write ' + file);
+      fs.writeFile(file, data, (err) => {
         if (err) {
-          Logger.error(self.key + ' - ' + err);
+          Logger.error(this.key + ' - ' + err);
           reject(err);
         } else {
-          Logger.info(self.key + ' - Write ' + file + ' SUCCESS');
+          Logger.info(this.key + ' - Write ' + file + ' SUCCESS');
           resolve(true);
         }
       });

@@ -13,6 +13,7 @@ chai.use(sinonChai);
 
 describe('JDK installer', function() {
   let sandbox, fakeProgress, DataStub, installerDataSvc;
+  let infoStub, errorStub;
   let fakeData = {
     tempDir: function() { return 'temp'; },
     installDir: function() { return 'install' },
@@ -25,6 +26,18 @@ describe('JDK installer', function() {
   installerDataSvc.jdkDir.returns('install/JDK8')
 
   before(function() {
+    infoStub = sinon.stub(Logger, 'info');
+    errorStub = sinon.stub(Logger, 'error');
+
+    fakeProgress = {
+      setStatus: function (desc) { return; },
+      setCurrent: function (val) {},
+      setLabel: function (label) {},
+      setComplete: function() {},
+      setTotalDownloadSize: function(size) {},
+      downloaded: function(amt, time) {}
+    };
+
     mockfs({
       'temp': {
         'jdk.zip': 'file content here',
@@ -36,19 +49,13 @@ describe('JDK installer', function() {
   });
 
   after(function() {
+    infoStub.restore();
+    errorStub.restore();
     mockfs.restore();
   });
 
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
-
-    fakeProgress = {
-      setStatus: function (desc) { return; },
-      setCurrent: function (val) {},
-      setLabel: function (label) {}
-    };
-
-    sandbox.stub(Logger, 'info');
   });
 
   afterEach(function () {
@@ -85,7 +92,7 @@ describe('when downloading the jdk zip', function() {
 
   it('should set progress to "Downloading"', function() {
     let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-    let spy = sinon.spy(fakeProgress, 'setStatus');
+    let spy = sandbox.spy(fakeProgress, 'setStatus');
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
@@ -95,7 +102,7 @@ describe('when downloading the jdk zip', function() {
 
   it('should write the data into temp/jdk8.zip', function() {
     let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-    let spy = sinon.spy(fs, 'createWriteStream');
+    let spy = sandbox.spy(fs, 'createWriteStream');
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
@@ -111,15 +118,13 @@ describe('when downloading the jdk zip', function() {
         'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
       }
     };
-    let spy = sinon.spy(request, 'get');
+    let spy = sandbox.spy(request, 'get');
     let installer = new JdkInstall(installerDataSvc, downloadUrl, null);
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
     expect(spy).to.have.been.calledOnce;
     expect(spy).to.have.been.calledWith(options);
-
-    spy.restore();
   });
 
   it('should fail with an invalid url', function(done) {
@@ -138,7 +143,7 @@ describe('when downloading the jdk zip', function() {
 
     it('should set progress to "Installing"', function() {
       let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let spy = sinon.spy(fakeProgress, 'setStatus');
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.install(fakeProgress, null, null);
 
@@ -148,7 +153,7 @@ describe('when downloading the jdk zip', function() {
 
     it('should load the downloaded installer file', function() {
       let installer = new JdkInstall(installerDataSvc, 'url', null);
-      let spy = sinon.spy(fs, 'createReadStream');
+      let spy = sandbox.spy(fs, 'createReadStream');
 
       installer.install(fakeProgress, null, null);
 
@@ -160,7 +165,7 @@ describe('when downloading the jdk zip', function() {
       let installer = new JdkInstall(installerDataSvc, 'url', 'file');
 
       function throwsWithNull() {
-        stub.installDir.returns(null);
+        installerDataSvc.installDir.returns(null);
         installer.install(fakeProgress, null, null);
       }
       expect(throwsWithNull).to.throw();
@@ -169,7 +174,7 @@ describe('when downloading the jdk zip', function() {
     it('should fail when install directory is empty', function() {
       let installer = new JdkInstall(installerDataSvc, 'url', 'file');
       function throwsWithEmpty() {
-        stub.installDir.returns('');
+        installerDataSvc.installDir.returns('');
         installer.install(fakeProgress, null, null);
       }
       expect(throwsWithEmpty).to.throw();
