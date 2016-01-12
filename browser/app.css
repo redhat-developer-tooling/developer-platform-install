@@ -1,6 +1,7 @@
 .branding {
   width: 180px;
   height: auto;
+  padding-top: 20px;
   padding-bottom: 20px;
 }
 
@@ -12,7 +13,7 @@ header {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 60%;
+  width: 100%;
 }
 
 .breadcrumbs:before {
