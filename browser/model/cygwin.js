@@ -15,6 +15,7 @@ class CygwinInstall extends InstallableItem {
     this.installerDataSvc = installerDataSvc;
 
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'cygwin.exe');
+    this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
   }
 
   static key() {
@@ -65,8 +66,45 @@ class CygwinInstall extends InstallableItem {
             Logger.info(CygwinInstall.key() + ' - ' + stdout);
           }
 
-          progress.setComplete();
-          success();
+          // Set required paths
+          let data = [
+            '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
+            '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+            '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
+            '[Environment]::Exit(0)'
+          ].join('\r\n');
+
+          Logger.info(CygwinInstall.key() + ' - Write cygwin path script to ' + this.cygwinPathScript);
+          fs.writeFileSync(this.cygwinPathScript, data);
+          Logger.info(CygwinInstall.key() + ' - Write cygwin path script to ' + this.cygwinPathScript + ' SUCCESS');
+
+          Logger.info(CygwinInstall.key() + ' - Execute cygwin path script ' + this.cygwinPathScript);
+          require('child_process')
+            .execFile(
+              'powershell',
+              [
+                '-ExecutionPolicy',
+                'ByPass',
+                '-File',
+                this.cygwinPathScript
+              ],
+              (error, stdout, stderr) => {
+                if (error && error != '') {
+                  Logger.error(CygwinInstall.key() + ' - ' + error);
+                  Logger.error(CygwinInstall.key() + ' - ' + stderr);
+                  return failure(error);
+                }
+
+                if (stdout && stdout != '') {
+                  Logger.info(CygwinInstall.key() + ' - ' + stdout);
+                }
+                Logger.info(CygwinInstall.key() + ' - Execute cygwin path script ' + this.cygwinPathScript + ' SUCCESS');
+
+                progress.setComplete();
+                success();
+
+              }
+            );
         }
       );
   }
