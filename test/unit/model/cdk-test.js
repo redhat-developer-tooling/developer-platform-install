@@ -16,11 +16,11 @@ let sinon  = require('sinon');
 require('sinon-as-promised');
 
 describe('CDK installer', function() {
-  let sandbox, fakeProgress, DataStub, installerDataSvc;
+  let sandbox, DataStub, installerDataSvc;
   let infoStub, errorStub;
   let fakeData = {
-    tempDir: function() { return 'temp'; },
-    installDir: function() { return 'install'; },
+    tempDir: function() { return 'temporaryFolder'; },
+    installDir: function() { return 'installFolder'; },
     getUsername: function() { return 'user'; },
     getPassword: function() { return 'password'; },
     ocDir: function() {},
@@ -31,10 +31,18 @@ describe('CDK installer', function() {
     cdkDir: function() {},
     getInstallable: function(key) {}
   };
+  let fakeProgress = {
+    setStatus: function (desc) { return; },
+    setCurrent: function (val) {},
+    setLabel: function (label) {},
+    setComplete: function() {},
+    setTotalDownloadSize: function(size) {},
+    downloaded: function(amt, time) {}
+  };
 
   installerDataSvc = sinon.stub(fakeData);
-  installerDataSvc.tempDir.returns('temp');
-  installerDataSvc.installDir.returns('install');
+  installerDataSvc.tempDir.returns('temporaryFolder');
+  installerDataSvc.installDir.returns('installFolder');
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('password');
   installerDataSvc.cdkDir.returns(path.join(installerDataSvc.installDir(), 'cdk'));
@@ -48,20 +56,12 @@ describe('CDK installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
 
-    fakeProgress = {
-      setStatus: function (desc) { return; },
-      setCurrent: function (val) {},
-      setLabel: function (label) {},
-      setComplete: function() {},
-      setTotalDownloadSize: function(size) {},
-      downloaded: function(amt, time) {}
-    };
-
     mockfs({
-      'temp': {
-      },
-      'install': {
-      }
+      temporaryFolder: {},
+      installFolder: {}
+    }, {
+      createCwd: false,
+      createTmp: false
     });
   });
 

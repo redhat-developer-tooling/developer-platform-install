@@ -12,39 +12,40 @@ import Logger from 'services/logger';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
-  let sandbox, fakeProgress, DataStub, installerDataSvc;
+  let DataStub, installerDataSvc;
   let infoStub, errorStub;
   let fakeData = {
-    tempDir: function() { return 'temp'; },
-    installDir: function() { return 'install' },
+    tempDir: function() { return 'tempDirectory'; },
+    installDir: function() { return 'installationFolder' },
     jdkDir: function() { return 'install/JDK8' }
   };
 
   installerDataSvc = sinon.stub(fakeData);
-  installerDataSvc.tempDir.returns('temp');
-  installerDataSvc.installDir.returns('install');
-  installerDataSvc.jdkDir.returns('install/JDK8')
+  installerDataSvc.tempDir.returns('tempDirectory');
+  installerDataSvc.installDir.returns('installationFolder');
+  installerDataSvc.jdkDir.returns('install/JDK8');
+
+  let fakeProgress = {
+    setStatus: function (desc) { return; },
+    setCurrent: function (val) {},
+    setLabel: function (label) {},
+    setComplete: function() {},
+    setTotalDownloadSize: function(size) {},
+    downloaded: function(amt, time) {}
+  };
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
 
-    fakeProgress = {
-      setStatus: function (desc) { return; },
-      setCurrent: function (val) {},
-      setLabel: function (label) {},
-      setComplete: function() {},
-      setTotalDownloadSize: function(size) {},
-      downloaded: function(amt, time) {}
-    };
-
     mockfs({
-      'temp': {
-        'jdk.zip': 'file content here',
-      },
-      'install': {
-        'zulu' : {}
+      tempDirectory : { 'jdk.zip': 'file content here' },
+      installationFolder : {
+        zulu : {}
       }
+    }, {
+      createCwd: false,
+      createTmp: false
     });
   });
 
@@ -52,14 +53,6 @@ describe('JDK installer', function() {
     infoStub.restore();
     errorStub.restore();
     mockfs.restore();
-  });
-
-  beforeEach(function () {
-    sandbox = sinon.sandbox.create();
-  });
-
-  afterEach(function () {
-    sandbox.restore();
   });
 
   it('should not download jdk when an installation exists', function() {
@@ -85,29 +78,33 @@ describe('JDK installer', function() {
 
 it('should download jdk installer to temporary folder as jdk8.zip', function() {
   expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-    path.join('temp', 'jdk8.zip'));
+    path.join('tempDirectory', 'jdk8.zip'));
 });
 
 describe('when downloading the jdk zip', function() {
 
   it('should set progress to "Downloading"', function() {
     let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-    let spy = sandbox.spy(fakeProgress, 'setStatus');
+    let spy = sinon.spy(fakeProgress, 'setStatus');
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
     expect(spy).to.have.been.calledOnce;
     expect(spy).to.have.been.calledWith('Downloading');
+
+    spy.restore();
   });
 
   it('should write the data into temp/jdk8.zip', function() {
     let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-    let spy = sandbox.spy(fs, 'createWriteStream');
+    let spy = sinon.spy(fs, 'createWriteStream');
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
     expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(path.join('temp', 'jdk8.zip'));
+    expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk8.zip'));
+
+    spy.restore();
   });
 
   it('should call a GET request with the specified parameters once', function() {
@@ -118,13 +115,15 @@ describe('when downloading the jdk zip', function() {
         'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
       }
     };
-    let spy = sandbox.spy(request, 'get');
+    let spy = sinon.spy(request, 'get');
     let installer = new JdkInstall(installerDataSvc, downloadUrl, null);
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
     expect(spy).to.have.been.calledOnce;
     expect(spy).to.have.been.calledWith(options);
+
+    spy.restore();
   });
 
   it('should fail with an invalid url', function(done) {
@@ -143,22 +142,26 @@ describe('when downloading the jdk zip', function() {
 
     it('should set progress to "Installing"', function() {
       let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      let spy = sinon.spy(fakeProgress, 'setStatus');
 
       installer.install(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
+
+      spy.restore();
     });
 
     it('should load the downloaded installer file', function() {
       let installer = new JdkInstall(installerDataSvc, 'url', null);
-      let spy = sandbox.spy(fs, 'createReadStream');
+      let spy = sinon.spy(fs, 'createReadStream');
 
       installer.install(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('temp', 'jdk8.zip'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk8.zip'));
+
+      spy.restore();
     });
 
     it('should fail when install directory is null', function() {
