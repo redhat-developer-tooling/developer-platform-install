@@ -107,6 +107,7 @@ class Installer {
   }
 
   fail(error) {
+    this.progress.setStatus('Failed');
     return this.failure(error);
   }
 
