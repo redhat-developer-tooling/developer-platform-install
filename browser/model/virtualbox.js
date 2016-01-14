@@ -3,6 +3,7 @@
 let fs = require('fs');
 let request = require('request');
 let path = require('path');
+let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -43,7 +44,6 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    progress.setStatus('Installing');
 
     Logger.info(VirtualBoxInstall.key() + ' - Extract virtualbox msi files');
 
@@ -67,33 +67,49 @@ class VirtualBoxInstall extends InstallableItem {
           Logger.info(VirtualBoxInstall.key() + ' - Extract virtualbox msi files SUCCESS');
 
           Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox');
-          require('child_process')
-            .execFile(
-              'msiexec',
-              [
-                '/i',
-                this.msiFile,
-                'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-                '/quiet',
-                '/passive',
-                '/norestart'
-              ],
-              (error, stdout, stderr) => {
-                if (error && error != '') {
-                  Logger.error(VirtualBoxInstall.key() + ' - ' + error);
-                  Logger.error(VirtualBoxInstall.key() + ' - ' + stderr);
-                  return failure(error);
-                }
+	  
+	      // If downloading is not finished wait for event 
+	      if (this.installerDataSvc.downloading) {
+	    	progress.setStatus('Waiting for all downloads to finish');
+	        ipcRenderer.on('downloadingComplete', (event, arg) => {
+            // time to start virtualbox installer
+	          this.installMsi(progress, success, failure);
+	        });
+	      } else { // it is safe to call virtualbox installer
+	        //downloading is already over vbox install is safe to start
+	    	this.installMsi(progress, success, failure);
+	      }
+        }
+      );
+  }
+  
+  installMsi(progress, success, failure) {
+	  progress.setStatus('Installing');
+	  require('child_process')
+      .execFile(
+        'msiexec',
+        [
+          '/i',
+          this.msiFile,
+          'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
+          '/quiet',
+          '/passive',
+          '/norestart'
+        ],
+        (error, stdout, stderr) => {
+          if (error && error != '') {
+            Logger.error(VirtualBoxInstall.key() + ' - ' + error);
+            Logger.error(VirtualBoxInstall.key() + ' - ' + stderr);
+            return failure(error);
+          }
 
-                if (stdout && stdout != '') {
-                  Logger.info(VirtualBoxInstall.key() + ' - ' + stdout);
-                }
-                Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox SUCCESS');
+          if (stdout && stdout != '') {
+            Logger.info(VirtualBoxInstall.key() + ' - ' + stdout);
+          }
+          Logger.info(VirtualBoxInstall.key() + ' - Execute msi installer for virtualbox SUCCESS');
 
-                progress.setComplete();
-                success();
-              }
-            );
+          progress.setComplete();
+          success();
         }
       );
   }

@@ -26,6 +26,11 @@ ipcMain.on('installComplete', (event, arg) => {
   event.sender.send('installComplete', arg);
 });
 
+ipcMain.on('downloadingComplete', (event, arg) => {
+  event.sender.send('downloadingComplete', arg);
+});
+
+
 // Setup logging listeners
 ipcMain.on('install-root', (event, installRoot) => {
   logger.init(installRoot, app.getVersion());

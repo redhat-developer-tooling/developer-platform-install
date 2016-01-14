@@ -1,6 +1,7 @@
 'use strict';
 
 let fs = require('fs-extra');
+let request = require('request');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
 

@@ -144,6 +144,7 @@ class InstallerDataService {
     this.toDownload.delete(key);
     if (this.isDownloading() && this.toDownload.size == 0) {
       this.downloading = false;
+      ipcRenderer.send('downloadingComplete', 'all');
     }
 
     this.startInstall(key);

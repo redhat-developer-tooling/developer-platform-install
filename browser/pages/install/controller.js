@@ -116,13 +116,10 @@ class ProgressState {
   }
 
   setCurrent(newVal) {
-    if (newVal <= this.current) return;
-    if (newVal > 99) return;
-
-    this.$scope.$apply(() => {
-      this.current = newVal;
-      this.label = newVal + '%';
-    });
+    if (newVal > this.current && newVal < 100) {
+    	this.current = newVal;
+    	this.label = newVal + '%';
+    }
   }
 
   setStatus(newStatus) {
@@ -130,11 +127,9 @@ class ProgressState {
   }
 
   setComplete() {
-    this.$scope.$apply(() => {
-      this.current = 100;
-      this.label = '100%';
-      this.setStatus('Complete');
-    });
+    this.current = 100;
+    this.label = '100%';
+    this.setStatus('Complete');
   }
 }
 
