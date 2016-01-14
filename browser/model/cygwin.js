@@ -7,6 +7,7 @@ let path = require('path');
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Installer from './helpers/installer';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -38,75 +39,39 @@ class CygwinInstall extends InstallableItem {
 
   install(progress, success, failure) {
     progress.setStatus('Installing');
+    let installer = new Installer(CygwinInstall.key(), progress, success, failure);
 
-    require('child_process')
-      .execFile(
-        this.downloadedFile,
-        [
-          '--no-admin',
-          '--quiet-mode',
-          '--only-site',
-          '--site',
-          'http://mirrors.kernel.org/sourceware/cygwin',
-          '--root',
-          this.installerDataSvc.cygwinDir(),
-          '--categories',
-          'Base',
-          '--packages',
-          'openssh,rsync'
-        ],
-        (error, stdout, stderr) => {
-          if (error && error != '') {
-            Logger.error(CygwinInstall.key() + ' - ' + error);
-            Logger.error(CygwinInstall.key() + ' - ' + stderr);
-            return failure(error);
-          }
+    let opts = [
+      '--no-admin',
+      '--quiet-mode',
+      '--only-site',
+      '--site',
+      'http://mirrors.kernel.org/sourceware/cygwin',
+      '--root',
+      this.installerDataSvc.cygwinDir(),
+      '--categories',
+      'Base',
+      '--packages',
+      'openssh,rsync'
+    ];
+    let data = [
+      '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
+      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+      '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
+      '[Environment]::Exit(0)'
+    ].join('\r\n');
 
-          if (stdout && stdout != '') {
-            Logger.info(CygwinInstall.key() + ' - ' + stdout);
-          }
-
-          // Set required paths
-          let data = [
-            '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
-            '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-            '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
-            '[Environment]::Exit(0)'
-          ].join('\r\n');
-
-          Logger.info(CygwinInstall.key() + ' - Write cygwin path script to ' + this.cygwinPathScript);
-          fs.writeFileSync(this.cygwinPathScript, data);
-          Logger.info(CygwinInstall.key() + ' - Write cygwin path script to ' + this.cygwinPathScript + ' SUCCESS');
-
-          Logger.info(CygwinInstall.key() + ' - Execute cygwin path script ' + this.cygwinPathScript);
-          require('child_process')
-            .execFile(
-              'powershell',
-              [
-                '-ExecutionPolicy',
-                'ByPass',
-                '-File',
-                this.cygwinPathScript
-              ],
-              (error, stdout, stderr) => {
-                if (error && error != '') {
-                  Logger.error(CygwinInstall.key() + ' - ' + error);
-                  Logger.error(CygwinInstall.key() + ' - ' + stderr);
-                  return failure(error);
-                }
-
-                if (stdout && stdout != '') {
-                  Logger.info(CygwinInstall.key() + ' - ' + stdout);
-                }
-                Logger.info(CygwinInstall.key() + ' - Execute cygwin path script ' + this.cygwinPathScript + ' SUCCESS');
-
-                progress.setComplete();
-                success();
-
-              }
-            );
-        }
-      );
+    installer.execFile(this.downloadedFile, opts)
+    .then((result) => { return installer.writeFile(this.cygwinPathScript, data, result); })
+    .then((result) => { return installer.execFile('powershell',
+      [
+        '-ExecutionPolicy',
+        'ByPass',
+        '-File',
+        this.cygwinPathScript
+      ], result); })
+    .then((result) => { return installer.succeed(result); })
+    .catch((error) => { return installer.fail(error); });
   }
 }
 
