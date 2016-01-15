@@ -1,13 +1,12 @@
 'use strict';
 
-let unzip = require('unzip');
-let request = require('request');
 let path = require('path');
 let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Installer from './helpers/installer';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -40,84 +39,29 @@ class VagrantInstall extends InstallableItem {
 
   install(progress, success, failure) {
     progress.setStatus('Installing');
+    let installer = new Installer(VagrantInstall.key(), progress, success, failure);
 
-    Logger.info(VagrantInstall.key() + ' - Extract vagrant zip to ' + this.installerDataSvc.tempDir());
+    let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
+    let data = [
+      '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
+      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+      '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
+      '[Environment]::Exit(0)'
+    ].join('\r\n');
+    let args = [
+      '-ExecutionPolicy',
+      'ByPass',
+      '-File',
+      this.vagrantPathScript
+    ];
 
-    fs.createReadStream(this.downloadedFile)
-      .pipe(unzip.Extract({path: this.installerDataSvc.tempDir()}))
-      .on('close', () => {
-        Logger.info(VagrantInstall.key() + ' - Extract vagrant zip to ' + this.installerDataSvc.tempDir() + ' SUCCESS');
-
-        let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
-
-        Logger.info(VagrantInstall.key() + ' - Move vagrant to ' + this.installerDataSvc.vagrantDir());
-
-        fs.move(vagrantExploded, this.installerDataSvc.vagrantDir(), (err) => {
-          if (err) {
-            Logger.error(VagrantInstall.key() + ' - ' + err);
-            return failure(err);
-          }
-
-          Logger.info(VagrantInstall.key() + ' - Move vagrant to ' + this.installerDataSvc.vagrantDir() + ' SUCCESS');
-
-          // Set required paths
-          let data = [
-            '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
-            '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-            '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
-            '[Environment]::Exit(0)'
-          ].join('\r\n');
-
-          Logger.info(VagrantInstall.key() + ' - Write vagrant path script to ' + this.vagrantPathScript);
-          fs.writeFileSync(this.vagrantPathScript, data);
-          Logger.info(VagrantInstall.key() + ' - Write vagrant path script to ' + this.vagrantPathScript + ' SUCCESS');
-
-          Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript);
-          require('child_process')
-            .execFile(
-              'powershell',
-              [
-                '-ExecutionPolicy',
-                'ByPass',
-                '-File',
-                this.vagrantPathScript
-              ],
-              (error, stdout, stderr) => {
-                if (error && error != '') {
-                  Logger.error(VagrantInstall.key() + ' - ' + error);
-                  Logger.error(VagrantInstall.key() + ' - ' + stderr);
-                  return failure(error);
-                }
-
-                if (stdout && stdout != '') {
-                  Logger.info(VagrantInstall.key() + ' - ' + stdout);
-                }
-                Logger.info(VagrantInstall.key() + ' - Execute vagrant path script ' + this.vagrantPathScript + ' SUCCESS');
-
-                Logger.info(VagrantInstall.key() + ' - Set VAGRANT_DETECTED_OS environment variable');
-                require('child_process')
-                  .exec(
-                    'setx VAGRANT_DETECTED_OS "cygwin"',
-                    (error, stdout, stderr) => {
-                      if (error && error != '') {
-                        Logger.error(VagrantInstall.key() + ' - ' + error);
-                        Logger.error(VagrantInstall.key() + ' - ' + stderr);
-                        return failure(error);
-                      }
-
-                      if (stdout && stdout != '') {
-                        Logger.info(VagrantInstall.key() + ' - ' + stdout);
-                      }
-                      Logger.info(VagrantInstall.key() + ' - Set VAGRANT_DETECTED_OS environment variable SUCCESS');
-
-                      progress.setComplete();
-                      success();
-                    }
-                  );
-              }
-            );
-        });
-      });
+    installer.unzip(this.downloadedFile, this.installerDataSvc.tempDir())
+    .then((result) => { return installer.moveFile(vagrantExploded, this.installerDataSvc.vagrantDir(), result); })
+    .then((result) => { return installer.writeFile(this.vagrantPathScript, data, result); })
+    .then((result) => { return installer.execFile('powershell', args, result); })
+    .then((result) => { return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"'); })
+    .then((result) => { return installer.succeed(result); })
+    .catch((error) => { return installer.fail(error); });
   }
 }
 
