@@ -1,13 +1,12 @@
 'use strict';
 
-let unzip = require('unzip');
 let fs = require('fs');
 let path = require('path');
-let request = require('request');
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Installer from './helpers/installer';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
@@ -45,49 +44,53 @@ class JdkInstall extends InstallableItem {
 
   install(progress, success, failure) {
     progress.setStatus('Installing');
+    let installer = new Installer(JdkInstall.key(), progress, success, failure);
 
-    this.extractZip(this.downloadedFile, this.installerDataSvc.installDir(), progress, success, failure);
+    installer.unzip(this.downloadedFile, this.installerDataSvc.installDir())
+    .then((result) => { return this.getFolderContents(this.installerDataSvc.installDir(), result); })
+    .then((files) => { return this.getFileByName('zulu', files) })
+    .then((fileName) => { return this.renameFile(this.installerDataSvc.installDir(), fileName, this.installerDataSvc.jdkDir()); })
+    .then((result) => { return installer.succeed(result); })
+    .catch((error) => { return installer.fail(error); });
   }
 
-  extractZip(zipFile, extractTo, progress, success, failure) {
-    Logger.info(JdkInstall.key() + ' - Extract zip to ' + extractTo);
-
-    fs.createReadStream(zipFile)
-      .pipe(unzip.Extract({path: extractTo}))
-      .on('close', () => {
-        Logger.info(JdkInstall.key() + ' - Extract zip to ' + extractTo + ' SUCCESS');
-
-        this.renameExtractedZipContents(extractTo, this.installerDataSvc.jdkDir(), progress, success, failure);
-      });
-  }
-
-  renameExtractedZipContents(extractTo, jdkDir, progress, success, failure) {
-    Logger.info(JdkInstall.key() + ' - Rename extracted directory to ' + jdkDir);
-
-    fs.readdir(extractTo, function(err, fileList) {
-      if (err) {
-        Logger.error(JdkInstall.key() + ' - ' + err);
-        return failure(err);
-      }
-
-      for (let dirName of fileList) {
-        if (dirName.startsWith('zulu')) {
-          return fs.rename(path.join(extractTo, dirName), jdkDir, function(err) {
-            if (err) {
-              Logger.error(JdkInstall.key() + ' - ' + err);
-              return failure(err);
-            } else {
-              Logger.info(JdkInstall.key() + ' - Rename extracted directory to ' + jdkDir + ' SUCCESS');
-
-              progress.setComplete();
-              success();
-            }
-          });
+  getFolderContents(parentFolder, result) {
+    return new Promise(function (resolve, reject) {
+      fs.readdir(parentFolder, function(err, fileList) {
+        if (err) {
+          Logger.error(JdkInstall.key() + ' - ' + err);
+          reject(err);
         } else {
-          continue;
+          resolve(fileList);
+        }
+      });
+    });
+  }
+
+  getFileByName(name, files) {
+    return new Promise(function (resolve) {
+      for (let fileName of files) {
+        if (fileName.startsWith(name)) {
+          resolve(fileName);
+          break;
         }
       }
-      failure('Extracted zip did not create directory with name starting "zulu"');
+    });
+  }
+
+  renameFile(folder, oldName, newName) {
+    let filePath = path.join(folder, oldName)
+    Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName)
+    return new Promise(function (resolve, reject) {
+      fs.rename(filePath, newName, function(err) {
+        if (err) {
+          Logger.error(JdkInstall.key() + ' - ' + err);
+          reject(err);
+        } else {
+          Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS')
+          resolve(true);
+        }
+      });
     });
   }
 }
