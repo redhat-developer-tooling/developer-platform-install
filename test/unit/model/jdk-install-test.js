@@ -9,6 +9,8 @@ import fs from 'fs';
 import path from 'path';
 import JdkInstall from 'model/jdk-install';
 import Logger from 'services/logger';
+import Downloader from 'model/helpers/downloader';
+import Installer from 'model/helpers/installer';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
@@ -17,13 +19,13 @@ describe('JDK installer', function() {
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder' },
-    jdkDir: function() { return 'install/JDK8' }
+    jdkDir: function() { return 'install/jdk8' }
   };
 
   installerDataSvc = sinon.stub(fakeData);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
-  installerDataSvc.jdkDir.returns('install/JDK8');
+  installerDataSvc.jdkDir.returns('install/jdk8');
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -39,9 +41,12 @@ describe('JDK installer', function() {
     errorStub = sinon.stub(Logger, 'error');
 
     mockfs({
-      tempDirectory : { 'jdk.zip': 'file content here' },
-      installationFolder : {
-        zulu : {}
+      'tempDirectory' : {
+        'jdk.zip': 'file content here',
+        'test' : 'empty'
+      },
+      'installationFolder' : {
+        'zulu': {}
       }
     }, {
       createCwd: false,
@@ -107,7 +112,7 @@ describe('when downloading the jdk zip', function() {
     spy.restore();
   });
 
-  it('should call a GET request with the specified parameters once', function() {
+  it('should call downloader#download with the specified parameters once', function() {
     let downloadUrl = 'http://www.azulsystems.com/products/zulu/downloads';
     let options = {
       url: downloadUrl,
@@ -115,7 +120,7 @@ describe('when downloading the jdk zip', function() {
         'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
       }
     };
-    let spy = sinon.spy(request, 'get');
+    let spy = sinon.spy(Downloader.prototype, 'download');
     let installer = new JdkInstall(installerDataSvc, downloadUrl, null);
 
     installer.downloadInstaller(fakeProgress, function() {}, function() {});
@@ -139,6 +144,7 @@ describe('when downloading the jdk zip', function() {
   });
 
   describe('when installing jdk', function() {
+    let downloadedFile = path.join('tempDirectory', 'jdk8.zip');
 
     it('should set progress to "Installing"', function() {
       let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
@@ -152,35 +158,81 @@ describe('when downloading the jdk zip', function() {
       spy.restore();
     });
 
-    it('should load the downloaded installer file', function() {
-      let installer = new JdkInstall(installerDataSvc, 'url', null);
-      let spy = sinon.spy(fs, 'createReadStream');
+    it('should unzip the downloaded file into install folder', function() {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
 
-      installer.install(fakeProgress, null, null);
+      let spy = sinon.spy(Installer.prototype, 'unzip');
+      installer.install(fakeProgress, function() {}, function (err) {});
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk8.zip'));
+      expect(spy).to.have.been.called;
+      expect(spy).calledWith(downloadedFile, installerDataSvc.installDir());
 
       spy.restore();
     });
 
-    it('should fail when install directory is null', function() {
-      let installer = new JdkInstall(installerDataSvc, 'url', 'file');
+    it('should catch errors during the installation', function(done) {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+      let stub = sinon.stub(require('unzip'), 'Extract');
+      stub.throws(new Error('critical error'));
 
-      function throwsWithNull() {
-        installerDataSvc.installDir.returns(null);
-        installer.install(fakeProgress, null, null);
+      try {
+        installer.install(fakeProgress, function() {}, function (err) {});
+        stub.restore();
+        done();
+      } catch (error) {
+        expect.fail('it did not catch the error');
       }
-      expect(throwsWithNull).to.throw();
     });
 
-    it('should fail when install directory is empty', function() {
-      let installer = new JdkInstall(installerDataSvc, 'url', 'file');
-      function throwsWithEmpty() {
-        installerDataSvc.installDir.returns('');
-        installer.install(fakeProgress, null, null);
-      }
-      expect(throwsWithEmpty).to.throw();
+    it('getFolderContents should list files in a folder', function() {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+      let spy = sinon.spy(fs, 'readdir');
+
+      return installer.getFolderContents('tempDirectory')
+      .then((files) => {
+        expect(spy).calledOnce;
+        expect(spy).calledWith('tempDirectory');
+        expect(files).to.contain('jdk.zip');
+        spy.restore();
+      });
+    });
+
+    it('getFolderContents should reject on error', function() {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+      let err = new Error('critical error');
+      let stub = sinon.stub(fs, 'readdir').throws(err);
+
+      return installer.getFolderContents('tempDirectory')
+      .then((files) => {
+        expect.fail('it did not reject');
+      })
+      .catch((error) => {
+        stub.restore();
+        expect(error).to.equal(err);
+      });
+    });
+
+    it('getFileByName should return a filename from an array', function() {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+      let files = ['abc', 'def', 'ghi'];
+
+      return installer.getFileByName('de', files)
+      .then((filename) => {
+        expect(filename).to.equal('def');
+      });
+    });
+
+    it('renameFile should rename a file with given path', function() {
+      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+      let spy = sinon.spy(fs, 'rename');
+
+      return installer.renameFile('tempDirectory', 'test', 'newName')
+      .then((result) => {
+        expect(result).to.be.true;
+        expect(spy).calledOnce;
+        expect(spy).calledWith(path.join('tempDirectory', 'test'), 'newName');
+        spy.restore();
+      });
     });
   });
 });
