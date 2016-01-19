@@ -41,6 +41,23 @@ In order to build the installer, you'll need to install some tools.
     dist/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
     ```
 
+Running unit tests
+------------------
+
+Unit tests are located in `test/unit`. To run all unit tests:
+
+```
+npm test
+```
+
+To run selected unit tests, you can grep any string from `describe` or `it` section
+of any test, e.g.:
+
+```
+npm test -- -g login
+npm test -- --grep login
+```
+
 Releasing the installer
 -----------------------
 

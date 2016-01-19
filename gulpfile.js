@@ -7,7 +7,8 @@ var gulp = require('gulp'),
   pjson = require('./package.json'),
   path = require('path'),
   mocha = require('gulp-spawn-mocha'),
-  symlink = require('gulp-symlink');
+  symlink = require('gulp-symlink'),
+  yargs = require('yargs');
 
 var artifactName = 'DeveloperPlatformInstaller';
 
@@ -74,7 +75,9 @@ gulp.task('unit-test', function () {
     .pipe(mocha({
       recursive: true,
       compilers: 'js:babel/register',
-      env: { NODE_PATH: './browser' }
+      env: { NODE_PATH: './browser' },
+      grep: yargs.argv.grep,
+      g: yargs.argv.g
     }));
 });
 
