@@ -22,7 +22,7 @@
     "test": "gulp test"
   },
   "dependencies": {
-    "fs-extra": "0.26.2",
+    "fs-extra": "0.26.4",
     "patternfly": "2.6.0",
     "request": "2.67.0",
     "unzip": "0.1.11"
