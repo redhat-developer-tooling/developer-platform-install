@@ -70,14 +70,23 @@ class CDKInstall extends InstallableItem {
         rejectUnauthorized: false
       }, username, password);
 
-    downloader.setWriteStream(ocWriteStream);
-    downloader.download(this.ocUrl);
-
     downloader.setWriteStream(vagrantFileWriteStream);
     downloader.download(this.vagrantFileUrl);
 
     downloader.setWriteStream(pscpWriteStream);
     downloader.download(this.pscpUrl);
+    
+    if(!this.ocUrl.endsWith('.zip')) {
+      request(this.ocUrl,(err,rsp,body) => {
+        var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
+        downloader.setWriteStream(ocWriteStream);
+        this.ocUrl=this.ocUrl.concat(fname);
+        downloader.download(this.ocUrl);
+      });
+    } else {
+      downloader.setWriteStream(ocWriteStream);
+      downloader.download(this.ocUrl);
+    }
   }
 
   install(progress, success, failure) {
