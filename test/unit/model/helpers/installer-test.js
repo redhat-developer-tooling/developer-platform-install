@@ -33,20 +33,9 @@ describe('Installer', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-
-    // mockfs({
-    //   someTempFolder: {
-    //     somefile: 'nothing to see here',
-    //     test: 'content',
-    //   }
-    // }, {
-    //   createCwd: false,
-    //   createTmp: false
-    // });
   });
 
   afterEach(function() {
-    // mockfs.restore();
     sandbox.restore();
   });
 
