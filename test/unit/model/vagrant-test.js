@@ -15,7 +15,7 @@ chai.use(sinonChai);
 
 describe('Vagrant installer', function() {
   let installerDataSvc;
-  let infoStub, errorStub;
+  let infoStub, errorStub, sandbox;
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder'; },
@@ -55,6 +55,14 @@ describe('Vagrant installer', function() {
     mockfs.restore();
   });
 
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
+  });
+
   it('should not download vagrant when an installation exists', function() {
     let jdk = new VagrantInstall(installerDataSvc, 'url', 'file');
     expect(jdk.useDownload).to.be.false;
@@ -76,59 +84,46 @@ describe('Vagrant installer', function() {
     expect(new VagrantInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
   });
 
-it('should download vagrant installer to temporary folder as vagrant.zip', function() {
-  expect(new VagrantInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-    path.join(installerDataSvc.tempDir(), 'vagrant.zip'));
-});
-
-describe('when downloading the vagrant zip', function() {
-  let downloadUrl = 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip';
-
-  it('should set progress to "Downloading"', function() {
-    let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
-    let spy = sinon.spy(fakeProgress, 'setStatus');
-
-    installer.downloadInstaller(fakeProgress, function() {}, function() {});
-
-    expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith('Downloading');
-
-    spy.restore();
+  it('should download vagrant installer to temporary folder as vagrant.zip', function() {
+    expect(new VagrantInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
+      path.join(installerDataSvc.tempDir(), 'vagrant.zip'));
   });
 
-  it('should write the data into temp/vagrant.zip', function() {
-    let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
-    let spy = sinon.spy(fs, 'createWriteStream');
+  describe('when downloading the vagrant zip', function() {
+    let downloadUrl = 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip';
+    let downloadStub;
 
-    installer.downloadInstaller(fakeProgress, function() {}, function() {});
+    beforeEach(function() {
+      downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
+    });
 
-    expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.zip'));
+    it('should set progress to "Downloading"', function() {
+      let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-    spy.restore();
-  });
+      installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-  it('should call downloader#download with the specified parameters once', function() {
-    let spy = sinon.spy(Downloader.prototype, 'download');
-    let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('Downloading');
+    });
 
-    installer.downloadInstaller(fakeProgress, function() {}, function() {});
+    it('should write the data into temp/vagrant.zip', function() {
+      let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
+      let spy = sandbox.spy(fs, 'createWriteStream');
 
-    expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(downloadUrl);
+      installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-    spy.restore();
-  });
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.zip'));
+    });
 
-  it('should fail with an invalid url', function(done) {
-    let url = 'url';
-    function failsWithInvalidUrl() {
-      let installer = new VagrantInstall(installerDataSvc, 'url', null);
-      installer.downloadInstaller(fakeProgress,
-        function() { return success(); }, function() {});
-      }
-      expect(failsWithInvalidUrl).to.throw('Invalid URI "' + url + '"');
-      done();
+    it('should call downloader#download with the specified parameters once', function() {
+      let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
+
+      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+
+      expect(downloadStub).to.have.been.calledOnce;
+      expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
   });
 
@@ -138,31 +133,27 @@ describe('when downloading the vagrant zip', function() {
 
     it('should set progress to "Installing"', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
-      let spy = sinon.spy(fakeProgress, 'setStatus');
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.install(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
-
-      spy.restore();
     });
 
     it('should unzip the downloaded file into temporary folder', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
 
-      let spy = sinon.spy(Installer.prototype, 'unzip');
+      let spy = sandbox.spy(Installer.prototype, 'unzip');
       installer.install(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith(downloadedFile, installerDataSvc.tempDir());
-
-      spy.restore();
     });
 
     it('should catch errors during the installation', function(done) {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
-      let stub = sinon.stub(require('unzip'), 'Extract');
+      let stub = sandbox.stub(require('unzip'), 'Extract');
       stub.throws(new Error('critical error'));
 
       try {

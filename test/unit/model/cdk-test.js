@@ -115,6 +115,12 @@ describe('CDK installer', function() {
       pscpPathScript = path.join(installerDataSvc.tempDir(), 'set-pscp-path.ps1');
 
   describe('when downloading the cdk tools', function() {
+    let downloadStub, authStub;
+
+    beforeEach(function() {
+      downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
+      authStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
+    });
 
     it('should set progress to "Downloading"', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
@@ -145,9 +151,6 @@ describe('CDK installer', function() {
 
     it('should call a correct downloader request for each file', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
-      let spy = sandbox.spy(Downloader.prototype, 'download');
-      let spyAuth = sandbox.spy(Downloader.prototype, 'downloadAuth');
-
       let headers = {
         url: cdkUrl,
         rejectUnauthorized: false
@@ -156,26 +159,15 @@ describe('CDK installer', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       //we download 1 out of 5 files with authentication
-      expect(spy.callCount).to.equal(4);
-      expect(spyAuth).to.have.been.calledOnce;
+      expect(downloadStub.callCount).to.equal(4);
+      expect(authStub).to.have.been.calledOnce;
 
-      expect(spy).calledWith(cdkBoxUrl);
-      expect(spy).calledWith(ocUrl);
-      expect(spy).calledWith(vagrantFileUrl);
-      expect(spy).calledWith(pscpUrl);
+      expect(downloadStub).calledWith(cdkBoxUrl);
+      expect(downloadStub).calledWith(ocUrl);
+      expect(downloadStub).calledWith(vagrantFileUrl);
+      expect(downloadStub).calledWith(pscpUrl);
 
-      expect(spyAuth).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
-    });
-
-    it('should fail with an invalid url', function(done) {
-      let url = 'url';
-      function failsWithInvalidUrl() {
-        let installer = new CDKInstall(installerDataSvc, 900, url, url, url, url, url, null);
-        installer.downloadInstaller(fakeProgress,
-          function() {}, function() {});
-        }
-        expect(failsWithInvalidUrl).to.throw('Invalid URI "' + url + '"');
-        done();
+      expect(authStub).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
     });
   });
 
@@ -210,21 +202,24 @@ describe('CDK installer', function() {
     it('setupVagrant should wait for vagrant install to complete', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
       let spy = sandbox.spy(installer, 'postVagrantSetup');
+      let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
 
-      installer.setupVagrant();
+      installer.setupVagrant(helper);
       expect(spy).not.called;
     });
 
     it('setupVagrant should call postVagrantSetup if vagrant is installed', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
       let spy = sandbox.spy(installer, 'postVagrantSetup');
+      let execStub = sandbox.stub(helper, 'exec');
 
       let fakeInstall = {
         isInstalled: function() { return true; }
       };
       installerDataSvc.getInstallable.returns(fakeInstall);
 
-      installer.setupVagrant();
+      installer.setupVagrant(helper);
       expect(spy).calledOnce;
     });
 

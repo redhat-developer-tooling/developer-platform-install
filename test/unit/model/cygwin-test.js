@@ -14,7 +14,7 @@ import Installer from 'model/helpers/installer';
 chai.use(sinonChai);
 
 describe('Cygwin installer', function() {
-  let DataStub, installerDataSvc;
+  let DataStub, installerDataSvc, sandbox;
   let infoStub, errorStub;
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
@@ -55,6 +55,14 @@ describe('Cygwin installer', function() {
     mockfs.restore();
   });
 
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
+  });
+
   it('should not download cygwin when an installation exists', function() {
     let cygwin = new CygwinInstall(installerDataSvc, 'url', 'file');
     expect(cygwin.useDownload).to.be.false;
@@ -82,11 +90,17 @@ describe('Cygwin installer', function() {
   });
 
   describe('when downloading cygwin', function() {
+    let downloadStub;
+
+    beforeEach(function() {
+      downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
+    });
+
     let downloadUrl = 'https://cygwin.com/setup-x86_64.exe';
 
     it('should set progress to "Downloading"', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let spy = sinon.spy(fakeProgress, 'setStatus');
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
@@ -98,8 +112,8 @@ describe('Cygwin installer', function() {
 
     it('should write the data into temp/cygwin.exe', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let spy = sinon.spy(fs, 'createWriteStream');
-      let streamSpy = sinon.spy(Downloader.prototype, 'setWriteStream');
+      let spy = sandbox.spy(fs, 'createWriteStream');
+      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
@@ -112,26 +126,12 @@ describe('Cygwin installer', function() {
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
-      let spy = sinon.spy(Downloader.prototype, 'download');
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(downloadUrl);
-
-      spy.restore();
-    });
-
-    it('should fail with an invalid url', function(done) {
-      let url = 'url';
-      function failsWithInvalidUrl() {
-        let installer = new CygwinInstall(installerDataSvc, url, null);
-        installer.downloadInstaller(fakeProgress,
-          function() { return success(); }, function() {});
-      }
-      expect(failsWithInvalidUrl).to.throw('Invalid URI "' + url + '"');
-      done();
+      expect(downloadStub).to.have.been.calledOnce;
+      expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
   });
 
@@ -141,7 +141,7 @@ describe('Cygwin installer', function() {
 
     it('should set progress to "Installing"', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let spy = sinon.spy(fakeProgress, 'setStatus');
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.install(fakeProgress, null, null);
 
@@ -153,9 +153,8 @@ describe('Cygwin installer', function() {
 
     it('should execute the installer with correct parameters', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sinon.stub(require('child_process'), 'execFile');
-      stub.yields();
-      let spy = sinon.spy(Installer.prototype, 'execFile');
+      let stub = sandbox.stub(require('child_process'), 'execFile').yields();
+      let spy = sandbox.spy(Installer.prototype, 'execFile');
 
       let opts = [
         '--no-admin',
@@ -180,7 +179,7 @@ describe('Cygwin installer', function() {
 
     it('should catch errors thrown during the installation', function(done) {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sinon.stub(require('child_process'), 'execFile');
+      let stub = sandbox.stub(require('child_process'), 'execFile');
       let err = new Error('critical error');
       stub.throws(err);
 

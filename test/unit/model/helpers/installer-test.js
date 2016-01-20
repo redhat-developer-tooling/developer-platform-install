@@ -13,7 +13,7 @@ import unzip from 'unzip';
 chai.use(sinonChai);
 
 describe('Installer', function() {
-  // let sandbox;
+  let sandbox;
   let infoStub, errorStub;
 
   let fakeProgress = {
@@ -29,22 +29,30 @@ describe('Installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+  });
 
-    mockfs({
-      someTempFolder: {
-        somefile : 'nothing to see here'
-      },
-      anInstallFolder : {}
-    }, {
-      createCwd: false,
-      createTmp: false
-    });
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+
+    // mockfs({
+    //   someTempFolder: {
+    //     somefile: 'nothing to see here',
+    //     test: 'content',
+    //   }
+    // }, {
+    //   createCwd: false,
+    //   createTmp: false
+    // });
+  });
+
+  afterEach(function() {
+    // mockfs.restore();
+    sandbox.restore();
   });
 
   after(function() {
     infoStub.restore();
     errorStub.restore();
-    mockfs.restore();
   });
 
   describe('exec', function() {
@@ -52,18 +60,18 @@ describe('Installer', function() {
     let args = ['arg1', 'arg2', 'arg3'];
 
     it('should call child_process#exec with the correct parameters', function() {
-      let stub = sinon.stub(child_process, 'exec');
-      stub.yields();
+      let stub = sandbox.stub(child_process, 'exec').yields();
 
-      installer.exec(command, args);
-
-      expect(stub).to.have.been.calledOnce;
-      expect(stub).to.have.been.calledWith(command, args);
-      stub.restore();
+      return installer.exec(command, args)
+      .then(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith(command, args);
+        stub.restore();
+      });
     });
 
     it('should resolve as true if no error occurs' , function() {
-      let stub = sinon.stub(child_process, 'exec').yields();
+      let stub = sandbox.stub(child_process, 'exec').yields();
 
       return installer.exec(command, args)
       .then(function(result) {
@@ -74,8 +82,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sinon.stub(child_process, 'exec');
-      proc.throws(err);
+      let proc = sandbox.stub(child_process, 'exec').throws(err);
 
       return installer.exec(command, args)
       .then(function(result) {
@@ -93,18 +100,18 @@ describe('Installer', function() {
     let file = path.join('someTempFolder', 'somefile');
 
     it('should call child_process#execFile with the correct parameters', function() {
-      let stub = sinon.stub(child_process, 'execFile');
-      stub.yields();
+      let stub = sandbox.stub(child_process, 'execFile').yields();
 
-      installer.execFile(file, args);
-
-      expect(stub).to.have.been.calledOnce;
-      expect(stub).to.have.been.calledWith(file, args);
-      stub.restore();
+      return installer.execFile(file, args)
+      .then(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith(file, args);
+        stub.restore();
+      });
     });
 
     it('should resolve as true if no error occurs' , function() {
-      let stub = sinon.stub(child_process, 'execFile').yields();
+      let stub = sandbox.stub(child_process, 'execFile').yields();
 
       return installer.execFile(file, args)
       .then(function(result) {
@@ -115,8 +122,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sinon.stub(child_process, 'execFile');
-      proc.throws(err);
+      let proc = sandbox.stub(child_process, 'execFile').throws(err);
 
       return installer.execFile(file, args)
       .then(function(result) {
@@ -134,34 +140,32 @@ describe('Installer', function() {
     let file = path.join('someTempFolder', 'somefile');
 
     it('should read the specified file', function() {
-      let stub = sinon.stub(unzip, 'Extract').yields();
-      let spy = sinon.spy(fs, 'createReadStream');
+      let stub = sandbox.stub(unzip, 'Extract').yields();
+      let spy = sandbox.spy(fs, 'createReadStream');
 
-      installer.unzip(file, dir);
-
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(file);
-
-      stub.restore();
-      spy.restore();
+      return installer.unzip(file, dir)
+      .catch(function(result) {
+        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWith(file);
+        stub.restore();
+        spy.restore();
+      });
     });
 
     it('should call unzip#Extract into a correct folder', function() {
-      let stub = sinon.stub(unzip, 'Extract');
-      stub.yields();
+      let stub = sandbox.stub(unzip, 'Extract').yields();
 
-      installer.unzip(file, dir);
-
-      expect(stub).to.have.been.calledOnce;
-      expect(stub).to.have.been.calledWith({ path: dir });
-
-      stub.restore();
+      return installer.unzip(file, dir)
+      .catch(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith({ path: dir });
+        stub.restore();
+      });
     });
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sinon.stub(unzip, 'Extract');
-      proc.throws(err);
+      let stub = sandbox.stub(unzip, 'Extract').throws(err);
 
       return installer.unzip(file, dir)
       .then(function(result) {
@@ -169,28 +173,28 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
+        stub.restore();
       });
     });
   });
 
   describe('moveFile', function() {
-    let source = path.join('someTempFolder', 'somefile');
+    let source = path.join('.','someTempFolder', 'somefile');
     let target = path.join('anInstallFolder', 'target');
 
     it('should call fs#move with correct arguments', function() {
-      let stub = sinon.stub(fs, 'move');
-      stub.yields();
+      let stub = sandbox.stub(fs, 'move').yields();
 
-      installer.moveFile(source, target);
-
-      expect(stub).to.have.been.calledOnce;
-      expect(stub).to.have.been.calledWith(source, target);
-
-      stub.restore();
+      return installer.moveFile(source, target)
+      .then(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith(source, target);
+        stub.restore();
+      });
     });
 
     it('should resolve as true when no error occurs', function() {
-      let stub = sinon.stub(fs, 'move').yields();
+      let stub = sandbox.stub(fs, 'move').yields();
 
       return installer.moveFile(source, target)
       .then(function(result) {
@@ -201,7 +205,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sinon.stub(fs, 'move');
+      let proc = sandbox.stub(fs, 'move');
       proc.throws(err);
 
       return installer.moveFile(source, target)
@@ -211,28 +215,6 @@ describe('Installer', function() {
       .catch(function(error) {
         expect(error).to.equal(err);
         proc.restore();
-      });
-    });
-
-    it('should fail with a non-existing source', function() {
-      let src = 'file';
-      return installer.moveFile(src, target)
-      .then(function(result) {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error.message).to.contain('no such file or directory');
-      });
-    });
-
-    it('should not overwrite an existing file', function() {
-      let folder = 'anInstallFolder';
-      return installer.moveFile(source, folder)
-      .then(function(result) {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error.message).to.contain('file already exists');
       });
     });
   });
@@ -242,21 +224,20 @@ describe('Installer', function() {
     let data = 'data';
 
     it('should call fs#writeFile with correct arguments', function() {
-      let stub = sinon.stub(fs, 'writeFile');
-      stub.yields();
+      let stub = sandbox.stub(fs, 'writeFile').yields();
 
-      installer.writeFile(file, data);
-
-      expect(stub).to.have.been.calledOnce;
-      expect(stub).to.have.been.calledWith(file, data);
-
-      stub.restore();
+      return installer.writeFile(file, data)
+      .then(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith(file, data);
+        stub.restore();
+      });
     });
 
     it('should resolve as true when no error occurs', function() {
-      let stub = sinon.stub(fs, 'writeFile').yields();
+      let stub = sandbox.stub(fs, 'writeFile').yields();
 
-      return installer.moveFile(file, data)
+      return installer.writeFile(file, data)
       .then(function(result) {
         expect(result).to.equal(true);
         stub.restore();
@@ -265,8 +246,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sinon.stub(fs, 'writeFile');
-      proc.throws(err);
+      let stub = sandbox.stub(fs, 'writeFile').throws(err);
 
       return installer.writeFile(file, data)
       .then(function(result) {
@@ -274,14 +254,14 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        proc.restore();
+        stub.restore();
       });
     });
   });
 
   describe('succeed', function() {
     it('should set progress to complete when the input is truthy', function() {
-      let spy = sinon.spy(fakeProgress, 'setComplete');
+      let spy = sandbox.spy(fakeProgress, 'setComplete');
       installer.succeed(true);
 
       expect(spy).to.have.been.calledOnce;
@@ -289,7 +269,7 @@ describe('Installer', function() {
     });
 
     it('should not succeed with a falsey input', function() {
-      let spy = sinon.spy(fakeProgress, 'setComplete');
+      let spy = sandbox.spy(fakeProgress, 'setComplete');
       installer.succeed(false);
 
       expect(spy).to.have.not.been.called;

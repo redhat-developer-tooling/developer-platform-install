@@ -49,9 +49,6 @@ describe('Downloader', function() {
       }
     };
 
-    beforeEach(function() {
-    });
-
     afterEach(function() {
       request.get.restore();
     })
