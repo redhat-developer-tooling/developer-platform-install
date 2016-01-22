@@ -4,7 +4,6 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import InstallController from 'pages/install/controller.js';
-import ProgressState from 'pages/install/controller.js';
 import InstallerDataService from 'services/data.js';
 import VagrantInstall from 'model/vagrant.js';
 import VirtualBoxInstall from 'model/virtualbox.js'
@@ -159,14 +158,6 @@ describe('Install controller', function() {
 
       expect(installerDataSvc.installing).to.be.true;
       expect(installerDataSvc.toInstall.size).to.equal(2);
-    });
-
-    it('should trigger the progress to install', function() {
-      sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
-      let spy = sandbox.spy(ProgressState.prototype, 'triggerInstall');
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
-
-      expect(spy).calledTwice;
     });
 
     it('should call the installables install method', function() {
