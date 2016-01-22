@@ -10,9 +10,17 @@ chai.use(sinonChai);
 
 describe('Downloader', function() {
   let downloader;
+  let fakeProgress = {
+    setStatus: function (desc) { return; },
+    setCurrent: function (val) {},
+    setLabel: function (label) {},
+    setComplete: function() {},
+    setTotalDownloadSize: function(size) {},
+    downloaded: function(amt, time) {}
+  };
 
   it('should set totalDownloads to 1 by default', function() {
-    downloader = new Downloader();
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
     expect(downloader.totalDownloads).to.equal(1);
   });
 
@@ -21,7 +29,7 @@ describe('Downloader', function() {
     let stream = { close: function() {} };
     let streamSpy = sinon.spy(stream, 'close');
 
-    downloader = new Downloader(undefined, undefined, errorSpy);
+    downloader = new Downloader(fakeProgress, function() {}, errorSpy);
     downloader.setWriteStream(stream);
     downloader.errorHandler(stream, 'some error');
 
@@ -34,7 +42,7 @@ describe('Downloader', function() {
     let stream = { end: function() {} };
     let streamSpy = sinon.spy(stream, 'end');
 
-    downloader = new Downloader();
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
     downloader.setWriteStream(stream);
     downloader.endHandler(stream);
 
@@ -55,7 +63,7 @@ describe('Downloader', function() {
 
     it('should make a request with given options', function() {
       let requestGetSpy = sinon.spy(request, 'get');
-      downloader = new Downloader();
+      downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(new PassThrough());
       downloader.download(options);
 
@@ -68,7 +76,7 @@ describe('Downloader', function() {
       sinon.stub(request, 'get').returns(response);
 
       let stream = new PassThrough();
-      downloader = new Downloader();
+      downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(stream);
       let endHandler = sinon.stub(downloader, 'endHandler');
       downloader.download(options);
@@ -84,7 +92,7 @@ describe('Downloader', function() {
       let error = new Error('something bad happened');
 
       let stream = new Writable();
-      downloader = new Downloader();
+      downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(stream);
       let errorHandler = sinon.stub(downloader, 'errorHandler');
       downloader.download(options);
