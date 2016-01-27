@@ -97,11 +97,12 @@ class JbdsInstall extends InstallableItem {
   }
 
   setupCdk(result) {
+    let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
     Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location');
     return new Promise((resolve, reject) => {
       fs.appendFile(
-        path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_location.properties'),
-        'CDKServer=' + this.installerDataSvc.cdkVagrantfileDir() + ',true',
+        path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties'),
+        'CDKServer=' + escapedPath + ',true',
         (err) => {
           if (err) {
             Logger.error(JbdsInstall.key() + ' - ' + err);

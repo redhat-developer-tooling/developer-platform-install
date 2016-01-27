@@ -257,8 +257,9 @@ describe('JBDS installer', function() {
       let helper = new Installer('jbds', fakeProgress, function() {}, function (err) {});
       let fsStub = sandbox.stub(fs, 'appendFile').yields();
 
-      let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_location.properties');
-      let data = 'CDKServer=' + installerDataSvc.cdkVagrantfileDir() + ',true';
+      let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties');
+      let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+      let data = 'CDKServer=' + escapedPath + ',true';
 
       return installer.setupCdk(helper)
       .then((result) => {
