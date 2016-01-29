@@ -69,7 +69,7 @@ let mainModule =
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
-                                'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
+                                'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/cdk-2.0.0-beta3.zip',
                                 'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
                                 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
                                 'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
