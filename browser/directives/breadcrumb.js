@@ -6,7 +6,7 @@ function breadcrumb($state) {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: './directives/breadcrumbs.html',
+    templateUrl: 'directives/breadcrumbs.html',
     compile: (tElement, tAttrs) => {
       return ($scope, $elem, $attr) => {
         $scope.show = (state) => {

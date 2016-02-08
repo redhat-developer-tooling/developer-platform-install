@@ -8,7 +8,10 @@ var gulp = require('gulp'),
   path = require('path'),
   mocha = require('gulp-spawn-mocha'),
   symlink = require('gulp-symlink'),
-  yargs = require('yargs');
+  yargs = require('yargs')
+  .boolean('singleRun')
+  .default({ singleRun : true });
+  Server = require('karma').Server;
 
 var artifactName = 'DeveloperPlatformInstaller';
 
@@ -60,14 +63,16 @@ gulp.task('package', function(cb) {
 });
 
 gulp.task('test', function() {
-  return runSequence('create-electron-symlink', 'unit-test', function() {
-    del(['node_modules/electron'], { force: true });
-  });
+  return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink', 'browser-test');
 });
 
 gulp.task('create-electron-symlink', function() {
   return gulp.src('node_modules/electron-prebuilt')
     .pipe(symlink('node_modules/electron', { force: true }));
+});
+
+gulp.task('delete-electron-symlink', function() {
+  return del(['node_modules/electron'], { force: true });
 });
 
 gulp.task('unit-test', function () {
@@ -79,6 +84,13 @@ gulp.task('unit-test', function () {
       grep: yargs.argv.grep,
       g: yargs.argv.g
     }));
+});
+
+gulp.task('browser-test', function(done) {
+  new Server({
+    configFile: __dirname + '/karma-conf.js',
+    singleRun: yargs.argv.singleRun
+  }, done).start();
 });
 
 gulp.task('default', function() {
