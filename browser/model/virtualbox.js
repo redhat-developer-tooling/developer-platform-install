@@ -80,9 +80,10 @@ class VirtualBoxInstall extends InstallableItem {
       '/i',
       this.msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-      '/quiet',
-      '/passive',
-      '/norestart'
+      '/qb!',
+      '/norestart',
+      '/Liwe',
+      path.join(this.installerDataSvc.installDir(), 'vbox.log')
     ]).then((res) => { return resolve(res); })
     .catch((err) => { return reject(err); });
   }

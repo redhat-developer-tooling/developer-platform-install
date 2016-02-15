@@ -199,11 +199,12 @@ describe('Virtualbox installer', function() {
         '/i',
         msiFile,
         'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
-        '/quiet',
-        '/passive',
-        '/norestart'
+        '/qb!',
+        '/norestart',
+        '/Liwe',
+        path.join(installerDataSvc.installDir(), 'vbox.log')
       ];
-
+      
       installer.installMsi(helper);
 
       expect(spy).to.have.been.calledOnce;
