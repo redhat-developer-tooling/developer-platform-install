@@ -24,8 +24,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/jquery/dist/jquery.js',
-      'browser/jspm_packages/github/angular/bower-angular@1.4.8/angular.js',
-      'browser/jspm_packages/npm/angular-mocks@1.4.9/angular-mocks.js',
+      'browser/jspm_packages/github/angular/bower-angular*/angular.js',
+      'browser/jspm_packages/npm/angular-mocks*/angular-mocks.js',
       { pattern: 'test/karma-shim.js', watched: true, included: true, served: true },
       'browser/directives/*.html',
       'browser/pages/**/*.html'
