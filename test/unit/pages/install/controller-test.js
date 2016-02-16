@@ -37,6 +37,7 @@ describe('Install controller', function() {
     sandbox = sinon.sandbox.create();
 
     installerDataSvc = new InstallerDataService();
+    installerDataSvc.setup('installRoot');
     vagrant = new VagrantInstall(installerDataSvc,
       'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
     vbox = new VirtualBoxInstall('5.0.8', '103449', installerDataSvc,
