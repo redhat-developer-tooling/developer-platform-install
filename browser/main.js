@@ -66,31 +66,35 @@ let mainModule =
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
             installerDataSvc.addItemToInstall(
-                CDKInstall.key(),
-                new CDKInstall(installerDataSvc,
-                                $timeout,
-                                'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/cdk-2.0.0-beta3.zip',
-                                'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
-                                'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
-                                'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
-                                'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
-                                null)
-            );
-
-            installerDataSvc.addItemToInstall(
-                VagrantInstall.key(),
-                new VagrantInstall(installerDataSvc,
-                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
-                                    null)
-            );
-
-            installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
                 new VirtualBoxInstall('5.0.8',
                                       '103449',
                                       installerDataSvc,
                                       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
                                       null)
+            );
+            installerDataSvc.addItemToInstall(
+                CygwinInstall.key(),
+                new CygwinInstall(installerDataSvc,
+                                  'https://drive.google.com/file/d/0B4pPomemPHeuNndtNE1LaUZZQzA/view?usp=sharing',
+                                  null)
+            );
+            installerDataSvc.addItemToInstall(
+                VagrantInstall.key(),
+                new VagrantInstall(installerDataSvc,
+                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
+                                    null)
+            );
+            installerDataSvc.addItemToInstall(
+                CDKInstall.key(),
+                new CDKInstall(installerDataSvc,
+                                $timeout,
+                                'http://cdk-builds.usersys.redhat.com/builds/22-Feb-2016-cdk2.0beta4-rebuild/cdk-2.0.0-beta4.zip',
+                                'http://cdk-builds.usersys.redhat.com/builds/22-Feb-2016-cdk2.0beta4-rebuild/rhel-cdk-kubernetes-7.2-18.x86_64.vagrant-virtualbox.box',
+                                'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
+                                'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/f3cd9f8859b65cf9257b3f886ab999dcfd0aac0b.zip',
+                                'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
+                                null)
             );
 
             installerDataSvc.addItemToInstall(
@@ -105,13 +109,6 @@ let mainModule =
                 new JbdsInstall(installerDataSvc,
                                 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
                                 null)
-            );
-
-            installerDataSvc.addItemToInstall(
-                CygwinInstall.key(),
-                new CygwinInstall(installerDataSvc,
-                                  'https://cygwin.com/setup-x86_64.exe',
-                                  null)
             );
           }]);
 

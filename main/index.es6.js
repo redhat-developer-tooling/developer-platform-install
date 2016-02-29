@@ -51,6 +51,7 @@ app.on('ready', function() {
   // Handle squirrel events before opening the browser
   var handleStartupEvent = function() {
     var squirrelCommand = process.argv[1];
+    console.log(process.argv[0]);
     switch (squirrelCommand) {
 	  // Perform any squirrel-install related logic here
 	  case '--squirrel-install':

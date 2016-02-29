@@ -18,6 +18,7 @@ class JbdsInstall extends InstallableItem {
 
     this.installerDataSvc = installerDataSvc;
 
+    this.downloadedFileName = 'jbds.jar';
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
     this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir());
@@ -32,23 +33,43 @@ class JbdsInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
+    var downloads = path.normalize(path.join(__dirname,"../../.."));
+    console.log(downloads);
+    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+      // Need to download the file
+      let writeStream = fs.createWriteStream(this.downloadedFile);
 
-    // Need to download the file
-    let writeStream = fs.createWriteStream(this.downloadedFile);
+      let options = {
+        url: this.downloadUrl,
+        headers: {
+          'Referer': 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/'
+        }
+      };
 
-    let options = {
-      url: this.downloadUrl,
-      headers: {
-        'Referer': 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/'
-      }
-    };
-
-    let downloader = new Downloader(progress, success, failure);
-    downloader.setWriteStream(writeStream);
-    downloader.download(options);
+      let downloader = new Downloader(progress, success, failure);
+      downloader.setWriteStream(writeStream);
+      downloader.download(options);
+    } else {
+      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      success();
+    }
   }
 
   install(progress, success, failure) {
+    let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
+    if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
+      this.postInstall(progress, success, failure);
+    } else {
+      progress.setStatus('Waiting for JDK to finish installation');
+      ipcRenderer.on('installComplete', (event, arg) => {
+        if (arg == 'jdk') {
+          this.postInstall(progress, success, failure);
+        }
+      });
+    }
+  }
+
+  postInstall(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(JbdsInstall.key(), progress, success, failure);
 

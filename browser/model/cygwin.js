@@ -3,19 +3,22 @@
 let fs = require('fs');
 let request = require('request');
 let path = require('path');
+let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
+import VirtualBoxInstall from './virtualbox';
+
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
     super('Cygwin', 720, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'cygwin.exe');
+    this.downloadedFileName = 'ssh-rsync.zip';
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
   }
 
@@ -29,15 +32,34 @@ class CygwinInstall extends InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
 
-    // Need to download the file
-    let writeStream = fs.createWriteStream(this.downloadedFile);
-
-    let downloader = new Downloader(progress, success, failure);
-    downloader.setWriteStream(writeStream);
-    downloader.download(this.downloadUrl);
+    var downloads = path.normalize(path.join(__dirname,"../../.."));
+    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+      // Need to download the file
+      let writeStream = fs.createWriteStream(this.downloadedFile);
+      let downloader = new Downloader(progress, success, failure);
+      downloader.setWriteStream(writeStream);
+      downloader.download(this.downloadUrl);
+    } else {
+      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      success();
+    }
   }
 
   install(progress, success, failure) {
+    let vboxInstall = this.installerDataSvc.getInstallable(VirtualBoxInstall.key());
+    if( vboxInstall !== undefined && vboxInstall.isInstalled() ) {
+      this.postVirtualboxInstall(progress, success, failure);
+    } else {
+      progress.setStatus('Waiting for VirtualBox to finish installation');
+      ipcRenderer.on('installComplete', (event, arg) => {
+        if (arg == 'virtualbox') {
+          this.postVirtualboxInstall(progress, success, failure);
+        }
+      });
+    }
+  }
+
+  postVirtualboxInstall(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(CygwinInstall.key(), progress, success, failure);
 
@@ -46,7 +68,7 @@ class CygwinInstall extends InstallableItem {
       '--quiet-mode',
       '--only-site',
       '--site',
-      'http://mirrors.kernel.org/sourceware/cygwin',
+      'http://mirrors.xmission.com/cygwin',
       '--root',
       this.installerDataSvc.cygwinDir(),
       '--categories',
@@ -61,7 +83,7 @@ class CygwinInstall extends InstallableItem {
       '[Environment]::Exit(0)'
     ].join('\r\n');
 
-    installer.execFile(this.downloadedFile, opts)
+    installer.unzip(this.downloadedFile, this.installerDataSvc.cygwinDir())
     .then((result) => { return installer.writeFile(this.cygwinPathScript, data, result); })
     .then((result) => { return installer.execFile('powershell',
       [

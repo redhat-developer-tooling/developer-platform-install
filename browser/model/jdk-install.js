@@ -2,19 +2,21 @@
 
 let fs = require('fs');
 let path = require('path');
+let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
+import CDKInstall from './cdk';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
     super('JDK 8', 260, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jdk8.zip');
+    this.downloadedFileName = 'jdk8.zip';
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
   }
 
   checkForExistingInstall() {
@@ -26,23 +28,30 @@ class JdkInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
+    var downloads = path.normalize(path.join(__dirname,"../../.."));
+    console.log(downloads);
+    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+      // Need to download the file
+      let writeStream = fs.createWriteStream(this.downloadedFile);
 
-    // Need to download the file
-    let writeStream = fs.createWriteStream(this.downloadedFile);
+      let options = {
+        url: this.downloadUrl,
+        headers: {
+          'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
+        }
+      };
 
-    let options = {
-      url: this.downloadUrl,
-      headers: {
-        'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
-      }
-    };
-
-    let downloader = new Downloader(progress, success, failure);
-    downloader.setWriteStream(writeStream);
-    downloader.download(options);
+      let downloader = new Downloader(progress, success, failure);
+      downloader.setWriteStream(writeStream);
+      downloader.download(options);
+    } else {
+      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      success();
+    }
   }
 
   install(progress, success, failure) {
+    let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.key());
     progress.setStatus('Installing');
     let installer = new Installer(JdkInstall.key(), progress, success, failure);
 

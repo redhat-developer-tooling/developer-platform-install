@@ -6,7 +6,7 @@ import Logger from './logger';
 let os = require('os');
 let path = require('path');
 let fs = require('fs');
-let ipcRenderer = require('electron').ipcRenderer;
+let electron = require('electron');
 
 class InstallerDataService {
   constructor($state) {
@@ -21,7 +21,7 @@ class InstallerDataService {
     Logger.initialize(this.installRoot);
 
     fs.mkdirSync(this.installRoot);
-
+    this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 
     this.username = '';
@@ -37,7 +37,7 @@ class InstallerDataService {
     this.jdkRoot = path.join(this.installRoot, 'jdk8');
     this.jbdsRoot = path.join(this.installRoot, 'DeveloperStudio');
     this.vagrantRoot = path.join(this.installRoot, 'vagrant');
-    this.cygwinRoot = path.join(this.installRoot, 'cygwin');
+    this.cygwinRoot = path.join(this.installRoot, 'ssh-rsync');
     this.cdkRoot = path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
@@ -47,6 +47,10 @@ class InstallerDataService {
 
   addItemToInstall(key, item) {
     this.installableItems.set(key, item);
+  }
+
+  getIpcRenderer() {
+    return this.ipcRenderer;
   }
 
   getInstallable(key) {
@@ -144,7 +148,7 @@ class InstallerDataService {
     this.toDownload.delete(key);
     if (this.isDownloading() && this.toDownload.size == 0) {
       this.downloading = false;
-      ipcRenderer.send('downloadingComplete', 'all');
+      this.ipcRenderer.send('downloadingComplete', 'all');
     }
 
     this.startInstall(key);
@@ -175,7 +179,7 @@ class InstallerDataService {
     let item = this.getInstallable(key);
     item.setInstallComplete();
 
-    ipcRenderer.send('installComplete', key);
+    this.ipcRenderer.send('installComplete', key);
 
     this.toInstall.delete(key);
     if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {

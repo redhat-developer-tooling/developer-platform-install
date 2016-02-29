@@ -17,7 +17,8 @@ class VirtualBoxInstall extends InstallableItem {
 
     this.version = version;
     this.revision = revision;
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'virtualBox-' + this.version + '.exe');
+    this.downloadedFileName = 'virtualBox-' + this.version + '.exe';
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
@@ -34,13 +35,20 @@ class VirtualBoxInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
+    var downloads = path.normalize(path.join(__dirname,"../../.."));
+    console.log(downloads);
+    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+      //if(fs.existsSync()))
+      // Need to download the file
+      let writeStream = fs.createWriteStream(this.downloadedFile);
 
-    // Need to download the file
-    let writeStream = fs.createWriteStream(this.downloadedFile);
-
-    let downloader = new Downloader(progress, success, failure);
-    downloader.setWriteStream(writeStream);
-    downloader.download(this.downloadUrl);
+      let downloader = new Downloader(progress, success, failure);
+      downloader.setWriteStream(writeStream);
+      downloader.download(this.downloadUrl);
+    } else {
+      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      success();
+    }
   }
 
   install(progress, success, failure) {
@@ -58,19 +66,8 @@ class VirtualBoxInstall extends InstallableItem {
 
   setup(installer, result) {
     return new Promise((resolve, reject) => {
-      // If downloading is not finished wait for event
-      if (this.installerDataSvc.downloading) {
-        Logger.info(VirtualBoxInstall.key() + ' - Waiting for all downloads to complete');
-        installer.progress.setStatus('Waiting for all downloads to finish');
-        ipcRenderer.on('downloadingComplete', (event, arg) => {
-          // time to start virtualbox installer
-          return this.installMsi(installer,resolve,reject);
-        });
-      } else { // it is safe to call virtualbox installer
-        //downloading is already over vbox install is safe to start
         return this.installMsi(installer,resolve,reject);
-      }
-    });
+      });
   }
 
   installMsi(installer,resolve,reject) {

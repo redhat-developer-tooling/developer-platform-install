@@ -22,14 +22,24 @@ class CDKInstall extends InstallableItem {
     this.vagrantFileUrl = vagrantFileUrl;
     this.pscpUrl = pscpUrl;
 
-    this.boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
+    this.cdkFileName = 'cdk.zip';
+    this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
 
-    this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'cdk.zip');
+    this.boxName = 'rhel-cdk-kubernetes-7.2-18.x86_64.vagrant-virtualbox.box';
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
-    this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'oc.zip');
-    this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'vagrantfile.zip');
-    this.pscpDownloadedFile = path.join(this.installerDataSvc.tempDir(), 'pscp.exe');
+
+    this.ocFileName = 'oc.zip';
+    this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(),   this.ocFileName);
+
+    this.vagrantFileName = 'vagrantfile.zip';
+    this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.vagrantFileName);
+
+    this.pscpFileName = 'pscp.exe';
+    this.pscpDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.pscpFileName);
+
     this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
+
+    this.downloads = path.normalize(path.join(__dirname,"../../.."));
   }
 
   static key() {
@@ -42,54 +52,94 @@ class CDKInstall extends InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
 
-    let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
-    let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
-    let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
-    let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
-    let pscpWriteStream = fs.createWriteStream(this.pscpDownloadedFile);
     let downloadSize = 869598013;
+
     let totalDownloads = 5;
 
     let downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
-    downloader.setWriteStream(cdkBoxWriteStream);
-    downloader.download(this.cdkBoxUrl);
-    // TODO Switch back to auth download when CDK latest is in Customer Portal
-    // downloader.downloadAuth
-    //   ({
-    //     url: this.cdkBoxUrl,
-    //     rejectUnauthorized: false
-    //   }, username, password);
+    if(!fs.existsSync(path.join(this.downloads, this.boxName))) {
+      let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
+      downloader.setWriteStream(cdkBoxWriteStream);
+      downloader.download(this.cdkBoxUrl);
+    } else {
+      this.cdkBoxDownloadedFile = path.join(this.downloads, this.boxName);
+      downloader.closeHandler();
+    }
 
-    downloader.setWriteStream(cdkWriteStream);
-    downloader.downloadAuth
+    if(!fs.existsSync(path.join(this.downloads, this.cdkFileName))) {
+      // TODO Switch back to auth download when CDK latest is in Customer Portal
+      // downloader.downloadAuth
+      //   ({
+      //     url: this.cdkBoxUrl,
+      //     rejectUnauthorized: false
+      //   }, username, password);
+      let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
+      downloader.setWriteStream(cdkWriteStream);
+      downloader.downloadAuth
       ({
         url: this.getDownloadUrl(),
         rejectUnauthorized: false
       }, username, password);
-
-    downloader.setWriteStream(vagrantFileWriteStream);
-    downloader.download(this.vagrantFileUrl);
-
-    downloader.setWriteStream(pscpWriteStream);
-    downloader.download(this.pscpUrl);
-    
-    if(!this.ocUrl.endsWith('.zip')) {
-      request(this.ocUrl,(err,rsp,body) => {
-        var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
-        downloader.setWriteStream(ocWriteStream);
-        this.ocUrl=this.ocUrl.concat(fname);
-        downloader.download(this.ocUrl);
-      });
     } else {
-      downloader.setWriteStream(ocWriteStream);
-      downloader.download(this.ocUrl);
+      this.cdkDownloadedFile = path.join(this.downloads, this.cdkFileName);
+      downloader.closeHandler();
+    }
+
+    if(!fs.existsSync(path.join(this.downloads, this.vagrantFileName))) {
+      let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
+      downloader.setWriteStream(vagrantFileWriteStream);
+      downloader.download(this.vagrantFileUrl);
+    } else {
+      this.vagrantDownloadedFile = path.join(this.downloads, this.vagrantFileName);
+      downloader.closeHandler();
+    }
+
+    if(!fs.existsSync(path.join(this.downloads, this.pscpFileName))) {
+      let pscpWriteStream = fs.createWriteStream(this.pscpDownloadedFile);
+      downloader.setWriteStream(pscpWriteStream);
+      downloader.download(this.pscpUrl);
+    } else {
+      this.pscpDownloadedFile = path.join(this.downloads, this.pscpFileName);
+      downloader.closeHandler();
+    }
+
+    if(!fs.existsSync(path.join(this.downloads, this.ocFileName))) {
+      let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
+      if(!this.ocUrl.endsWith('.zip')) {
+        request(this.ocUrl,(err,rsp,body) => {
+          var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
+          downloader.setWriteStream(ocWriteStream);
+          this.ocUrl=this.ocUrl.concat(fname);
+          downloader.download(this.ocUrl);
+        });
+      } else {
+        downloader.setWriteStream(ocWriteStream);
+        downloader.download(this.ocUrl);
+      }
+    } else {
+      this.ocDownloadedFile = path.join(this.downloads, this.ocFileName);
+      downloader.closeHandler();
     }
   }
 
   install(progress, success, failure) {
+    let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
+    if( vagrantInstall !== undefined && vagrantInstall.isInstalled() ) {
+      this.postVagrantInstall(progress, success, failure);
+    } else {
+      progress.setStatus('Waiting for Vagrant to finish installation');
+      ipcRenderer.on('installComplete', (event, arg) => {
+        if (arg == 'vagrant') {
+          this.postVagrantInstall(progress, success, failure);
+        }
+      });
+    }
+  }
+
+  postVagrantInstall(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(CDKInstall.key(), progress, success, failure);
 
@@ -169,9 +219,10 @@ class CDKInstall extends InstallableItem {
         env: env
       };
 
-      let res = installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.0.0.gem'), opts, promise)
+      let res = installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.1.0.cdk.gem'), opts, promise)
       .then((result) => { return installer.exec('vagrant box add --name cdk_v2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result); })
-      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-adbinfo-0.0.5.gem'), opts, result); });
+      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-adbinfo-0.1.0.gem'), opts, result); })
+      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.cdk.gem'), opts, result); });
 
       return res;
     }

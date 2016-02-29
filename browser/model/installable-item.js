@@ -8,7 +8,7 @@ class InstallableItem {
     this.existingInstallLocation = "";
     this.useDownload = true;
     this.downloaded = false;
-    this.installed = false;
+    this.installed = false; 
 
     if (downloadUrl == null || downloadUrl == '') {
     	throw(new Error('No download URL set'));
