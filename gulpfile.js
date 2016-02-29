@@ -11,7 +11,8 @@ var gulp = require('gulp'),
   yargs = require('yargs')
   .boolean('singleRun')
   .default({ singleRun : true });
-  Server = require('karma').Server;
+  Server = require('karma').Server,
+  angularProtractor = require('gulp-angular-protractor');
 
 var artifactName = 'DeveloperPlatformInstaller';
 
@@ -91,6 +92,20 @@ gulp.task('browser-test', function(done) {
     configFile: __dirname + '/karma-conf.js',
     singleRun: yargs.argv.singleRun
   }, done).start();
+});
+
+gulp.task('ui-test', function() {
+  return runSequence('generate', 'protractor-run');
+});
+
+gulp.task('protractor-run', function() {
+  return gulp.src(['./test/ui/**/*.js'])
+    .pipe(angularProtractor({
+      'configFile': 'protractor-conf.js',
+      'autoStartStopServer': false,
+      'debug': false
+    }))
+    .on('error', function(e) { throw e; });
 });
 
 gulp.task('default', function() {
