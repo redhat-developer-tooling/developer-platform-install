@@ -107,7 +107,8 @@ class CDKInstall extends InstallableItem {
     ].join('\r\n');
     let markerContent = [
       'openshift.auth.scheme=Basic',
-      'openshift.auth.username=test-admin',
+      'openshift.auth.username=openshift-dev',
+      'openshift.auth.password=devel',
       'vagrant.binary.path=' + path.join(this.installerDataSvc.vagrantDir(), 'bin'),
       'oc.binary.path=' + this.installerDataSvc.ocDir(),
       'rhel.subscription.username=' + this.installerDataSvc.getUsername()
