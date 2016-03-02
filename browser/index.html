@@ -9,11 +9,74 @@
         System.import('./bootstrap');
     </script>
 
+    <style>
+      a.disabled { pointer-events: none; }
+    </style>
+
     <link rel="stylesheet" href="jspm_packages/npm/patternfly@2.6.0/dist/css/patternfly.css">
     <link rel="stylesheet" href="jspm_packages/npm/patternfly@2.6.0/dist/css/patternfly-additions.css">
     <link rel="stylesheet" href="app.css">
   </head>
   <body class="container-fluid">
+    <!-- Fake first page visible until angular starts and takes over -->
+    <div ng-show=acctCtrl>
+      <header>
+        <img class="branding" src="images/Logo.jpg"/>
+
+        <ul class="breadcrumbs">
+          <li class="active">
+            <span>Install Setup</span>
+          </li>
+          <li>
+            <span>Confirmation</span>
+          </li>
+          <li>
+            <span>Download &amp; Install</span>
+          </li>
+          <li class="end">
+            <span>Get Started</span>
+          </li>
+        </ul>
+      </header>
+
+      <main>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="row">
+              <div class="col-sm-12">
+                <h3 style="float: left">Log in to your Red Hat account</h3>
+                <img src="../resources/loading.gif" style="height: 20px; width: auto; float: right; margin-top: 18px;"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-offset-1 col-sm-11">
+                <form class="form-horizontal">
+                  <div class="form-group has-feedback">
+                      <input disabled="true" type="text" class="form-control" placeholder="Red Hat login"/>
+                  </div>
+                  <div class="form-group has-feedback">
+                      <input disabled="true" type="password" class="form-control" placeholder="Password"/>
+                  </div>
+                  <div class="form-group">
+                      <button type="submit" class="btn btn-primary btn-lg" disabled="accountForm.$invalid">LOG IN</button>
+                      <div class="pull-right">
+                        <a class="disabled" href="">Forgot your login or password?</a>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                Don't have an account? <a class="disabled" href="">Create</a> one today!
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- the actual content -->
     <ui-view></ui-view>
   </body>
 </html>
