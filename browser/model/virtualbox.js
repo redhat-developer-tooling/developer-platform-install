@@ -66,8 +66,19 @@ class VirtualBoxInstall extends InstallableItem {
 
   setup(installer, result) {
     return new Promise((resolve, reject) => {
-        return this.installMsi(installer,resolve,reject);
-      });
+      // If downloading is not finished wait for event
+      if (this.installerDataSvc.downloading) {
+        Logger.info(VirtualBoxInstall.key() + ' - Waiting for all downloads to complete');
+        installer.progress.setStatus('Waiting for all downloads to finish');
+        ipcRenderer.on('downloadingComplete', (event, arg) => {
+          // time to start virtualbox installer
+          return this.installMsi(installer,resolve,reject);
+        });
+      } else { // it is safe to call virtualbox installer
+        //downloading is already over vbox install is safe to start
+       return this.installMsi(installer,resolve,reject);
+      }
+    });
   }
 
   installMsi(installer,resolve,reject) {
