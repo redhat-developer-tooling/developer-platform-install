@@ -95,7 +95,19 @@ gulp.task('browser-test', function(done) {
 });
 
 gulp.task('ui-test', function() {
-  return runSequence('generate', 'protractor-run');
+  return runSequence('generate', 'protractor-install', 'protractor-run');
+});
+
+gulp.task('protractor-install', function(cb) {
+  var cmd = path.join('node_modules', 'gulp-angular-protractor',
+   'node_modules', 'gulp-protractor', 'node_modules', '.bin') + path.sep + 'webdriver-manager';
+  cmd += ' update';
+
+  exec(cmd, function(err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 });
 
 gulp.task('protractor-run', function() {
