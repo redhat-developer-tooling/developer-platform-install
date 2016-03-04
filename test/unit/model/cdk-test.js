@@ -107,12 +107,6 @@ describe('CDK installer', function() {
       pscpUrl = 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe';
 
   let boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
-  let cdkDownloadedFile = path.join(installerDataSvc.tempDir(), 'cdk.zip'),
-      cdkBoxDownloadedFile = path.join(installerDataSvc.tempDir(), boxName),
-      ocDownloadedFile = path.join(installerDataSvc.tempDir(), 'oc.zip'),
-      vagrantDownloadedFile = path.join(installerDataSvc.tempDir(), 'vagrantfile.zip'),
-      pscpDownloadedFile = path.join(installerDataSvc.tempDir(), 'pscp.exe'),
-      pscpPathScript = path.join(installerDataSvc.tempDir(), 'set-pscp-path.ps1');
 
   describe('when downloading the cdk tools', function() {
     let downloadStub, authStub;
@@ -142,11 +136,11 @@ describe('CDK installer', function() {
       //expect 5 streams to be set and created
       expect(streamSpy.callCount).to.equal(5);
       expect(fsSpy.callCount).to.equal(5);
-      expect(fsSpy).calledWith(cdkDownloadedFile);
-      expect(fsSpy).calledWith(cdkBoxDownloadedFile);
-      expect(fsSpy).calledWith(ocDownloadedFile);
-      expect(fsSpy).calledWith(vagrantDownloadedFile);
-      expect(fsSpy).calledWith(pscpDownloadedFile);
+      expect(fsSpy).calledWith(installer.cdkDownloadedFile);
+      expect(fsSpy).calledWith(installer.cdkBoxDownloadedFile);
+      expect(fsSpy).calledWith(installer.ocDownloadedFile);
+      expect(fsSpy).calledWith(installer.vagrantDownloadedFile);
+      expect(fsSpy).calledWith(installer.pscpDownloadedFile);
     });
 
     it('should call a correct downloader request for each file', function() {
@@ -176,7 +170,7 @@ describe('CDK installer', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.install(fakeProgress, null, null);
+      installer.postVagrantInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -186,10 +180,10 @@ describe('CDK installer', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
 
       let spy = sandbox.spy(Installer.prototype, 'unzip');
-      installer.install(fakeProgress, function() {}, function (err) {});
+      installer.postVagrantInstall(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith(cdkDownloadedFile, installerDataSvc.installDir());
+      expect(spy).calledWith(installer.cdkDownloadedFile, installerDataSvc.installDir());
     });
 
     it('createEnvironment should return path to vagrant/bin', function() {

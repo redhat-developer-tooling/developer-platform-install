@@ -16,10 +16,14 @@ chai.use(sinonChai);
 describe('Vagrant installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox;
+  let fakeInstallable = {
+    isInstalled: function() { return true; }
+  };
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder'; },
-    vagrantDir: function() { return 'installationFolder/vagrant'; }
+    vagrantDir: function() { return 'installationFolder/vagrant'; },
+    getInstallable: function(key) { return fakeInstallable; }
   };
 
   installerDataSvc = sinon.stub(fakeData);
@@ -135,7 +139,7 @@ describe('Vagrant installer', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.install(fakeProgress, null, null);
+      installer.postCygwinInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -145,7 +149,7 @@ describe('Vagrant installer', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
 
       let spy = sandbox.spy(Installer.prototype, 'unzip');
-      installer.install(fakeProgress, function() {}, function (err) {});
+      installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith(downloadedFile, installerDataSvc.tempDir());
@@ -157,7 +161,7 @@ describe('Vagrant installer', function() {
       stub.throws(new Error('critical error'));
 
       try {
-        installer.install(fakeProgress, function() {}, function (err) {});
+        installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
         stub.restore();
         done();
       } catch (error) {

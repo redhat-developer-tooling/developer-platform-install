@@ -112,9 +112,11 @@ describe('Install controller', function() {
 
     after(function() {
       dlStub.restore();
-    })
+    });
 
     it('data service should register the new downloads', function() {
+      sandbox.stub(vagrant, 'downloadInstaller').returns();
+      sandbox.stub(vbox, 'downloadInstaller').returns();
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
@@ -148,6 +150,8 @@ describe('Install controller', function() {
     })
 
     it('data service should register the new install', function() {
+      sandbox.stub(vagrant, 'install').returns();
+      sandbox.stub(vbox, 'install').returns();
       sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
       controller = new InstallController(null, timeoutStub, installerDataSvc);

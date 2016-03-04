@@ -16,10 +16,14 @@ chai.use(sinonChai);
 describe('JDK installer', function() {
   let DataStub, installerDataSvc, sandbox;
   let infoStub, errorStub;
+  let fakeInstallable = {
+    isInstalled: function() { return true; }
+  };
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder' },
-    jdkDir: function() { return 'install/jdk8' }
+    jdkDir: function() { return 'install/jdk8' },
+    getInstallable: function(key) { return fakeInstallable; }
   };
 
   installerDataSvc = sinon.stub(fakeData);

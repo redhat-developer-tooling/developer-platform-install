@@ -16,16 +16,22 @@ chai.use(sinonChai);
 describe('Cygwin installer', function() {
   let DataStub, installerDataSvc, sandbox;
   let infoStub, errorStub;
+  let fakeInstallable = {
+    isInstalled: function() { return true; }
+  };
+
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder'; },
-    cygwinDir: function() { return 'install/Cygwin'; }
+    cygwinDir: function() { return 'install/Cygwin'; },
+    getInstallable: function(key) { return fakeInstallable; }
   };
 
   installerDataSvc = sinon.stub(fakeData);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.cygwinDir.returns('install/Cygwin');
+  installerDataSvc.getInstallable
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -39,20 +45,11 @@ describe('Cygwin installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-
-    mockfs({
-      tempDirectory : { 'testFile': 'file content here' },
-      installationFolder : {}
-    }, {
-      createCwd: false,
-      createTmp: false
-    });
   });
 
   after(function() {
     infoStub.restore();
     errorStub.restore();
-    mockfs.restore();
   });
 
   beforeEach(function () {
@@ -84,9 +81,9 @@ describe('Cygwin installer', function() {
     expect(new CygwinInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
   });
 
-  it('should download cygwin installer to temporary folder as cygwin.exe', function() {
+  it('should download cygwin installer to temporary folder as ssh-rsync.zip', function() {
     expect(new CygwinInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join('tempDirectory', 'cygwin.exe'));
+      path.join('tempDirectory', 'ssh-rsync.zip'));
   });
 
   describe('when downloading cygwin', function() {
@@ -110,7 +107,7 @@ describe('Cygwin installer', function() {
       spy.restore();
     });
 
-    it('should write the data into temp/cygwin.exe', function() {
+    it('should write the data into temp/ssh-rsync.zip', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fs, 'createWriteStream');
       let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
@@ -119,7 +116,7 @@ describe('Cygwin installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'cygwin.exe'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'ssh-rsync.zip'));
 
       streamSpy.restore();
       spy.restore();
@@ -143,7 +140,7 @@ describe('Cygwin installer', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.install(fakeProgress, null, null);
+      installer.postVirtualboxInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -151,30 +148,14 @@ describe('Cygwin installer', function() {
       spy.restore();
     });
 
-    it('should execute the installer with correct parameters', function() {
+    it('should unzip the installer with correct parameters', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'execFile').yields();
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
+      let stub = sandbox.stub(require('unzip'), 'Extract').throws('done');
+      let spy = sandbox.spy(Installer.prototype, 'unzip');
 
-      let opts = [
-        '--no-admin',
-        '--quiet-mode',
-        '--only-site',
-        '--site',
-        'http://mirrors.kernel.org/sourceware/cygwin',
-        '--root',
-        installerDataSvc.cygwinDir(),
-        '--categories',
-        'Base',
-        '--packages',
-        'openssh,rsync'
-      ];
+      installer.postVirtualboxInstall(fakeProgress, null, null);
 
-      installer.install(fakeProgress, null, null);
-
-      expect(spy).to.have.been.calledWith(downloadedFile, opts);
-      spy.restore();
-      stub.restore();
+      expect(spy).to.have.been.calledWith(installer.downloadedFile, fakeData.cygwinDir());
     });
 
     it('should catch errors thrown during the installation', function(done) {
@@ -184,7 +165,7 @@ describe('Cygwin installer', function() {
       stub.throws(err);
 
       try {
-        installer.install(fakeProgress, null, null);
+        installer.postVirtualboxInstall(fakeProgress, null, null);
         stub.restore();
         done();
       } catch (error) {

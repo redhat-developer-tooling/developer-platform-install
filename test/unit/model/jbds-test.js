@@ -149,7 +149,7 @@ describe('JBDS installer', function() {
       let installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.install(fakeProgress, null, null);
+      installer.postInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -159,7 +159,7 @@ describe('JBDS installer', function() {
       let installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(JbdsAutoInstallGenerator.prototype, 'fileContent');
 
-      installer.install(fakeProgress, null, null);
+      installer.postInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
     });
@@ -171,7 +171,7 @@ describe('JBDS installer', function() {
 
       let data = new JbdsAutoInstallGenerator(installerDataSvc.jbdsDir(), installerDataSvc.jdkDir()).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
-      installer.install(fakeProgress, null, null);
+      installer.postInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(installConfigFile, data);
