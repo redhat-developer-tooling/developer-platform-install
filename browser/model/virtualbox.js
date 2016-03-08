@@ -59,41 +59,45 @@ class VirtualBoxInstall extends InstallableItem {
         '-path',
         this.installerDataSvc.tempDir(),
         '--silent'])
-    .then((result) => { return this.setup(installer, result) })
+    .then((result) => { return this.setup(progress, result) })
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
   }
 
-  setup(installer, result) {
+  setup(progress, result) {
     return new Promise((resolve, reject) => {
       // If downloading is not finished wait for event
       if (this.installerDataSvc.downloading) {
         Logger.info(VirtualBoxInstall.key() + ' - Waiting for all downloads to complete');
-        installer.progress.setStatus('Waiting for all downloads to finish');
+        progress.setStatus('Waiting for all downloads to finish');
         ipcRenderer.on('downloadingComplete', (event, arg) => {
           // time to start virtualbox installer
-          return this.installMsi(installer,resolve,reject);
+          return this.installMsi(progress, resolve, reject);
         });
       } else { // it is safe to call virtualbox installer
         //downloading is already over vbox install is safe to start
-       return this.installMsi(installer,resolve,reject);
+       return this.installMsi(progress, resolve, reject);
       }
     });
   }
 
-  installMsi(installer,resolve,reject) {
-    installer.progress.setStatus('Installing');
-    return installer.execFile('msiexec',
-    [
-      '/i',
-      this.msiFile,
-      'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-      '/qb!',
-      '/norestart',
-      '/Liwe',
-      path.join(this.installerDataSvc.installDir(), 'vbox.log')
-    ]).then((res) => { return resolve(res); })
-    .catch((err) => { return reject(err); });
+  installMsi(progress, resolve, reject) {
+    progress.setStatus('Installing');
+    let cmd = 'msiexec /qn /i ' + this.msiFile + ' /norestart';
+    cmd += ' INSTALLDIR=' + this.installerDataSvc.virtualBoxDir();
+    Logger.info(VirtualBoxInstall.key() + ' - Execute "' + cmd + '"');
+
+    require('node-windows').elevate(cmd, (error, stdout, stderr) => {
+      if (error) {
+        Logger.info(VirtualBoxInstall.key() + ' - ' + stderr);
+        Logger.error(VirtualBoxInstall.key() + ' - ' + error);
+        reject(error);
+      } else {
+        Logger.info(VirtualBoxInstall.key() + ' - ' + stdout);
+        Logger.info(VirtualBoxInstall.key() + ' - execute "' + cmd + '" SUCCESS');
+        resolve(true);
+      }
+    });
   }
 }
 
