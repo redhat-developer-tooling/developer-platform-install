@@ -50,7 +50,12 @@ class Downloader {
 
   download(options) {
     let stream = this.writeStream;
-    request.get(options)
+    console.log(options);
+    request.get(options, {timeout:15000}, (error, response, body) => {
+          if(error) {
+            this.failure(error);
+          }
+      })
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
       .on('data', this.dataHandler.bind(this))

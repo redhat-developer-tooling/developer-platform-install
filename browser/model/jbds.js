@@ -38,17 +38,9 @@ class JbdsInstall extends InstallableItem {
     if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
-
-      let options = {
-        url: this.downloadUrl,
-        headers: {
-          'Referer': 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/'
-        }
-      };
-
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
-      downloader.download(options);
+      downloader.download(this.downloadUrl);
     } else {
       this.downloadedFile = path.join(downloads, this.downloadedFileName);
       success();

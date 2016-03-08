@@ -68,15 +68,15 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
                 new VirtualBoxInstall('5.0.8',
-                                      '103449',
-                                      installerDataSvc,
-                                      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
-                                      null)
+                                        '103449',
+                                        installerDataSvc,
+                                        'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                                        null)
             );
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
                 new CygwinInstall(installerDataSvc,
-                                  'https://drive.google.com/file/d/0B4pPomemPHeuNndtNE1LaUZZQzA/view?usp=sharing',
+                                  'http://dgolovin.github.io/mingw-ssh-rsync/ssh-rsync.zip',
                                   null)
             );
             installerDataSvc.addItemToInstall(
@@ -89,10 +89,10 @@ let mainModule =
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
-                                'http://cdk-builds.usersys.redhat.com/builds/22-Feb-2016-cdk2.0beta4-rebuild/cdk-2.0.0-beta4.zip',
-                                'http://cdk-builds.usersys.redhat.com/builds/22-Feb-2016-cdk2.0beta4-rebuild/rhel-cdk-kubernetes-7.2-18.x86_64.vagrant-virtualbox.box',
+                                'http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/cdk.zip',
+                                'http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
                                 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
-                                'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/f3cd9f8859b65cf9257b3f886ab999dcfd0aac0b.zip',
+                                'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
                                 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
                                 null)
             );
@@ -100,7 +100,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
-                               'http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_66-8.11.0.1-win64.zip',
+                               'http://cdn.azul.com/zulu/bin/zulu8.13.0.5-jdk8.0.72-win_x64.zip',
                                null)
             );
 

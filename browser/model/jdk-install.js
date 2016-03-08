@@ -33,17 +33,9 @@ class JdkInstall extends InstallableItem {
     if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
-
-      let options = {
-        url: this.downloadUrl,
-        headers: {
-          'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
-        }
-      };
-
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
-      downloader.download(options);
+      downloader.download(this.downloadUrl);
     } else {
       this.downloadedFile = path.join(downloads, this.downloadedFileName);
       success();

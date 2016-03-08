@@ -25,7 +25,7 @@ class CDKInstall extends InstallableItem {
     this.cdkFileName = 'cdk.zip';
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
 
-    this.boxName = 'rhel-cdk-kubernetes-7.2-18.x86_64.vagrant-virtualbox.box';
+    this.boxName = 'rhel-cdk-kubernetes-7.2-1.x86_64.vagrant-virtualbox.box';
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
 
     this.ocFileName = 'oc.zip';
@@ -220,10 +220,10 @@ class CDKInstall extends InstallableItem {
         env: env
       };
 
-      let res = installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.1.0.cdk.gem'), opts, promise)
+      let res = installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise)
       .then((result) => { return installer.exec('vagrant box add --name cdk_v2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result); })
-      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-adbinfo-0.1.0.gem'), opts, result); })
-      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.cdk.gem'), opts, result); });
+      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.3.gem'), opts, result); })
+      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.gem'), opts, result); });
 
       return res;
     }

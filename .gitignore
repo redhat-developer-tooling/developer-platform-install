@@ -7,3 +7,4 @@ main/*.js
 !main/*.es6.js
 browser/config.js
 test/jspm-config.js
+.idea
