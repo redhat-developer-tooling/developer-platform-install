@@ -1,6 +1,7 @@
 'use strict';
 
 const shell = require('electron').shell;
+var pjson = require('../package.json');
 
 class AccountController {
   constructor($state, $http, $base64, installerDataSvc) {
@@ -13,6 +14,7 @@ class AccountController {
     this.password = "";
     this.authFailed = false;
     this.tandcNotSigned = false;
+    this.pdkVersion = pjson.version;
   }
 
   login() {
