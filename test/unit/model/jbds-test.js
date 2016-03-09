@@ -126,17 +126,11 @@ describe('JBDS installer', function() {
 
     it('should call a correct downloader request with the specified parameters once', function() {
       let installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
-      let options = {
-        url: downloadUrl,
-        headers: {
-          'Referer': 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/'
-        }
-      };
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(downloadStub).to.have.been.calledOnce;
-      expect(downloadStub).to.have.been.calledWith(options);
+      expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
   });
 

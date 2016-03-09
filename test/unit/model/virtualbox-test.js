@@ -13,6 +13,8 @@ import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
 chai.use(sinonChai);
 
+let child_process = require('child_process');
+
 describe('Virtualbox installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox;
@@ -136,7 +138,7 @@ describe('Virtualbox installer', function() {
 
     it('should execute the silent extract', function() {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'execFile').yields();
+      let stub = sandbox.stub(child_process, 'execFile').yields();
 
       let data = [
         '--extract',
@@ -170,6 +172,7 @@ describe('Virtualbox installer', function() {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
       let helper = new Installer('virtualbox', fakeProgress);
       let spy = sandbox.spy(installer, 'installMsi');
+      sandbox.stub(child_process, 'execFile').yields();
 
       installerDataSvc.downloading = false;
 
@@ -181,6 +184,7 @@ describe('Virtualbox installer', function() {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
       let helper = new Installer('virtualbox', fakeProgress);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
+      sandbox.stub(child_process, 'execFile').yields();
 
       installer.installMsi(helper);
 
@@ -190,7 +194,7 @@ describe('Virtualbox installer', function() {
 
     it('installMsi should execute the msi installer', function() {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'execFile').yields();
+      let stub = sandbox.stub(child_process, 'execFile').yields();
       let helper = new Installer('virtualbox', fakeProgress);
       let spy = sandbox.spy(Installer.prototype, 'execFile');
 
@@ -204,7 +208,7 @@ describe('Virtualbox installer', function() {
         '/Liwe',
         path.join(installerDataSvc.installDir(), 'vbox.log')
       ];
-      
+
       installer.installMsi(helper);
 
       expect(spy).to.have.been.calledOnce;
@@ -213,7 +217,7 @@ describe('Virtualbox installer', function() {
 
     it('should catch errors during the installation', function(done) {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'exec');
+      let stub = sandbox.stub(child_process, 'exec');
       stub.throws(new Error('critical error'));
 
       try {

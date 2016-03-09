@@ -127,18 +127,12 @@ describe('JDK installer', function() {
 
     it('should call downloader#download with the specified parameters once', function() {
       let downloadUrl = 'http://www.azulsystems.com/products/zulu/downloads';
-      let options = {
-        url: downloadUrl,
-        headers: {
-          'Referer': 'http://www.azulsystems.com/products/zulu/downloads'
-        }
-      };
       let installer = new JdkInstall(installerDataSvc, downloadUrl, null);
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(downloadStub).to.have.been.calledOnce;
-      expect(downloadStub).to.have.been.calledWith(options);
+      expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
   });
 
