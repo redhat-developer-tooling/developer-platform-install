@@ -1,7 +1,8 @@
 'use strict';
 
 const shell = require('electron').shell;
-var pjson = require('../package.json');
+let path = require('path');
+var pjson = require(path.resolve('./package.json'));
 
 class AccountController {
   constructor($state, $http, $base64, installerDataSvc) {
