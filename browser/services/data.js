@@ -20,7 +20,9 @@ class InstallerDataService {
 
     Logger.initialize(this.installRoot);
 
-    fs.mkdirSync(this.installRoot);
+    if (!fs.existsSync(this.installRoot)) {
+      fs.mkdirSync(this.installRoot);
+    }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 
