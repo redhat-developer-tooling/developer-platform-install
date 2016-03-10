@@ -4,9 +4,53 @@
   <breadcrumb></breadcrumb>
 </header>
 
+<style type="text/css">
+  form.form-horizontal div.form-group {
+    margin-left: 0px; margin-right: 0px; margin-bottom: 0px
+  }
+  div.help-block {
+    margin-bottom: 0px;
+  }
+</style>
+
 <main class="col-sm-12">
   <h5>Products and tools that will be installed.</h5>
-  <form id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
+  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="product-name">Select Installation Folder:</span>
+        <div class="form-group has-feedback" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
+          <div class="input-group">
+            <div style="position:relative">
+              <input type="text" name="folder" ng-init="confCtrl.checkFolder()" ng-change="confCtrl.folderChanged()" class="form-control" ng-model="confCtrl.folder" placeholder="Installation Folder" required aria-describedby="folderStatus" id="folder" path-validator/>
+              <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="confirmForm.folder.$invalid"></span>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectFolder()" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <span id="folderStatus" class="sr-only" ng-show="confirmForm.folder.$invalid">(error)</span>
+          <div ng-show="confirmForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>Please select an installation folder.</strong>
+          </div>
+          <div ng-show="confirmForm.folder.$error.folderPath && !confirmForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>The selection is not a valid absolute path.</strong>
+          </div>
+          <div ng-show="!confirmForm.folder.$invalid" class="form-group has-warning">
+              <div ng-show="confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected folder already exists, some files might be overwritten.</strong>
+              </div>
+              <div ng-show="!confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
+                <span class="pficon pficon-info"></span>
+                <strong>The selected folder will be created.</strong>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="product-name">OpenJDK</span><span class="product-version">v8</span>
@@ -32,9 +76,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group" style="margin-left: 0px">
         <div class="col-sm-12 pull-right">
-          <button type="submit" class="btn btn-primary btn-lg">Download & Install</button>
+          <button type="submit" ng-disabled="confirmForm.$invalid" class="btn btn-primary btn-lg">Download & Install</button>
         </div>
       </div>
     </div>

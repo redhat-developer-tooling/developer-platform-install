@@ -18,11 +18,6 @@ class InstallerDataService {
       this.installRoot = process.env.HOME + '/DeveloperPlatform';
   	}
 
-    Logger.initialize(this.installRoot);
-
-    if (!fs.existsSync(this.installRoot)) {
-      fs.mkdirSync(this.installRoot);
-    }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 
@@ -34,7 +29,10 @@ class InstallerDataService {
     this.toInstall = new Set();
     this.downloading = false;
     this.installing = false;
+  }
 
+  setup(installRoot) {
+    this.installRoot = installRoot;
     this.vboxRoot = path.join(this.installRoot, 'virtualbox');
     this.jdkRoot = path.join(this.installRoot, 'jdk8');
     this.jbdsRoot = path.join(this.installRoot, 'DeveloperStudio');
@@ -45,6 +43,8 @@ class InstallerDataService {
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
     this.cdkVagrantRoot = path.join(this.cdkRoot, 'openshift-vagrant');
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
+
+    Logger.initialize(this.installRoot);
   }
 
   addItemToInstall(key, item) {

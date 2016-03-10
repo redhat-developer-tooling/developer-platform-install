@@ -8,6 +8,7 @@ import acctCtrl from './pages/account/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';
 import startCtrl from './pages/start/controller';
+import pathValidator from './directives/pathValidator';
 import progressBar from './directives/progressBar';
 import breadcrumb from './directives/breadcrumb';
 import InstallerDataService from './services/data';
@@ -27,6 +28,7 @@ let mainModule =
           .factory('installerDataSvc', InstallerDataService.factory)
           .directive(progressBar.name, progressBar)
           .directive(breadcrumb.name, ['$state', breadcrumb])
+          .directive(pathValidator.name, pathValidator)
           .config( ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) => {
             $urlRouterProvider.otherwise('/account');
 
