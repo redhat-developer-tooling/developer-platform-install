@@ -208,6 +208,7 @@ describe('Virtualbox installer', function() {
 
       let cmd = 'msiexec /qn /i ' + msiFile + ' /norestart';
       cmd += ' INSTALLDIR=' + installerDataSvc.virtualBoxDir();
+      cmd += ' /log ' + path.join(installerDataSvc.installDir(), 'vbox.log');
 
       installerDataSvc.downloading = false;
 

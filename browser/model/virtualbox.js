@@ -85,6 +85,7 @@ class VirtualBoxInstall extends InstallableItem {
     progress.setStatus('Installing');
     let cmd = 'msiexec /qn /i ' + this.msiFile + ' /norestart';
     cmd += ' INSTALLDIR=' + this.installerDataSvc.virtualBoxDir();
+    cmd += ' /log ' + path.join(this.installerDataSvc.installDir(), 'vbox.log');
     Logger.info(VirtualBoxInstall.key() + ' - Execute "' + cmd + '"');
 
     require('node-windows').elevate(cmd, (error, stdout, stderr) => {
