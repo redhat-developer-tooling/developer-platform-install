@@ -63,6 +63,9 @@
     "tmp": "0.0.28",
     "yargs": "^4.2.0"
   },
+  "optionalDependencies": {
+    "node-windows": "0.1.11"
+  },
   "jspm": {
     "directories": {
       "baseURL": "browser"
