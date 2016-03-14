@@ -17,12 +17,6 @@ class InstallerDataService {
     } else {
       this.installRoot = process.env.HOME + '/DeveloperPlatform';
   	}
-
-    Logger.initialize(this.installRoot);
-
-    if (!fs.existsSync(this.installRoot)) {
-      fs.mkdirSync(this.installRoot);
-    }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 
@@ -32,23 +26,30 @@ class InstallerDataService {
     this.installableItems = new Map();
     this.toDownload = new Set();
     this.toInstall = new Set();
+    this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
+  }
 
-    this.vboxRoot = path.join(this.installRoot, 'virtualbox');
-    this.jdkRoot = path.join(this.installRoot, 'jdk8');
-    this.jbdsRoot = path.join(this.installRoot, 'DeveloperStudio');
-    this.vagrantRoot = path.join(this.installRoot, 'vagrant');
-    this.cygwinRoot = path.join(this.installRoot, 'ssh-rsync');
-    this.cdkRoot = path.join(this.installRoot, 'cdk');
+  setup(installRoot, vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
+    this.installRoot = installRoot || this.installRoot;
+    this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
+    this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
+    this.jbdsRoot = jbdsRoot || path.join(this.installRoot, 'DeveloperStudio');
+    this.vagrantRoot = vagrantRoot || path.join(this.installRoot, 'vagrant');
+    this.cygwinRoot = cygwinRoot || path.join(this.installRoot, 'ssh-rsync');
+    this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
     this.cdkVagrantRoot = path.join(this.cdkRoot, 'openshift-vagrant');
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
+
+    Logger.initialize(this.installRoot);
   }
 
   addItemToInstall(key, item) {
     this.installableItems.set(key, item);
+    this.toInstall.add(key);
   }
 
   getIpcRenderer() {
@@ -158,7 +159,7 @@ class InstallerDataService {
 
     return item.install(progress,
       () => {
-        this.installDone(key);
+        this.installDone(progress,key);
       },
       (error) => {
         Logger.error(key + ' failed to install: ' + error);
@@ -175,15 +176,29 @@ class InstallerDataService {
     this.toInstall.add(key);
   }
 
-  installDone(key) {
+  installDone(progress,key) {
     Logger.info('Install finished for: ' + key);
 
     let item = this.getInstallable(key);
-    item.setInstallComplete();
+    return item.setup(progress,
+        () => {
+          this.setupDone(progress,key);
+        },
+        (error) => {
+          Logger.error(key + ' failed to install: ' + error);
+        }
+    );
+
+  }
+
+  setupDone(progress,key) {
+    Logger.info('Setup finished for: ' + key);
 
     this.ipcRenderer.send('installComplete', key);
-
     this.toInstall.delete(key);
+    var item = this.getInstallable(key);
+    item.setInstallComplete();
+
     if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
       Logger.info('All installs complete');
 

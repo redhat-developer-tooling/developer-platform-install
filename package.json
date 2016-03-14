@@ -25,9 +25,11 @@
   },
   "dependencies": {
     "fs-extra": "0.26.5",
+    "glob": "7.0.0",
     "patternfly": "2.6.0",
     "request": "2.69.0",
-    "unzip": "0.1.11"
+    "unzip": "0.1.11",
+    "replace-in-file": "1.0.2"
   },
   "devDependencies": {
     "babel": "^5.8.29",

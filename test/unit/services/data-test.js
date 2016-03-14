@@ -64,6 +64,15 @@ describe('InstallerDataService', function() {
       expect(svc.downloading).to.equal(false);
       expect(svc.installing).to.equal(false);
 
+      expect(svc.installableItems).to.be.empty;
+    });
+
+    it('setup should correctly initialize folders', function() {
+      let svc = new InstallerDataService();
+      svc.setup('installRoot');
+
+      expect(svc.installRoot).to.equal('installRoot');
+
       expect(svc.vboxRoot).to.equal(path.join(svc.installRoot, 'virtualbox'));
       expect(svc.jdkRoot).to.equal(path.join(svc.installRoot, 'jdk8'));
       expect(svc.jbdsRoot).to.equal(path.join(svc.installRoot, 'DeveloperStudio'));
@@ -74,9 +83,7 @@ describe('InstallerDataService', function() {
       expect(svc.ocBinRoot).to.equal(path.join(svc.cdkRoot, 'bin'));
       expect(svc.cdkVagrantRoot).to.equal(path.join(svc.cdkRoot, 'openshift-vagrant'));
       expect(svc.cdkMarkerFile).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
-
-      expect(svc.installableItems).to.be.empty;
-    });
+    })
   });
 
   describe('installables', function() {

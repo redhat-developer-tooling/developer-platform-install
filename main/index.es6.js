@@ -30,6 +30,10 @@ ipcMain.on('downloadingComplete', (event, arg) => {
   event.sender.send('downloadingComplete', arg);
 });
 
+ipcMain.on('checkComplete', (event, arg) => {
+  event.sender.send('checkComplete', arg);
+});
+
 
 // Setup logging listeners
 ipcMain.on('install-root', (event, installRoot) => {

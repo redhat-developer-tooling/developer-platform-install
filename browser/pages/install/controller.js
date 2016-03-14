@@ -28,6 +28,8 @@ class InstallController {
       this.$timeout(this.triggerDownload(key, value, itemProgress));
     } else if (!value.hasExistingInstall()) {
       this.$timeout(this.triggerInstall(key, value, itemProgress));
+    } else {
+      this.$timeout(this.triggerSetup(key, value, itemProgress));
     }
   }
 
@@ -51,10 +53,25 @@ class InstallController {
 
     installableValue.install(progress,
       () => {
-        this.installerDataSvc.installDone(installableKey);
+        this.installerDataSvc.installDone(progress,installableKey);
       },
       (error) => {
         Logger.error(installableKey + ' failed to install: ' + error);
+      }
+    )
+  }
+
+  triggerSetup(installableKey, installableValue, progress) {
+    this.installerDataSvc.startSetup(installableKey);
+
+    progress.installTrigger();
+
+    installableValue.setup(progress,
+      () => {
+        this.installerDataSvc.setupDone(installableKey);
+      },
+      (error) => {
+        Logger.error(installableKey + ' setup failed: ' + error);
       }
     )
   }

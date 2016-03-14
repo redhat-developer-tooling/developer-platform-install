@@ -167,9 +167,9 @@ class CDKInstall extends InstallableItem {
     installer.unzip(this.cdkDownloadedFile, this.installerDataSvc.installDir())
     .then((result) => { return installer.unzip(this.ocDownloadedFile, this.installerDataSvc.ocDir(), result); })
     .then((result) => { return installer.unzip(this.vagrantDownloadedFile, this.installerDataSvc.tempDir(), result); })
-    .then((result) => { return installer.moveFile(path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'), this.installerDataSvc.cdkVagrantfileDir(), result); })
-    .then((result) => { return installer.moveFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
-    .then((result) => { return installer.moveFile(this.pscpDownloadedFile, path.join(this.installerDataSvc.ocDir(), 'pscp.exe'), result); })
+    .then((result) => { return installer.copyFile(path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'), this.installerDataSvc.cdkVagrantfileDir(), result); })
+    .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
+    .then((result) => { return installer.copyFile(this.pscpDownloadedFile, path.join(this.installerDataSvc.ocDir(), 'pscp.exe'), result); })
     .then((result) => { return installer.writeFile(this.pscpPathScript, data, result); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
     .then((result) => { return installer.execFile('powershell', opts, result); })
@@ -220,10 +220,15 @@ class CDKInstall extends InstallableItem {
         env: env
       };
 
-      let res = installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise)
-      .then((result) => { return installer.exec('vagrant box add --name cdk_v2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result); })
-      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.3.gem'), opts, result); })
-      .then((result) => { return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.gem'), opts, result); });
+      let res = installer.exec(
+        'vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise
+      ).then((result) => {
+        return installer.exec('vagrant box add --name cdk_v2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result);
+      }).then((result) => {
+        return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.3.gem'), opts, result);
+      }).then((result) => {
+        return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.gem'), opts, result);
+      });
 
       return res;
     }

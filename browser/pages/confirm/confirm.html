@@ -4,39 +4,217 @@
   <breadcrumb></breadcrumb>
 </header>
 
+<style type="text/css">
+  form.form-horizontal div.form-group {
+    margin-left: 0px; margin-right: 0px; margin-bottom: 0px
+  }
+  div.help-block {
+    margin-bottom: 0px;
+  }
+</style>
+
 <main class="col-sm-12">
-  <h5>Products and tools that will be installed.</h5>
-  <form id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
+  <h5>Setup and confirm.</h5>
+  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="product-name">OpenJDK</span><span class="product-version">v8</span>
-        <div>Java Development Kit for running JBoss Developer Studio</div>
+        <span class="product-name">Select Installation Folder:</span>
+        <div class="form-group has-feedback" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
+          <div class="input-group">
+            <div style="position:relative">
+              <input type="text" name="folder" ng-init="confCtrl.checkFolder()" ng-change="confCtrl.folderChanged()" class="form-control" ng-model="confCtrl.folder" placeholder="Installation Folder" required aria-describedby="folderStatus" id="folder" path-validator/>
+              <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="confirmForm.folder.$invalid"></span>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectFolder()" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <span id="folderStatus" class="sr-only" ng-show="confirmForm.folder.$invalid">(error)</span>
+          <div ng-show="confirmForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>Please select an installation folder.</strong>
+          </div>
+          <div ng-show="confirmForm.folder.$error.folderPath && !confirmForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>The selection is not a valid absolute path.</strong>
+          </div>
+          <div ng-show="!confirmForm.folder.$invalid" class="form-group has-warning">
+              <div ng-show="confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected folder already exists, some files might be overwritten.</strong>
+              </div>
+              <div ng-show="!confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
+                <span class="pficon pficon-info"></span>
+                <strong>The selected folder will be created.</strong>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <h5>Products and tools that will be installed.</h5>
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">v2</span>
         <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications</div>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">v9</span>
-        <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
-      </div>
-    </div>
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="product-name">RED HAT OPENSHIFT ENTERPRISE</span><span class="product-version">v3</span>
         <div>DevOps tooling that helps you easily build and deploy your projects in a PaaS environment.</div>
       </div>
     </div>
-    <div class="row">
-      <div class="form-group">
-        <div class="col-sm-12 pull-right">
-          <button type="submit" class="btn btn-primary btn-lg">Download & Install</button>
+
+    <h5>Required Tools and Runtimes.</h5>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="product-name">OpenJDK</span><span class="product-version">v8</span>
+        <div>Java Development Kit for running JBoss Developer Studio</div>
+        <div>
+          <div>
+            OpenJDK v8 will be installed. Or you may hit "Browse" and select an existing JDK 8 installation instead. Below is what we found on your machine:
+          </div>
+          <div class="input-group">
+            <div ng-init="confCtrl.checkItem('jdk')" style="position:relative">
+              <input type="text" disabled="true" name="jdk" placeholder="No JDK v8 installation found" class="form-control" ng-model="confCtrl.installables['jdk'][0].existingInstallLocation" id="jdk"/>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectItem('jdk')" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <div ng-show="!confCtrl.installables['jdk'][1]" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selection is not a valid JDK version 8 or newer. We will install OpenJDK v8 for you.</strong>
+            </div>
+          </div>
+          <div>
+            <div ng-show="confCtrl.installables['jdk'][1]" class="help-block form-group has-info">
+              <input type="checkbox" ng-disabled="!confCtrl.installables['jdk'][1]" ng-model="confCtrl.installables['jdk'][0].existingInstall">
+              <strong>I want to use the existing JDK I provided.</strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">v9</span>
+        <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
+        <div>
+          <div>
+            JBDS v9 will be installed. Or you may hit "Browse" and select an existing JBDS 9 installation instead. Below is what we found on your machine:
+          </div>
+          <div class="input-group">
+            <div ng-init="confCtrl.checkItem('jbds')" style="position:relative">
+              <input type="text" disabled="true" name="jbds" placeholder="No JBDS v9 installation found" class="form-control" ng-model="confCtrl.installables['jbds'][0].existingInstallLocation" id="jbds"/>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectItem('jbds')" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <div ng-show="!confCtrl.installables['jbds'][1]" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selection is not a valid JBDS version 9 or newer. We will install JBDS v9 for you.</strong>
+            </div>
+          </div>
+          <div>
+            <div ng-show="confCtrl.installables['jbds'][1]" class="help-block form-group has-info">
+              <input type="checkbox" ng-disabled="!confCtrl.installables['jbds'][1]" ng-model="confCtrl.installables['jbds'][0].existingInstall">
+              <strong>I want to use the existing JBDS I provided.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="product-name">Oracle VirtualBox</span><span class="product-version">v5</span>
+        <div>A virtualization software package developed by Oracle.</div>
+        <div>
+          <div>
+            VirtualBox v5 will be installed. Or you may hit "Browse" and select an existing VirtualBox installation instead. Below is what we found on your machine:
+          </div>
+          <div class="input-group">
+            <div ng-init="confCtrl.checkItem('virtualbox')" style="position:relative">
+              <input type="text" disabled="true" name="virtualbox" placeholder="No VirtualBox installation found" class="form-control" ng-model="confCtrl.installables['virtualbox'][0].existingInstallLocation" id="virtualbox"/>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectItem('virtualbox')" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <div ng-show="!confCtrl.installables['virtualbox'][1]" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selection is either not a valid VirtualBox installation or you do not have VirtualBox on path. We will install VirtualBox for you.</strong>
+            </div>
+          </div>
+          <div ng-show="confCtrl.installables['virtualbox'][1] && confCtrl.installables['virtualbox'][0].existingVersion && confCtrl.installables['virtualbox'][0].existingVersion + 2 < confCtrl.installables['virtualbox'][0].version.charAt(0)" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selected VirtualBox installation is more than 2 major versions old. It might still work, but use it at your own risk.</strong>
+            </div>
+          </div>
+          <div>
+            <div ng-show="confCtrl.installables['virtualbox'][1]" class="help-block form-group has-info">
+              <input type="checkbox" ng-disabled="!confCtrl.installables['virtualbox'][1]" ng-model="confCtrl.installables['virtualbox'][0].existingInstall">
+              <strong>I want to use the existing VirtualBox I provided.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="product-name">Vagrant</span><span class="product-version">v1</span>
+        <div>A container provisioning tool.</div>
+        <div>
+          <div>
+            Vagrant will be installed. Or you may hit "Browse" and select an existing Vagrant installation instead. Below is what we found on your machine:
+          </div>
+          <div class="input-group">
+            <div ng-init="confCtrl.checkItem('vagrant')" style="position:relative">
+              <input type="text" disabled="true" name="vagrant" placeholder="No Vagrant installation found" class="form-control" ng-model="confCtrl.installables['vagrant'][0].existingInstallLocation" id="vagrant"/>
+            </div>
+            <span class="input-group-btn">
+              <button type="button" ng-click="confCtrl.selectItem('vagrant')" class="btn btn-primary">Browse</button>
+            </span>
+          </div>
+          <div ng-show="!confCtrl.installables['vagrant'][1]" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selection is either not a valid Vagrant installation or you do not have Vagrant on path. We will install Vagrant for you.</strong>
+            </div>
+          </div>
+          <div ng-show="confCtrl.installables['vagrant'][1] && confCtrl.installables['vagrant'][0].existingVersion && confCtrl.installables['vagrant'][0].existingVersion < confCtrl.installables['vagrant'][0].version" class="form-group has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selected Vagrant installation is outdated. It will likely still work, but use it at your own risk.</strong>
+            </div>
+          </div>
+          <div>
+            <div ng-show="confCtrl.installables['vagrant'][1]" class="help-block form-group has-info">
+              <input type="checkbox" ng-disabled="!confCtrl.installables['vagrant'][1]" ng-model="confCtrl.installables['vagrant'][0].existingInstall">
+              <strong>I want to use the existing Vagrant I provided.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group" style="margin-bottom: 20px">
+        <div class="col-sm-12 pull-right">
+          <button type="submit" ng-disabled="confirmForm.$invalid" class="btn btn-primary btn-lg">Download & Install</button>
+        </div>
+      </div>
+    </div>
+
   </form>
 </main>

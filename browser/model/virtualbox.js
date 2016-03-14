@@ -8,6 +8,7 @@ import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
+import Util from './helpers/util';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
@@ -30,15 +31,73 @@ class VirtualBoxInstall extends InstallableItem {
     return 'virtualbox';
   }
 
-  checkForExistingInstall() {
+  checkForExistingInstall(selection, data) {
+    let versionRegex = /(\d+)\.\d+\.\d+r\d+/;
+    let command;
+    let extension = '';
+    let directory;
+
+    if (process.platform === 'win32') {
+      command = 'echo %VBOX_INSTALL_PATH%';
+      extension = '.exe';
+    } else {
+      command = 'which virtualbox';
+    }
+    if (selection) {
+      this.existingInstallLocation = selection[0] || this.existingInstallLocation;
+    }
+
+    Util.executeCommand(command, 1).then((output) => {
+      return new Promise((resolve, reject) => {
+        if (process.platform === 'win32') {
+          if (output === '%VBOX_INSTALL_PATH%') {
+            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1)
+            .then((output) => { return resolve(output); });
+          } else {
+            return resolve(output);
+          }
+        } else {
+          return Util.findText(output, 'INSTALL_DIR=')
+          .then((result) => { return resolve(result.split('=')[1]); });
+        }
+      });
+    }).then((folder) => {
+      return new Promise((resolve, reject) => {
+        if (selection && folder !== selection[0] && folder !== selection[0] + path.sep) {
+          return reject('selection is not on path');
+        } else {
+          directory = folder;
+          resolve(directory);
+        }
+      });
+    }).then((output) => {
+      return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension])
+    }).then((output) => {
+      var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
+      return Util.executeCommand(command, 1);
+    }).then((output) => {
+      this.existingVersion = parseInt(versionRegex.exec(output)[1]);
+      this.existingInstall = this.existingVersion + 2 >= this.version.charAt(0);
+      if (selection && data) {
+        data[VirtualBoxInstall.key()][1] = true;
+      } else {
+        this.existingInstallLocation = directory;
+      }
+      ipcRenderer.send('checkComplete', VirtualBoxInstall.key());
+    }).catch((error) => {
+      if (data) {
+        data[VirtualBoxInstall.key()][1] = false;
+      }
+      this.existingInstall = false;
+      ipcRenderer.send('checkComplete', VirtualBoxInstall.key());
+    });
   }
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
     var downloads = path.normalize(path.join(__dirname,"../../.."));
     console.log(downloads);
-    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
-      //if(fs.existsSync()))
+    if(!this.hasExistingInstall() && !fs.existsSync(path.join(downloads, this.downloadedFileName))) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
 
@@ -53,18 +112,34 @@ class VirtualBoxInstall extends InstallableItem {
 
   install(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.key(), progress, success, failure);
-
-    installer.execFile(this.downloadedFile,
-      ['--extract',
-        '-path',
-        this.installerDataSvc.tempDir(),
-        '--silent'])
-    .then((result) => { return this.setup(installer, result) })
-    .then((result) => { return installer.succeed(result); })
-    .catch((error) => { return installer.fail(error); });
+    if(!this.hasExistingInstall()) {
+      installer.execFile(this.downloadedFile,
+          ['--extract',
+            '-path',
+            this.installerDataSvc.tempDir(),
+            '--silent'])
+          .then((result) => {
+            return this.configure(installer, result)
+          })
+          .then((result) => {
+            return installer.succeed(result);
+          })
+          .catch((error) => {
+            return installer.fail(error);
+          });
+    } else {
+      success();
+    }
   }
 
-  setup(installer, result) {
+  setup(progress, success, failure) {
+    //no need to setup anything for vbox
+    progress.setStatus('Setting up');
+    progress.setComplete();
+    success();
+  }
+
+  configure(installer, result) {
     return new Promise((resolve, reject) => {
       // If downloading is not finished wait for event
       if (this.installerDataSvc.downloading) {
@@ -83,8 +158,7 @@ class VirtualBoxInstall extends InstallableItem {
 
   installMsi(installer,resolve,reject) {
     installer.progress.setStatus('Installing');
-    return installer.execFile('msiexec',
-    [
+    return installer.execFile('msiexec', [
       '/i',
       this.msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
@@ -92,8 +166,11 @@ class VirtualBoxInstall extends InstallableItem {
       '/norestart',
       '/Liwe',
       path.join(this.installerDataSvc.installDir(), 'vbox.log')
-    ]).then((res) => { return resolve(res); })
-    .catch((err) => { return reject(err); });
+    ]).then((res) => {
+      return resolve(res);
+    }) .catch((err) => {
+      return reject(err);
+    });
   }
 }
 

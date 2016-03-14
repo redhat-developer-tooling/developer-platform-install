@@ -75,6 +75,11 @@ class InstallableItem {
     // To be overridden
     success();
   }
+
+  setup(progress, success, failure) {
+    // To be overridden
+    success();
+  }
 }
 
 export default InstallableItem;
