@@ -17,7 +17,7 @@
         <div class="col-sm-offset-1 col-sm-11">
           <form name="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
             <div class="form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
-                <input type="text" name="username" class="form-control" ng-model="acctCtrl.username" placeholder="Red Hat login" required aria-describedby="usernameStatus" id="username"/>
+                <input type="text" name="username" class="form-control" ng-model="acctCtrl.username" placeholder="Red Hat login" required aria-describedby="usernameStatus" id="username" autofocus/>
                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>
                 <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
                 <div ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$error.required" class="help-block has-error">Please enter a username.</div>
