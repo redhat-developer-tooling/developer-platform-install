@@ -24,8 +24,8 @@
     "browser-test": "gulp browser-test"
   },
   "dependencies": {
-    "fs-extra": "0.26.5",
-    "glob": "7.0.0",
+    "fs-extra": "0.26.7",
+    "glob": "7.0.3",
     "patternfly": "2.6.0",
     "request": "2.69.0",
     "unzip": "0.1.11",
@@ -63,7 +63,7 @@
     "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
     "tmp": "0.0.28",
-    "yargs": "^4.2.0"
+    "yargs": "^4.3.1"
   },
   "jspm": {
     "directories": {
