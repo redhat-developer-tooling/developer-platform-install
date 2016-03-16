@@ -2,7 +2,7 @@
 
 const shell = require('electron').shell;
 let path = require('path');
-var pjson = require(path.resolve('./package.json'));
+var pjson = require(path.join(__dirname,'../package.json'));
 
 class AccountController {
   constructor($state, $http, $base64, installerDataSvc) {
