@@ -155,6 +155,7 @@ class VagrantInstall extends InstallableItem {
 
   setup(progress, success, failure) {
     progress.setStatus('Setting up');
+    progress.setComplete();
     success();
   }
 }
