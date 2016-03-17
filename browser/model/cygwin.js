@@ -17,7 +17,7 @@ class CygwinInstall extends InstallableItem {
     super('Cygwin', 720, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-    this.downloadedFileName = 'ssh-rsync.zip';
+    this.downloadedFileName = 'cygwin.exe';
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
   }
@@ -83,7 +83,7 @@ class CygwinInstall extends InstallableItem {
       '[Environment]::Exit(0)'
     ].join('\r\n');
 
-    installer.unzip(this.downloadedFile, this.installerDataSvc.cygwinDir())
+    installer.execFile(this.downloadedFile, opts)
     .then((result) => { return installer.writeFile(this.cygwinPathScript, data, result); })
     .then((result) => { return installer.execFile('powershell',
       [
