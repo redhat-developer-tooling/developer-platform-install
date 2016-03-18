@@ -11,6 +11,7 @@ import VagrantInstall from 'model/vagrant';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+let child_process = require('child_process');
 chai.use(sinonChai);
 
 describe('Vagrant installer', function() {
@@ -90,7 +91,7 @@ describe('Vagrant installer', function() {
 
   it('should download vagrant installer to temporary folder as vagrant.zip', function() {
     expect(new VagrantInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join(installerDataSvc.tempDir(), 'vagrant.zip'));
+      path.join(installerDataSvc.tempDir(), 'vagrant.msi'));
   });
 
   describe('when downloading the vagrant zip', function() {
@@ -118,7 +119,7 @@ describe('Vagrant installer', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.zip'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.msi'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
@@ -145,14 +146,14 @@ describe('Vagrant installer', function() {
       expect(spy).to.have.been.calledWith('Installing');
     });
 
-    it('should unzip the downloaded file into temporary folder', function() {
+    it('should exec the downloaded file with emporary folder as target destination', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
-
-      let spy = sandbox.spy(Installer.prototype, 'unzip');
+      let stub = sandbox.stub(child_process, 'execFile').yields();
+      let spy = sandbox.spy(Installer.prototype, 'execFile');
       installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith(downloadedFile, installerDataSvc.tempDir());
+      expect(spy).calledWith('msiexec', ['/i', 'tempDirectory\\vagrant.msi', 'VAGRANTAPPDIR=installationFolder/vagrant', '/qb!', '/norestart', '/Liwe', 'installationFolder\\vagrant.log']);
     });
 
     it('should catch errors during the installation', function(done) {
