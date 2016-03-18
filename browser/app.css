@@ -3,6 +3,7 @@
   height: auto;
   padding-top: 20px;
   padding-bottom: 20px;
+  float: right;
 }
 
 header {
@@ -11,9 +12,12 @@ header {
 
 .breadcrumbs {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  padding-top: 35px;
+  padding-left: 0px;
+  margin-left: -20px;
+  margin-bottom: 0;
+  width: 70%;
+  float: left;
 }
 
 .breadcrumbs:before {
