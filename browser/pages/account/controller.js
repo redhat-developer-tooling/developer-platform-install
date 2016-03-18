@@ -2,7 +2,16 @@
 
 const shell = require('electron').shell;
 let path = require('path');
-var pjson = require(path.join(__dirname,'../package.json'));
+let fs = require('fs-extra');
+
+let pjson = { 'version' : 'Unknown' };
+let packageJsonForTests = path.resolve('./package.json');
+let packageJsonForRT = path.join(path.resolve('.'),'resources/app.asar/package.json');
+if(fs.existsSync(packageJsonForTests)) {
+  pjson = require(packageJsonForTests);
+} else if ( fs.existsSync(packageJsonForRT) ) {
+  pjson = require(packageJsonForRT);
+}
 
 class AccountController {
   constructor($state, $http, $base64, installerDataSvc) {

@@ -83,7 +83,7 @@ describe('Cygwin installer', function() {
 
   it('should download cygwin installer to temporary folder as ssh-rsync.zip', function() {
     expect(new CygwinInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join('tempDirectory', 'ssh-rsync.zip'));
+      path.join('tempDirectory', 'cygwin.exe'));
   });
 
   describe('when downloading cygwin', function() {
@@ -116,7 +116,7 @@ describe('Cygwin installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'ssh-rsync.zip'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'cygwin.exe'));
 
       streamSpy.restore();
       spy.restore();
@@ -148,14 +148,14 @@ describe('Cygwin installer', function() {
       spy.restore();
     });
 
-    it('should unzip the installer with correct parameters', function() {
+    it('should run the installer with correct parameters', function() {
       let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('unzip'), 'Extract').throws('done');
-      let spy = sandbox.spy(Installer.prototype, 'unzip');
+      let stub = sandbox.stub(require('child_process'), 'execFile').throws('done');
+      let spy = sandbox.spy(Installer.prototype, 'execFile');
 
       installer.postVirtualboxInstall(fakeProgress, null, null);
 
-      expect(spy).to.have.been.calledWith(installer.downloadedFile, fakeData.cygwinDir());
+      expect(spy).to.have.been.calledWith(installer.downloadedFile, ["--no-admin", "--quiet-mode", "--only-site", "--site", "http://mirrors.xmission.com/cygwin", "--root", "install/Cygwin", "--categories", "Base", "--packages", "openssh,rsync"]);
     });
 
     it('should catch errors thrown during the installation', function(done) {

@@ -78,7 +78,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
                 new CygwinInstall(installerDataSvc,
-                                  'http://dgolovin.github.io/mingw-ssh-rsync/ssh-rsync.zip',
+                                  'https://cygwin.com/setup-x86_64.exe',
                                   null)
             );
             installerDataSvc.addItemToInstall(
