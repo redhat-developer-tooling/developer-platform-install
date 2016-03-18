@@ -2,6 +2,7 @@ var gulp = require('gulp'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
   zip = require('gulp-zip'),
+  electronInstaller = require('electron-winstaller'),
   rename = require('gulp-rename'),
   del = require('del'),
   exec = require('child_process').exec,
@@ -14,6 +15,10 @@ var gulp = require('gulp'),
   .default({ singleRun : true });
   Server = require('karma').Server,
   angularProtractor = require('gulp-angular-protractor');
+
+// TODO add timestamp and buildID to this installerVersion
+var installerVersionBase = '9.1.0';
+var installerVersion = installerVersionBase + '.CR1';
 
 var artifactName = 'DeveloperPlatformInstaller',
     artifactPlatform = 'win32',
@@ -35,7 +40,7 @@ gulp.task('clean', function() {
 gulp.task('create-zip', () => {
     return gulp.src('dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch + '/**/*')
         .pipe(zip(artifactName + '-' + artifactPlatform + '-' + artifactArch + '.zip'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/win'));
 });
 
 gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
@@ -60,7 +65,7 @@ gulp.task('run', ['transpile:app'], function(cb) {
 });
 
 gulp.task('package', function(cb) {
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./dist/win/' + artifactName + '-win32-x64';
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch;
   cmd += ' --out=./dist/win/ --name=developer_platform --exe=' + artifactName + '.exe';
   cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
   cmd += ' --loading_gif=./resources/loading.gif';
@@ -131,5 +136,24 @@ gulp.task('protractor-run', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('generate','create-zip');
+  return runSequence('generate','create-zip','electronwinstaller');
+});
+
+// see https://github.com/electronjs/windows-installer for more params
+// must install 7zip from http://www.7-zip.org/ for this to work
+gulp.task('electronwinstaller', function() {
+	console.log("Begin creating .exe and .msi installers. This may take >6 mins.");
+	resultPromise = electronInstaller.createWindowsInstaller({
+	    appDirectory: 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch,
+	    outputDirectory: 'dist/win/',
+	    // authors: 'Red Hat Developer Tooling Group', see package.json authors
+	    exe: artifactName + ".exe",
+	    title: artifactName + "_" + installerVersion,
+	    version: installerVersionBase, // can only be x.y.z
+	    loadingGif: 'resources/loading.gif',
+	    id: artifactName + "_" + installerVersion,
+	    noMsi: "true"
+	  });
+
+	resultPromise.then(() => console.log("[INFO] Installer(s) created."), (e) => console.log(`[ERROR] Installer creation failed: ${e.message}`));
 });
