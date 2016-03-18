@@ -14,6 +14,16 @@ class ConfirmController {
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
     this.installables = new Object();
+    
+    $scope.checkboxModel = {
+      cdk : true,
+      ose : true,
+      jdk : true,
+      jbds : true,
+      vbox : true,
+      vag : true,
+    };
+
   }
 
   install() {
