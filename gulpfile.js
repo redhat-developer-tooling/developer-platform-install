@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
+  zip = require('gulp-zip'),
   rename = require('gulp-rename'),
   del = require('del'),
   exec = require('child_process').exec,
@@ -14,7 +15,9 @@ var gulp = require('gulp'),
   Server = require('karma').Server,
   angularProtractor = require('gulp-angular-protractor');
 
-var artifactName = 'DeveloperPlatformInstaller';
+var artifactName = 'DeveloperPlatformInstaller',
+    artifactPlatform = 'win32',
+    artifactArch = 'x64';
 
 gulp.task('transpile:app', function() {
   return gulp.src(['./main/*.es6.js'])
@@ -29,9 +32,15 @@ gulp.task('clean', function() {
     return del(['dist'], {force: true});
 });
 
+gulp.task('create-zip', () => {
+    return gulp.src('dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch + '/**/*')
+        .pipe(zip(artifactName + '-' + artifactPlatform + '-' + artifactArch + '.zip'))
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=win32 --arch=x64';
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
   cmd += ' --version=' + electronVersion + ' --out=./dist/win/ --overwrite --asar=true';
   cmd += ' --prune --ignore=test';
 
@@ -122,5 +131,5 @@ gulp.task('protractor-run', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('generate');
+  return runSequence('generate','create-zip');
 });
