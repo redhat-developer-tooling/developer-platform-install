@@ -75,6 +75,10 @@ header {
   padding-left: 5px;
 }
 
+.btn-rightside {
+  float: right;
+}
+
 .animate-show {
   line-height: 20px;
   opacity: 1;
