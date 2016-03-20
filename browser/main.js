@@ -84,7 +84,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
                 new VagrantInstall(installerDataSvc,
-                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
+                                    'https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4.msi',
                                     null)
             );
             installerDataSvc.addItemToInstall(

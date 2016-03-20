@@ -199,7 +199,7 @@ class InstallerDataService {
     var item = this.getInstallable(key);
     item.setInstallComplete();
 
-    if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
+    if (!this.isDownloading() && this.toInstall.size == 0) {
       Logger.info('All installs complete');
 
       this.installing = false;
