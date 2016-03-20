@@ -23,14 +23,14 @@ describe('Vagrant installer', function() {
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder'; },
-    vagrantDir: function() { return 'installationFolder/vagrant'; },
+    vagrantDir: function() { return path.join('installationFolder','vagrant'); },
     getInstallable: function(key) { return fakeInstallable; }
   };
 
   installerDataSvc = sinon.stub(fakeData);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
-  installerDataSvc.vagrantDir.returns('installationFolder/vagrant');
+  installerDataSvc.vagrantDir.returns(path.join('installationFolder','vagrant'));
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -153,7 +153,7 @@ describe('Vagrant installer', function() {
       installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith('msiexec', ['/i', 'tempDirectory\\vagrant.msi', 'VAGRANTAPPDIR=installationFolder/vagrant', '/qb!', '/norestart', '/Liwe', 'installationFolder\\vagrant.log']);
+      expect(spy).calledWith('msiexec', ['/i', 'tempDirectory\\vagrant.msi', 'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qb!', '/norestart', '/Liwe', path.join('installationFolder','vagrant.log')]);
     });
 
     it('should catch errors during the installation', function(done) {
