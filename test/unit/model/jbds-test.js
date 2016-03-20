@@ -245,7 +245,7 @@ describe('JBDS installer', function() {
 
       let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties');
       let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
-      let data = 'CDKServer=' + escapedPath + ',true';
+      let data = 'CDKServer=' + escapedPath + ',true\r\n';
 
       return installer.setupCdk(helper)
       .then((result) => {

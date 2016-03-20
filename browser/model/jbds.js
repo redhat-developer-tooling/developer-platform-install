@@ -268,7 +268,7 @@ class JbdsInstall extends InstallableItem {
     return new Promise((resolve, reject) => {
       fs.appendFile(
         path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties'),
-        'CDKServer=' + escapedPath + ',true',
+        'CDKServer=' + escapedPath + ',true\r\n',
         (err) => {
           if (err) {
             Logger.error(JbdsInstall.key() + ' - ' + err);
