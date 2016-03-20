@@ -146,14 +146,14 @@ describe('Vagrant installer', function() {
       expect(spy).to.have.been.calledWith('Installing');
     });
 
-    it('should exec the downloaded file with emporary folder as target destination', function() {
+    it('should exec the downloaded file with temporary folder as target destination', function() {
       let installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
       let stub = sandbox.stub(child_process, 'execFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'execFile');
       installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith('msiexec', ['/i', 'tempDirectory\\vagrant.msi', 'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qb!', '/norestart', '/Liwe', path.join('installationFolder','vagrant.log')]);
+      expect(spy).calledWith('msiexec', ['/i', path.join('tempDirectory','vagrant.msi'), 'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qb!', '/norestart', '/Liwe', path.join('installationFolder','vagrant.log')]);
     });
 
     it('should catch errors during the installation', function(done) {
