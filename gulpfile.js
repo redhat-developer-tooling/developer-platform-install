@@ -27,6 +27,7 @@ var artifactName = 'DeveloperPlatformInstaller',
     artifactArch = 'x64';
 
 var prefetchFolder = 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch; // or use downloads/ folder to that a clean doesn't wipe out the downloads
+var buildFolder = 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch;
 
 gulp.task('transpile:app', function() {
   return gulp.src(['./main/*.es6.js'])
@@ -81,6 +82,17 @@ gulp.task('package', function(cb) {
   cmd += ' --loading_gif=./resources/loading.gif';
 
   exec(cmd, function(err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
+
+// must install 7zip from http://www.7-zip.org/ for this to work
+gulp.task('7zipsfx', function (cb) {
+  var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx -r a ' + buildFolder + '.exe ' + buildFolder;
+
+  exec(cmd, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
@@ -188,7 +200,7 @@ gulp.task('prefetch', function() {
 gulp.task('electronwinstaller', function() {
 	console.log("Creating .exe installer.");
 	resultPromise = electronInstaller.createWindowsInstaller({
-	    appDirectory: 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch,
+	    appDirectory: buildFolder,
 	    outputDirectory: 'dist/win/',
 	    // authors: 'Red Hat Developer Tooling Group', see package.json authors
 	    exe: artifactName + ".exe",
@@ -201,3 +213,4 @@ gulp.task('electronwinstaller', function() {
 
 	resultPromise.then(() => console.log("[INFO] Installer(s) created."), (e) => console.log(`[ERROR] Installer creation failed: ${e.message}`));
 });
+
