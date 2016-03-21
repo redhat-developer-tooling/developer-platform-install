@@ -248,7 +248,7 @@ describe('CDK installer', function() {
       installer.setupVagrant(helper);
 
       expect(spy).calledOnce;
-      expect(execStub).called;
+      expect(execStub).not.called;
     });
   });
 });
