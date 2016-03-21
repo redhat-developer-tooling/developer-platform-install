@@ -1,5 +1,7 @@
 'use strict';
 
+let ijson = require('../installers.json');
+
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import base64 from 'angular-base64';
@@ -69,47 +71,47 @@ let mainModule =
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
-                new VirtualBoxInstall('5.0.8',
-                                        '103449',
+                new VirtualBoxInstall(ijson.installerURLs['virtualbox']['version'],
+                                        ijson.installerURLs['virtualbox']['revision'],
                                         installerDataSvc,
-                                        'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                                        ijson.installerURLs['virtualbox']['url'],
                                         null)
             );
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
                 new CygwinInstall(installerDataSvc,
-                                  'https://cygwin.com/setup-x86_64.exe',
+                                  ijson.installerURLs['cygwin'],
                                   null)
             );
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
                 new VagrantInstall(installerDataSvc,
-                                    'https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4.msi',
+                                    ijson.installerURLs['vagrant'],
                                     null)
             );
             installerDataSvc.addItemToInstall(
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
-                                'http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/cdk.zip',
-                                'http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
-                                'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
-                                'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
-                                'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
+                                ijson.installerURLs['cdk']['cdkZip'],
+                                ijson.installerURLs['cdk']['vagrantVirtualBox'],
+                                ijson.installerURLs['cdk']['openshift-origin-client-tools-windows.zip'],
+                                ijson.installerURLs['cdk']['openshift-vagrant-sources.zip'],
+                                ijson.installerURLs['cdk']['pscp.exe'],
                                 null)
             );
 
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
-                               'http://cdn.azul.com/zulu/bin/zulu8.13.0.5-jdk8.0.72-win_x64.zip',
+                               ijson.installerURLs['jdk'],
                                null)
             );
 
             installerDataSvc.addItemToInstall(
                 JbdsInstall.key(),
                 new JbdsInstall(installerDataSvc,
-                                'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
+                                ijson.installerURLs['jbds'],
                                 null)
             );
           }]);
