@@ -83,7 +83,8 @@ gulp.task('unit-test', function () {
       compilers: 'js:babel/register',
       env: { NODE_PATH: './browser' },
       grep: yargs.argv.grep,
-      g: yargs.argv.g
+      g: yargs.argv.g,
+      reporter: yargs.argv.reporter
     }));
 });
 
