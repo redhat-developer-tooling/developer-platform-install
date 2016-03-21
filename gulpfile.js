@@ -3,10 +3,12 @@ var gulp = require('gulp'),
   runSequence = require('run-sequence'),
   zip = require('gulp-zip'),
   electronInstaller = require('electron-winstaller'),
+  download = require("download"),
   rename = require('gulp-rename'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
+  ijson = require('./installers.json'),
   path = require('path'),
   mocha = require('gulp-spawn-mocha'),
   symlink = require('gulp-symlink'),
@@ -24,6 +26,8 @@ var artifactName = 'DeveloperPlatformInstaller',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 
+var prefetchFolder = 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch; // or use downloads/ folder to that a clean doesn't wipe out the downloads
+
 gulp.task('transpile:app', function() {
   return gulp.src(['./main/*.es6.js'])
     .pipe(babel())
@@ -33,6 +37,12 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('./main'));
 });
 
+// clean dist/ AND downloads/ folder
+gulp.task('clean-all', ['clean'], function() {
+    return del([prefetchFolder], {force: true});
+});
+
+// clean dist/ folder in prep for fresh build
 gulp.task('clean', function() {
     return del(['dist'], {force: true});
 });
@@ -139,10 +149,44 @@ gulp.task('default', function() {
   return runSequence('generate','create-zip','electronwinstaller');
 });
 
+// TODO this should just be a recursive function
+// download all the installer dependencies so we can package them up into the .exe
+gulp.task('prefetch', function() {
+	for (var name in ijson.installerURLs) 
+	{
+		var url = ijson.installerURLs[name];
+		if (url.toString().indexOf("http")>=0)
+		{
+			console.log("[INFO] Downloading " + url + " ...");
+			new download({mode: '755'}).get(url).dest(prefetchFolder).run();				
+		}
+		else
+		{
+			// check in nested map for URLs, one level deep
+			for (var child in url) 
+			{
+				var url2 = url[child];
+				if (url2.toString().indexOf("http")>=0)
+				{
+					// TODO: handle the case where the URL passed in is for openshift origin client tools build folder and we need the zip (see code in browser/model/cdk.js), eg.,
+					// https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/ -> 
+					// https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1.4-160-g97f3219-97f3219-windows.zip
+
+					// TODO: handle login/auth requirements for github.com and cdk-builds.usersys.redhat.com
+					console.log("[INFO] Downloading " + url2 + " ...");
+					new download({mode: '755'}).get(url2).dest(prefetchFolder).run();				
+				}
+			}
+		}
+	}
+});
+
 // see https://github.com/electronjs/windows-installer for more params
 // must install 7zip from http://www.7-zip.org/ for this to work
+// TODO this should depend on the output of the prefetch task, and the prefetched stuff should be bundled into the installer; installer should then LOOK into local filesystem for these files
+// instead of fetching them (again) remotely
 gulp.task('electronwinstaller', function() {
-	console.log("Begin creating .exe and .msi installers. This may take >6 mins.");
+	console.log("Creating .exe installer.");
 	resultPromise = electronInstaller.createWindowsInstaller({
 	    appDirectory: 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch,
 	    outputDirectory: 'dist/win/',
