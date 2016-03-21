@@ -63,6 +63,7 @@
     "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
     "tmp": "0.0.28",
+    "xunit-file": "0.0.9",
     "yargs": "^4.3.1"
   },
   "jspm": {

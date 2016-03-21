@@ -166,7 +166,6 @@ describe('JDK installer', function() {
 
       try {
         installer.install(fakeProgress, function() {}, function (err) {});
-        stub.restore();
         done();
       } catch (error) {
         expect.fail('it did not catch the error');
@@ -182,7 +181,6 @@ describe('JDK installer', function() {
         expect(spy).calledOnce;
         expect(spy).calledWith('tempDirectory');
         expect(files).to.contain('jdk.zip');
-        spy.restore();
       });
     });
 
@@ -196,7 +194,6 @@ describe('JDK installer', function() {
         expect.fail('it did not reject');
       })
       .catch((error) => {
-        stub.restore();
         expect(error).to.equal(err);
       });
     });
@@ -220,7 +217,6 @@ describe('JDK installer', function() {
         expect(result).to.be.true;
         expect(spy).calledOnce;
         expect(spy).calledWith(path.join('tempDirectory', 'test'), 'newName');
-        spy.restore();
       });
     });
   });
