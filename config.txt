@@ -1,0 +1,5 @@
+;!@Install@!UTF-8!
+Title="Red Hat Developer Platform"
+BeginPrompt="Do you want to install the Red Hat Developer Platform?"
+RunProgram="DeveloperPlatformInstaller.exe"
+;!@InstallEnd@!
