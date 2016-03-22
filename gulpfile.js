@@ -1,26 +1,26 @@
+'use strict';
+
 var gulp = require('gulp'),
+  fs = require('fs-extra'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
   zip = require('gulp-zip'),
   electronInstaller = require('electron-winstaller'),
   download = require("download"),
+  request = require("request"),
   rename = require('gulp-rename'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
-  ijson = require('./requirements.json'),
+  reqs = require('./requirements.json'),
   path = require('path'),
   mocha = require('gulp-spawn-mocha'),
   symlink = require('gulp-symlink'),
   yargs = require('yargs')
-  .boolean('singleRun')
-  .default({ singleRun : true });
-  Server = require('karma').Server,
+    .boolean('singleRun')
+    .default({ singleRun : true });
+  var Server = require('karma').Server,
   angularProtractor = require('gulp-angular-protractor');
-
-// TODO add timestamp and buildID to this installerVersion
-var installerVersionBase = '9.1.0';
-var installerVersion = installerVersionBase + '.CR1';
 
 var artifactName = 'DeveloperPlatformInstaller',
     artifactPlatform = 'win32',
@@ -91,7 +91,7 @@ gulp.task('package', function(cb) {
 // must install 7zip from http://www.7-zip.org/ for this to work
 gulp.task('7zipsfx', function (cb) {
   var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx -r a ' + buildFolder + '.exe ' + buildFolder;
-
+1
   exec(cmd, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
@@ -161,56 +161,28 @@ gulp.task('default', function() {
   return runSequence('generate','create-zip','electronwinstaller');
 });
 
-// TODO this should just be a recursive function
 // download all the installer dependencies so we can package them up into the .exe
-gulp.task('prefetch', function() {
-	for (var name in ijson.installerURLs) 
-	{
-		var url = ijson.installerURLs[name];
-		if (url.toString().indexOf("http")>=0)
-		{
-			console.log("[INFO] Downloading " + url + " ...");
-			new download({mode: '755'}).get(url).dest(prefetchFolder).run();				
-		}
-		else
-		{
-			// check in nested map for URLs, one level deep
-			for (var child in url) 
-			{
-				var url2 = url[child];
-				if (url2.toString().indexOf("http")>=0)
-				{
-					// TODO: handle the case where the URL passed in is for openshift origin client tools build folder and we need the zip (see code in browser/model/cdk.js), eg.,
-					// https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/ -> 
-					// https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1.4-160-g97f3219-97f3219-windows.zip
-
-					// TODO: handle login/auth requirements for github.com and cdk-builds.usersys.redhat.com
-					console.log("[INFO] Downloading " + url2 + " ...");
-					new download({mode: '755'}).get(url2).dest(prefetchFolder).run();				
-				}
-			}
-		}
-	}
-});
-
-// see https://github.com/electronjs/windows-installer for more params
-// must install 7zip from http://www.7-zip.org/ for this to work
-// TODO this should depend on the output of the prefetch task, and the prefetched stuff should be bundled into the installer; installer should then LOOK into local filesystem for these files
-// instead of fetching them (again) remotely
-gulp.task('electronwinstaller', function() {
-	console.log("Creating .exe installer.");
-	resultPromise = electronInstaller.createWindowsInstaller({
-	    appDirectory: buildFolder,
-	    outputDirectory: 'dist/win/',
-	    // authors: 'Red Hat Developer Tooling Group', see package.json authors
-	    exe: artifactName + ".exe",
-	    title: artifactName + "_" + installerVersion,
-	    version: installerVersionBase, // can only be x.y.z
-	    loadingGif: 'resources/loading.gif',
-	    id: artifactName + "_" + installerVersion,
-	    noMsi: "true"
-	  });
-
-	resultPromise.then(() => console.log("[INFO] Installer(s) created."), (e) => console.log(`[ERROR] Installer creation failed: ${e.message}`));
+gulp.task('prefetch', function () {
+    for (var key in reqs) {
+        if (reqs.hasOwnProperty(key)) {
+            let currentUrl = reqs[key].url;
+            let currentKey = key;
+            // download only what can be included in offline installer
+            if(reqs[key].bundle === 'yes') {
+                if (reqs[key].url.endsWith('/')) {
+                    request(currentUrl, (err, rsp, body) => {
+                        var fname = body.match(/openshift-origin-client-tools-v\w(\.\w)(\.\w){1,3}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
+                        console.log('DOWNLOADING -> ' + currentUrl.concat(fname));
+                        request(currentUrl.concat(fname))
+                            .pipe(fs.createWriteStream(path.join(prefetchFolder, currentKey)));
+                    });
+                } else {
+                    console.log('DOWNLOADING -> ' + reqs[key].url);
+                    request(reqs[key].url)
+                        .pipe(fs.createWriteStream(path.join(prefetchFolder, key)));
+                }
+            }
+        }
+    }
 });
 

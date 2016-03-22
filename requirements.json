@@ -1,32 +1,42 @@
 {
   "cdk.zip": {
+    "bundle": "yes",
     "url": "http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/cdk.zip"
   },
   "rhel-vagrant-virtualbox.box": {
+    "bundle": "yes",
     "url": "http://cdk-builds.usersys.redhat.com/builds/03-Mar-2016/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box"
   },
   "oc.zip": {
-    "url": "https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/"
+    "bundle": "yes",
+    "url": "https://ci.openshift.redhat.com/jenkins/job/networking_extended/lastSuccessfulBuild/artifact/origin/artifacts/release/"
   },
   "vagrantfile.zip": {
+    "bundle": "yes",
     "url": "https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip"
   },
   "pscp.exe": {
+    "bundle": "yes",
     "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe"
   },
   "cygwin.exe": {
+    "bundle": "yes",
     "url": "https://cygwin.com/setup-x86_64.exe"
   },
   "jbds.jar": {
+    "bundle": "yes",
     "url": "https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar"
   },
   "jdk8.zip": {
+    "bundle": "yes",
     "url": "http://cdn.azul.com/zulu/bin/zulu8.13.0.5-jdk8.0.72-win_x64.zip"
   },
   "vagrant.msi": {
+    "bundle": "no",
     "url": "https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4.msi"
   },
   "VirtualBox-5.0.8.exe": {
+    "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
     "url": "http://download.virtualbox.org/virtualbox/5.0.8/VirtualBox-5.0.8-103449-Win.exe"

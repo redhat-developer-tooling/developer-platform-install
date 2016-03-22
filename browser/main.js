@@ -1,7 +1,5 @@
 'use strict';
 
-let ijson = require('../installers.json');
-
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import base64 from 'angular-base64';
@@ -81,7 +79,8 @@ let mainModule =
             }
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
-                new VirtualBoxInstall(ijson.requirements['VirtualBox-5.0.8.exe'].version,
+                new VirtualBoxInstall(
+                    reqs['VirtualBox-5.0.8.exe'].version,
                     reqs['VirtualBox-5.0.8.exe'].revision,
                     installerDataSvc,
                     reqs['VirtualBox-5.0.8.exe'].url,
