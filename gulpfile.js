@@ -162,7 +162,7 @@ gulp.task('ui-test', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('prefetch','generate','7zipsfx-adv');
+  return runSequence('generate','7zipsfx-adv');
 });
 
 // download all the installer dependencies so we can package them up into the .exe
