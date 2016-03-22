@@ -69,50 +69,60 @@ let mainModule =
               });
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
+            let path = require('path');
+            let fs = require('fs-extra');
+            let reqs = null;
+            let installersJsonForTests = path.resolve('./requirements.json');
+            let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
+            if(fs.existsSync(installersJsonForTests)) {
+              reqs = require(installersJsonForTests);
+            } else if ( fs.existsSync(installersJsonForRT) ) {
+              reqs = require(installersJsonForRT);
+            }
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
-                new VirtualBoxInstall(ijson.installerURLs['virtualbox']['version'],
-                                        ijson.installerURLs['virtualbox']['revision'],
-                                        installerDataSvc,
-                                        ijson.installerURLs['virtualbox']['url'],
-                                        null)
+                new VirtualBoxInstall(ijson.requirements['VirtualBox-5.0.8.exe'].version,
+                    reqs['VirtualBox-5.0.8.exe'].revision,
+                    installerDataSvc,
+                    reqs['VirtualBox-5.0.8.exe'].url,
+                    null)
             );
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
                 new CygwinInstall(installerDataSvc,
-                                  ijson.installerURLs['cygwin'],
-                                  null)
+                    reqs['cygwin.exe'].url,
+                    null)
             );
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
                 new VagrantInstall(installerDataSvc,
-                                    ijson.installerURLs['vagrant'],
-                                    null)
+                    reqs['vagrant.msi'].url,
+                    null)
             );
             installerDataSvc.addItemToInstall(
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
-                                $timeout,
-                                ijson.installerURLs['cdk']['cdkZip'],
-                                ijson.installerURLs['cdk']['vagrantVirtualBox'],
-                                ijson.installerURLs['cdk']['openshift-origin-client-tools-windows.zip'],
-                                ijson.installerURLs['cdk']['openshift-vagrant-sources.zip'],
-                                ijson.installerURLs['cdk']['pscp.exe'],
-                                null)
+                    $timeout,
+                    reqs['cdk.zip'].url,
+                    reqs['rhel-vagrant-virtualbox.box'].url,
+                    reqs['oc.zip'].url,
+                    reqs['vagrantfile.zip'].url,
+                    reqs['pscp.exe'].url,
+                    null)
             );
 
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
-                               ijson.installerURLs['jdk'],
-                               null)
+                    reqs['jdk8.zip'].url,
+                    null)
             );
 
             installerDataSvc.addItemToInstall(
                 JbdsInstall.key(),
                 new JbdsInstall(installerDataSvc,
-                                ijson.installerURLs['jbds'],
-                                null)
+                    reqs['jbds.jar'].url,
+                    null)
             );
           }]);
 

@@ -25,7 +25,7 @@ class CDKInstall extends InstallableItem {
     this.cdkFileName = 'cdk.zip';
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
 
-    this.boxName = 'rhel-cdk-kubernetes-7.2-1.x86_64.vagrant-virtualbox.box';
+    this.boxName = 'rhel-vagrant-virtualbox.box';
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
 
     this.ocFileName = 'oc.zip';
