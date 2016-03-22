@@ -5,8 +5,6 @@ var gulp = require('gulp'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
   zip = require('gulp-zip'),
-  electronInstaller = require('electron-winstaller'),
-  download = require("download"),
   request = require("request"),
   rename = require('gulp-rename'),
   del = require('del'),
@@ -91,7 +89,7 @@ gulp.task('package', function(cb) {
 // must install 7zip from http://www.7-zip.org/ for this to work
 gulp.task('7zipsfx', function (cb) {
   var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx -r a ' + buildFolder + '.exe ' + buildFolder;
-1
+
   exec(cmd, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
