@@ -11,21 +11,29 @@ var gulp = require('gulp'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
   reqs = require('./requirements.json'),
-  path = require('path');
+  path = require('path'),
 
+  copy = require('gulp-copy'),
+  concat = require('gulp-concat');
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'DeveloperPlatformInstaller',
-  artifactPlatform = 'win32',
-  artifactArch = 'x64';
+process.env.INIT_CWD;
+var homedir = process.cwd();
 
-var prefetchFolder = 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch; // or use downloads/ folder to that a clean doesn't wipe out the downloads
-var buildFolder = 'dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch;
+var artifactName = 'DeveloperPlatformInstaller',
+    artifactPlatform = 'win32',
+    artifactArch = 'x64';
+
+var buildFolderRoot = 'dist/win/';
+var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifactArch;
+var buildFolder = buildFolderRoot + buildFileNamePrefix;
+
+var prefetchFolder = buildFolderRoot + buildFileNamePrefix; // or just use downloads/ folder to that a clean doesn't wipe out the downloads
 
 gulp.task('transpile:app', function() {
   return gulp.src(['./main/*.es6.js'])
     .pipe(babel())
-    .pipe(rename(function(path) {
+    .pipe(rename(function (path) {
       path.basename = path.basename.substring(0, path.basename.length - 4)
     }))
     .pipe(gulp.dest('./main'));
@@ -33,28 +41,25 @@ gulp.task('transpile:app', function() {
 
 // clean dist/ AND downloads/ folder
 gulp.task('clean-all', ['clean'], function() {
-  return del([prefetchFolder], {
-    force: true
-  });
+  return del([prefetchFolder], { force: true });
 });
 
 // clean dist/ folder in prep for fresh build
 gulp.task('clean', function() {
-  return del(['dist'], {
-    force: true
-  });
+  return del(['dist'], { force: true });
 });
 
+// currently not used
 gulp.task('create-zip', () => {
-  return gulp.src('dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch + '/**/*')
-    .pipe(zip(artifactName + '-' + artifactPlatform + '-' + artifactArch + '.zip'))
-    .pipe(gulp.dest('dist/win'));
+    return gulp.src(buildFolderRoot + buildFolderRoot + '/**/*')
+        .pipe(zip(buildFolderRoot + '.zip'))
+        .pipe(gulp.dest(buildFolderRoot));
 });
 
 gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
-  cmd += ' --version=' + electronVersion + ' --out=./dist/win/ --overwrite --asar=true';
+  cmd += ' --version=' + electronVersion + ' --out=./' + buildFolderRoot + ' --overwrite --asar=true';
   cmd += ' --prune --ignore=test';
 
   exec(cmd, function(err, stdout, stderr) {
@@ -73,8 +78,8 @@ gulp.task('run', ['transpile:app'], function(cb) {
 });
 
 gulp.task('package', function(cb) {
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./dist/win/' + artifactName + '-' + artifactPlatform + '-' + artifactArch;
-  cmd += ' --out=./dist/win/ --name=developer_platform --exe=' + artifactName + '.exe';
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./' + buildFolderRoot + buildFolderRoot;
+  cmd += ' --out=./' + buildFolderRoot + ' --name=developer_platform --exe=' + artifactName + '.exe';
   cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
   cmd += ' --loading_gif=./resources/loading.gif';
 
@@ -86,14 +91,66 @@ gulp.task('package', function(cb) {
 });
 
 // must install 7zip from http://www.7-zip.org/ for this to work
-gulp.task('7zipsfx', function(cb) {
-  var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx -r a ' + buildFolder + '.exe ' + buildFolder;
-
-  exec(cmd, function(err, stdout, stderr) {
+// Takes about 30 seconds in console, but only does extraction of the .exe; does not perform install
+gulp.task('7zipsfx-cmd', function (cb) {
+  // simple sfx 
+  var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx -r a ' + buildFolder + '-cmd.exe ' + buildFolder;
+  exec(cmd, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
+});
+
+// must install 7zip from http://www.7-zip.org/ for this to work
+// Takes about 30 seconds w/ GUI to prompt for extraction location, but only does extraction of the .exe; does not perform install
+gulp.task('7zipsfx-win', function (cb) {
+  // simple sfx 
+  var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -sfx7z.sfx -r a ' + buildFolder + '-win.exe ' + buildFolder;
+  exec(cmd, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
+
+// must install 7zip from http://www.7-zip.org/ for this to work
+// complex sfx, using config.txt file to support extraction & immediate installation
+gulp.task('7zipsfx-adv', function() {
+  return runSequence('7zipsfx-del-exe', '7zipsfx-copy', '7zipsfx-7z', '7zipsfx-concat', '7zipsfx-cleanup');
+});
+
+gulp.task('7zipsfx-del-exe', function () {
+  // // remove .7z archive
+  return del([buildFolder + '-sfx.exe'], { force: true });
+});
+
+gulp.task('7zipsfx-copy', function () {
+  return gulp.src(['7zS.sfx','config.txt'])
+    .pipe(copy(buildFolderRoot));
+});
+
+gulp.task('7zipsfx-7z', function (cb) {
+  var cmd = 'c:' + path.sep + 'Progra~1' + path.sep + '7-Zip' + path.sep + '7z.exe -r a ../' + buildFileNamePrefix + '.7z ' + '.';
+  process.chdir(buildFolder);
+  exec(cmd, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+  process.chdir(homedir);
+});
+
+// merge .7z with config.txt and 7zS.sfx controller
+gulp.task('7zipsfx-concat', function () {
+  return gulp.src([buildFolderRoot + '7zS.sfx', buildFolderRoot + 'config.txt', buildFolderRoot + buildFileNamePrefix + '.7z'])
+    .pipe(concat(buildFileNamePrefix + '-sfx.exe'))
+    .pipe(gulp.dest(buildFolderRoot));
+});
+
+gulp.task('7zipsfx-cleanup', function () {
+  // // remove .7z archive
+  return del([buildFolderRoot + '7zS.sfx', buildFolderRoot + 'config.txt', buildFolderRoot + buildFileNamePrefix + '.7z'], { force: true });
 });
 
 gulp.task('test', function() {
@@ -105,7 +162,7 @@ gulp.task('ui-test', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('generate', 'create-zip', 'electronwinstaller');
+  return runSequence('generate','7zipsfx-adv');
 });
 
 // download all the installer dependencies so we can package them up into the .exe
