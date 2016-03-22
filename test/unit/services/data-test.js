@@ -81,7 +81,7 @@ describe('InstallerDataService', function() {
       expect(svc.cdkRoot).to.equal(path.join(svc.installRoot, 'cdk'));
       expect(svc.cdkBoxRoot).to.equal(path.join(svc.cdkRoot, 'boxes'));
       expect(svc.ocBinRoot).to.equal(path.join(svc.cdkRoot, 'bin'));
-      expect(svc.cdkVagrantRoot).to.equal(path.join(svc.cdkRoot, 'openshift-vagrant'));
+      expect(svc.cdkVagrantRoot).to.equal(path.join(svc.cdkRoot, 'components', 'rhel', 'rhel-ose'));
       expect(svc.cdkMarkerFile).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
     })
   });

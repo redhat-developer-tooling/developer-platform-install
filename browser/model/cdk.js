@@ -12,14 +12,13 @@ import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, installFile) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, installFile) {
     super('CDK', 900, cdkUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
-    this.vagrantFileUrl = vagrantFileUrl;
     this.pscpUrl = pscpUrl;
 
     this.cdkFileName = 'cdk.zip';
@@ -30,9 +29,6 @@ class CDKInstall extends InstallableItem {
 
     this.ocFileName = 'oc.zip';
     this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(),   this.ocFileName);
-
-    this.vagrantFileName = 'vagrantfile.zip';
-    this.vagrantDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.vagrantFileName);
 
     this.pscpFileName = 'pscp.exe';
     this.pscpDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.pscpFileName);
@@ -54,7 +50,7 @@ class CDKInstall extends InstallableItem {
 
     let downloadSize = 869598013;
 
-    let totalDownloads = 5;
+    let totalDownloads = 4;
 
     let downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
@@ -85,15 +81,6 @@ class CDKInstall extends InstallableItem {
       }, username, password);
     } else {
       this.cdkDownloadedFile = path.join(this.downloads, this.cdkFileName);
-      downloader.closeHandler();
-    }
-
-    if(!fs.existsSync(path.join(this.downloads, this.vagrantFileName))) {
-      let vagrantFileWriteStream = fs.createWriteStream(this.vagrantDownloadedFile);
-      downloader.setWriteStream(vagrantFileWriteStream);
-      downloader.download(this.vagrantFileUrl);
-    } else {
-      this.vagrantDownloadedFile = path.join(this.downloads, this.vagrantFileName);
       downloader.closeHandler();
     }
 
@@ -166,8 +153,6 @@ class CDKInstall extends InstallableItem {
 
     installer.unzip(this.cdkDownloadedFile, this.installerDataSvc.installDir())
     .then((result) => { return installer.unzip(this.ocDownloadedFile, this.installerDataSvc.ocDir(), result); })
-    .then((result) => { return installer.unzip(this.vagrantDownloadedFile, this.installerDataSvc.tempDir(), result); })
-    .then((result) => { return installer.copyFile(path.join(this.installerDataSvc.tempDir(), 'openshift-vagrant-master', 'cdk-v2'), this.installerDataSvc.cdkVagrantfileDir(), result); })
     .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
     .then((result) => { return installer.copyFile(this.pscpDownloadedFile, path.join(this.installerDataSvc.ocDir(), 'pscp.exe'), result); })
     .then((result) => { return installer.writeFile(this.pscpPathScript, data, result); })
@@ -225,9 +210,7 @@ class CDKInstall extends InstallableItem {
       ).then((result) => {
         return installer.exec('vagrant box add --name cdk_v2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result);
       }).then((result) => {
-        return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.3.gem'), opts, result);
-      }).then((result) => {
-        return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'landrush-0.18.0.gem'), opts, result);
+        return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.4.gem'), opts, result);
       });
 
       return res;

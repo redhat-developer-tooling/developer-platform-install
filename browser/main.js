@@ -105,7 +105,6 @@ let mainModule =
                     reqs['cdk.zip'].url,
                     reqs['rhel-vagrant-virtualbox.box'].url,
                     reqs['oc.zip'].url,
-                    reqs['vagrantfile.zip'].url,
                     reqs['pscp.exe'].url,
                     null)
             );

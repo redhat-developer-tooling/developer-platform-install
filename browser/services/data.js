@@ -41,7 +41,7 @@ class InstallerDataService {
     this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
-    this.cdkVagrantRoot = path.join(this.cdkRoot, 'openshift-vagrant');
+    this.cdkVagrantRoot = path.join(this.cdkRoot, 'components', 'rhel', 'rhel-ose');
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
 
     Logger.initialize(this.installRoot);
