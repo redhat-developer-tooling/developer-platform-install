@@ -103,7 +103,7 @@ describe('CDK installer', function() {
 
   let cdkUrl = 'http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip',
       cdkBoxUrl ='http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box',
-      ocUrl = 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1.4-160-g97f3219-97f3219-windows.zip',
+      ocUrl = 'https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip',
       pscpUrl = 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe';
 
   let boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';

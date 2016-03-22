@@ -9,7 +9,7 @@
   },
   "oc.zip": {
     "bundle": "yes",
-    "url": "https://ci.openshift.redhat.com/jenkins/job/networking_extended/lastSuccessfulBuild/artifact/origin/artifacts/release/"
+    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip"
   },
   "pscp.exe": {
     "bundle": "yes",
