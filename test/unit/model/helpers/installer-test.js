@@ -29,6 +29,16 @@ describe('Installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+
+    mockfs({
+      someTempFolder: {
+        somefile: 'empty'
+      },
+      anInstallFolder: {}
+    }, {
+      createCwd: false,
+      createTmp: false
+    });
   });
 
   beforeEach(function() {
@@ -42,6 +52,7 @@ describe('Installer', function() {
   after(function() {
     infoStub.restore();
     errorStub.restore();
+    mockfs.restore();
   });
 
   describe('exec', function() {
@@ -55,7 +66,6 @@ describe('Installer', function() {
       .then(function(result) {
         expect(stub).to.have.been.calledOnce;
         expect(stub).to.have.been.calledWith(command, args);
-        stub.restore();
       });
     });
 
@@ -65,7 +75,6 @@ describe('Installer', function() {
       return installer.exec(command, args)
       .then(function(result) {
         expect(result).to.equal(true);
-        stub.restore();
       });
     });
 
@@ -79,7 +88,6 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        proc.restore();
       });
     });
   });
@@ -95,7 +103,6 @@ describe('Installer', function() {
       .then(function(result) {
         expect(stub).to.have.been.calledOnce;
         expect(stub).to.have.been.calledWith(file, args);
-        stub.restore();
       });
     });
 
@@ -105,7 +112,6 @@ describe('Installer', function() {
       return installer.execFile(file, args)
       .then(function(result) {
         expect(result).to.equal(true);
-        stub.restore();
       });
     });
 
@@ -119,7 +125,6 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        proc.restore();
       });
     });
   });
@@ -129,26 +134,23 @@ describe('Installer', function() {
     let file = path.join('someTempFolder', 'somefile');
 
     it('should read the specified file', function() {
-      let stub = sandbox.stub(unzip, 'Extract').yields();
+      let stub = sandbox.stub(unzip, 'Extract').throws('done');
       let spy = sandbox.spy(fs, 'createReadStream');
 
       return installer.unzip(file, dir)
       .catch(function(result) {
         expect(spy).to.have.been.calledOnce;
         expect(spy).to.have.been.calledWith(file);
-        stub.restore();
-        spy.restore();
       });
     });
 
     it('should call unzip#Extract into a correct folder', function() {
-      let stub = sandbox.stub(unzip, 'Extract').yields();
+      let stub = sandbox.stub(unzip, 'Extract').throws('done');
 
       return installer.unzip(file, dir)
       .catch(function(result) {
         expect(stub).to.have.been.calledOnce;
         expect(stub).to.have.been.calledWith({ path: dir });
-        stub.restore();
       });
     });
 
@@ -162,7 +164,6 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        stub.restore();
       });
     });
   });
@@ -178,7 +179,6 @@ describe('Installer', function() {
       .then(function(result) {
         expect(stub).to.have.been.calledOnce;
         expect(stub).to.have.been.calledWith(source, target);
-        stub.restore();
       });
     });
 
@@ -188,7 +188,6 @@ describe('Installer', function() {
       return installer.moveFile(source, target)
       .then(function(result) {
         expect(result).to.equal(true);
-        stub.restore();
       });
     });
 
@@ -203,7 +202,6 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        proc.restore();
       });
     });
   });
@@ -219,7 +217,6 @@ describe('Installer', function() {
       .then(function(result) {
         expect(stub).to.have.been.calledOnce;
         expect(stub).to.have.been.calledWith(file, data);
-        stub.restore();
       });
     });
 
@@ -229,7 +226,6 @@ describe('Installer', function() {
       return installer.writeFile(file, data)
       .then(function(result) {
         expect(result).to.equal(true);
-        stub.restore();
       });
     });
 
@@ -243,7 +239,6 @@ describe('Installer', function() {
       })
       .catch(function(error) {
         expect(error).to.equal(err);
-        stub.restore();
       });
     });
   });
@@ -254,7 +249,6 @@ describe('Installer', function() {
       installer.succeed(true);
 
       expect(spy).to.have.been.calledOnce;
-      spy.restore();
     });
 
     it('should not succeed with a falsey input', function() {
@@ -262,7 +256,6 @@ describe('Installer', function() {
       installer.succeed(false);
 
       expect(spy).to.have.not.been.called;
-      spy.restore();
     });
   });
 });

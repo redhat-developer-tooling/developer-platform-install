@@ -38,7 +38,8 @@ class Installer {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute ' + file + ' ' + args);
       child_process.execFile(file, args, (error, stdout, stderr) => {
-        if (error && error !== '') {
+        // vagrant exits with code 3010
+        if (error && error !== '' && error !== 3010) {
           Logger.error(this.key + ' - ' + error);
           Logger.error(this.key + ' - ' + stderr);
           reject(error);

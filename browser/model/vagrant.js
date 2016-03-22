@@ -16,7 +16,7 @@ class VagrantInstall extends InstallableItem {
     super('Vagrant', 900, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-    this.downloadedFileName = 'vagrant.zip';
+    this.downloadedFileName = 'vagrant.msi';
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
   }
@@ -130,26 +130,32 @@ class VagrantInstall extends InstallableItem {
         '-File',
         this.vagrantPathScript
       ];
-
-      installer.unzip(this.downloadedFile, this.installerDataSvc.tempDir())
-          .then((result) => {
-            return installer.moveFile(vagrantExploded, this.installerDataSvc.vagrantDir(), result);
-          })
-          .then((result) => {
-            return installer.writeFile(this.vagrantPathScript, data, result);
-          })
-          .then((result) => {
-            return installer.execFile('powershell', args, result);
-          })
-          .then((result) => {
-          	return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"');
-          })
-          .then((result) => {
-            return installer.succeed(result);
-          })
-          .catch((error) => {
-            return installer.fail(error);
-          });
+      installer.execFile('msiexec', [
+        '/i',
+        this.downloadedFile,
+        'VAGRANTAPPDIR=' + this.installerDataSvc.vagrantDir(),
+        '/qb!',
+        '/norestart',
+        '/Liwe',
+        path.join(this.installerDataSvc.installDir(), 'vagrant.log')
+      ]).then((result) => {
+        return installer.writeFile(this.vagrantPathScript, data, result);
+      })
+      .then((result) => {
+        return installer.execFile('powershell', args, result);
+      })
+      .then((result) => {
+        return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"');
+      })
+      .then((result) => {
+        return installer.succeed(result);
+      })
+      .catch((error) => {
+        if(error.code == 3010) {
+          return installer.succeed(true);
+        }
+        return installer.fail(error);
+      });
     } else {
       success();
     }

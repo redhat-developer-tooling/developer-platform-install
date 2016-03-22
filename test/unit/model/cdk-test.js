@@ -48,7 +48,8 @@ describe('CDK installer', function() {
   installerDataSvc.cdkDir.returns(path.join(installerDataSvc.installDir(), 'cdk'));
   installerDataSvc.ocDir.returns(path.join(installerDataSvc.cdkDir(), 'bin'));
   installerDataSvc.vagrantDir.returns(path.join(installerDataSvc.installDir(), 'vagrant'));
-  installerDataSvc.cdkVagrantfileDir.returns(path.join(installerDataSvc.cdkDir(), 'openshift-vagrant'));
+  installerDataSvc.cdkVagrantfileDir.returns(path.join(installerDataSvc.cdkDir(), 'components', 'rhel', 'rhel-ose'));
+  
   installerDataSvc.cdkBoxDir.returns(path.join(installerDataSvc.cdkDir(), 'boxes'));
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
 
@@ -80,30 +81,29 @@ describe('CDK installer', function() {
   });
 
   it('should not download cdk when an installation exists', function() {
-    let cdk = new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'vagrantFileUrl', 'pscpUrl', 'installFile');
+    let cdk = new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'pscpUrl', 'installFile');
     expect(cdk.useDownload).to.be.false;
   });
 
   it('should fail when some download url is not set and installed file not defined', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'vagrantFileUrl', 'pscpUrl', null);
+      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', null);
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'vagrantFileUrl', 'pscpUrl', '');
+      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', '');
     }).to.throw('No download URL set');
   });
 
   it('should download files when no installation is found', function() {
-    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'vagrantFileUrl', 'pscpUrl', null).useDownload).to.be.true;
+    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'pscpUrl', null).useDownload).to.be.true;
   });
 
-  let cdkUrl = 'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
-      cdkBoxUrl ='http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
-      ocUrl = 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/3072/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1-658-g273458a-273458a-windows.zip',
-      vagrantFileUrl = 'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
+  let cdkUrl = 'http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip',
+      cdkBoxUrl ='http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box',
+      ocUrl = 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1.4-160-g97f3219-97f3219-windows.zip',
       pscpUrl = 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe';
 
   let boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
@@ -117,7 +117,7 @@ describe('CDK installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
@@ -127,24 +127,23 @@ describe('CDK installer', function() {
     });
 
     it('should write the data into temp folder', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
       let fsSpy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-      //expect 5 streams to be set and created
-      expect(streamSpy.callCount).to.equal(5);
-      expect(fsSpy.callCount).to.equal(5);
+      //expect 4 streams to be set and created
+      expect(streamSpy.callCount).to.equal(4);
+      expect(fsSpy.callCount).to.equal(4);
       expect(fsSpy).calledWith(installer.cdkDownloadedFile);
       expect(fsSpy).calledWith(installer.cdkBoxDownloadedFile);
       expect(fsSpy).calledWith(installer.ocDownloadedFile);
-      expect(fsSpy).calledWith(installer.vagrantDownloadedFile);
       expect(fsSpy).calledWith(installer.pscpDownloadedFile);
     });
 
     it('should call a correct downloader request for each file', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let headers = {
         url: cdkUrl,
         rejectUnauthorized: false
@@ -152,13 +151,12 @@ describe('CDK installer', function() {
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-      //we download 1 out of 5 files with authentication
-      expect(downloadStub.callCount).to.equal(4);
+      //we download 1 out of 4 files with authentication
+      expect(downloadStub.callCount).to.equal(3);
       expect(authStub).to.have.been.calledOnce;
 
       expect(downloadStub).calledWith(cdkBoxUrl);
       expect(downloadStub).calledWith(ocUrl);
-      expect(downloadStub).calledWith(vagrantFileUrl);
       expect(downloadStub).calledWith(pscpUrl);
 
       expect(authStub).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
@@ -167,7 +165,7 @@ describe('CDK installer', function() {
 
   describe('when installing cdk', function() {
     it('should set progress to "Installing"', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.postVagrantInstall(fakeProgress, null, null);
@@ -177,7 +175,7 @@ describe('CDK installer', function() {
     });
 
     it('should extract cdk archive to install folder', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
 
       let spy = sandbox.spy(Installer.prototype, 'unzip');
       installer.postVagrantInstall(fakeProgress, function() {}, function (err) {});
@@ -187,14 +185,14 @@ describe('CDK installer', function() {
     });
 
     it('createEnvironment should return path to vagrant/bin', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let env = installer.createEnvironment();
 
       expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';');
     });
 
     it('setupVagrant should wait for vagrant install to complete', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let spy = sandbox.spy(installer, 'postVagrantSetup');
       let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
 
@@ -203,7 +201,7 @@ describe('CDK installer', function() {
     });
 
     it('setupVagrant should call postVagrantSetup if vagrant is installed', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
       let spy = sandbox.spy(installer, 'postVagrantSetup');
       let execStub = sandbox.stub(helper, 'exec');
@@ -218,7 +216,7 @@ describe('CDK installer', function() {
     });
 
     it('postVagrantSetup should not execute if vagrant installation does not exist', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
       let spy = sandbox.spy(Installer.prototype, 'exec');
       let envSpy = sandbox.spy(installer, 'createEnvironment');
@@ -234,7 +232,7 @@ describe('CDK installer', function() {
     });
 
     it('postVagrantSetup should execute when vagrant installation is complete', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, vagrantFileUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
       let spy = sandbox.spy(installer, 'createEnvironment');
       let execStub = sandbox.stub(helper, 'exec');

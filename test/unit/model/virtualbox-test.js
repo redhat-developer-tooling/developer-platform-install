@@ -222,7 +222,6 @@ describe('Virtualbox installer', function() {
 
       try {
         installer.install(fakeProgress, function() {}, function (err) {});
-        stub.restore();
         done();
       } catch (error) {
         expect.fail('it did not catch the error');

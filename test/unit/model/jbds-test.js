@@ -213,10 +213,6 @@ describe('JBDS installer', function() {
       .then((result) => {
         expect(spy).calledOnce;
         expect(spy).calledWith(javaPath, javaOpts);
-
-        stub.restore();
-        fsStub.restore();
-        spy.restore();
       });
     });
 
@@ -239,10 +235,6 @@ describe('JBDS installer', function() {
       .then((result) => {
         expect(spy).calledOnce;
         expect(spy).calledWith(result);
-
-        stub.restore();
-        fsStub.restore();
-        spy.restore();
       });
     });
 
@@ -253,15 +245,13 @@ describe('JBDS installer', function() {
 
       let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties');
       let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
-      let data = 'CDKServer=' + escapedPath + ',true';
+      let data = 'CDKServer=' + escapedPath + ',true\r\n';
 
       return installer.setupCdk(helper)
       .then((result) => {
         expect(result).to.be.true;
         expect(fsStub).calledOnce;
         expect(fsStub).calledWith(runtimePath, data);
-
-        fsStub.restore();
       });
     });
 
@@ -273,7 +263,6 @@ describe('JBDS installer', function() {
 
       try {
         installer.install(fakeProgress, null, null);
-        stub.restore();
         done();
       } catch (error) {
         expect.fail('It did not catch the error');

@@ -41,7 +41,7 @@ class InstallerDataService {
     this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
-    this.cdkVagrantRoot = path.join(this.cdkRoot, 'openshift-vagrant');
+    this.cdkVagrantRoot = path.join(this.cdkRoot, 'components', 'rhel', 'rhel-ose');
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
 
     Logger.initialize(this.installRoot);
@@ -199,7 +199,7 @@ class InstallerDataService {
     var item = this.getInstallable(key);
     item.setInstallComplete();
 
-    if (!this.isDownloading() && this.isInstalling() && this.toInstall.size == 0) {
+    if (!this.isDownloading() && this.toInstall.size == 0) {
       Logger.info('All installs complete');
 
       this.installing = false;
