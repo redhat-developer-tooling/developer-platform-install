@@ -5,7 +5,8 @@
   },
   "rhel-vagrant-virtualbox.box": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box",
+    "file": "rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box"
   },
   "oc.zip": {
     "bundle": "yes",
