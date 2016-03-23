@@ -132,3 +132,31 @@ gulp.task('prefetch', function() {
     }
   }
 });
+
+function getUserHome() {
+  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+gulp.task("hd", function() {
+	console.log("homedir         = [ " + getUserHome() + " ]");
+	eightdotthree_path(getUserHome(), function (stdout) {
+	console.log("homedir_cleaned = [ " + stdout + " ]");
+	})
+});
+
+gulp.task("bc", function() {
+	var bc = "C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe"
+	console.log("bc         = [ " + bc + " ]");
+	eightdotthree_path(bc, function (stdout) {
+	console.log("bc_cleaned = [ " + stdout + " ]");
+	})
+});
+
+function eightdotthree_path(path, callback) {
+	var cmd = "cmd /c for %A in (\"" + path + "\") do @echo %~sA";
+    var proc = exec(cmd);
+    var list = [];
+    proc.stdout.setEncoding('utf8');
+    proc.stdout.on('data', function (chunk) { list.push(chunk); });
+    proc.stdout.on('end', function () { callback(list.join().toString().trim()); });
+}
