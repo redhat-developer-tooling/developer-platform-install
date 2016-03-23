@@ -101,12 +101,21 @@ describe('CDK installer', function() {
     expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'pscpUrl', null).useDownload).to.be.true;
   });
 
-  let cdkUrl = 'http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip',
-      cdkBoxUrl ='http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box',
-      ocUrl = 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/openshift-origin-client-tools-v1.1.4-160-g97f3219-97f3219-windows.zip',
-      pscpUrl = 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe';
+  let reqs = null;
+  let installersJsonForTests = path.resolve('./requirements.json');
+  let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
+  if(fs.existsSync(installersJsonForTests)) {
+    reqs = require(installersJsonForTests);
+  } else if ( fs.existsSync(installersJsonForRT) ) {
+    reqs = require(installersJsonForRT);
+  }
 
-  let boxName = 'rhel-cdk-kubernetes-7.2-6.x86_64.vagrant-virtualbox.box';
+  let cdkUrl = reqs['cdk.zip'].url,
+      cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,
+      ocUrl = reqs['oc.zip'].url,
+      pscpUrl = reqs['pscp.exe'].url;
+
+  let boxName = reqs['rhel-vagrant-virtualbox.box'].file;
 
   describe('when downloading the cdk tools', function() {
     let downloadStub, authStub;
