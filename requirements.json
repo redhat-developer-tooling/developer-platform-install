@@ -23,7 +23,7 @@
     "bundle": "yes",
     "url": "https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar"
   },
-  "jdk8.zip": {
+  "jdk.zip": {
     "bundle": "yes",
     "url": "http://cdn.azul.com/zulu/bin/zulu8.13.0.5-jdk8.0.72-win_x64.zip"
   },
@@ -31,7 +31,7 @@
     "bundle": "no",
     "url": "https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4.msi"
   },
-  "VirtualBox-5.0.8.exe": {
+  "virtualbox.exe": {
     "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",

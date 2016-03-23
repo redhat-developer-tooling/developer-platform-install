@@ -16,7 +16,7 @@ class JdkInstall extends InstallableItem {
     super('JDK 8', 260, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-    this.downloadedFileName = 'jdk8.zip';
+    this.downloadedFileName = 'jdk.zip';
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
   }
 
