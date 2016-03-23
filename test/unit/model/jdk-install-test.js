@@ -22,7 +22,7 @@ describe('JDK installer', function() {
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder' },
-    jdkDir: function() { return 'install/jdk8' },
+    jdkDir: function() { return 'install/jdk' },
     getInstallable: function(key) { return fakeInstallable; }
   };
 
@@ -95,7 +95,7 @@ describe('JDK installer', function() {
 
   it('should download jdk installer to temporary folder as jdk8.zip', function() {
     expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join('tempDirectory', 'jdk8.zip'));
+      path.join('tempDirectory', 'jdk.zip'));
   });
 
   describe('when downloading the jdk zip', function() {
@@ -115,14 +115,14 @@ describe('JDK installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/jdk8.zip', function() {
+    it('should write the data into temp/jdk.zip', function() {
       let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
       let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk8.zip'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk.zip'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
@@ -137,7 +137,7 @@ describe('JDK installer', function() {
   });
 
   describe('when installing jdk', function() {
-    let downloadedFile = path.join('tempDirectory', 'jdk8.zip');
+    let downloadedFile = path.join('tempDirectory', 'jdk.zip');
 
     it('should set progress to "Installing"', function() {
       let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);

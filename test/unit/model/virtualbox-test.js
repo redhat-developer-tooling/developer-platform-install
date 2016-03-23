@@ -83,9 +83,9 @@ describe('Virtualbox installer', function() {
     expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', null).useDownload).to.be.true;
   });
 
-  it('should download virtualbox installer to temporary folder as virtualBox-ver.exe', function() {
+  it('should download virtualbox installer to temporary folder as virtualbox.exe', function() {
     expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join(installerDataSvc.tempDir(), 'virtualBox-ver.exe'));
+      path.join(installerDataSvc.tempDir(), 'virtualbox.exe'));
   });
 
   describe('when downloading the virtualbox installer', function() {
@@ -109,14 +109,14 @@ describe('Virtualbox installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/virtualBox-version.exe', function() {
+    it('should write the data into temp/virtualbox.exe', function() {
       let installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'virtualBox-' + version + '.exe'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'virtualbox.exe'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
@@ -130,7 +130,7 @@ describe('Virtualbox installer', function() {
   });
 
   describe('when installing virtualbox', function() {
-    let downloadedFile = path.join('tempDirectory', 'virtualBox-5.0.8.exe');
+    let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
     let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
         version = '5.0.8',
         revision = '103449',

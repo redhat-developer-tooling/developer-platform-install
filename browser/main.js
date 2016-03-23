@@ -80,10 +80,10 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
                 new VirtualBoxInstall(
-                    reqs['VirtualBox-5.0.8.exe'].version,
-                    reqs['VirtualBox-5.0.8.exe'].revision,
+                    reqs['virtualbox.exe'].version,
+                    reqs['virtualbox.exe'].revision,
                     installerDataSvc,
-                    reqs['VirtualBox-5.0.8.exe'].url,
+                    reqs['virtualbox.exe'].url,
                     null)
             );
             installerDataSvc.addItemToInstall(
@@ -112,7 +112,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
-                    reqs['jdk8.zip'].url,
+                    reqs['jdk.zip'].url,
                     null)
             );
 
