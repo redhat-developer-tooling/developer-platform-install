@@ -113,7 +113,6 @@ gulp.task('prefetch', function() {
   for (var key in reqs) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
-      let currentKey = key;
       // download only what can be included in offline installer
       if (reqs[key].bundle === 'yes') {
         if (reqs[key].url.endsWith('/')) {
@@ -121,7 +120,7 @@ gulp.task('prefetch', function() {
             var fname = body.match(/openshift-origin-client-tools-v\w(\.\w)(\.\w){1,3}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
             console.log('DOWNLOADING -> ' + currentUrl.concat(fname));
             request(currentUrl.concat(fname))
-              .pipe(fs.createWriteStream(path.join(prefetchFolder, currentKey)));
+              .pipe(fs.createWriteStream(path.join(prefetchFolder, key)));
           });
         } else {
           console.log('DOWNLOADING -> ' + reqs[key].url);
