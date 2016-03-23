@@ -62,7 +62,7 @@ class JdkInstall extends InstallableItem {
         var t = locationRegex.exec(output);
         if(t.length > 1) {
           this.existingInstallLocation = t[1];
-          this.existingInstall = true;
+          this.existingInstall = false;
         }
       }
       ipcRenderer.send('checkComplete', JdkInstall.key());

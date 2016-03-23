@@ -56,28 +56,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.cdk" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-model="checkboxModel.cdk.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">v2</span>
           <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications</div>
         </div>
       </div>
-      <div class="check-element animate-show" ng-hide="checkboxModel.cdk">
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.ose" aria-label="Toggle ngHide">
-        </div>
-        <div class="product-container">
-          <span class="product-name">RED HAT OPENSHIFT ENTERPRISE</span><span class="product-version">v3</span>
-          <div>DevOps tooling that helps you easily build and deploy your projects in a PaaS environment.</div>
-        </div>
-      </div>
-      <div class="check-element animate-show" ng-hide="checkboxModel.ose">
+      <div class="check-element animate-show" ng-hide="checkboxModel.cdk.selected">
       </div>
     </div>
 
@@ -86,14 +72,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.jdk" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-model="checkboxModel.jdk.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">OpenJDK</span><span class="product-version">v8</span>
           <div>Java Development Kit for running JBoss Developer Studio</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.jdk">
+      <div class="animate-show" ng-hide="checkboxModel.jdk.selected">
         <div>
           OpenJDK v8 will be installed. Or you may hit "Browse" and select an existing JDK 8 installation instead. Below is what we found on your machine:
         </div>
@@ -123,14 +109,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.jbds" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-model="checkboxModel.jbds.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">v9</span>
           <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.jbds">
+      <div class="animate-show" ng-hide="checkboxModel.jbds.selected">
         <div>
           JBDS v9 will be installed. Or you may hit "Browse" and select an existing JBDS 9 installation instead. Below is what we found on your machine:
         </div>
@@ -160,14 +146,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.vbox" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-model="checkboxModel.vbox.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">Oracle VirtualBox</span><span class="product-version">v5</span>
           <div>A virtualization software package developed by Oracle.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.vbox">
+      <div class="animate-show" ng-hide="checkboxModel.vbox.selected">
         <div>
           VirtualBox v5 will be installed. Or you may hit "Browse" and select an existing VirtualBox installation instead. Below is what we found on your machine:
         </div>
@@ -203,14 +189,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.vag" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-model="checkboxModel.vag.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">Vagrant</span><span class="product-version">v1</span>
           <div>A container provisioning tool.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.vag">
+      <div class="animate-show" ng-hide="checkboxModel.vag.selected">
         <div>
           Vagrant will be installed. Or you may hit "Browse" and select an existing Vagrant installation instead. Below is what we found on your machine:
         </div>

@@ -52,6 +52,7 @@ class JbdsInstall extends InstallableItem {
       this.existingInstallLocation = selection[0];
     } else {
       ipcRenderer.send('checkComplete', JbdsInstall.key());
+      return;
     }
 
     if (process.platform === 'win32') {
@@ -254,6 +255,7 @@ class JbdsInstall extends InstallableItem {
   headlessInstall(installer, promise) {
     Logger.info(JbdsInstall.key() + ' - headlessInstall() called');
     let javaOpts = [
+      '-DTRACE=true',
       '-jar',
       this.downloadedFile,
       this.installConfigFile

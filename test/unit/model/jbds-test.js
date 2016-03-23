@@ -204,6 +204,7 @@ describe('JBDS installer', function() {
 
       let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java.exe');
       let javaOpts = [
+        '-DTRACE=true',
         '-jar',
         downloadedFile,
         path.join(installerDataSvc.tempDir(), 'jbds-autoinstall.xml')

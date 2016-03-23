@@ -16,12 +16,11 @@ class ConfirmController {
     this.installables = new Object();
     
     $scope.checkboxModel = {
-      cdk : true,
-      ose : true,
-      jdk : true,
-      jbds : true,
-      vbox : true,
-      vag : true,
+      cdk : installerDataSvc.getInstallable('cdk'),
+      jdk : installerDataSvc.getInstallable('jdk'),
+      jbds : installerDataSvc.getInstallable('jbds'),
+      vbox : installerDataSvc.getInstallable('virtualbox'),
+      vag : installerDataSvc.getInstallable('vagrant'),
     };
 
   }
