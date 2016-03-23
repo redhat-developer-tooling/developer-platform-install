@@ -145,29 +145,27 @@ gulp.task('ui-test', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('prefetch','generate','7zipsfx-adv');
+  return runSequence('generate');
 });
 
 // download all the installer dependencies so we can package them up into the .exe
-gulp.task('prefetch', function() {
+gulp.task('prefetch', function(cb) {
+  let counter=0;
   for (var key in reqs) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
       // download only what can be included in offline installer
       if (reqs[key].bundle === 'yes') {
-        if (reqs[key].url.endsWith('/')) {
-          request(currentUrl, (err, rsp, body) => {
-            var fname = body.match(/openshift-origin-client-tools-v\w(\.\w)(\.\w){1,3}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
-            console.log('DOWNLOADING -> ' + currentUrl.concat(fname));
-            request(currentUrl.concat(fname))
-              .pipe(fs.createWriteStream(path.join(prefetchFolder, currentKey)));
-          });
-        } else {
+        counter++;
           console.log('DOWNLOADING -> ' + reqs[key].url);
           request(reqs[key].url)
-            .pipe(fs.createWriteStream(path.join(prefetchFolder, key)));
-        }
+            .pipe(fs.createWriteStream(path.join(prefetchFolder, key))).on('finish',function() {
+            counter--;
+            if(counter===0) {
+              cb();
+            }
+        });
       }
     }
   }
