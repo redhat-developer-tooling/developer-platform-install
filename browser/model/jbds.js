@@ -192,6 +192,8 @@ class JbdsInstall extends InstallableItem {
           }
         });
       }
+    } else {
+      success();
     }
   }
 
