@@ -76,7 +76,7 @@ gulp.task('run', ['transpile:app'], function(cb) {
 });
 
 gulp.task('package', function(cb) {
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./' + buildFolderRoot + buildFolderRoot;
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./' + buildFolderRoot + buildFileNamePrefix ;
   cmd += ' --out=./' + buildFolderRoot + ' --name=developer_platform --exe=' + artifactName + '.exe';
   cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
   cmd += ' --loading_gif=./resources/loading.gif';
