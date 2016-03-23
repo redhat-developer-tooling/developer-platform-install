@@ -105,7 +105,7 @@ gulp.task('ui-test', function() {
 });
 
 gulp.task('default', function() {
-  return runSequence('generate', 'create-zip', 'electronwinstaller');
+  return runSequence('generate', 'create-zip');
 });
 
 // download all the installer dependencies so we can package them up into the .exe
