@@ -19,6 +19,7 @@
     "start": "gulp run",
     "generate": "gulp generate",
     "package": "gulp package",
+    "package-bundle": "gulp package-bundle",
     "test": "gulp test",
     "unit-test": "gulp unit-test",
     "browser-test": "gulp browser-test",
