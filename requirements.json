@@ -29,12 +29,12 @@
   },
   "vagrant.msi": {
     "bundle": "no",
-    "url": "https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4.msi"
+    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download"
   },
   "virtualbox.exe": {
     "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
-    "url": "http://download.virtualbox.org/virtualbox/5.0.8/VirtualBox-5.0.8-103449-Win.exe"
+    "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download"
   }
 }
