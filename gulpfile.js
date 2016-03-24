@@ -54,9 +54,11 @@ gulp.task('create-zip', () => {
 });
 
 // Create default callback for exec
-function createExecCallback(cb) {
+function createExecCallback(cb, quiet) {
   return function(err,stdout,stderr) {
-    console.log(stdout);
+    if (!quiet) {
+      console.log(stdout);
+    }
     console.log(stderr);
     cb(err);
   }
@@ -68,7 +70,7 @@ gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
   cmd += ' --version=' + electronVersion + ' --out=./' + buildFolderRoot + ' --overwrite --asar=true';
   cmd += ' --prune --ignore=test';
 
-  exec(cmd,createExecCallback(cb));
+  exec(cmd,createExecCallback(cb, true));
 });
 
 gulp.task('run', ['transpile:app'], function(cb) {
@@ -88,7 +90,7 @@ gulp.task('package', function (cb) {
   let instllerExe = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64.exe');
   request('http://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F&ts=1458670605&use_mirror=pilotfiber')
       .pipe(fs.createWriteStream(zaZip)).on('finish', function () {
-    console.log(zaZip);
+    //console.log(zaZip);
     gulp.src(path.join(buildFolderRoot, '7za920.zip'))
         .pipe(unzip())
         .pipe(gulp.dest(buildFolderRoot));
@@ -97,18 +99,18 @@ gulp.task('package', function (cb) {
       var cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y';
       console.log(cmd);
       exec(cmd, function (err, stdout, stderr) {
-        console.log(stdout);
+        //console.log(stdout);
         console.log(stderr);
         if (!err) {
           var packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*';
           console.log(packCmd);
           exec(packCmd, function (err, stdout, stderr) {
-            console.log(stdout);
+            //console.log(stdout);
             console.log(stderr);
             if (!err) {
               var packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + instllerExe;
               console.log(packageCmd);
-              exec(packageCmd, createExecCallback(cb));
+              exec(packageCmd, createExecCallback(cb, true));
             } else {
               cb(err);
             }
