@@ -32,7 +32,7 @@
     "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download"
   },
   "virtualbox.exe": {
-    "bundle": "bundle",
+    "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download"
