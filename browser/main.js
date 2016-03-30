@@ -3,7 +3,6 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import base64 from 'angular-base64';
-import anguarmsg from 'angular-messages';
 import acctCtrl from './pages/account/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';
@@ -20,7 +19,7 @@ import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
 
 let mainModule =
-      angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
+      angular.module('devPlatInstaller', ['ui.router', 'base64'])
           .controller(acctCtrl.name, acctCtrl)
           .controller(confCtrl.name, confCtrl)
           .controller(instCtrl.name, instCtrl)
