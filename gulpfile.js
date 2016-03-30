@@ -75,22 +75,8 @@ gulp.task('run', ['transpile:app'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron .',createExecCallback(cb));
 });
 
-gulp.task('package', function(cb) {
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-installer-squirrel-windows ./' + buildFolderRoot + buildFileNamePrefix ;
-  cmd += ' --out=./' + buildFolderRoot + ' --name=developer_platform --exe=' + artifactName + '.exe';
-  cmd += ' --overwrite --authors="Red Hat Developer Tooling Group"';
-  cmd += ' --loading_gif=./resources/loading.gif';
-
-  exec(cmd,createExecCallback(cb));
-});
-
-// Create bundled installer
-gulp.task('package-bundle', function() {
-  return runSequence('prefetch', '7zip-sfx');
-});
-
 // Wrap electrom generated app to self extractring 7zip archive
-gulp.task('7zip-sfx', function (cb) {
+gulp.task('package', function (cb) {
   let zaRoot = path.resolve(buildFolderRoot)
   let zaElectronPackage = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64');
   let zaZip = path.join(zaRoot, '7za920.zip');
@@ -135,6 +121,10 @@ gulp.task('7zip-sfx', function (cb) {
   });
 });
 
+// Create bundled installer
+gulp.task('package-bundle', function() {
+  return runSequence('prefetch', 'package');
+});
 
 gulp.task('test', function() {
   return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink', 'browser-test');
