@@ -10,7 +10,7 @@
     <div class="row">
       <h1 class="text-center">Everything's installed and you're good to go!</h1>
     </div>
-    <div class="checkbox">
+    <div class="checkbox" ng-show="startCtrl.jbdsInstall.selected || startCtrl.jbdsInstall.existingInstall">
       <label><input type="checkbox" ng-model="startCtrl.startJBDS"> Start JBDS now</label>
     </div>
     <button type="submit" class="btn btn-primary btn-lg">Finish</button>

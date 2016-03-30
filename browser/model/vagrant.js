@@ -17,83 +17,79 @@ class VagrantInstall extends InstallableItem {
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'vagrant.msi';
+    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
+    this.detected = false;
+    this.minimumVersion = "1.7.4";
+    this.existingVersion = "";
   }
 
   static key() {
     return 'vagrant';
   }
 
-  checkForExistingInstall(selection, data) {
-    let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/;
-    let command, directory;
-    let extension = '';
-    let subfolder = path.sep + 'bin';
+  // Vagrant validation rules:
+  // - cannot install vagrant if another one is already present in classpath
+  // - minimal version reqired is 1.7.4 the same downloaded by installer
+  // -
+  isConfigured() {
+    return this.existingVersion
+        && this.existingInstallLocation
+        && this.existingInstall
+        && this.existingVersion >= this.minimumVersion
+        || this.selected
+        && this.existingInstallLocation === '';
+  }
 
+  detectExistingInstall(cb = new function(){}) {
+    let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/,
+        command,
+        directory,
+        extension = '',
+        subfolder = path.sep + 'bin';
     if (process.platform === 'win32') {
       command = 'where vagrant';
       extension = '.exe';
     } else {
       command = 'which vagrant';
     }
-    if (selection) {
-      this.existingInstallLocation = selection[0] || this.existingInstallLocation;
-    }
 
     Util.executeCommand(command, 1)
     .then((output) => {
-      return new Promise((resolve, reject) => {
-        if (process.platform === 'win32') {
-          return resolve(path.dirname(path.dirname(output)));
-        } else {
-          return Util.findText(output, 'VAGRANT_DIR=')
-          .then((result) => { return resolve(result.split('=')[1].replace(/["]+/g, '')); });
-        }
-      });
-    }).then((folder) => {
-      return new Promise((resolve, reject) => {
-        if (selection && folder !== selection[0] && folder !== selection[0] + path.sep) {
-          return reject('selection is not on path');
-        } else {
-          directory = folder;
-          resolve(directory);
-        }
-      });
-    }).then((output) => {
-      return Util.executeCommand(path.join(output + subfolder, 'vagrant' + extension) + ' -v', 1)
+      this.existingInstallLocation = path.dirname(path.dirname(output));
+      return Util.executeCommand(output + ' -v', 1)
     }).then((output) => {
       this.existingVersion = versionRegex.exec(output)[1];
       this.existingInstall = true;
-      if (selection && data) {
-        data[VagrantInstall.key()][1] = true;
-      } else {
-        this.existingInstallLocation = directory;
-      }
-      ipcRenderer.send('checkComplete', VagrantInstall.key());
+      this.detected = true;
+      this.selected = false;
+      cb();
     }).catch((error) => {
-      if (data) {
-        data[VagrantInstall.key()][1] = false;
-      }
       this.existingInstall = false;
-      ipcRenderer.send('checkComplete', VagrantInstall.key());
+      cb(error);
     });
+  }
+
+  validateSelectedFolder(selection) {
+    // should be called after path to vagrant changed
+  }
+
+  isDownloadRequired() {
+    return !this.hasExistingInstall() && !fs.existsSync(this.bundledFile);
   }
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    var downloads = path.normalize(path.join(__dirname,"../../.."));
-    console.log(downloads);
-    if(!this.hasExistingInstall() && !fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+    if(this.isDownloadRequired()) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloadSize = 199819264;
-
       let downloader = new Downloader(progress, success, failure, downloadSize);
       downloader.setWriteStream(writeStream);
       downloader.download(this.downloadUrl);
     } else {
-      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      this.downloadedFile = this.bundledFile;
       success();
     }
   }

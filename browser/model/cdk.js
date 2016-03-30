@@ -167,8 +167,13 @@ class CDKInstall extends InstallableItem {
     let env = {};
 
     //TODO Need to get this info from VagrantInstaller rather than hard code
-    env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';';
-
+    let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
+    if(vagrantInstall) {
+      env['path'] = vagrantInstall.existingInstallLocation ? path.join(vagrantInstall.existingInstallLocation,'bin')
+          : this.installerDataSvc.vagrantDir();
+    } else {
+      env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';';
+    }
     return env;
   }
 
@@ -201,7 +206,7 @@ class CDKInstall extends InstallableItem {
       // Vagrant is installed, add CDK bits
       let env = this.createEnvironment();
       let opts = {
-        cwd: path.join(this.installerDataSvc.vagrantDir(), 'bin'),
+        cwd: env['path'],
         env: env
       };
 

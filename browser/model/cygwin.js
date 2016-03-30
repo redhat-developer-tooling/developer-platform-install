@@ -18,6 +18,7 @@ class CygwinInstall extends InstallableItem {
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'cygwin.exe';
+    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
   }
@@ -32,8 +33,7 @@ class CygwinInstall extends InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
 
-    var downloads = path.normalize(path.join(__dirname,"../../.."));
-    if(! fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+    if(!fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloader = new Downloader(progress, success, failure);

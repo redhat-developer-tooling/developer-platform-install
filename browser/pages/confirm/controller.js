@@ -6,30 +6,45 @@ let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
 
 class ConfirmController {
-  constructor($scope, $state, installerDataSvc) {
+  constructor($scope, $state, $timeout, installerDataSvc) {
     this.router = $state;
-    this.installerDataSvc = installerDataSvc;
     this.sc = $scope;
-
+    this.timeout = $timeout;
+    this.installerDataSvc = installerDataSvc;
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
     this.installables = new Object();
-    
-    $scope.checkboxModel = {
-      cdk : installerDataSvc.getInstallable('cdk'),
-      jdk : installerDataSvc.getInstallable('jdk'),
-      jbds : installerDataSvc.getInstallable('jbds'),
-      vbox : installerDataSvc.getInstallable('virtualbox'),
-      vag : installerDataSvc.getInstallable('vagrant'),
-    };
+    $scope.checkboxModel = new Object();
 
+    $scope.detectionStyle = true;
+    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      $scope.checkboxModel[key] = value;
+    }
+    $scope.isConfigurationValid = this.isConfigurationValid;
+
+    $scope.$watch(()=>{
+      return $scope.checkboxModel.jdk.isConfigured()
+    },(nVal,oVal)=>{
+      if(nVal===false) {
+        $scope.checkboxModel.jbds.selected = false;
+      }
+    });
+    $scope.$watch('$viewContentLoaded', ()=>{
+      console.log('content loaded');
+      $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
+        $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
+          $scope.checkboxModel.jdk.detectExistingInstall(()=> {
+            $timeout(()=>{
+              $scope.detectionStyle = false;
+              $scope.$apply();
+            });
+          });
+        });
+      });
+    });
   }
 
   install() {
-    //for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-    //  value.useDownload = !value.existingInstall;
-    //}
-
     this.checkFolder();
     if (!this.folderExists) {
       fs.mkdirSync(this.folder);
@@ -55,19 +70,18 @@ class ConfirmController {
 
     if (selection) {
       item.checkForExistingInstall(selection, this.installables);
+    } else {
+      this.timeout(()=>{
+        this.sc.$apply(()=>{
+          item.detectExistingInstall();
+        })
+      });
     }
   }
 
   checkItem(key) {
     let item = this.installerDataSvc.allInstallables().get(key);
     item.checkForExistingInstall();
-
-    ipcRenderer.on('checkComplete', (event, arg) => {
-      if (arg === key) {
-          this.installables[key] = [item, item.existingInstall];
-        this.sc.$digest();
-      }
-    });
   }
 
   selectFolder() {
@@ -104,8 +118,15 @@ class ConfirmController {
     }
     return root;
   }
+
+  isConfigurationValid() {
+    return this.checkboxModel.virtualbox.isConfigured()
+        && this.checkboxModel.cygwin.isConfigured()
+        && this.checkboxModel.vagrant.isConfigured()
+        && this.checkboxModel.cdk.isConfigured();
+  }
 }
 
-ConfirmController.$inject = ['$scope', '$state', 'installerDataSvc'];
+ConfirmController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc'];
 
 export default ConfirmController;

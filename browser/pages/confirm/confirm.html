@@ -13,6 +13,7 @@
 </style>
 
 <main class="col-sm-12">
+  <div id="shadow" ng-class="{'dimmed': detectionStyle}">
   <h5>Setup and confirm.</h5>
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
     <div class="panel panel-default">
@@ -51,12 +52,12 @@
       </div>
     </div>
 
-    <h5>Products and tools that will be installed.</h5>
+    <h5>Products that will be installed</h5>
 
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.cdk.selected" aria-label="Toggle ngHide">
+          <input disabled type="checkbox" ng-model="checkboxModel.cdk.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">v2</span>
@@ -67,7 +68,117 @@
       </div>
     </div>
 
-    <h5>Required Tools and Runtimes.</h5>
+    <h5>Required Tools and Runtimes</h5>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox-container verticalLine">
+          <input type="checkbox" ng-disabled="checkboxModel.virtualbox.detected" ng-model="checkboxModel.virtualbox.selected" aria-label="Toggle ngHide">
+        </div>
+        <div class="product-container">
+          <span class="product-name">Oracle VirtualBox</span><span class="product-version">v5</span>
+          <div>A virtualization software package developed by Oracle - <stron ng-hide="!checkboxModel.virtualbox.selected">VirtualBox 5.0.8 will be installed.</stron></div>
+        </div>
+      </div>
+      <div class="animate-show" ng-hide="checkboxModel.virtualbox.selected">
+        <div ng-hide="checkboxModel.virtualbox.detected">
+          Press "Browse" and select an existing VirtualBox installation instead. Below is what we found on your machine:
+        </div>
+        <div class="input-group">
+          <div style="position:relative">
+            <input type="text" disabled="true" name="virtualbox" placeholder="No VirtualBox installation found" class="form-control" ng-model="checkboxModel.virtualbox.existingInstallLocation" id="virtualbox"/>
+          </div>
+          <span class="input-group-btn">
+            <button type="button" ng-disabled="checkboxModel.virtualbox.detected" ng-click="confCtrl.selectItem('virtualbox')" class="btn btn-primary">Browse</button>
+          </span>
+        </div>
+        <div ng-hide="checkboxModel.virtualbox.detected" class="form-group has-warning">
+          <div class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The selection is either not a valid VirtualBox installation or you do not have VirtualBox on path. We will install VirtualBox for you.</strong>
+          </div>
+        </div>
+        <div ng-show="checkboxModel.virtualbox.detected && checkboxModel.virtualbox.existingVersion === checkboxModel.virtualbox.minimumVersion" class="form-group has-warning">
+          <div class="help-block">
+            <strong>The detected Virtualbox version is {{checkboxModel.virtualbox.existingVersion}}</strong>
+          </div>
+        </div>
+        <div ng-show="checkboxModel.virtualbox.existingVersion > checkboxModel.virtualbox.minimumVersion" class="form-group has-warning">
+          <div class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The selected VirtualBox installation is newer that recommended 10.0.8</strong>
+          </div>
+        </div>
+        <div>
+          <div ng-show="!checkboxModel.virtualbox.selected" class="help-block form-group has-info">
+            <input type="checkbox" ng-disabled="!checkboxModel.virtualbox.existingInstallLocation || checkboxModel.virtualbox.detected" ng-model="checkboxModel.virtualbox.existingInstall">
+            <strong>I want to use the existing VirtualBox</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox-container verticalLine">
+          <input disabled type="checkbox" ng-model="checkboxModel.cygwin.selected" aria-label="Toggle ngHide">
+        </div>
+        <div class="product-container">
+          <span class="product-name">Cygwin</span><span class="product-version">v2</span>
+          <div>A distribution of popular GNU and other Open Source tools running on Microsoft Windows.</div>
+        </div>
+      </div>
+      <div class="check-element animate-show" ng-hide="checkboxModel.cygwin.selected">
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox-container verticalLine">
+          <input type="checkbox" ng-disabled="checkboxModel.vagrant.detected" ng-model="checkboxModel.vagrant.selected" aria-label="Toggle ngHide">
+        </div>
+        <div class="product-container">
+          <span class="product-name">Vagrant</span><span class="product-version">v1</span>
+          <div>A container provisioning tool.</div>
+        </div>
+      </div>
+      <div class="animate-show" ng-show="checkboxModel.vagrant.detected || !checkboxModel.vagrant.selected ">
+        <div ng-hide="checkboxModel.vagrant.detected">
+          Vagrant will be installed. Or you may hit "Browse" and select an existing Vagrant installation instead. Below is what we found on your machine:
+        </div>
+        <div class="input-group">
+          <div style="position:relative">
+            <input type="text" disabled="true" name="vagrant" placeholder="No Vagrant installation found" class="form-control" ng-model="checkboxModel.vagrant.existingInstallLocation" id="vagrant"/>
+          </div>
+          <span class="input-group-btn">
+            <button type="button" ng-disabled="checkboxModel.vagrant.detected" ng-click="confCtrl.selectItem('vagrant')" class="btn btn-primary">Browse</button>
+          </span>
+        </div>
+        <div ng-show="!checkboxModel.vagrant.detected" class="form-group has-warning">
+          <div class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The selection is either not a valid Vagrant installation or you do not have Vagrant on path. We will install Vagrant for you.</strong>
+          </div>
+        </div>
+        <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion === checkboxModel.vagrant.minimumVersion" class="form-group has-warning">
+          <div class="help-block">
+            <strong>The detected Vagrant version is {{checkboxModel.vagrant.existingVersion}}</strong>
+          </div>
+        </div>
+        <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion > checkboxModel.vagrant.minimumVersion" class="form-group has-warning">
+          <div class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The detected Vagrant {{checkboxModel.vagrant.existingVersion}} installation is newer that recommended. It will likely still work, but use it at your own risk.</strong>
+          </div>
+        </div>
+        <div>
+          <div ng-show="checkboxModel.vagrant.detected" class="help-block form-group has-info">
+            <input type="checkbox" ng-disabled="checkboxModel.vagrant.detected" ng-model="checkboxModel.vagrant.existingInstall">
+            <strong>I want to use the existing Vagrant</strong>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -84,23 +195,28 @@
           OpenJDK v8 will be installed. Or you may hit "Browse" and select an existing JDK 8 installation instead. Below is what we found on your machine:
         </div>
         <div class="input-group">
-          <div ng-init="confCtrl.checkItem('jdk')" style="position:relative">
-            <input type="text" disabled="true" name="jdk" placeholder="No JDK v8 installation found" class="form-control" ng-model="confCtrl.installables['jdk'][0].existingInstallLocation" id="jdk"/>
+          <div style="position:relative">
+            <input type="text" disabled="true" name="jdk" placeholder="No JDK v8 installation found" class="form-control" ng-model="checkboxModel.jdk.existingInstallLocation" id="jdk"/>
           </div>
           <span class="input-group-btn">
-            <button type="button" ng-click="confCtrl.selectItem('jdk')" class="btn btn-primary">Browse</button>
+            <button type="button" disabled ng-click="confCtrl.selectItem('jdk')" class="btn btn-primary">Browse</button>
           </span>
         </div>
-        <div ng-show="!confCtrl.installables['jdk'][1]" class="form-group has-warning">
+        <div ng-show="checkboxModel.jdk.detected && checkboxModel.jdk.existingVersion === checkboxModel.jdk.minimumVersion" class="form-group has-warning">
+          <div class="help-block">
+            <strong>The detected JDK version is {{checkboxModel.jdk.existingVersion}}</strong>
+          </div>
+        </div>
+        <div ng-show="checkboxModel.jdk.existingVersion < checkboxModel.jdk.minimumVersion" class="form-group has-warning">
           <div class="help-block">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>The selection is not a valid JDK version 8 or newer. We will install OpenJDK v8 for you.</strong>
           </div>
         </div>
         <div>
-          <div ng-show="confCtrl.installables['jdk'][1]" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="!confCtrl.installables['jdk'][1]" ng-model="confCtrl.installables['jdk'][0].existingInstall">
-            <strong>I want to use the existing JDK I provided.</strong>
+          <div class="help-block form-group has-info">
+            <input type="checkbox" ng-disabled="true" ng-model="checkboxModel.jdk.existingInstall">
+            <strong>I want to use the existing JDK</strong>
           </div>
         </div>
       </div>
@@ -109,20 +225,20 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.jbds.selected" aria-label="Toggle ngHide">
+          <input type="checkbox" ng-disabled="!checkboxModel.jdk.isConfigured()" ng-model="checkboxModel.jbds.selected" aria-label="Toggle ngHide">
         </div>
         <div class="product-container">
           <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">v9</span>
           <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.jbds.selected">
+      <div class="animate-show" ng-hide="true">
         <div>
           JBDS v9 will be installed. Or you may hit "Browse" and select an existing JBDS 9 installation instead. Below is what we found on your machine:
         </div>
         <div class="input-group">
           <div ng-init="confCtrl.checkItem('jbds')" style="position:relative">
-            <input type="text" disabled="true" name="jbds" placeholder="No JBDS v9 installation found" class="form-control" ng-model="confCtrl.installables['jbds'][0].existingInstallLocation" id="jbds"/>
+            <input type="text" disabled="true" name="jbds" placeholder="No JBDS v9 installation found" class="form-control" ng-model="checkboxModel.jbds.existingInstallLocation" id="jbds"/>
           </div>
           <span class="input-group-btn">
             <button type="button" ng-click="confCtrl.selectItem('jbds')" class="btn btn-primary">Browse</button>
@@ -143,99 +259,14 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.vbox.selected" aria-label="Toggle ngHide">
-        </div>
-        <div class="product-container">
-          <span class="product-name">Oracle VirtualBox</span><span class="product-version">v5</span>
-          <div>A virtualization software package developed by Oracle.</div>
-        </div>
-      </div>
-      <div class="animate-show" ng-hide="checkboxModel.vbox.selected">
-        <div>
-          VirtualBox v5 will be installed. Or you may hit "Browse" and select an existing VirtualBox installation instead. Below is what we found on your machine:
-        </div>
-        <div class="input-group">
-          <div ng-init="confCtrl.checkItem('virtualbox')" style="position:relative">
-            <input type="text" disabled="true" name="virtualbox" placeholder="No VirtualBox installation found" class="form-control" ng-model="confCtrl.installables['virtualbox'][0].existingInstallLocation" id="virtualbox"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" ng-click="confCtrl.selectItem('virtualbox')" class="btn btn-primary">Browse</button>
-          </span>
-        </div>
-        <div ng-show="!confCtrl.installables['virtualbox'][1]" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is either not a valid VirtualBox installation or you do not have VirtualBox on path. We will install VirtualBox for you.</strong>
-          </div>
-        </div>
-        <div ng-show="confCtrl.installables['virtualbox'][1] && confCtrl.installables['virtualbox'][0].existingVersion && confCtrl.installables['virtualbox'][0].existingVersion + 2 < confCtrl.installables['virtualbox'][0].version.charAt(0)" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selected VirtualBox installation is more than 2 major versions old. It might still work, but use it at your own risk.</strong>
-          </div>
-        </div>
-        <div>
-          <div ng-show="confCtrl.installables['virtualbox'][1]" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="!confCtrl.installables['virtualbox'][1]" ng-model="confCtrl.installables['virtualbox'][0].existingInstall">
-            <strong>I want to use the existing VirtualBox I provided.</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-model="checkboxModel.vag.selected" aria-label="Toggle ngHide">
-        </div>
-        <div class="product-container">
-          <span class="product-name">Vagrant</span><span class="product-version">v1</span>
-          <div>A container provisioning tool.</div>
-        </div>
-      </div>
-      <div class="animate-show" ng-hide="checkboxModel.vag.selected">
-        <div>
-          Vagrant will be installed. Or you may hit "Browse" and select an existing Vagrant installation instead. Below is what we found on your machine:
-        </div>
-        <div class="input-group">
-          <div ng-init="confCtrl.checkItem('vagrant')" style="position:relative">
-            <input type="text" disabled="true" name="vagrant" placeholder="No Vagrant installation found" class="form-control" ng-model="confCtrl.installables['vagrant'][0].existingInstallLocation" id="vagrant"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" ng-click="confCtrl.selectItem('vagrant')" class="btn btn-primary">Browse</button>
-          </span>
-        </div>
-        <div ng-show="!confCtrl.installables['vagrant'][1]" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is either not a valid Vagrant installation or you do not have Vagrant on path. We will install Vagrant for you.</strong>
-          </div>
-        </div>
-        <div ng-show="confCtrl.installables['vagrant'][1] && confCtrl.installables['vagrant'][0].existingVersion && confCtrl.installables['vagrant'][0].existingVersion < confCtrl.installables['vagrant'][0].version" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selected Vagrant installation is outdated. It will likely still work, but use it at your own risk.</strong>
-          </div>
-        </div>
-        <div>
-          <div ng-show="confCtrl.installables['vagrant'][1]" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="!confCtrl.installables['vagrant'][1]" ng-model="confCtrl.installables['vagrant'][0].existingInstall">
-            <strong>I want to use the existing Vagrant I provided.</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="row">
       <div class="form-group" style="margin-bottom: 20px">
         <div class="col-sm-12 pull-right">
-          <button type="submit" ng-disabled="confirmForm.$invalid" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
+          <button type="submit" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
         </div>
       </div>
     </div>
 
   </form>
+    </div>
 </main>

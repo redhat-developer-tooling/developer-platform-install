@@ -17,61 +17,58 @@ class JdkInstall extends InstallableItem {
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'jdk.zip';
+    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
+    this.existingVersion = '';
+    this.minimumVersion = '1.8.0';
   }
 
-  checkForExistingInstall(selection, data) {
-    let versionRegex = /version\s\"\d+\.(\d+)\.\d+_\d+\"/;
+  isConfigured() {
+    return (this.existingVersion
+        && this.existingInstallLocation
+        && this.existingInstall
+        && this.existingVersion >= this.minimumVersion)
+        || this.selected;
+  }
+
+  detectExistingInstall(cb = new function(){}) {
+    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_\d+\"/;
     let selectedFolder = '';
 
     let extension = '';
     let command;
     if (process.platform === 'win32') {
+      // where java doesn't work good because it returns
+      // hardlink created in C:\ProgramData\Oracle\Java\javapath
       command = 'java -XshowSettings';
-      if (selection) {
-        extension = '.exe';
-      }
     } else {
       command = 'which java';
     }
-
-    if(selection) {
-      command = '';
-      this.existingInstallLocation = selection[0] || this.existingInstallLocation;
-      selectedFolder = path.join(this.existingInstallLocation, 'bin') + path.sep;
-    }
-
-    Util.executeFile(selectedFolder + 'java' + extension, ['-version'], 2)
+    Util.executeCommand('java -version', 2)
     .then((output) => {
       return new Promise((resolve, reject) => {
-        let version = versionRegex.exec(output)[1];
-        if (!version || version < 8) {
-          reject('wrong version');
-        } else {
+        let version = versionRegex.exec(output);
+        if (version && version.length > 0) {
+          this.existingVersion = version[1];
           resolve(true);
+        } else {
+          reject("No java detected");
         }
       });
-    }).then((output) => {
+    }).then((result) => {
       return Util.executeCommand(command, 2);
     }).then((output) => {
-
-      if (selection && data) {
-        data[JdkInstall.key()][1] = true;
-      } else {
         var locationRegex = /java.home*\s=*\s(.*)[\s\S]/;
         var t = locationRegex.exec(output);
         if(t.length > 1) {
           this.existingInstallLocation = t[1];
-          this.existingInstall = false;
+          this.existingInstall = true;
+          this.detected = true;
         }
-      }
-      ipcRenderer.send('checkComplete', JdkInstall.key());
+        cb();
     }).catch((error) => {
-      if (data) {
-        data[JdkInstall.key()][1] = false;
-      }
       this.existingInstall = false;
-      ipcRenderer.send('checkComplete', JdkInstall.key());
+      cb();
     });
   }
 
@@ -81,16 +78,14 @@ class JdkInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    var downloads = path.normalize(path.join(__dirname,"../../.."));
-    console.log(downloads);
-    if(!this.hasExistingInstall() && !fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+    if(!this.hasExistingInstall() && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
       downloader.download(this.downloadUrl);
     } else {
-      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      this.downloadedFile = this.bundledFile;
       success();
     }
   }

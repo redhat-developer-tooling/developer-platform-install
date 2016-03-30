@@ -9,36 +9,34 @@ class InstallController {
     this.installerDataSvc = installerDataSvc;
 
     this.data = Object.create(null);
-
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      this.processInstallable(key, value);
+      let itemProgress = new ProgressState(value.getName(), value.getInstallTime(), this.$scope, this.$timeout);
+      Object.defineProperty(this.data, key, {
+        enumerable: true,
+        writable: true,
+        value: itemProgress
+      });
+      if(value.selected || value.hasExistingInstall()) {
+        this.processInstallable(key, value,itemProgress);
+      } else {
+        this.installerDataSvc.setupDone(itemProgress,key);
+      }
     }
   }
 
-  processInstallable(key, value) {
-    let itemProgress = new ProgressState(value.getName(), value.getInstallTime(), this.$scope, this.$timeout);
-
-    Object.defineProperty(this.data, key, {
-      enumerable: true,
-      writable: true,
-      value: itemProgress
-    });
-
-    if (value.isDownloadRequired() && !value.isDownloaded()) {
-      this.$timeout(this.triggerDownload(key, value, itemProgress));
-    } else if (!value.hasExistingInstall()) {
-      this.$timeout(this.triggerInstall(key, value, itemProgress));
+  processInstallable(key, value,itemProgress) {
+    if(value.isDownloadRequired()) {
+      this.triggerDownload(key, value, itemProgress);
     } else {
-      this.$timeout(this.triggerSetup(key, value, itemProgress));
+      this.triggerInstall(key, value, itemProgress);
     }
   }
 
   triggerDownload(installableKey, installableValue, progress) {
     this.installerDataSvc.startDownload(installableKey);
-
     installableValue.downloadInstaller(progress,
       () => {
-        this.$timeout(this.installerDataSvc.downloadDone(progress, installableKey));
+        this.installerDataSvc.downloadDone(progress, installableKey);
       },
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
@@ -86,6 +84,10 @@ class InstallController {
 
   desc(key) {
     return this.data[key].desc;
+  }
+
+  show(key) {
+    return this.installerDataSvc.getInstallable(key).selected;
   }
 }
 
