@@ -16,7 +16,7 @@ class ConfirmController {
     this.installables = new Object();
     $scope.checkboxModel = new Object();
 
-    $scope.detectionStyle = true;
+    $scope.detectionStyle = false;
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
     }
