@@ -22,6 +22,7 @@ class JbdsInstall extends InstallableItem {
     this.installerDataSvc = installerDataSvc;
 
     this.downloadedFileName = 'jbds.jar';
+    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
   }
@@ -106,16 +107,14 @@ class JbdsInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    var downloads = path.normalize(path.join(__dirname,"../../.."));
-    console.log(downloads);
-    if(!this.hasExistingInstall() && !fs.existsSync(path.join(downloads, this.downloadedFileName))) {
+    if(!this.hasExistingInstall() && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
       downloader.download(this.downloadUrl);
     } else {
-      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      this.downloadedFile = this.bundledFile;
       success();
     }
   }
@@ -261,7 +260,7 @@ class JbdsInstall extends InstallableItem {
       this.installConfigFile
     ];
     let res = installer.execFile(path.join(this.installerDataSvc.jdkDir(), 'bin', 'java.exe'), javaOpts)
-    .then((result) => { return this.setupCdk(result); });
+      .then((result) => { return this.setupCdk(result);});
 
     return res;
   }

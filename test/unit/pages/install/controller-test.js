@@ -89,14 +89,16 @@ describe('Install controller', function() {
     });
 
     it('should not trigger download on already downloaded items', function() {
-      sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
+      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
+      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(dlStub).not.called;
     });
 
     it('should trigger install on already downloaded items', function() {
-      sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
+      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
+      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(inStub).calledTwice;
@@ -153,7 +155,8 @@ describe('Install controller', function() {
     it('data service should register the new install', function() {
       sandbox.stub(vagrant, 'install').returns();
       sandbox.stub(vbox, 'install').returns();
-      sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
+      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
+      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
@@ -166,7 +169,8 @@ describe('Install controller', function() {
     });
 
     it('should call the installables install method', function() {
-      sandbox.stub(InstallableItem.prototype, 'isDownloadRequired').returns(false);
+      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
+      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       sandbox.stub(installerDataSvc, 'startInstall').returns();
       let vagrantSpy = sandbox.stub(vagrant, 'install').returns();
       let vboxSpy = sandbox.stub(vbox, 'install').returns();

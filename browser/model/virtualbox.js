@@ -15,10 +15,11 @@ class VirtualBoxInstall extends InstallableItem {
     super('VirtualBox', 700, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
-
+    this.minimumVersion = '5.0.8';
     this.version = version;
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
+    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
@@ -31,8 +32,21 @@ class VirtualBoxInstall extends InstallableItem {
     return 'virtualbox';
   }
 
-  checkForExistingInstall(selection, data) {
-    let versionRegex = /(\d+)\.\d+\.\d+r\d+/;
+  // Vagrant validation rules:
+  // - cannot install vagrant if another one is already present in classpath
+  // - minimal version reqired is 1.7.4 the same downloaded by installer
+  // -
+  isConfigured() {
+    return (this.existingVersion
+        && this.existingInstallLocation
+        && this.existingInstall
+        && this.existingVersion >= this.minimumVersion)
+        || (this.selected
+        && this.existingInstallLocation === '');
+  }
+
+  detectExistingInstall(cb = new function(){}) {
+    let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
     let command;
     let extension = '';
     let directory;
@@ -43,16 +57,19 @@ class VirtualBoxInstall extends InstallableItem {
     } else {
       command = 'which virtualbox';
     }
-    if (selection) {
-      this.existingInstallLocation = selection[0] || this.existingInstallLocation;
-    }
 
     Util.executeCommand(command, 1).then((output) => {
       return new Promise((resolve, reject) => {
         if (process.platform === 'win32') {
           if (output === '%VBOX_INSTALL_PATH%') {
             return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1)
-            .then((output) => { return resolve(output); });
+            .then((output) => {
+              if(output=== '%VBOX_MSI_INSTALL_PATH%') {
+                return Util.executeCommand('where VirtualBox', 1)
+              } else {
+                return resolve(output);
+              }
+            });
           } else {
             return resolve(output);
           }
@@ -63,12 +80,8 @@ class VirtualBoxInstall extends InstallableItem {
       });
     }).then((folder) => {
       return new Promise((resolve, reject) => {
-        if (selection && folder !== selection[0] && folder !== selection[0] + path.sep) {
-          return reject('selection is not on path');
-        } else {
-          directory = folder;
-          resolve(directory);
-        }
+        this.existingInstallLocation = folder;
+        resolve(folder);
       });
     }).then((output) => {
       return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension])
@@ -76,36 +89,34 @@ class VirtualBoxInstall extends InstallableItem {
       var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
       return Util.executeCommand(command, 1);
     }).then((output) => {
-      this.existingVersion = parseInt(versionRegex.exec(output)[1]);
-      this.existingInstall = this.existingVersion + 2 >= this.version.charAt(0);
-      if (selection && data) {
-        data[VirtualBoxInstall.key()][1] = true;
-      } else {
-        this.existingInstallLocation = directory;
-      }
-      ipcRenderer.send('checkComplete', VirtualBoxInstall.key());
+      this.existingVersion = versionRegex.exec(output)[1];
+      this.existingInstall = this.existingVersion >= this.minimumVersion;
+      this.detected = true;
+      this.selected = false;
+      cb();
     }).catch((error) => {
-      if (data) {
-        data[VirtualBoxInstall.key()][1] = false;
-      }
       this.existingInstall = false;
-      ipcRenderer.send('checkComplete', VirtualBoxInstall.key());
+      cb();
     });
+  }
+
+  validateSelectedFolder(selection) {
+    // should be called after path to vagrant changed
+  }
+
+  isDownloadRequired() {
+    return !this.hasExistingInstall() && !fs.existsSync(this.bundledFile);
   }
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    var downloads = path.normalize(path.join(__dirname,"../../.."));
-    console.log(downloads);
-    if(!this.hasExistingInstall() && !fs.existsSync(path.join(downloads, this.downloadedFileName))) {
-      // Need to download the file
+    if(this.isDownloadRequired()) {
       let writeStream = fs.createWriteStream(this.downloadedFile);
-
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
       downloader.download(this.downloadUrl);
     } else {
-      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      this.downloadedFile = this.bundledFile;
       success();
     }
   }

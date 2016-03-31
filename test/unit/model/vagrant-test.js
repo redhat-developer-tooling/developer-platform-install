@@ -69,8 +69,8 @@ describe('Vagrant installer', function() {
   });
 
   it('should not download vagrant when an installation exists', function() {
-    let jdk = new VagrantInstall(installerDataSvc, 'url', 'file');
-    expect(jdk.useDownload).to.be.false;
+    let vagrant = new VagrantInstall(installerDataSvc, 'url', 'file');
+    expect(vagrant.useDownload).to.be.false;
   });
 
   it('should fail when no url is set and installed file not defined', function() {

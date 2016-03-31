@@ -7,6 +7,7 @@ import request from 'request';
 import fs from 'fs-extra';
 import path from 'path';
 import CDKInstall from 'model/cdk';
+import VagrantInstall from "model/vagrant";
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
@@ -29,7 +30,7 @@ describe('CDK installer', function() {
     cdkBoxDir: function() {},
     cdkMarker: function() {},
     cdkDir: function() {},
-    getInstallable: function(key) {}
+    getInstallable: function(key) {return new VagrantInstall(installerDataSvc,'url', null);}
   };
   let fakeProgress = {
     setStatus: function (desc) { return; },

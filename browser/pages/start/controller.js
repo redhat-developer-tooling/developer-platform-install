@@ -11,10 +11,11 @@ class StartController {
   constructor(installerDataSvc) {
     this.startJBDS = true;
     this.installerDataSvc = installerDataSvc;
+    this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
   }
 
   start() {
-    if(this.startJBDS) {
+    if(this.startJBDS && (this.jbdsInstall.selected || this.jbdsInstall.existingInstall)) {
       // Start JBDS
       this.launchJBDS();
     } else {
@@ -24,7 +25,8 @@ class StartController {
 
   launchJBDS() {
     Logger.info('JBDS Start - Write temp files...');
-    let jbdevstudioBat = path.join(this.installerDataSvc.jbdsDir(), 'jbdevstudio.bat');
+    let jbdevstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
+        :  this.jbdsInstall.existingInstallLocation, 'jbdevstudio.bat');
 
     let resetvarsBatFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.bat');
     let resetvarsVbsFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.vbs');

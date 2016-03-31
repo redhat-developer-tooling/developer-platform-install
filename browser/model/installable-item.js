@@ -5,11 +5,14 @@ class InstallableItem {
     this.name = name;
     this.installTime = installTime;
     this.existingInstall = false;
-    this.existingInstallLocation = "";
+    this.existingInstallLocation = '';
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
+    // We assume all items are going to be selected for installation
     this.selected = true;
+    this.version = '';
+    this.existingVersion = '';
 
     if (downloadUrl == null || downloadUrl == '') {
     	throw(new Error('No download URL set'));
@@ -80,6 +83,10 @@ class InstallableItem {
   setup(progress, success, failure) {
     // To be overridden
     success();
+  }
+
+  isConfigured() {
+    return true;
   }
 }
 

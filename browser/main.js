@@ -3,7 +3,6 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import base64 from 'angular-base64';
-
 import acctCtrl from './pages/account/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';

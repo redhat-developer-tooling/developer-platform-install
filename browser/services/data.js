@@ -82,6 +82,7 @@ class InstallerDataService {
   }
 
   jdkDir() {
+    let jdkItem = this.getInstallable('jdk')
     return this.jdkRoot;
   }
 
