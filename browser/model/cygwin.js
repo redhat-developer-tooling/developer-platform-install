@@ -40,7 +40,7 @@ class CygwinInstall extends InstallableItem {
       downloader.setWriteStream(writeStream);
       downloader.download(this.downloadUrl);
     } else {
-      this.downloadedFile = path.join(downloads, this.downloadedFileName);
+      this.downloadedFile = this.bundledFile;
       success();
     }
   }
