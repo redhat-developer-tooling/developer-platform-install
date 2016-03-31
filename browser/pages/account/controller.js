@@ -31,7 +31,7 @@ class AccountController {
     this.authFailed = false;
     this.tandcNotSigned = false;
 
-    var req = {
+    let req = {
       method: 'GET',
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip',
       headers: {

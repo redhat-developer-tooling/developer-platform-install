@@ -1,117 +1,307 @@
-.branding {
-  width: 180px;
-  height: auto;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  float: right;
+@CHARSET "ISO-8859-1";
+
+@-webkit-viewport{width:device-width}
+@-moz-viewport{width:device-width}
+@-ms-viewport{width:device-width}
+@-o-viewport{width:device-width}
+@viewport{width:device-width}
+
+/* CSS Reset by Eric Meyer; http://meyerweb.com/eric/tools/css/reset/ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn,
+em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas,
+details, embed, figure, figcaption, footer, header, hgroup, menu, nav,
+output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup,
+menu, nav, section {
+  display: block;
 }
 
-header {
-  padding-bottom: 35px;
+body {
+  line-height: 1;
 }
 
-.breadcrumbs {
+ol, ul {
   list-style: none;
-  padding-top: 35px;
-  padding-left: 0px;
-  margin-left: -20px;
-  margin-bottom: 0;
-  width: 70%;
-  float: left;
 }
 
-.breadcrumbs:before {
-  content: "";
-  display: block;
-  height: 3px;
-  background: #d1d1d1;
-  position: relative;
-  top: 6px;
-  margin-right: 12.5%;
+blockquote, q {
+  quotes: none;
 }
 
-.breadcrumbs li {
-  display: block;
-  float: left;
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* These are the styles that apply to all and do not require an advanced browser to view */
+
+/* Generic styles */
+.centered {
   text-align: center;
-  color: #d1d1d1;
-  width: 25%;
-  position: relative;
-  padding-top: 15px;
 }
 
-.breadcrumbs li:before {
-  content: "";
-  display: block;
-  width: 10px;
-  height: 10px;
-  background: #d1d1d1;
-  border-radius: 50%;
-  position: absolute;
+.double-spaced {
+  line-height: 2em; /* 32px / 16px */
+}
+
+.greyed-out-background {
+  position: fixed;
   top: 0;
-  left: 50%;
-  margin-left: -5px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #7f7f7f;
+  z-index: 6;
 }
 
-.breadcrumbs li.active {
-  color: #0088ce;
+li a {
+  text-decoration: none;
 }
 
-.breadcrumbs li.active:before {
-  background: #0088ce;
-}
-
-.product-container {
-}
-
-.product-name {
-  color: #c00;
-  text-transform: uppercase;
+h1 {
+  font-size: 1.875em; /* 30px / 16px */
   font-weight: bold;
-  font-size: x-large;
 }
 
-.product-version {
-  padding-left: 5px;
+
+/* App specific CSS */
+body {
+  background-color: #FFFFFF;
+  z-index: 0;
 }
 
-.btn-rightside {
-  float: right;
+footer {
+  bottom: 0;
+  height: 1.875em; /* 30px / 16px */
+  width: 100%;
+  background-color: #FFFFFF;
+  z-index: 3;
+  position: fixed;
 }
 
-.animate-show {
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px;
-  /*border: 1px solid black;*/
-  background: white;
-}
 
-.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
-  transition: all linear 0.5s;
-}
 
-.animate-show.ng-hide {
-  line-height: 0;
-  opacity: 0;
-  padding: 0 10px;
-}
+@media only all {
 
-.check-element {
-  padding: 10px;
-  border: 1px solid black;
-  background: white;
-}
+  .greyed-out-background {
+    filter: alpha(opacity=0.5);
+    opacity: .5;
+  }
 
-.verticalLine {
-  border-right: medium solid #888888;
-  margin-right: 25px;
-}
+  header {
+  }
 
-.checkbox-container {
-  float: left;
-  padding-top: 15px;
-  padding-right: 25px;
-  padding-bottom: 15px;
-  padding-left: 10px;
+    .login-header {
+      padding-top: 35px;
+      padding-bottom: 35px;
+    }
+
+    .branding {
+      width: 180px;
+      height: auto;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      float: right;
+    }
+
+    .branding-logo {
+      width: 180px;
+      height: auto;
+      /*padding-bottom: 25px;*/
+    }
+
+    .branding-name {
+      color: #c00;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: x-large;
+    }
+
+    .breadcrumbs {
+      list-style: none;
+      padding-top: 35px;
+      padding-left: 0px;
+      margin-left: -20px;
+      margin-bottom: 0;
+      width: 70%;
+      float: left;
+    }
+
+      .breadcrumbs:before {
+        content: "";
+        display: block;
+        height: 3px;
+        background: #d1d1d1;
+        position: relative;
+        top: 6px;
+        margin-right: 12.5%;
+      }
+
+      .breadcrumbs li {
+        display: block;
+        float: left;
+        text-align: center;
+        color: #d1d1d1;
+        width: 25%;
+        position: relative;
+        padding-top: 15px;
+      }
+
+        .breadcrumbs li:before {
+          content: "";
+          display: block;
+          width: 10px;
+          height: 10px;
+          background: #d1d1d1;
+          border-radius: 50%;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          margin-left: -5px;
+        }
+
+        .breadcrumbs li.active {
+          color: #0088ce;
+        }
+
+        .breadcrumbs li.active:before {
+          background: #0088ce;
+        }
+
+  .product-container {
+  }
+
+  .product-name {
+    color: #c00;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: x-large;
+  }
+
+  .product-version {
+    padding-left: 5px;
+  }
+
+  .btn-rightside {
+    float: right;
+  }
+
+  .animate-show {
+    line-height: 20px;
+    opacity: 1;
+    padding: 10px;
+    /*border: 1px solid black;*/
+    background: white;
+  }
+
+  .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+    transition: all linear 0.5s;
+  }
+
+  .animate-show.ng-hide {
+    line-height: 0;
+    opacity: 0;
+    padding: 0 10px;
+  }
+
+  .check-element {
+    padding: 10px;
+    border: 1px solid black;
+    background: white;
+  }
+
+  .verticalLine {
+    border-right: thin solid #888888;
+    margin-right: 6%;
+  }
+
+  .checkbox-container {
+    float: left;
+    padding-top: 15px;
+    padding-right: 25px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+  }
+
+  #login-section {
+    float: left;
+    width: 50%;
+  }
+
+    #accountForm {
+      padding-right: 20%;
+    }
+
+      #accountForm div {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+        .login-form-input-container {
+          float: right;
+        }
+
+        .login-form-label {
+          width: 80px;
+          vertical-align: middle;
+        }
+
+        .login-form-input {
+          display: inline;
+          width: 250px;
+        }
+
+        .align-to-input {
+          padding-left: 83px;
+        }
+
+        .form-buttons {
+          width: 100%;
+          text-align: right;
+          margin-top: 10px;
+        }
+
+          .btn-plain {
+            color: #00a8e1;
+            background-color: #FFFFFF;
+            border-color: #00a8e1;
+          }
+
+          .btn-spacer {
+            margin-right: 10px;
+          }
+
+          .btn-med-size {
+            width: 80px;
+          }
+
+  #welcome-text {
+    padding-right: 2.5%;
+  }
+
+  .overflow-parent {
+    overflow: hidden;
+  }
+
+  .container:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 }

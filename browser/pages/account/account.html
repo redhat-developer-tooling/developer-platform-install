@@ -1,59 +1,53 @@
 <header>
-  <breadcrumb></breadcrumb>
-  <img class="branding" src="images/Logo.jpg"/>
+  <div class="login-header">
+    <img class="branding-logo" src="images/Logo.jpg"/>
+    <span class="branding-name">Red Hat Developer Platform</span>
+  </div>
 </header>
 
 <main>
-  <div class="row">
-    <div class="col-sm-4">
-      <div class="row">
-        <div class="col-sm-12">
-          <h3>Log in to your Red Hat account</h3>
+  <div class="container">
+    <div id="login-section" class="verticalLine">
+      <form name="accountForm" id="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
+        <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
+          <label for="username" class="login-form-label">Username</label>
+          <input type="text" id="username" name="username" class="login-form-input form-control" ng-model="acctCtrl.username"  required aria-describedby="usernameStatus" autofocus/>
+          <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>-->
+          <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
+          <div ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$error.required" class="align-to-input help-block has-error">Please enter a username.</div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-offset-1 col-sm-11">
-          <form name="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
-            <div class="form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
-                <input type="text" name="username" class="form-control" ng-model="acctCtrl.username" placeholder="Red Hat login" required aria-describedby="usernameStatus" id="username" autofocus/>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>
-                <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
-                <div ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$error.required" class="help-block has-error">Please enter a username.</div>
-            </div>
-            <div class="form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.password.$touched) && accountForm.username.$invalid}">
-                <input type="password" name="password" class="form-control" ng-model="acctCtrl.password" placeholder="Password" required aria-describedby="passwordStatus" id="password"/>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid"></span>
-                <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
-                <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="help-block has-error">Please enter a password.</div>
-            </div>
-            <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned)" class="form-group has-error">
-                <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
-                  <span class="pficon pficon-error-circle-o"></span>
-                  <strong>Invalid account information, please try again.</strong>
-                </div>
-                <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
-                  <span class="pficon pficon-error-circle-o"></span>
-                  <strong>Terms and Conditions for CDK have not been signed.</strong>
-                </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">LOG IN</button>
-                <div class="pull-right">
-                  <a href="" ng-click="acctCtrl.forgotPassword()">Forgot your login or password?</a>
-                </div>
-            </div>
-          </form>
+        <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.password.$touched) && accountForm.username.$invalid}">
+          <label for="password" class="login-form-label">Password</label>
+          <input type="password" id="password" name="password" class="login-form-input form-control" ng-model="acctCtrl.password" required aria-describedby="passwordStatus"/>
+          <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid"></span>-->
+          <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
+          <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="align-to-input help-block has-error">Please enter a password.</div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          Don't have an account? <a href="" ng-click="acctCtrl.createAccount()">Create</a> one today!
+        <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned)" class="form-group has-error pull-right">
+          <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Invalid account information, please try again.</strong>
+          </div>
+          <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Terms and Conditions for CDK have not been signed.</strong>
+          </div>
         </div>
-      </div>
+        <div class="form-group pull-right form-buttons">
+          <button type="button" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="acctCtrl.createAccount()">Register</button>
+          <button type="submit" class="btn-med-size btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">Log in</button>
+        </div>
+        <div class="pull-right">
+          Forgot your <a href="" ng-click="acctCtrl.forgotPassword()">username</a> or <a href="" ng-click="acctCtrl.forgotPassword()">password</a>?
+        </div>
+      </form>
+    </div>
+    <div id="welcome-text">
+      Welcome to Red Hat Developer Platform. In this new version of our product, there are new features such as the CDK and lastest JBDS. Try the product today by logging into your Red Hat account or create a new account.
     </div>
   </div>
 </main>
 
 <footer>
-    <span>Version: {{acctCtrl.pdkVersion}}</span>
+  <span>Version: {{acctCtrl.pdkVersion}}</span>
 </footer>
