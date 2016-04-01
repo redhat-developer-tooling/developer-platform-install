@@ -1,5 +1,3 @@
-# developer-platform-install
-
 Red Hat Developer Platform Installer
 ====================================
 
