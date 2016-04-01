@@ -1,4 +1,4 @@
-Red Hat Developer Platform Installer
+Red Hat Developer Platform Installer x
 ====================================
 
 [![Build Status](https://travis-ci.org/redhat-developer-tooling/developer-platform-install.svg?branch=master)](https://travis-ci.org/redhat-developer-tooling/developer-platform-install)
