@@ -62,22 +62,24 @@ class VirtualBoxInstall extends InstallableItem {
       return new Promise((resolve, reject) => {
         if (process.platform === 'win32') {
           if (output === '%VBOX_INSTALL_PATH%') {
-            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1)
-            .then((output) => {
-              if(output=== '%VBOX_MSI_INSTALL_PATH%') {
-                return Util.executeCommand('where VirtualBox', 1)
-              } else {
-                return resolve(output);
-              }
+            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
+                resolve(output);
             });
           } else {
             return resolve(output);
           }
         } else {
-          return Util.findText(output, 'INSTALL_DIR=')
-          .then((result) => { return resolve(result.split('=')[1]); });
+          return Util.findText(output, 'INSTALL_DIR=').then((result) => {
+            return resolve(result.split('=')[1]);
+          });
         }
       });
+     }).then((output) => {
+      if(output === '%VBOX_MSI_INSTALL_PATH%') {
+        return Util.executeCommand('where VirtualBox', 1);
+      } else {
+        return resolve(output);
+      }
     }).then((folder) => {
       return new Promise((resolve, reject) => {
         this.existingInstallLocation = folder;
