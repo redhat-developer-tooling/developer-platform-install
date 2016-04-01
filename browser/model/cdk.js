@@ -213,6 +213,14 @@ class CDKInstall extends InstallableItem {
       let res = installer.exec(
         'vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise
       ).then((result) => {
+        return new Promise((resolve,reject) => {
+          installer.exec('vagrant box remove cdkv2 -f',installer, promise).then((result)=> {
+            resolve(result);
+          }).catch((result) => {
+            resolve(result);
+          });
+        });
+      }).then((result) => {
         return installer.exec('vagrant box add --name cdkv2 ' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), opts, result);
       }).then((result) => {
         return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-0.0.4.gem'), opts, result);
