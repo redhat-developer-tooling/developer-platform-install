@@ -25,7 +25,8 @@
   },
   "jdk.zip": {
     "bundle": "yes",
-    "url": "http://cdn.azul.com/zulu/bin/zulu8.13.0.5-jdk8.0.72-win_x64.zip"
+    "prefix": "java-1.8.0-openjdk-1.8.0.77",
+    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip"
   },
   "vagrant.msi": {
     "bundle": "no",

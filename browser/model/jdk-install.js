@@ -12,7 +12,7 @@ import CDKInstall from './cdk';
 import Util from './helpers/util';
 
 class JdkInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile) {
+  constructor(installerDataSvc, downloadUrl, installFile, prefix) {
     super('JDK 8', 260, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -21,6 +21,7 @@ class JdkInstall extends InstallableItem {
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
+    this.jdkZipEntryPrefix = prefix;
   }
 
   isConfigured() {
@@ -101,7 +102,7 @@ class JdkInstall extends InstallableItem {
             return this.getFolderContents(this.installerDataSvc.installDir(), result);
           })
           .then((files) => {
-            return this.getFileByName('zulu', files)
+            return this.getFileByName(this.jdkZipEntryPrefix, files)
           })
           .then((fileName) => {
             return this.renameFile(this.installerDataSvc.installDir(), fileName, this.installerDataSvc.jdkDir());

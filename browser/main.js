@@ -112,7 +112,8 @@ let mainModule =
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
                     reqs['jdk.zip'].url,
-                    null)
+                    null,
+                    reqs['jdk.zip'].prefix)
             );
 
             installerDataSvc.addItemToInstall(
