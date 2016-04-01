@@ -14,6 +14,10 @@ class StartController {
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
   }
 
+  learnCDK() {
+    shell.openExternal('http://developers.redhat.com/products/cdk/get-started/');
+  }
+
   start() {
     if(this.startJBDS && (this.jbdsInstall.selected || this.jbdsInstall.existingInstall)) {
       // Start JBDS
@@ -51,9 +55,9 @@ class StartController {
         'oFile.WriteLine("SET PATH=" & path)',
         'oFile.Close'
     ].join('\r\n');
-    Logger.info('JBDS Start - Write ' + resetvarsVbsFile);
+    Logger.info('JBDS Start - Write resetvarsVbsFile: ' + resetvarsVbsFile);
     fs.writeFileSync(resetvarsVbsFile, resetvarsVbsFileData);
-    Logger.info('JBDS Start - Write ' + resetvarsVbsFile + ' SUCCESS');
+    Logger.info('JBDS Start - Write resetvarsVbsFile: ' + resetvarsVbsFile + ' - SUCCESS');
 
     let runJbdsFile = path.join(this.installerDataSvc.tempDir(), 'runjbds.bat');
     let runJbdsFileData = [
@@ -61,13 +65,13 @@ class StartController {
         'call "' + resetvarsBatFile + '"',
         'call "' + jbdevstudioBat + '"'
     ].join('\r\n');
-    Logger.info('JBDS Start - Write ' + runJbdsFile);
+    Logger.info('JBDS Start - Write runJbdsFile: ' + runJbdsFile);
     fs.writeFileSync(runJbdsFile, runJbdsFileData);
-    Logger.info('JBDS Start - Write ' + runJbdsFile + ' SUCCESS');
+    Logger.info('JBDS Start - Write runJbdsFile: ' + runJbdsFile + ' - SUCCESS');
 
     Logger.info('JBDS Start - Write temp file SUCCESS');
 
-    Logger.info('JBDS Start - Run ' + runJbdsFile);
+    Logger.info('JBDS Start - Run runJbdsFile: ' + runJbdsFile);
     let runJbdsBat = require('child_process')
         .spawn(
             'cmd.exe',

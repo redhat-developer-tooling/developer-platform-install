@@ -320,4 +320,29 @@ footer {
     display: block;
     clear: both;
   }
+
+  .middle-high-pos {
+    width: 100%;
+    display: inline-block;
+    padding-top: 10%;
+  }
+
+    .text-padding {
+      padding-top: 1%;
+    }
+
+  #startForm {
+    padding-top: 5%;
+  }
+
+    #start-submit {
+      width: 450px;
+      font-size: 24px;
+      padding: 6px 10px;
+      border-radius: 1px;
+    }
+
+    #exit-btn {
+      margin-top: 1%;
+    }
 }
