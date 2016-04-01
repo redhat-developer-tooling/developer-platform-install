@@ -1,7 +1,7 @@
 {
   "name": "developer-platform-install",
   "productName": "Red Hat Developer Platform installer",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Installer for Red Hat Developer Platform",
   "main": "main/index.js",
   "repository": {
