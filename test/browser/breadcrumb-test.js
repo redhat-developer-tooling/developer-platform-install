@@ -8,17 +8,6 @@ describe('breadcrumb directive', function() {
   //don't change the ordering of the names in this array
   let names = ['Install Setup', 'Confirmation', 'Download & Install', 'Get Started'];
   let scope, element;
-  let fs = require('fs');
-  let stub;
-
-  //workaround for DEVEX-101, TODO - fix
-  beforeEach(function() {
-    stub = sinon.stub(fs, 'mkdirSync');
-  });
-
-  afterEach(function() {
-    stub.restore();
-  });
 
   //load main module
   beforeEach(module('devPlatInstaller'));
