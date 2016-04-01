@@ -13,13 +13,13 @@ module.exports = function(config) {
       'karma-electron-launcher',
       'karma-jspm',
       'karma-jasmine',
-      'karma-ng-html2js-preprocessor',
-      'karma-sinon'
+      'karma-junit-reporter',
+      'karma-ng-html2js-preprocessor'
     ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'jspm', 'sinon'],
+    frameworks: ['jasmine', 'jspm'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -107,7 +107,13 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'junit'],
+
+    junitReporter: {
+      outputDir: '',
+      outputFile: 'browser-tests.xml',
+      useBrowserName: false,
+    },
 
     // web server port
     port: 9876,

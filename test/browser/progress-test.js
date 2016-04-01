@@ -6,17 +6,6 @@ import progressBar from 'browser/directives/progressBar';
 describe('progressBar directive', function() {
 
   let scope, element;
-  let fs = require('fs');
-  let stub;
-
-  //workaround for DEVEX-101, TODO - fix
-  beforeEach(function() {
-    stub = sinon.stub(fs, 'mkdirSync');
-  });
-
-  afterEach(function() {
-    stub.restore();
-  });
 
   //load main module
   beforeEach(module('devPlatInstaller'));
