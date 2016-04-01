@@ -112,20 +112,6 @@ class VagrantInstall extends InstallableItem {
     progress.setStatus('Installing');
     if(!this.hasExistingInstall()) {
       let installer = new Installer(VagrantInstall.key(), progress, success, failure);
-
-      let vagrantExploded = path.join(this.installerDataSvc.tempDir(), 'vagrant-distribution-1.7.4', 'windows-64');
-      let data = [
-        '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
-        '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-        '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
-        '[Environment]::Exit(0)'
-      ].join('\r\n');
-      let args = [
-        '-ExecutionPolicy',
-        'ByPass',
-        '-File',
-        this.vagrantPathScript
-      ];
       installer.execFile('msiexec', [
         '/i',
         this.downloadedFile,
@@ -135,18 +121,8 @@ class VagrantInstall extends InstallableItem {
         '/Liwe',
         path.join(this.installerDataSvc.installDir(), 'vagrant.log')
       ]).then((result) => {
-        return installer.writeFile(this.vagrantPathScript, data, result);
-      })
-      .then((result) => {
-        return installer.execFile('powershell', args, result);
-      })
-      .then((result) => {
-        return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"');
-      })
-      .then((result) => {
         return installer.succeed(result);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         if(error.code == 3010) {
           return installer.succeed(true);
         }
@@ -159,8 +135,30 @@ class VagrantInstall extends InstallableItem {
 
   setup(progress, success, failure) {
     progress.setStatus('Setting up');
-    progress.setComplete();
-    success();
+    let installer = new Installer(VagrantInstall.key(), progress, success, failure);
+    let data = [
+      '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
+      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+      '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
+      '[Environment]::Exit(0)'
+    ].join('\r\n');
+    let args = [
+      '-ExecutionPolicy',
+      'ByPass',
+      '-File',
+      this.vagrantPathScript
+    ];
+    installer.writeFile(this.vagrantPathScript, data)
+    .then((result) => {
+      return installer.execFile('powershell', args, result);
+    }).then((result) => {
+      installer.exec('setx VAGRANT_DETECTED_OS "cygwin"')
+    }).then((result) => {
+      return installer.succeed(true);
+    }).catch((result) => {
+      return installer.fail(result);
+    });
+
   }
 }
 

@@ -39,7 +39,7 @@ class Installer {
       Logger.info(this.key + ' - Execute ' + file + ' ' + args);
       child_process.execFile(file, args, {"maxBuffer": 1024*1024} , (error, stdout, stderr) => {
         // vagrant exits with code 3010
-        if (error && error !== '' && error !== 3010) {
+        if (error && error !== '' && error.code !== 3010) {
           Logger.error(this.key + ' - ' + error);
           Logger.error(this.key + ' - ' + stderr);
           reject(error);

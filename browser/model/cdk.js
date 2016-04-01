@@ -170,7 +170,7 @@ class CDKInstall extends InstallableItem {
     let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
     if(vagrantInstall) {
       env['path'] = vagrantInstall.existingInstallLocation ? path.join(vagrantInstall.existingInstallLocation,'bin')
-          : this.installerDataSvc.vagrantDir();
+          : path.join(this.installerDataSvc.vagrantDir(), 'bin');
     } else {
       env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';';
     }
