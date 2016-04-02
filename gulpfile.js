@@ -89,7 +89,7 @@ gulp.task('package', function (cb) {
   let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
   let bundled7z = path.join(zaRoot, 'DeveloperPlatformInstaller-w32-x64.7z');
-  let installerExe = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64' + artifactType + '.exe');
+  let installerExe = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64' + artifactType + '-' + pjson.version + '.exe');
   console.log("Creating " + installerExe);
   request('http://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F')
       .pipe(fs.createWriteStream(zaZip)).on('finish', function () {
