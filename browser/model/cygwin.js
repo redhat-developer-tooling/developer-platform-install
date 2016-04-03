@@ -67,6 +67,8 @@ class CygwinInstall extends InstallableItem {
       '--no-admin',
       '--quiet-mode',
       '--only-site',
+      '-l',
+      path.join(this.installerDataSvc.cygwinDir(),'packages'),
       '--site',
       'http://mirrors.xmission.com/cygwin',
       '--root',
@@ -83,17 +85,21 @@ class CygwinInstall extends InstallableItem {
       '[Environment]::Exit(0)'
     ].join('\r\n');
 
-    installer.execFile(this.downloadedFile, opts)
-    .then((result) => { return installer.writeFile(this.cygwinPathScript, data, result); })
-    .then((result) => { return installer.execFile('powershell',
-      [
-        '-ExecutionPolicy',
-        'ByPass',
-        '-File',
-        this.cygwinPathScript
-      ], result); })
-    .then((result) => { return installer.succeed(result); })
-    .catch((error) => { return installer.fail(error); });
+    let originalExecFile = path.join(this.installerDataSvc.cygwinDir(),'setup-x86_64.exe');
+    installer.execFile(
+      this.downloadedFile, opts
+    ).then((result) => {
+      return installer.copyFile(
+        this.downloadedFile, originalExecFile, true);
+    }).then((result) => {
+      return installer.writeFile(this.cygwinPathScript, data, result);
+    }).then((result) => { return installer.execFile('powershell',
+      ['-ExecutionPolicy','ByPass','-File',this.cygwinPathScript], result);
+    }).then((result) => {
+      return installer.succeed(result);
+    }).catch((error) => {
+      return installer.fail(error);
+    });
   }
 }
 

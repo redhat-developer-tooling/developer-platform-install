@@ -158,7 +158,8 @@ describe('Cygwin installer', function() {
       installer.postVirtualboxInstall(fakeProgress, null, null);
 
       expect(spy).to.have.been.calledWith(installer.downloadedFile,
-        ["--no-admin", "--quiet-mode", "--only-site",
+        ["--no-admin", "--quiet-mode", "--only-site", '-l',
+         path.join(installerDataSvc.cygwinDir(),'packages'),
          "--site", "http://mirrors.xmission.com/cygwin",
          "--root", "install/Cygwin", "--categories", "Base",
          "--packages", "openssh,rsync"]);
