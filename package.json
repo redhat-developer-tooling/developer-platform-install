@@ -28,7 +28,7 @@
   "dependencies": {
     "fs-extra": "0.26.7",
     "glob": "7.0.3",
-    "patternfly": "2.6.0",
+    "patternfly": "3.3.2",
     "request": "2.69.0",
     "unzip": "0.1.11",
     "replace-in-file": "1.0.2"
@@ -80,7 +80,7 @@
       "angular": "github:angular/bower-angular@^1.5.0",
       "angular-base64": "github:ninjatronic/angular-base64@^2.0.5",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
-      "patternfly": "npm:patternfly@2.6.0"
+      "patternfly": "npm:patternfly@3.3.2"
     },
     "devDependencies": {
       "angular-mocks": "npm:angular-mocks@^1.5.0",
