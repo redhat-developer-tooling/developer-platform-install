@@ -19,7 +19,7 @@ describe('JBDS installer', function() {
   let fakeData = {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder'; },
-    jbdsDir: function() { return 'installationFolder/DeveloperStudio'; },
+    jbdsDir: function() { return 'installationFolder/developer-studio'; },
     jdkDir: function() { return 'install/jdk8'; },
     getInstallable: function(key) {},
     cdkVagrantfileDir: function() {}
@@ -29,7 +29,7 @@ describe('JBDS installer', function() {
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.jdkDir.returns('install/jdk8');
-  installerDataSvc.jbdsDir.returns('installationFolder/DeveloperStudio');
+  installerDataSvc.jbdsDir.returns('installationFolder/developer-studio');
   installerDataSvc.cdkVagrantfileDir.returns('installationFolder/cdk/vagrant');
 
   let fakeProgress = {

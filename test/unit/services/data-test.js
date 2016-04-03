@@ -75,7 +75,7 @@ describe('InstallerDataService', function() {
 
       expect(svc.vboxRoot).to.equal(path.join(svc.installRoot, 'virtualbox'));
       expect(svc.jdkRoot).to.equal(path.join(svc.installRoot, 'jdk8'));
-      expect(svc.jbdsRoot).to.equal(path.join(svc.installRoot, 'DeveloperStudio'));
+      expect(svc.jbdsRoot).to.equal(path.join(svc.installRoot, 'developer-studio'));
       expect(svc.vagrantRoot).to.equal(path.join(svc.installRoot, 'vagrant'));
       expect(svc.cygwinRoot).to.equal(path.join(svc.installRoot, 'cygwin'));
       expect(svc.cdkRoot).to.equal(path.join(svc.installRoot, 'cdk'));
