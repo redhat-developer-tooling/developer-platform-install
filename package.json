@@ -18,8 +18,9 @@
     "postinstall": "jspm install --yes && cp browser/config.js test/jspm-config.js",
     "start": "gulp run",
     "generate": "gulp generate",
-    "package": "gulp package",
     "package-bundle": "gulp package-bundle",
+    "package-simple": "gulp package-simple",
+    "dist": "gulp dist",
     "test": "gulp test",
     "unit-test": "gulp unit-test",
     "browser-test": "gulp browser-test",
@@ -67,6 +68,7 @@
     "sinon": "1.17.3",
     "sinon-as-promised": "4.0.0",
     "sinon-chai": "2.8.0",
+    "start": "^4.0.1",
     "tmp": "0.0.28",
     "xunit-file": "0.0.9",
     "yargs": "4.4.0"

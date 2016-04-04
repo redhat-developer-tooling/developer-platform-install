@@ -48,13 +48,6 @@ gulp.task('clean', function() {
   return del(['dist'], { force: true });
 });
 
-// currently not used
-gulp.task('create-zip', () => {
-  return gulp.src(buildFolderRoot + buildFolderRoot + '/**/*')
-      .pipe(zip(buildFolderRoot + '.zip'))
-      .pipe(gulp.dest(buildFolderRoot));
-});
-
 // Create default callback for exec
 function createExecCallback(cb, quiet) {
   return function(err,stdout,stderr) {
@@ -66,7 +59,7 @@ function createExecCallback(cb, quiet) {
   }
 }
 
-gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
+gulp.task('generate', ['transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
   cmd += ' --version=' + electronVersion + ' --out=./' + buildFolderRoot + ' --overwrite --asar=true';
@@ -74,6 +67,9 @@ gulp.task('generate', ['clean', 'transpile:app'], function(cb) {
 
   exec(cmd,createExecCallback(cb, true));
 });
+
+// default task
+gulp.task('default', ['run']); 
 
 gulp.task('run', ['transpile:app'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron .',createExecCallback(cb));
@@ -126,9 +122,19 @@ gulp.task('package', function (cb) {
   });
 });
 
-// Create bundled installer
+// Create stub installer that will then download all the requirements
+gulp.task('package-simple', function() {
+  return runSequence('clean', 'generate', 'package','7zip-cleanup');
+});
+
+// Create bundled installer that includes all the requirements already
 gulp.task('package-bundle', function() {
-  return runSequence('prefetch', 'package');
+  return runSequence('clean', 'generate', 'prefetch', 'package','7zip-cleanup');
+});
+
+// Create both installers
+gulp.task('dist', function() {
+  return runSequence('clean', 'generate', 'package', 'prefetch', 'package', '7zip-cleanup');
 });
 
 gulp.task('7zip-cleanup', function() {
@@ -141,10 +147,6 @@ gulp.task('test', function() {
 
 gulp.task('ui-test', function() {
   return runSequence('generate', 'protractor-install', 'protractor-run');
-});
-
-gulp.task('default', function() {
-  return runSequence('generate');
 });
 
 // download all the installer dependencies so we can package them up into the .exe
