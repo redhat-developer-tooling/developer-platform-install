@@ -75,15 +75,21 @@ class VirtualBoxInstall extends InstallableItem {
         }
       });
      }).then((output) => {
+      // with VBox 5.0.8 or later installed in C:\Program Files\Oracle\VirtualBox, output = C:\Program Files\Oracle\VirtualBox
       if(output === '%VBOX_MSI_INSTALL_PATH%') {
         return Util.executeCommand('where VirtualBox', 1);
       } else {
-        return resolve(output);
+        // this ensures that by default the previous install is selected for reuse
+        // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
+        return new Promise((resolve, reject) => {
+          this.existingInstallLocation = output;
+          resolve(output);
+        });
       }
-    }).then((folder) => {
+    }).then((output) => {
       return new Promise((resolve, reject) => {
-        this.existingInstallLocation = folder;
-        resolve(folder);
+        this.existingInstallLocation = output;
+        resolve(output);
       });
     }).then((output) => {
       return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension])
