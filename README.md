@@ -27,71 +27,72 @@ In order to build the installer, you'll need to install some tools.
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
-5. Install Gulp and jspm:
+5. Install Gulp, jspm, and all dependencies:
 
-    ```
     npm install -g gulp jspm
-    ```
-
-6. Install all dependencies:
-
-    ```
     npm install
-    ```
 
 If either of the above steps fail, try deleting the c:\Users\<username>\.electron folder.
 
-7. Run the application using `npm start` or `gulp run`.
+6. Run the application using `npm start` or `gulp run`.
 
-8. Build a Windows binary and run it:
+7. Build a Windows binary and run it:
 
-    ```
-    gulp
-    dist/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
-    ```
+    npm run package-simple
+    dist/win/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
 
+Or, to run the msi installer (about 36M):
+
+    dist/win/DeveloperPlatformInstaller-win32-x64-*.exe
+
+8. To build a Windows binary including all 1.6G of dependencies, then run that:
+ 
+    npm run package-bundle
+    dist/win/DeveloperPlatformInstaller-win32-x64-*-bundle.exe
+
+9. To build both installers in a single step:
+
+    npm run dist
+ 
 If your npm install gets corrupted (or out of date) and you can't build, you can try cleaning leftover modules by deleting these files/folders:
 
-    ```
     node_modules/ 
     browser/jspm_packages/
     browser/config.js
-    ```
-
+    test/jspm-config.js
+ 
 Running unit tests
 ------------------
 
 Unit tests are located in `test/unit`. To run all unit tests:
 
-```
-npm test
-```
+    npm test
 
 To run selected unit tests, you can grep any string from `describe` or `it` section
 of any test, e.g.:
 
-```
-npm test -- -g login
-npm test -- --grep login
-```
+    npm test -- -g login
+    npm test -- --grep login
 
 Local build with clean up
 -------------------------
 
-```
-rm -rf node_modules browser/jspm_modules browser/config.js test/jspm-config.js
-npm install
-```
+To perform a cleanup before building:
+
+    rm -rf node_modules/ browser/jspm_packages/ browser/config.js test/jspm-config.js
+    npm install -g gulp jspm
+    npm install
+
+Then build as in the examples above.
+
 
 Debugging
 ---------
 
 Enable ChromeDevtools in installer window
 
-```
-export PDKI_DEBUG=1
-npm run
-```
+    export PDKI_DEBUG=1
+    npm run
 
 Releasing the installer
 -----------------------
