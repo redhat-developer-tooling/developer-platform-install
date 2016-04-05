@@ -26,10 +26,8 @@
     "ui-test": "gulp ui-test"
   },
   "dependencies": {
-    "bower": "1.7.7",
     "fs-extra": "0.26.7",
     "glob": "7.0.3",
-    "patternfly": "3.3.2",
     "request": "2.69.0",
     "unzip": "0.1.11",
     "replace-in-file": "1.0.2"
