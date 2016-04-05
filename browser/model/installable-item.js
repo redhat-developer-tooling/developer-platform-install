@@ -1,8 +1,10 @@
 'use strict';
 
 class InstallableItem {
-  constructor(name, installTime, downloadUrl, installFile) {
-    this.name = name;
+  constructor(productName, productVersion, productDesc, installTime, downloadUrl, installFile) {
+    this.productName = productName;
+    this.productVersion = productVersion;
+    this.productDesc = productDesc;
     this.installTime = installTime;
     this.existingInstall = false;
     this.existingInstallLocation = '';
@@ -26,8 +28,16 @@ class InstallableItem {
     }
   }
 
-  getName() {
-    return this.name;
+  getProductName() {
+    return this.productName;
+  }
+
+  getProductVersion() {
+    return this.productVersion;
+  }
+
+  getProductDesc() {
+    return this.productDesc;
   }
 
   getInstallTime() {

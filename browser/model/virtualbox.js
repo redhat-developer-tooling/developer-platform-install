@@ -12,7 +12,12 @@ import Util from './helpers/util';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
-    super('VirtualBox', 700, downloadUrl, installFile);
+    super('Oracle VirtualBox',
+          'v5.0.16', 
+          'A virtualization software package developed by Oracle', 
+          700, 
+          downloadUrl, 
+          installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.minimumVersion = '5.0.8';

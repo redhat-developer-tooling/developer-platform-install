@@ -13,7 +13,7 @@ import Util from './helpers/util';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('Vagrant', 900, downloadUrl, installFile);
+    super('Vagrant','v1.7','A container provisioning tool.', 900, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'vagrant.msi';

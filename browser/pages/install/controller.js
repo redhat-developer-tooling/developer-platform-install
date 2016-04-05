@@ -10,7 +10,7 @@ class InstallController {
 
     this.data = Object.create(null);
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let itemProgress = new ProgressState(value.getName(), value.getInstallTime(), this.$scope, this.$timeout);
+      let itemProgress = new ProgressState(value.getProductName(), value.getProductVersion(), value.getProductDesc(), value.getInstallTime(), this.$scope, this.$timeout);
       Object.defineProperty(this.data, key, {
         enumerable: true,
         writable: true,
@@ -74,6 +74,18 @@ class InstallController {
     )
   }
 
+  productName(key) {
+    return this.data[key].productName;
+  }
+
+  productVersion(key) {
+    return this.data[key].productVersion;
+  }
+
+  productDesc(key) {
+    return this.data[key].productDesc;
+  }
+
   current(key) {
     return this.data[key].current;
   }
@@ -82,18 +94,16 @@ class InstallController {
     return this.data[key].label;
   }
 
-  desc(key) {
-    return this.data[key].desc;
-  }
-
   show(key) {
     return this.installerDataSvc.getInstallable(key).selected;
   }
 }
 
 class ProgressState {
-  constructor(name, installTime, $scope, $timeout) {
-    this.name = name;
+  constructor(productName, productVersion, productDesc, installTime, $scope, $timeout) {
+    this.productName = productName;
+    this.productVersion = productVersion;
+    this.productDesc = productDesc;
     this.installTime = installTime;
     this.$scope = $scope;
     this.$timeout = $timeout;
@@ -104,7 +114,6 @@ class ProgressState {
     this.timeSpentInstall = 0;
     this.lastInstallTime = 0;
     this.label = '';
-    this.desc = '';
   }
 
   setTotalDownloadSize(totalSize) {
@@ -142,7 +151,7 @@ class ProgressState {
   }
 
   setStatus(newStatus) {
-    this.desc = this.name + ' - ' + newStatus;
+    this.productName = this.productName + ' - ' + newStatus;
   }
 
   setComplete() {

@@ -345,4 +345,12 @@ footer {
     #exit-btn {
       margin-top: 1%;
     }
+
+  .progress-description {
+    margin-bottom: 10px;
+    max-width: 100%;
+    overflow: hidden;
+    /*text-overflow: ellipsis;*/
+    white-space: nowrap;
+  }
 }

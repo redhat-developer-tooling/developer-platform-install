@@ -14,7 +14,12 @@ import VirtualBoxInstall from './virtualbox';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('Cygwin', 720, downloadUrl, installFile);
+    super('Cygwin', 
+          'v2',
+          'A distribution of popular GNU and other Open Source tools running on Microsoft Windows.', 
+          720, 
+          downloadUrl, 
+          installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'cygwin.exe';

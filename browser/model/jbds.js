@@ -17,7 +17,10 @@ import Util from './helpers/util';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
-    super('JBDS', 1600, downloadUrl, installFile);
+    super('RED HAT JBOSS DEVELOPER STUDIO',
+          'v9.1', 
+          'An IDE with tooling that will help you easily code, test, and deploy your projects.', 
+          1600, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
 
