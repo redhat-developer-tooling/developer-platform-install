@@ -97,6 +97,10 @@ class InstallController {
   show(key) {
     return this.installerDataSvc.getInstallable(key).selected;
   }
+
+  status(key) {
+    return this.data[key].status;
+  }
 }
 
 class ProgressState {
@@ -114,6 +118,7 @@ class ProgressState {
     this.timeSpentInstall = 0;
     this.lastInstallTime = 0;
     this.label = '';
+    this.status = '';
   }
 
   setTotalDownloadSize(totalSize) {
@@ -151,7 +156,7 @@ class ProgressState {
   }
 
   setStatus(newStatus) {
-    this.productName = this.productName + ' - ' + newStatus;
+    this.status = newStatus;
   }
 
   setComplete() {

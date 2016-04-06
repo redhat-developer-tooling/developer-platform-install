@@ -13,7 +13,8 @@ function progressBar() {
       current: '=',
       min: '=',
       max: '=',
-      label: '='
+      label: '=',
+      status: '='
     },
     template:
     [
@@ -22,7 +23,7 @@ function progressBar() {
         <div class="product-container">
           <div>
             <div class="progress-description">
-              <span class="product-name">{{productName}}</span><span class="product-version">{{productVersion}}</span>
+              <span class="product-name">{{productName}}</span><span class="product-version">{{productVersion}}</span> - <span class="product-version">{{status}}</span>
               <div>{{productDesc}}</div>
             </div>
             <div class="progress progress-label-top-right">
@@ -34,7 +35,7 @@ function progressBar() {
         </div>
       </div>
     </div>`,
-      
+
     ].join('')
   }
 }

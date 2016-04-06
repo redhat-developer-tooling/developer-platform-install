@@ -19,7 +19,6 @@ describe('progressBar directive', function() {
     scope = $rootScope;
     $state.go('install');
     element = angular.element('<progress-bar name="cdk" current="15" min="0" max="100" label="CDK" desc="Downloading"></progress-bar>');
-
     $compile(element)(scope);
     scope.$digest();
   }));
@@ -35,7 +34,7 @@ describe('progressBar directive', function() {
   });
 
   it('generates a progress description element', function() {
-    expect(element.find('div.progress-description span').length).toBe(2);
+    expect(element.find('div.progress-description span').length).toBe(3);
   });
 
   it('generates a labeled progress bar', function() {
