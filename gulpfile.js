@@ -148,20 +148,28 @@ gulp.task('default', function() {
 // download all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
   let counter=0;
+  var reqObjs = [];
   for (var key in reqs) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
+
       // download only what can be included in offline installer
       if (reqs[key].bundle === 'yes') {
         counter++;
-          console.log('DOWNLOADING -> ' + reqs[key].url);
-          request(reqs[key].url)
-            .pipe(fs.createWriteStream(path.join(prefetchFolder, key))).on('finish',function() {
-            counter--;
-            if(counter===0) {
-              cb();
-            }
+        reqObjs[currentKey] = request(reqs[currentKey].url, function (err) {
+          if (err) { console.log('DOWNLOADING -> ' + reqs[currentKey].url); console.log(err); console.log(""); }
+        });
+        reqObjs[currentKey].pipe(fs.createWriteStream(path.join(prefetchFolder, currentKey))).on('finish',function() {
+          counter--;
+          if(counter===0) {
+            cb();
+          }
+        });
+        reqObjs[currentKey].on('response', function(res){
+          var len = parseInt(res.headers['content-length'], 10);
+          var size = len > 1024*1024 ? Math.round(len/1024/1024,1) + " Mb" : (len > 1024 ? Math.round(len/1024,1) + " Kb" : len + " b")
+          console.log('DOWNLOADING ' + size + ' -> ' + reqs[currentKey].url);
         });
       }
     }
