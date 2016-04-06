@@ -56,7 +56,7 @@ class AccountController {
     if (result.status == 200) {
       if (result.data == true) {
         this.installerDataSvc.setCredentials(this.username, this.password);
-        this.router.go('confirm');
+        this.router.go('location');
         return;
       } else if (result.data == false) {
         this.tandcNotSigned = true;

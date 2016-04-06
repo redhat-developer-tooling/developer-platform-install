@@ -6,7 +6,7 @@ import breadcrumb from 'browser/directives/breadcrumb';
 describe('breadcrumb directive', function() {
 
   //don't change the ordering of the names in this array
-  let names = ['Install Setup', 'Confirmation', 'Download & Install', 'Get Started'];
+    let names = ['Install Setup', 'Target Folder', 'Confirmation', 'Download & Install', 'Get Started'];
   let scope, element;
 
   //load main module
@@ -15,6 +15,7 @@ describe('breadcrumb directive', function() {
   //load templates
   beforeEach(module('directives/breadcrumbs.html'));
   beforeEach(module('pages/account/account.html'));
+  beforeEach(module('pages/location/location.html'));
   beforeEach(module('pages/confirm/confirm.html'));
   beforeEach(module('pages/install/install.html'));
   beforeEach(module('pages/start/start.html'));
@@ -30,7 +31,7 @@ describe('breadcrumb directive', function() {
   it('should generate a breadcrumb for each step', function() {
     let breadcrumbs = element.find('li span');
 
-    expect(breadcrumbs.length).toBe(4);
+    expect(breadcrumbs.length).toBe(5);
   });
 
   it('should assign correct names to the steps', function() {
@@ -51,7 +52,7 @@ describe('breadcrumb directive', function() {
     let breadcrumb = element.find('li.end span');
 
     expect(breadcrumb.length).toBe(1);
-    expect(breadcrumb.text()).toBe(names[3]);
+    expect(breadcrumb.text()).toBe(names[4]);
   });
 
   describe('when changing pages', function() {
@@ -70,12 +71,20 @@ describe('breadcrumb directive', function() {
       compile = $compile;
     }));
 
+    it('should activate the "location" breadcrumb on get started page', function() {
+      goToPage('location');
+      let breadcrumb = element.find('li.active span');
+
+      expect(breadcrumb.length).toBe(1);
+      expect(breadcrumb.text()).toBe(names[1]);
+    });
+
     it('should activate the "confirm" breadcrumb on confirmation page', function() {
       goToPage('confirm');
       let breadcrumb = element.find('li.active span');
 
       expect(breadcrumb.length).toBe(1);
-      expect(breadcrumb.text()).toBe(names[1]);
+      expect(breadcrumb.text()).toBe(names[2]);
     });
 
     it('should activate the "D&I" breadcrumb on installation page', function() {
@@ -83,7 +92,7 @@ describe('breadcrumb directive', function() {
       let breadcrumb = element.find('li.active span');
 
       expect(breadcrumb.length).toBe(1);
-      expect(breadcrumb.text()).toBe(names[2]);
+      expect(breadcrumb.text()).toBe(names[3]);
     });
 
     it('should activate the "start" breadcrumb on get started page', function() {
@@ -91,7 +100,7 @@ describe('breadcrumb directive', function() {
       let breadcrumb = element.find('li.active span');
 
       expect(breadcrumb.length).toBe(1);
-      expect(breadcrumb.text()).toBe(names[3]);
+      expect(breadcrumb.text()).toBe(names[4]);
     });
   });
 });

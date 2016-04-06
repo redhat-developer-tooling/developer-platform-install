@@ -50,7 +50,7 @@ class ConfirmController {
       fs.mkdirSync(this.folder);
     }
 
-    this.installerDataSvc.setup(this.folder,
+    this.installerDataSvc.setup(
       this.itemRoot('virtualbox'),
       this.itemRoot('jdk'),
       this.itemRoot('jbds'),

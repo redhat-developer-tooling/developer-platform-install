@@ -31,8 +31,7 @@ class InstallerDataService {
     this.installing = false;
   }
 
-  setup(installRoot, vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
-    this.installRoot = installRoot || this.installRoot;
+  setup( vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
     this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
     this.jbdsRoot = jbdsRoot || path.join(this.installRoot, 'developer-studio');

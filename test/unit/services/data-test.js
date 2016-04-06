@@ -69,9 +69,10 @@ describe('InstallerDataService', function() {
 
     it('setup should correctly initialize folders', function() {
       let svc = new InstallerDataService();
-      svc.setup('installRoot');
 
-      expect(svc.installRoot).to.equal('installRoot');
+      svc.installRoot = 'installRoot';
+
+      svc.setup();
 
       expect(svc.vboxRoot).to.equal(path.join(svc.installRoot, 'virtualbox'));
       expect(svc.jdkRoot).to.equal(path.join(svc.installRoot, 'jdk8'));

@@ -143,7 +143,7 @@ describe('Login controller', function(){
       controller.handleHttpSuccess({ status: 200, data: true });
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('confirm');
+      expect(spy).to.have.been.calledWith('location');
       expect(controller.tandcNotSigned).to.be.false;
       expect(controller.authFailed).to.be.false;
     });
