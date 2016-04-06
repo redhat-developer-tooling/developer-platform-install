@@ -51,26 +51,7 @@ app.on('window-all-closed', function() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-
-  // Handle squirrel events before opening the browser
-  var handleStartupEvent = function() {
-    var squirrelCommand = process.argv[1];
-    console.log(process.argv[0]);
-    switch (squirrelCommand) {
-	  // Perform any squirrel-install related logic here
-	  case '--squirrel-install':
-	  case '--squirrel-updated':
-		// Right now the installer doesn't need to
-		// do anything here, so quit right away
-	    app.quit();
-	    return true;
-    }
-  };
-
-  if (handleStartupEvent()) {
-	   return;
-  }
-
+  
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000,
