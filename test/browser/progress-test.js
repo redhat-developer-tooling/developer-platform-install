@@ -35,7 +35,7 @@ describe('progressBar directive', function() {
   });
 
   it('generates a progress description element', function() {
-    expect(element.find('div.progress-description span').length).toBe(1);
+    expect(element.find('div.progress-description span').length).toBe(2);
   });
 
   it('generates a labeled progress bar', function() {
