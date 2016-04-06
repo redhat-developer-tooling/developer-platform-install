@@ -58,6 +58,24 @@ npm test -- -g login
 npm test -- --grep login
 ```
 
+Local build with clean up
+-------------------------
+
+```
+rm -rf node_modules browser/jspm_modules browser/config.js test/jspm-config.js
+npm install
+```
+
+Debugging
+---------
+
+Enable ChromeDevtools in installer window
+
+```
+export PDKI_DEBUG=1
+npm run
+```
+
 Releasing the installer
 -----------------------
 
