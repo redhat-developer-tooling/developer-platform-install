@@ -35,6 +35,7 @@
   "devDependencies": {
     "babel": "5.8.38",
     "chai": "3.5.0",
+    "crypto": "0.0.3",
     "del": "2.2.0",
     "electron-packager": "6.0.0",
     "electron-prebuilt": "0.37.4",

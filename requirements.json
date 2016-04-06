@@ -1,32 +1,39 @@
 {
   "cdk.zip": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip",
+    "sha256sum": "37f13dfe5d840c0d5fc50e993f9caa5dca1619ed6aa9bf1d03b850073b5c33d9"
   },
   "rhel-vagrant-virtualbox.box": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "e3eab78ae17422ab87497ab34d0bcc3b34928e4174896f6cddb98ff28a213786"
   },
   "oc.zip": {
     "bundle": "yes",
-    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip"
+    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip",
+    "sha256sum": "b05877aab75004cc30181f25960cfc3c09b5336678fc1cbad80c51848ed15a0f"
   },
   "pscp.exe": {
     "bundle": "yes",
-    "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe"
+    "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe",
+    "sha256sum": "b20ba6df30bbb27ae74b2567a81aef66e787591a5ef810bfc9ecd45cb6d3d51e"
   },
   "cygwin.exe": {
     "bundle": "yes",
-    "url": "https://cygwin.com/setup-x86_64.exe"
+    "url": "https://cygwin.com/setup-x86_64.exe",
+    "sha256sum": "08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56"
   },
   "jbds.jar": {
     "bundle": "yes",
-    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar"
+    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar",
+    "sha256sum": "618c413cb8b0b68bc9b5075ce724354717d81b14d9fdfa8e234f20c5730dcf8f"
   },
   "jdk.zip": {
     "bundle": "yes",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
-    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip"
+    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
+    "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
   },
   "vagrant.msi": {
     "bundle": "no",
