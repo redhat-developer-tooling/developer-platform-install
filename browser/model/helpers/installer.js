@@ -17,7 +17,8 @@ class Installer {
 
   exec(command, options, result) {
     return new Promise((resolve, reject) => {
-      Logger.info(this.key + ' - Execute ' + command);
+      Logger.info(this.key + ' - Execute command ' + command);
+      Logger.info(this.key + ' - Execute options ' + JSON.stringify(options,null,4));
       child_process.exec(command, options, (error, stdout, stderr) => {
         if (error && error !== '') {
           Logger.error(this.key + ' - ' + error);
