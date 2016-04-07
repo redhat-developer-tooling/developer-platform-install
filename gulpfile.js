@@ -2,7 +2,6 @@
 
 var gulp = require('gulp'),
     fs = require('fs-extra'),
-    crypto = require('crypto'),
     babel = require('gulp-babel'),
     runSequence = require('run-sequence'),
     zip = require('gulp-zip'),
@@ -21,7 +20,7 @@ var gulp = require('gulp'),
 require('./gulp-tasks/tests')(gulp);
 
 var artifactName = 'DeveloperPlatformInstaller',
-    artifactType = '',
+    artifactType = '', 
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 
@@ -125,84 +124,7 @@ gulp.task('package', function (cb) {
       });
     });
   });
-  createSHA256File(installerExe);
 });
-
-// should return a string that matches what you get when you run `sha256sum.exe gulpfile.js`
-gulp.task('test_getSHA256',function() {
-  var filename = "dist/win/DeveloperPlatformInstaller-win32-x64/cygwin.exe"; // 08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56
-  var filename2 = "C:\\Program Files\\Internet Explorer\\iexplore.exe"; // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-  getSHA256(filename, function(hashstring) { console.log("Got sha256 ( " + filename + " ) = "+ hashstring); } );
-  getSHA256(filename2, function(hashstring) { console.log("Got sha256 ( " + filename2 + " ) = "+ hashstring); } );
-});
-
-// for a given filename, return the sha256sum
-// eg., a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-// getSHA256("C:\\Program Files\\Internet Explorer\\iexplore.exe", function(hashstring) { console.log("Got sha256 = "+ hashstring); } );
-function getSHA256(filename, cb) {
-  var hashstring = "NONE";
-  var hash = crypto.createHash('sha256');
-  //console.log("Generate SHA256 for " + filename);
-  var readStream = fs.createReadStream(filename);
-  readStream
-    .on('readable', function () {
-      var chunk;
-      while (null !== (chunk = readStream.read())) {
-        hash.update(chunk);
-      }
-    })
-    .on('end', function () {
-      // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-      hashstring = hash.digest('hex');
-      // console.log("[1] SHA256 = " + hashstring);
-      cb(hashstring);
-    });
-  return hashstring;
-}
-
-// doesn't work on large files - Error: toString failed
-function getSHA256Sync(filename) {
-  return crypto.createHash('sha256').update(fs.readFileSync(filename, 'binary').toString()).digest("hex");
-}
-
-// should return a string that matches what you get when you run `sha256sum.exe gulpfile.js`
-gulp.task('test_getSHA256Sync',function() {
-  var filename = "dist/win/DeveloperPlatformInstaller-win32-x64/cygwin.exe"; // 08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56
-  var filename2 = "C:\\Program Files\\Internet Explorer\\iexplore.exe"; // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-  console.log("Got sha256 ( " + filename + " ) = "+ getSHA256Sync(filename));
-  console.log("Got sha256 ( " + filename2 + " ) = "+ getSHA256Sync(filename2));
-});
-
-// should create a file called gulpfile.js.sha256 with contents that match what you get when you run `sha256sum.exe gulpfile.js`
-gulp.task('test_createSHA256FileSync',function() {
-  var filename = "requirements.json";
-  createSHA256FileSync(filename); console.log("Wrote sha256 to " + filename + ".sha256"); // async so won't write until method is done
-  console.log("---");console.log(fs.readFileSync(filename + ".sha256",'utf-8').toString());console.log("---"); // sync, so might have old contents (or fail if file not yet created); run a second time
-  console.log("Got sha256 ( " + filename + " ) = "+ getSHA256Sync(filename));
-});
-
-// should create a file called gulpfile.js.sha256 with contents that match what you get when you run `sha256sum.exe gulpfile.js`
-gulp.task('test_createSHA256File',function() {
-  var filename = "requirements.json";
-  createSHA256File(filename); console.log("Wrote sha256 to " + filename + ".sha256"); // async so won't write until method is done
-  console.log("---");console.log(fs.readFileSync(filename + ".sha256",'utf-8').toString());console.log("---"); // sync, so might have old contents (or fail if file not yet created); run a second time
-  getSHA256(filename, function(hashstring) { console.log("Got sha256 ( " + filename + " ) = " + hashstring); });
-});
-
-// writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
-function createSHA256File(filename) {
-  getSHA256(filename, function(hashstring) {
-    console.log(hashstring);
-    fs.writeFileSync(filename + ".sha256", hashstring + " " + path.parse(filename).base); })
-  return true;
-}
-
-// writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
-function createSHA256FileSync(filename) {
-  var hashstring = getSHA256(filename) + " "  + filename;
-  fs.writeFileSync(filename + ".sha256", hashstring);
-  return true;
-}
 
 // Create bundled installer
 gulp.task('package-bundle', function() {
@@ -225,22 +147,6 @@ gulp.task('default', function() {
   return runSequence('generate');
 });
 
-// read the existing .sha256 file and compare it to the existing file's SHA
-function isExistingSHA256Current(currentFile, processResult) {
-  if (fs.existsSync(currentFile) && reqs[path.parse(currentFile).base].checksum) {
-    var existingSHA256 = reqs[path.parse(currentFile).base].checksum.value;
-    // console.log("Existing SHA file (" + currentFile + ".sha256): " + existingSHA256);
-    // console.log("Existing file's SHA (" + currentFile + ")     : " + getSHA256(currentFile));
-    getSHA256(currentFile, function(hashstring) {
-      console.log("configured=>" + existingSHA256);
-      console.log("existing  =>" + hashstring);
-      processResult(existingSHA256 === hashstring);
-    });
-  } else {
-    processResult(false);
-  }
-}
-
 // download all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
   let counter=0;
@@ -248,28 +154,18 @@ gulp.task('prefetch', function(cb) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
-      let currentFile = path.join(prefetchFolder, key)
-      let alreadyDownloaded = false
-      if (reqs[key].bundle === 'no') continue;
-      // if file is already downloaded, check its sha against the stored one
-      isExistingSHA256Current(currentFile,(downloaded)=> {
-        if(!downloaded) {
-          // download only what can be included in offline installer
-          if (reqs[key].bundle === 'yes' && !alreadyDownloaded) {
-            counter++;
-            console.log('DOWNLOADING -> ' + reqs[key].url);
-            request(reqs[key].url)
-              .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
-                // create a sha256sum file
-                createSHA256File(currentFile);
-                counter--;
-                if(counter===0) {
-                  cb();
-                }
-              });
-          }
-        }
-      });
+      // download only what can be included in offline installer
+      if (reqs[key].bundle === 'yes') {
+        counter++;
+          console.log('DOWNLOADING -> ' + reqs[key].url);
+          request(reqs[key].url)
+            .pipe(fs.createWriteStream(path.join(prefetchFolder, key))).on('finish',function() {
+            counter--;
+            if(counter===0) {
+              cb();
+            }
+        });
+      }
     }
   }
   artifactType = "-bundle";

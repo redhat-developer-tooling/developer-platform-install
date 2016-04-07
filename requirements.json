@@ -1,30 +1,30 @@
 {
   "cdk.zip": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/cdk-2.0.0-beta5.zip"
   },
   "rhel-vagrant-virtualbox.box": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "http://cdk-builds.usersys.redhat.com/builds/09-Mar-2016/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box"
   },
   "oc.zip": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip"
   },
   "pscp.exe": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe"
   },
   "cygwin.exe": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "https://cygwin.com/setup-x86_64.exe"
   },
   "jbds.jar": {
-    "bundle": "no",
+    "bundle": "yes",
     "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar"
   },
   "jdk.zip": {
-    "bundle": "no",
+    "bundle": "yes",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
     "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip"
   },
@@ -33,12 +33,9 @@
     "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download"
   },
   "virtualbox.exe": {
-    "bundle": "yes",
+    "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
-    "checksum": {
-      "value": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280",
-      "hash": "sha256" },
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download"
   }
 }
