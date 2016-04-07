@@ -6,6 +6,7 @@ let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
 
 class ConfirmController {
+
   constructor($scope, $state, $timeout, installerDataSvc) {
     this.router = $state;
     this.sc = $scope;
@@ -13,13 +14,15 @@ class ConfirmController {
     this.installerDataSvc = installerDataSvc;
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
-    this.installables = new Object();
-    $scope.checkboxModel = new Object();
+    this.installables = {};
+    $scope.checkboxModel = {};
 
     $scope.detectionStyle = false;
+    
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
     }
+
     $scope.isConfigurationValid = this.isConfigurationValid;
 
     $scope.$watch(()=>{
@@ -29,6 +32,7 @@ class ConfirmController {
         $scope.checkboxModel.jbds.selected = false;
       }
     });
+    
     $scope.$watch('$viewContentLoaded', ()=>{
       console.log('content loaded');
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
@@ -66,6 +70,7 @@ class ConfirmController {
       properties: [ 'openDirectory' ],
       defaultPath: this.installables[key] && this.installables[key][0].existingInstallLocation ? this.installables[key][0].existingInstallLocation : this.installerDataSvc.installRoot
     });
+    
     let item = this.installerDataSvc.allInstallables().get(key);
 
     if (selection) {

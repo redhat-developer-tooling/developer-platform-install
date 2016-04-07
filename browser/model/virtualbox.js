@@ -12,7 +12,8 @@ import Util from './helpers/util';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
-    super('Oracle VirtualBox',
+    super('virtualbox',
+          'Oracle VirtualBox',
           'v5.0.16', 
           'A virtualization software package developed by Oracle', 
           700, 
@@ -39,7 +40,7 @@ class VirtualBoxInstall extends InstallableItem {
 
   // Vagrant validation rules:
   // - cannot install vagrant if another one is already present in classpath
-  // - minimal version reqired is 1.7.4 the same downloaded by installer
+  // - minimal version required is 1.7.4 the same downloaded by installer
   // -
   isConfigured() {
     return (this.existingVersion

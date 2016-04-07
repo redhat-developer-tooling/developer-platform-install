@@ -1,7 +1,8 @@
 'use strict';
 
 class InstallableItem {
-  constructor(productName, productVersion, productDesc, installTime, downloadUrl, installFile) {
+  constructor(keyName, productName, productVersion, productDesc, installTime, downloadUrl, installFile) {
+    this.keyName = keyName;
     this.productName = productName;
     this.productVersion = productVersion;
     this.productDesc = productDesc;
@@ -15,6 +16,7 @@ class InstallableItem {
     this.selected = true;
     this.version = '';
     this.existingVersion = '';
+    this.isCollapsed = true;
 
     if (downloadUrl == null || downloadUrl == '') {
     	throw(new Error('No download URL set'));
@@ -98,6 +100,18 @@ class InstallableItem {
   isConfigured() {
     return true;
   }
+
+  changeIsCollapsed() {
+    let element = document.getElementById(`arrow-${this.keyName}`);
+    if (this.isCollapsed) {
+      this.isCollapsed = false;
+      element.classList.add("arrow-down");
+    } else {
+      this.isCollapsed = true;
+      element.classList.remove("arrow-down");
+    }
+  }
+  
 }
 
 export default InstallableItem;

@@ -41,14 +41,15 @@ let mainModule =
                 data: {
                   displayName: 'Install Setup'
                 }
-              }).state('location', {
-                  url: '/location',
-                  controller: 'LocationController as locCtrl',
-                  templateUrl: 'pages/location/location.html',
-                  data: {
-                    displayName: 'Target Folder'
-                  }
-                })
+              })
+              .state('location', {
+                url: '/location',
+                controller: 'LocationController as locCtrl',
+                templateUrl: 'pages/location/location.html',
+                data: {
+                  displayName: 'Target Folder'
+                }
+              })
               .state('confirm', {
                 url: '/confirm',
                 controller: 'ConfirmController as confCtrl',
@@ -80,11 +81,13 @@ let mainModule =
             let reqs = null;
             let installersJsonForTests = path.resolve('./requirements.json');
             let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
+            
             if(fs.existsSync(installersJsonForTests)) {
               reqs = require(installersJsonForTests);
             } else if ( fs.existsSync(installersJsonForRT) ) {
               reqs = require(installersJsonForRT);
             }
+            
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
                 new VirtualBoxInstall(
@@ -94,21 +97,27 @@ let mainModule =
                     reqs['virtualbox.exe'].url,
                     null)
             );
+            
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
-                new CygwinInstall(installerDataSvc,
+                new CygwinInstall(
+                    installerDataSvc,
                     reqs['cygwin.exe'].url,
                     null)
             );
+            
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
-                new VagrantInstall(installerDataSvc,
+                new VagrantInstall(
+                    installerDataSvc,
                     reqs['vagrant.msi'].url,
                     null)
             );
+            
             installerDataSvc.addItemToInstall(
                 CDKInstall.key(),
-                new CDKInstall(installerDataSvc,
+                new CDKInstall(
+                    installerDataSvc,
                     $timeout,
                     reqs['cdk.zip'].url,
                     reqs['rhel-vagrant-virtualbox.box'].url,
@@ -119,7 +128,8 @@ let mainModule =
 
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
-                new JdkInstall(installerDataSvc,
+                new JdkInstall(
+                    installerDataSvc,
                     reqs['jdk.zip'].url,
                     null,
                     reqs['jdk.zip'].prefix)
@@ -127,7 +137,8 @@ let mainModule =
 
             installerDataSvc.addItemToInstall(
                 JbdsInstall.key(),
-                new JbdsInstall(installerDataSvc,
+                new JbdsInstall(
+                    installerDataSvc,
                     reqs['jbds.jar'].url,
                     null)
             );

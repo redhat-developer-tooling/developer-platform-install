@@ -13,7 +13,8 @@ import Installer from './helpers/installer';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, installFile) {
-    super('Red Hat Container Development Kit', 
+    super('cdk',
+          'Red Hat Container Development Kit', 
           'v2.0.beta5',
           'Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications',
           900, 

@@ -13,7 +13,13 @@ import Util from './helpers/util';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, prefix) {
-    super('OpenJDK','v8','Java Development Kit for running JBoss Developer Studio', 260, downloadUrl, installFile);
+    super('jdk',
+          'OpenJDK',
+          'v8',
+          'Java Development Kit for running JBoss Developer Studio', 
+          260, 
+          downloadUrl, 
+          installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'jdk.zip';
