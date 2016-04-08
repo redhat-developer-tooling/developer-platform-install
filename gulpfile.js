@@ -2,6 +2,7 @@
 
 var gulp = require('gulp'),
     fs = require('fs-extra'),
+    crypto = require('crypto'),
     babel = require('gulp-babel'),
     runSequence = require('run-sequence'),
     zip = require('gulp-zip'),
@@ -130,14 +131,40 @@ gulp.task('package', ['prepare-7zip'], function (cb) {
       cb(err);
     }
   });
+  createSHA256File(installerExe);
 });
 
-// Create stub installer that will then download all the requirements
-gulp.task('package-simple', function() {
-  return runSequence('clean', 'generate', 'package', '7zip-cleanup');
-});
+// for a given filename, return the sha256sum
+// eg., a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
+// getSHA256("C:\\Program Files\\Internet Explorer\\iexplore.exe", function(hashstring) { console.log("Got sha256 = "+ hashstring); } );
+function getSHA256(filename, cb) {
+  var hashstring = "NONE";
+  var hash = crypto.createHash('sha256');
+  //console.log("Generate SHA256 for " + filename);
+  var readStream = fs.createReadStream(filename);
+  readStream
+    .on('readable', function () {
+      var chunk;
+      while (null !== (chunk = readStream.read())) {
+        hash.update(chunk);
+      }
+    })
+    .on('end', function () {
+      // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
+      hashstring = hash.digest('hex');
+      // console.log("[1] SHA256 = " + hashstring);
+      cb(hashstring);
+    });
+  return hashstring;
+}
 
-// Create bundled installer that includes all the requirements already
+// writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
+function createSHA256File(filename) {
+  getSHA256(filename, function(hashstring) { fs.writeFileSync(filename + ".sha256", hashstring + " *" + path.parse(filename).base); })
+  return true;
+}
+
+// Create bundled installer
 gulp.task('package-bundle', function() {
   return runSequence('clean', 'generate', 'prefetch', 'package', '7zip-cleanup');
 });
@@ -159,6 +186,20 @@ gulp.task('ui-test', function() {
   return runSequence('generate', 'protractor-install', 'protractor-run');
 });
 
+// read the existing .sha256 file and compare it to the existing file's SHA
+function isExistingSHA256Current(currentFile, sha256sum, processResult) {
+  if (fs.existsSync(currentFile)) {
+    getSHA256(currentFile, function(hashstring) {
+      if (sha256sum !== hashstring) {
+        console.log('[WARNING] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
+      }
+      processResult(sha256sum === hashstring);
+    });
+  } else {
+    processResult(false);
+  }
+}
+
 // download all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
   let counter=0;
@@ -166,18 +207,30 @@ gulp.task('prefetch', function(cb) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
-      // download only what can be included in offline installer
-      if (reqs[key].bundle === 'yes') {
-        counter++;
-          console.log('DOWNLOADING -> ' + reqs[key].url);
-          request(reqs[key].url)
-            .pipe(fs.createWriteStream(path.join(prefetchFolder, key))).on('finish',function() {
-            counter--;
-            if(counter===0) {
-              cb();
-            }
-        });
-      }
+      let currentFile = path.join(prefetchFolder, key);
+      let alreadyDownloaded = false;
+
+      // if file is already downloaded, check its sha against the stored one
+      isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
+        //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
+        if(!alreadyDownloaded) {
+          // download only what can be included in offline installer
+          if (reqs[currentKey].bundle === 'yes') {
+            counter++;
+            console.log('DOWNLOADING -> ' + currentUrl);
+            request(currentUrl)
+              .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
+                // create a sha256sum file
+                counter--;
+                if(counter===0) {
+                  cb();
+                }
+              });
+          }
+        } else {
+          console.log('DOWNLOADED <- ' + currentFile);
+        }
+      });
     }
   }
   artifactType = "-bundle";

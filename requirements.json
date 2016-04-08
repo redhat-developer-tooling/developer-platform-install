@@ -1,41 +1,50 @@
 {
   "cdk.zip": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/release/09-Mar-2016-beta5/cdk-2.0.0-beta5.zip"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/release/09-Mar-2016-beta5/cdk-2.0.0-beta5.zip",
+    "sha256sum": "106eccc4246522e7a5672b266086fa5e987009cd9d94b08529ef607cbff6d02a"
   },
   "rhel-vagrant-virtualbox.box": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/release/09-Mar-2016-beta5/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/release/09-Mar-2016-beta5/rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "e275d00367847273e6783533aaf113063987dd976e79e0b8369c2a6c587210bb"
   },
   "oc.zip": {
     "bundle": "yes",
-    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip"
+    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip",
+    "sha256sum": "b05877aab75004cc30181f25960cfc3c09b5336678fc1cbad80c51848ed15a0f"
   },
   "pscp.exe": {
     "bundle": "yes",
-    "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe"
+    "url": "http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe",
+    "sha256sum": "b20ba6df30bbb27ae74b2567a81aef66e787591a5ef810bfc9ecd45cb6d3d51e"
   },
   "cygwin.exe": {
     "bundle": "yes",
-    "url": "https://cygwin.com/setup-x86_64.exe"
+    "url": "https://cygwin.com/setup-x86_64.exe",
+    "sha256sum": "08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56"
   },
   "jbds.jar": {
     "bundle": "yes",
-    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar"
+    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar",
+    "sha256sum": "618c413cb8b0b68bc9b5075ce724354717d81b14d9fdfa8e234f20c5730dcf8f"
   },
   "jdk.zip": {
     "bundle": "yes",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
-    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip"
+    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
+    "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
   },
   "vagrant.msi": {
-    "bundle": "no",
-    "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download"
+    "bundle": "yes",
+    "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download",
+    "sha256sum": "a1ca7d99f162e001c826452a724341f421adfaef3e1366ee504b73ad19e3574f"
   },
   "virtualbox.exe": {
-    "bundle": "no",
+    "bundle": "yes",
     "version": "5.0.8",
     "revision": "103449",
-    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download"
+    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download",
+    "sha256sum": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280"
   }
 }
