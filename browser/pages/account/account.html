@@ -24,21 +24,21 @@
           <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="align-to-input help-block has-error">Please enter a password.</div>
         </div>
         <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned)" class="form-group has-error pull-right">
-          <div ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
-            <span class="pficon pficon-error-circle-o"></span>
-            <strong>Invalid account information, please try again.</strong>
+          <div id="invalidLoginError" ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
+            <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
           </div>
-          <div ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
-            <span class="pficon pficon-error-circle-o"></span>
-            <strong>Terms and Conditions for CDK have not been signed.</strong>
+          <div id="tcError" ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
+            <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="tcMessage">Terms and Conditions for CDK have not been signed.</strong>
           </div>
         </div>
         <div class="form-group pull-right form-buttons">
-          <button type="button" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="acctCtrl.createAccount()">Register</button>
-          <button type="submit" class="btn-med-size btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">Log in</button>
+          <button id="registerButton" type="button" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="acctCtrl.createAccount()">Register</button>
+          <button id="loginButton" type="submit" class="btn-med-size btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">Log in</button>
         </div>
         <div class="pull-right">
-          Forgot your <a href="" ng-click="acctCtrl.forgotPassword()">username</a> or <a href="" ng-click="acctCtrl.forgotPassword()">password</a>?
+          Forgot your <a id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">username</a> or <a id="passwordLink" href="" ng-click="acctCtrl.forgotPassword()">password</a>?
         </div>
       </form>
     </div>

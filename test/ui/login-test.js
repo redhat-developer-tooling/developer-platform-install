@@ -1,78 +1,114 @@
 'use strict';
 
-/* POC test for login UI, verify bad login fails, author ldimaggi */
-
 let webdriver = browser.driver;
 let ACCOUNT_URL = '/account';
 let PAGE_TITLE = 'Red Hat Developer Platform Installer';
 let BAD_USERNAME = "badusername1";
 let BAD_PASSWORD = "badpassword1";
 
-var usernameField = element(by.id('username'));
-var passwordField = element(by.id('password'));
-var loginButton = protractor.until.elementLocated(By.className('btn-lg'));
+describe('Login page', function() {
+  let usernameField, passwordField, loginButton;
 
-describe('basic ui test', function() {
-
-/* Simple test for page URL */
-  it ('Inital page URL should be correct', function() {
-    console.log ('Check initial page URL');
-    expect (browser.getLocationAbsUrl()).toEqual (ACCOUNT_URL);
-  });
-
-/* Simple test for page title */
-  it ('Initial page title should match', function() {
-    console.log ('Check initial page title');
-    expect (browser.getTitle()).toEqual(PAGE_TITLE);
-  });
-
-/* At this point, the login button should be disabled */
-  it ('Login button should be disabled until user enters name/password', function() {
-    console.log ('Verify login button is disabled');
-//    webdriver.wait(protractor.until.elementLocated(By.className('btn-lg')), 10000)
-    webdriver.wait(loginButton, 10000)
+  beforeAll(function() {
+    webdriver.wait(protractor.until.elementLocated(By.id('loginButton')), 10000)
     .then(function(elm) {
-      expect(elm.isEnabled()).toEqual(false);
+      loginButton = elm;
+      usernameField = element(By.id('username'));
+      passwordField = element(By.id('password'));
     });
   });
 
-/* Enter invalid username and password */
-  it ('Enter invalid username and password', function() {
-    console.log ('Enter invalid username and password');
-    usernameField.sendKeys(BAD_USERNAME);
-    passwordField.sendKeys(BAD_PASSWORD);
+  it('Inital page URL should be correct', function() {
+    expect(browser.getLocationAbsUrl()).toEqual(ACCOUNT_URL);
   });
 
-/* At this point, the login button should be enabled */
-  console.log ('Verify the login button is enabled')
-  it ('Login button should be enabled after user enters name and password', function() {
-    webdriver.wait(loginButton, 10000)
-    .then(function(elm) {
-      expect(elm.isEnabled()).toEqual(true);
+  it('Initial page title should match', function() {
+    expect(browser.getTitle()).toEqual(PAGE_TITLE);
+  });
+
+  it('Login button should be disabled until user enters name/password', function() {
+    expect(loginButton.isEnabled()).toBe(false);
+  });
+
+  it('Should display links for forgotten username or password', function() {
+    expect(element(By.id('usernameLink')).isDisplayed()).toBe(true);
+    expect(element(By.id('passwordLink')).isDisplayed()).toBe(true);
+  });
+
+  it('Should contain a Register button', function() {
+    expect(element(By.id('registerButton')).isDisplayed()).toBe(true);
+  });
+
+  describe('Login form', function() {
+    let usernameStatus, passwordStatus;
+
+    beforeAll(function() {
+      usernameStatus = element(By.id('usernameStatus'));
+      passwordStatus = element(By.id('passwordStatus'));
+    });
+
+    afterAll(function() {
+      usernameField.clear();
+      passwordField.clear();
+    });
+
+    it('Username field should be focused', function() {
+      let activeElmId = webdriver.switchTo().activeElement().getAttribute('id');
+      expect(activeElmId).toEqual(usernameField.getAttribute('id'));
+    });
+
+    it('Error messages should be hidden by default', function() {
+      expect(usernameStatus.isDisplayed()).toBe(false);
+      expect(passwordStatus.isDisplayed()).toBe(false);
+    });
+
+    it('Leaving empty username field should display an error', function() {
+      passwordField.sendKeys('');
+      expect(usernameStatus.isDisplayed()).toBe(true);
+    });
+
+    it('Leaving empty password field should display an error', function() {
+      usernameField.sendKeys('');
+      expect(usernameStatus.isDisplayed()).toBe(true);
+    });
+
+    it('Entering a username should hide the appropriate error', function() {
+      usernameField.sendKeys('user');
+      expect(usernameStatus.isDisplayed()).toBe(false);
+      usernameField.clear();
+    });
+
+    it('Entering a password should hide the appropriate error', function() {
+      passwordField.sendKeys('password');
+      expect(passwordStatus.isDisplayed()).toBe(false);
+      passwordField.clear();
+    });
+
+    it('Login button should be enabled after user enters name and password', function() {
+      usernameField.sendKeys('username');
+      passwordField.sendKeys('password');
+      expect(loginButton.isEnabled()).toEqual(true);
     });
   });
 
-/*  --------------------------  */
-it('should return true when element is present', function() {
-  console.log ('Force an error by clicking the login button')
-  var displayedLoginButton = element(By.className('btn-lg'));
-  //sleepFor(5000);
-  expect(displayedLoginButton.isEnabled()).toEqual(true);
-  //sleepFor(5000);
-  displayedLoginButton.click();
-  displayedLoginButton.click();
-  //sleepFor(5000);
+  describe('Invalid login information', function() {
 
-  console.log ('Verify that the correct error is displayed')
-  webdriver.isElementPresent(By.className('pficon-error-circle-o')).then(function (isPresent) {
-    isPresent = (isPresent) ? true : browser.wait(function () {
-      return browser.driver.isElementPresent(By.className('pficon-error-circle-o'));
-    }, 15000); //timeout after 15s
-    expect(browser.driver.isElementPresent(By.className('pficon-error-circle-o'))).toBe(true);
-    expect (browser.driver.isElementPresent(by.xpath("//div[contains(@class, 'help-block') and contains (string(), 'Invalid account information, please try again')]"))).toBe(true);
+    beforeAll(function() {
+      usernameField.sendKeys(BAD_USERNAME);
+      passwordField.sendKeys(BAD_PASSWORD);
     });
 
+    afterAll(function() {
+      usernameField.clear();
+      passwordField.clear();
+    });
+
+    it('Should display an error when attempting to log in', function() {
+      loginButton.click();
+      browser.wait(protractor.until.elementLocated(By.id('invalidLoginError')), 2000);
+      expect(element(By.id('invalidLoginIcon')).isDisplayed()).toBe(true);
+      expect(element(By.id('invalidLoginMessage')).isDisplayed()).toBe(true);
+    });
   });
 
 });
-

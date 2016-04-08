@@ -63,9 +63,9 @@ module.exports = function(gulp) {
   });
 
   gulp.task('protractor-run', function() {
-    return gulp.src(['./test/ui/**/*.js'])
+    return gulp.src(['../test/ui/**/*.js'])
       .pipe(angularProtractor({
-        'configFile': '../protractor-conf.js',
+        'configFile': 'protractor-conf.js',
         'autoStartStopServer': false,
         'debug': false
       }))
