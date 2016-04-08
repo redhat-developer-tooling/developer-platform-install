@@ -1,9 +1,5 @@
-# developer-platform-install
-
 Red Hat Developer Platform Installer
 ====================================
-
-[![Build Status](https://travis-ci.org/redhat-developer-tooling/developer-platform-install.svg?branch=master)](https://travis-ci.org/redhat-developer-tooling/developer-platform-install)
 
 Architecture
 ------------
@@ -12,8 +8,8 @@ This installer is built on Windows using [Electron](http://electron.atom.io/).
 
 You will also require the [Node.js, NPM](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [jspm](http://jspm.io/).
 
-Building the installer
-----------------------
+Installing dependencies
+-----------------------
 
 In order to build the installer, you'll need to install some tools.
 
@@ -27,40 +23,55 @@ In order to build the installer, you'll need to install some tools.
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
-5. Install Gulp, jspm, and all dependencies:
+5. Install Gulp, JSPM, and all dependencies:
 
-    npm install -g gulp jspm
-    npm install
+        npm install -g gulp jspm
+        npm install
 
 If either of the above steps fail, try deleting the c:\Users\<username>\.electron folder.
 
-6. Run the application using `npm start` or `gulp run`.
+Running the application
+-----------------------
 
-7. Build a Windows binary and run it:
+There are multiple ways how to run the installer.
 
-    npm run package-simple
-    dist/win/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
+1. When fixing bugs and/or creating new features, run the application using 
+        
+        npm start
+   
+   This way, you can open Chrome developer tools using `Ctrl+Alt+I` or reload application using `Ctrl+R`.
 
-Or, to run the msi installer (about 36M):
+2. Build a Windows binary and run it:
 
-    dist/win/DeveloperPlatformInstaller-win32-x64-*.exe
+        npm run generate
+        dist/win/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
 
-8. To build a Windows binary including all 1.6G of dependencies, then run that:
+3. Build a distribution Windows binary that downloads Vagrant, VirtualBox, JBDS, etc. from the Internet (it will download about 1.6G):
+
+        npm run package-simple
+        dist/win/DeveloperPlatformInstaller-win32-x64-*.exe
+
+4. Build a distribution Windows binary including almost all dependencies, except of Vagrant and VirtualBox (will download them):
  
-    npm run package-bundle
-    dist/win/DeveloperPlatformInstaller-win32-x64-*-bundle.exe
+        npm run package-bundle
+        dist/win/DeveloperPlatformInstaller-win32-x64-*-bundle.exe
 
-9. To build both installers in a single step:
+5. To build both installers in a single step:
 
-    npm run dist
+        npm run dist
  
-If your npm install gets corrupted (or out of date) and you can't build, you can try cleaning leftover modules by deleting these files/folders:
+Local build with clean up
+-------------------------
 
-    node_modules/ 
-    browser/jspm_packages/
-    browser/config.js
-    test/jspm-config.js
- 
+If your npm install gets corrupted (or out of date) and you can't build, you can try cleaning leftover modules by deleting all dependencies and generated configuration files and installing them again:
+
+    rm -rf node_modules/ browser/jspm_packages/ browser/config.js test/jspm-config.js
+    npm cache clean
+    npm install -g gulp jspm
+    npm install
+
+Then build as in the examples above.
+
 Running unit tests
 ------------------
 
@@ -73,18 +84,6 @@ of any test, e.g.:
 
     npm test -- -g login
     npm test -- --grep login
-
-Local build with clean up
--------------------------
-
-To perform a cleanup before building:
-
-    rm -rf node_modules/ browser/jspm_packages/ browser/config.js test/jspm-config.js
-    npm install -g gulp jspm
-    npm install
-
-Then build as in the examples above.
-
 
 Debugging
 ---------
