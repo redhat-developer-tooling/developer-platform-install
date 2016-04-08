@@ -36,12 +36,12 @@
     "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
   },
   "vagrant.msi": {
-    "bundle": "yes",
+    "bundle": "no",
     "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download",
     "sha256sum": "a1ca7d99f162e001c826452a724341f421adfaef3e1366ee504b73ad19e3574f"
   },
   "virtualbox.exe": {
-    "bundle": "yes",
+    "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download",
