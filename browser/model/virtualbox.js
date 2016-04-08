@@ -9,15 +9,16 @@ import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
+import Version from './helpers/version';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
     super('virtualbox',
           'Oracle VirtualBox',
-          'v5.0.16', 
-          'A virtualization software package developed by Oracle', 
-          700, 
-          downloadUrl, 
+          'v5.0.16',
+          'A virtualization software package developed by Oracle',
+          700,
+          downloadUrl,
           installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -72,7 +73,9 @@ class VirtualBoxInstall extends InstallableItem {
                 resolve(output);
             });
           } else {
-            return resolve(output);
+            return new Promise((resolve, reject) => {
+	             resolve(output);
+	            });
           }
         } else {
           return Util.findText(output, 'INSTALL_DIR=').then((result) => {
@@ -103,7 +106,7 @@ class VirtualBoxInstall extends InstallableItem {
       return Util.executeCommand(command, 1);
     }).then((output) => {
       this.existingVersion = versionRegex.exec(output)[1];
-      this.existingInstall = this.existingVersion >= this.minimumVersion;
+      this.existingInstall = Version.GE(this.existingVersion,this.minimumVersion) ;
       this.detected = true;
       this.selected = false;
       cb();
