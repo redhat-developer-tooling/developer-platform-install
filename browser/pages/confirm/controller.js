@@ -1,10 +1,13 @@
 'use strict';
 
 let dialog = require('remote').require('dialog');
-/*import {remote, ipcRenderer} from 'electron-prebuilt';*/
+let remote = require('remote');
 let fs = require('fs');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
+
+import Logger from '../../services/logger';
+/*import {remote, ipcRenderer} from 'electron-prebuilt';*/
 
 class ConfirmController {
 
@@ -104,6 +107,16 @@ class ConfirmController {
         && this.checkboxModel.cygwin.isConfigured()
         && this.checkboxModel.vagrant.isConfigured()
         && this.checkboxModel.cdk.isConfigured();
+  }
+
+  exit() {
+    Logger.info('Closing the installer window');
+    remote.getCurrentWindow().close();
+  }
+
+  back() {
+    Logger.info('Going back a page');
+    this.router.go('location');
   }
 }
 

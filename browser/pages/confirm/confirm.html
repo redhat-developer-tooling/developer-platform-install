@@ -361,12 +361,10 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="form-group">
-        <div class="col-sm-12 pull-right">
-          <button type="submit" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
-        </div>
-      </div>
+    <div class="pull-right form-buttons">
+      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="acctCtrl.exit()">Cancel</button>
+      <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="acctCtrl.back()">Back</button>
+      <button type="submit" id="confirm-install-btn" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
     </div>
 
   </form>
