@@ -67,10 +67,19 @@ function createExecCallback(cb, quiet) {
 
 gulp.task('generate', ['transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
+  let buildFolderPath = path.resolve(buildFolderRoot);
+  let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
-  cmd += ' --version=' + electronVersion + ' --out=./' + buildFolderRoot + ' --overwrite --asar=true';
+  cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
+  cmd += ' --version-string.CompanyName="Red Hat, Inc."';
+  cmd += ' --version-string.ProductName="' + pjson.productName + '"';
+  cmd += ' --version-string.OriginalFilename="' + artifactName + '.exe"';
+  cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
+  cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
+  cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
   cmd += ' --prune --ignore=test';
-
+  cmd += ' --icon="' + configIcon + '"';
+  //console.log(cmd);
   exec(cmd,createExecCallback(cb, true));
 });
 
