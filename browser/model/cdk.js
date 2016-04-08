@@ -220,7 +220,7 @@ class CDKInstall extends InstallableItem {
         'vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise
       ).then((result) => {
         return new Promise((resolve,reject) => {
-          installer.exec('vagrant box remove cdkv2 -f',installer, promise).then((result)=> {
+          installer.exec('vagrant box remove cdkv2 -f',opts, promise).then((result)=> {
             resolve(result);
           }).catch((result) => {
             resolve(result);
