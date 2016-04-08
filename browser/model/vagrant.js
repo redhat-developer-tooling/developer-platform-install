@@ -37,7 +37,7 @@ class VagrantInstall extends InstallableItem {
 
   // Vagrant validation rules:
   // - cannot install vagrant if another one is already present in classpath
-  // - minimal version reqired is 1.7.4 the same downloaded by installer
+  // - minimal version required is 1.7.4 the same downloaded by installer
   // -
   isConfigured() {
     return this.existingVersion

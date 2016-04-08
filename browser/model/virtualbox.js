@@ -39,10 +39,7 @@ class VirtualBoxInstall extends InstallableItem {
     return 'virtualbox';
   }
 
-  // Vagrant validation rules:
-  // - cannot install vagrant if another one is already present in classpath
-  // - minimal version required is 1.7.4 the same downloaded by installer
-  // -
+  // Override parent "true" and check if we have something setup
   isConfigured() {
     return (this.existingVersion
         && this.existingInstallLocation

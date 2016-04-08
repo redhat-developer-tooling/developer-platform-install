@@ -5,54 +5,63 @@
 
 <main class="col-sm-12">
   <div id="shadow" ng-class="{'dimmed': detectionStyle}">
-  <h5>Setup and confirm.</h5>
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
 
     <!-- VirtualBox -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-virtualbox" class="arrow" ng-click="checkboxModel.virtualbox.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">Oracle VirtualBox</span><span class="product-version">v5</span>
-          <div>A virtualization software package developed by Oracle - <strong ng-hide="!checkboxModel.virtualbox.selected">VirtualBox 5.0.8 will be installed.</strong></div>
+          <span class="product-name">Oracle VirtualBox</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
+          <div>A virtualization software package developed by Oracle</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.virtualbox.isCollapsed">
-        <div>
-          Press "Browse" and select an existing VirtualBox installation instead. Below is what we found on your machine:
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.virtualbox.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.virtualbox.selected">
+          <label for="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn-label">
+            Install
+          </label>
         </div>
-        <div class="input-group">
-          <div style="position:relative">
-            <input type="text" disabled="true" name="virtualbox" placeholder="No VirtualBox installation found" class="form-control" ng-model="checkboxModel.virtualbox.existingInstallLocation" id="virtualbox"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" ng-disabled="checkboxModel.virtualbox.detected" ng-click="confCtrl.selectItem('virtualbox')" class="btn btn-primary">Browse</button>
-          </span>
+        <div class="confirm-radio-container" ng-show="!checkboxModel.virtualbox.existingInstallLocation">
+          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.virtualbox.existingInstall">
+          <label for="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.virtualbox.existingVersion}}
+          </label>
         </div>
-        <div ng-hide="checkboxModel.virtualbox.detected" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is either not a valid VirtualBox installation or you do not have VirtualBox on path. We will install VirtualBox for you.</strong>
-          </div>
-        </div>
-        <div ng-show="checkboxModel.virtualbox.detected && checkboxModel.virtualbox.existingVersion === checkboxModel.virtualbox.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <strong>The detected Virtualbox version is {{checkboxModel.virtualbox.existingVersion}}</strong>
-          </div>
-        </div>
-        <div ng-show="checkboxModel.virtualbox.existingVersion > checkboxModel.virtualbox.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selected VirtualBox installation is newer that recommended 10.0.8</strong>
-          </div>
-        </div>
-        <div>
-          <div ng-show="!checkboxModel.virtualbox.selected" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="!checkboxModel.virtualbox.existingInstallLocation || checkboxModel.virtualbox.detected" ng-model="checkboxModel.virtualbox.existingInstall">
-            <strong>I want to use the existing VirtualBox</strong>
-          </div>
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-virtualbox" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-virtualbox" name="confirm-browse-input-virtualbox" class="confirm-browse-input"
+                     ng-model="checkboxModel.virtualbox.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('virtualbox')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.virtualbox.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid VirtualBox installation or you do not have VirtualBox on path. We will install VirtualBox for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.virtualbox.detected && checkboxModel.virtualbox.existingVersion === checkboxModel.virtualbox.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected Virtualbox version is {{checkboxModel.virtualbox.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.virtualbox.existingVersion > checkboxModel.virtualbox.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected VirtualBox installation is newer that recommended {{checkboxModel.virtualbox.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     </div>
@@ -60,63 +69,117 @@
     <!-- Cygwin -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-cygwin" class="arrow" ng-click="checkboxModel.cygwin.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">Cygwin</span><span class="product-version">v2</span>
+          <span class="product-name">Cygwin</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
           <div>A distribution of popular GNU and other Open Source tools running on Microsoft Windows.</div>
         </div>
       </div>
-      <div class="check-element animate-show" ng-hide="checkboxModel.cygwin.isCollapsed">
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cygwin.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.cygwin.selected">
+          <label for="confirm-radio-btn-cygwin-install" class="confirm-radio-btn-label">
+            Install
+          </label>
+        </div>
+        <div class="confirm-radio-container" ng-hide="true">
+          <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.cygwin.existingInstall">
+          <label for="confirm-radio-btn-cygwin-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.cygwin.existingVersion}}
+          </label>
+        </div>
+        <div class="confirm-radio-container" ng-hide="true">
+          <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-cygwin-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-cygwin" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-cygwin" name="confirm-browse-input-cygwin" class="confirm-browse-input"
+                     ng-model="checkboxModel.cygwin.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('cygwin')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.cygwin.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid cygwin installation or you do not have cygwin on path. We will install cygwin for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.cygwin.detected && checkboxModel.cygwin.existingVersion === checkboxModel.cygwin.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected cygwin version is {{checkboxModel.cygwin.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.cygwin.existingVersion > checkboxModel.cygwin.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected cygwin installation is newer that recommended {{checkboxModel.cygwin.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
+        </div>
       </div>
     </div>
 
     <!-- Vagrant-->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-vagrant" class="arrow" ng-click="checkboxModel.vagrant.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">Vagrant</span><span class="product-version">v1</span>
+          <span class="product-name">Vagrant</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
           <div>A container provisioning tool.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.vagrant.isCollapsed">
-        <div ng-hide="checkboxModel.vagrant.detected">
-          Vagrant will be installed. Or you may hit "Browse" and select an existing Vagrant installation instead. Below is what we found on your machine:
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.vagrant.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.vagrant.selected">
+          <label for="confirm-radio-btn-vagrant-install" class="confirm-radio-btn-label">
+            Install
+          </label>
         </div>
-        <div class="input-group">
-          <div style="position:relative">
-            <input type="text" disabled="true" name="vagrant" placeholder="No Vagrant installation found" class="form-control" ng-model="checkboxModel.vagrant.existingInstallLocation" id="vagrant"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" ng-disabled="checkboxModel.vagrant.detected" ng-click="confCtrl.selectItem('vagrant')" class="btn btn-primary">Browse</button>
-          </span>
+        <div class="confirm-radio-container" ng-show="!checkboxModel.vagrant.existingInstallLocation">
+          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.vagrant.existingInstall">
+          <label for="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.vagrant.existingVersion}}
+          </label>
         </div>
-        <div ng-show="!checkboxModel.vagrant.detected" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is either not a valid Vagrant installation or you do not have Vagrant on path. We will install Vagrant for you.</strong>
-          </div>
-        </div>
-        <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion === checkboxModel.vagrant.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <strong>The detected Vagrant version is {{checkboxModel.vagrant.existingVersion}}</strong>
-          </div>
-        </div>
-        <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion > checkboxModel.vagrant.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The detected Vagrant {{checkboxModel.vagrant.existingVersion}} installation is newer that recommended. It will likely still work, but use it at your own risk.</strong>
-          </div>
-        </div>
-        <div>
-          <div ng-show="checkboxModel.vagrant.detected" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="checkboxModel.vagrant.detected" ng-model="checkboxModel.vagrant.existingInstall">
-            <strong>I want to use the existing Vagrant</strong>
-          </div>
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-vagrant" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-vagrant" name="confirm-browse-input-vagrant" class="confirm-browse-input"
+                     ng-model="checkboxModel.vagrant.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('vagrant')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.vagrant.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid vagrant installation or you do not have vagrant on path. We will install vagrant for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion === checkboxModel.vagrant.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected vagrant version is {{checkboxModel.vagrant.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.vagrant.existingVersion > checkboxModel.vagrant.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected vagrant installation is newer that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     </div>
@@ -124,56 +187,117 @@
     <!-- CDK -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-cdk" class="arrow" ng-click="checkboxModel.cdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">v2</span>
+          <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
           <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications</div>
         </div>
       </div>
-      <div class="check-element animate-show" ng-hide="checkboxModel.cdk.isCollapsed"></div>
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cdk.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.cdk.selected">
+          <label for="confirm-radio-btn-cdk-install" class="confirm-radio-btn-label">
+            Install
+          </label>
+        </div>
+        <div class="confirm-radio-container" ng-hide="true">
+          <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.cdk.existingInstall">
+          <label for="confirm-radio-btn-cdk-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.cdk.existingVersion}}
+          </label>
+        </div>
+        <div class="confirm-radio-container" ng-hide="true">
+          <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-cdk-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-cdk" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-cdk" name="confirm-browse-input-cdk" class="confirm-browse-input"
+                     ng-model="checkboxModel.cdk.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('cdk')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.cdk.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid cdk installation or you do not have cdk on path. We will install cdk for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.cdk.detected && checkboxModel.cdk.existingVersion === checkboxModel.cdk.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected cdk version is {{checkboxModel.cdk.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.cdk.existingVersion > checkboxModel.cdk.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected cdk installation is newer that recommended {{checkboxModel.cdk.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
     </div>
 
     <!-- JDK -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-jdk" class="arrow" ng-click="checkboxModel.jdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">OpenJDK</span><span class="product-version">v8</span>
+          <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
           <div>Java Development Kit for running JBoss Developer Studio</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.jdk.isCollapsed">
-        <div>
-          OpenJDK v8 will be installed. Or you may hit "Browse" and select an existing JDK 8 installation instead. Below is what we found on your machine:
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jdk.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.jdk.selected">
+          <label for="confirm-radio-btn-jdk-install" class="confirm-radio-btn-label">
+            Install
+          </label>
         </div>
-        <div class="input-group">
-          <div style="position:relative">
-            <input type="text" disabled="true" name="jdk" placeholder="No JDK v8 installation found" class="form-control" ng-model="checkboxModel.jdk.existingInstallLocation" id="jdk"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" disabled ng-click="confCtrl.selectItem('jdk')" class="btn btn-primary">Browse</button>
-          </span>
+        <div class="confirm-radio-container" ng-show="!checkboxModel.jdk.existingInstallLocation">
+          <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.jdk.existingInstall">
+          <label for="confirm-radio-btn-jdk-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.jdk.existingVersion}}
+          </label>
         </div>
-        <div ng-show="checkboxModel.jdk.detected && checkboxModel.jdk.existingVersion === checkboxModel.jdk.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <strong>The detected JDK version is {{checkboxModel.jdk.existingVersion}}</strong>
-          </div>
-        </div>
-        <div ng-show="checkboxModel.jdk.existingVersion < checkboxModel.jdk.minimumVersion" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is not a valid JDK version 8 or newer. We will install OpenJDK v8 for you.</strong>
-          </div>
-        </div>
-        <div>
-          <div class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="true" ng-model="checkboxModel.jdk.existingInstall">
-            <strong>I want to use the existing JDK</strong>
-          </div>
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-jdk-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-jdk" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-jdk" name="confirm-browse-input-jdk" class="confirm-browse-input"
+                     ng-model="checkboxModel.jdk.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('jdk')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.jdk.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid jdk installation or you do not have jdk on path. We will install jdk for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.jdk.detected && checkboxModel.jdk.existingVersion === checkboxModel.jdk.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected jdk version is {{checkboxModel.jdk.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.jdk.existingVersion > checkboxModel.jdk.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected jdk installation is newer that recommended {{checkboxModel.jdk.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     </div>
@@ -181,43 +305,64 @@
     <!-- JBDS -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <div class="checkbox-container verticalLine">
+        <div class="checkbox-container">
           <div id="arrow-jbds" class="arrow" ng-click="checkboxModel.jbds.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">v9</span>
+          <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
           <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
         </div>
       </div>
-      <div class="animate-show" ng-hide="checkboxModel.jbds.isCollapsed">
-        <div>
-          JBDS v9 will be installed. Or you may hit "Browse" and select an existing JBDS 9 installation instead. Below is what we found on your machine:
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jbds.isCollapsed">
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.jbds.selected">
+          <label for="confirm-radio-btn-jbds-install" class="confirm-radio-btn-label">
+            Install
+          </label>
         </div>
-        <div class="input-group">
-          <div ng-init="confCtrl.checkItem('jbds')" style="position:relative">
-            <input type="text" disabled="true" name="jbds" placeholder="No JBDS v9 installation found" class="form-control" ng-model="checkboxModel.jbds.existingInstallLocation" id="jbds"/>
-          </div>
-          <span class="input-group-btn">
-            <button type="button" ng-click="confCtrl.selectItem('jbds')" class="btn btn-primary">Browse</button>
-          </span>
+        <div class="confirm-radio-container" ng-show="!checkboxModel.jbds.existingInstallLocation">
+          <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-exists" class="confirm-radio-btn"
+                 ng-model="checkboxModel.jbds.existingInstall">
+          <label for="confirm-radio-btn-jbds-exists" class="confirm-radio-btn-label">
+            Use the existing version {{checkboxModel.jbds.existingVersion}}
+          </label>
         </div>
-        <div ng-show="!confCtrl.installables['jbds'][1]" class="form-group has-warning">
-          <div class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selection is not a valid JBDS version 9 or newer. We will install JBDS v9 for you.</strong>
-          </div>
-        </div>
-        <div>
-          <div ng-show="confCtrl.installables['jbds'][1]" class="help-block form-group has-info">
-            <input type="checkbox" ng-disabled="!confCtrl.installables['jbds'][1]" ng-model="confCtrl.installables['jbds'][0].existingInstall">
-            <strong>I want to use the existing JBDS I provided.</strong>
-          </div>
+        <div class="confirm-radio-container">
+          <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-browse" class="confirm-radio-btn">
+          <label for="confirm-radio-btn-jbds-browse" class="confirm-radio-btn-label">
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-jbds" class="browse-browse-label">
+                Use a different version
+              </label>
+              <input type="text" id="confirm-browse-input-jbds" name="confirm-browse-input-jbds" class="confirm-browse-input"
+                     ng-model="checkboxModel.jbds.existingInstallLocation"/>
+              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('jbds')">Browse</button>
+            </div>
+            <div ng-hide="checkboxModel.jbds.detected" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selection is either not a valid jbds installation or you do not have jbds on path. We will install jbds for you.</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.jbds.detected && checkboxModel.jbds.existingVersion === checkboxModel.jbds.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <strong>The detected jbds version is {{checkboxModel.jbds.existingVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.jbds.existingVersion > checkboxModel.jbds.minimumVersion" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The selected jbds installation is newer that recommended {{checkboxModel.jbds.minimumVersion}}</strong>
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="form-group" style="margin-bottom: 20px">
+      <div class="form-group">
         <div class="col-sm-12 pull-right">
           <button type="submit" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
         </div>

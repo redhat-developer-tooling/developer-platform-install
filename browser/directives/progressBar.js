@@ -17,8 +17,8 @@ function progressBar() {
       status: '='
     },
     template:
-    [
-    `<div class="panel panel-default">
+    [`
+    <div class="panel panel-default">
       <div class="panel-heading">
         <div class="product-container">
           <div>
@@ -34,9 +34,8 @@ function progressBar() {
           </div>
         </div>
       </div>
-    </div>`,
-
-    ].join('')
+    </div>
+    `].join('')
   }
 }
 

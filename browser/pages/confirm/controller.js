@@ -1,6 +1,7 @@
 'use strict';
 
 let dialog = require('remote').require('dialog');
+/*import {remote, ipcRenderer} from 'electron-prebuilt';*/
 let fs = require('fs');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
@@ -12,8 +13,7 @@ class ConfirmController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-    this.folder = installerDataSvc.installDir();
-    this.folderExists = false;
+    
     this.installables = {};
     $scope.checkboxModel = {};
 
@@ -48,12 +48,17 @@ class ConfirmController {
     });
   }
 
-  install() {
-    this.checkFolder();
-    if (!this.folderExists) {
-      fs.mkdirSync(this.folder);
+  // Get the install location if you can. Check if there is an existing install. 
+  itemRoot(key) {
+    let root = this.installables[key] ? this.installables[key][0].existingInstallLocation : null;
+    if (root && (root.length === 0 || !this.installables[key][0].existingInstall)) {
+      root = null;
     }
+    return root;
+  }
 
+  // Prep the install location path for each product, then go to the next page.
+  install() {
     this.installerDataSvc.setup(
       this.itemRoot('virtualbox'),
       this.itemRoot('jdk'),
@@ -65,6 +70,7 @@ class ConfirmController {
     this.router.go('install');
   }
 
+  // Open up a browse dialog and select the dir that has the installed product you are looking for.
   selectItem(key) {
     let selection = dialog.showOpenDialog({
       properties: [ 'openDirectory' ],
@@ -73,7 +79,9 @@ class ConfirmController {
     
     let item = this.installerDataSvc.allInstallables().get(key);
 
+    // If the browsed for dir is found then expect it to be JBDS
     if (selection) {
+      // only JBDS at the moment
       item.checkForExistingInstall(selection, this.installables);
     } else {
       this.timeout(()=>{
@@ -84,44 +92,11 @@ class ConfirmController {
     }
   }
 
+  // Check if the product is already installed
+  // ATM this is only JBDS 
   checkItem(key) {
     let item = this.installerDataSvc.allInstallables().get(key);
     item.checkForExistingInstall();
-  }
-
-  selectFolder() {
-    let selection = dialog.showOpenDialog({
-      properties: [ 'openDirectory' ],
-      defaultPath: this.folder
-    });
-
-    if (selection) {
-      this.folder = selection[0] || this.folder;
-    }
-
-    this.checkFolder();
-  }
-
-  checkFolder() {
-    try {
-      fs.accessSync(this.folder, fs.F_OK);
-      this.folderExists = true;
-    } catch (err) {
-      this.folderExists = false;
-    }
-  }
-
-  folderChanged() {
-    this.folder = folder.value;
-    this.checkFolder()
-  }
-
-  itemRoot(key) {
-    let root = this.installables[key] ? this.installables[key][0].existingInstallLocation : null;
-    if (root && (root.length === 0 || !this.installables[key][0].existingInstall)) {
-      root = null;
-    }
-    return root;
   }
 
   isConfigurationValid() {

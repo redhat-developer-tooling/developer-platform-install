@@ -11,12 +11,12 @@ class LocationController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
+    
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
-    this.installables = new Object();
-    $scope.checkboxModel = new Object();
+    this.installables = {};
+    $scope.checkboxModel = {};
     $scope.detectionStyle = false;
-
   }
 
   confirm() {

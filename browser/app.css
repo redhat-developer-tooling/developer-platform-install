@@ -248,23 +248,59 @@ footer {
     background: rgba(0, 0, 0, 0.5);
   }
 
-  .animate-show {
-    line-height: 20px;
-    opacity: 1;
-    padding: 10px;
-    /*border: 1px solid black;*/
-    background: white;
+  #confirmForm {
+
   }
 
-  .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
-    transition: all linear 0.5s;
-  }
+    .animate-show {
+      line-height: 20px;
+      opacity: 1;
+      padding: 10px;
+      padding-left: 90px;
+      /*border: 1px solid black;*/
+      background: white;
+    }
 
-  .animate-show.ng-hide {
-    line-height: 0;
-    opacity: 0;
-    padding: 0 10px;
-  }
+    .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+      transition: all linear 0.5s;
+    }
+
+    .animate-show.ng-hide {
+      line-height: 0;
+      opacity: 0;
+      padding: 0 10px;
+    }
+
+      .confirm-radio-container {
+
+      }
+
+        .confirm-radio-btn {
+          display: inline;
+          width: 25px;
+        }
+
+        .confirm-radio-btn-label {
+          width: 80%;
+          vertical-align: text-top;
+          margin-top: -5px;
+        }
+
+          .confirm-browse-container {
+
+          }
+            .browse-browse-label {
+              margin-right: 10px;
+            }
+
+            .confirm-browse-input {
+              width: 60%;
+              margin-right: -4px;
+            }
+
+            .confirm-browse-btn {
+              margin-top: -2px;
+            }
 
   .check-element {
     padding: 10px;
