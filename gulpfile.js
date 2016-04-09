@@ -126,12 +126,18 @@ gulp.task('package', ['prepare-7zip'], function (cb) {
     if (!err) {
       var packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
       console.log(packageCmd);
-      exec(packageCmd, createExecCallback(cb, true));
+      exec(packageCmd, function(err,stdout,stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        if (!err) {
+            createSHA256File(installerExe);
+        }
+        cb(err);
+      });
     } else {
       cb(err);
     }
   });
-  createSHA256File(installerExe);
 });
 
 // for a given filename, return the sha256sum
@@ -163,6 +169,11 @@ function createSHA256File(filename) {
   getSHA256(filename, function(hashstring) { fs.writeFileSync(filename + ".sha256", hashstring + " *" + path.parse(filename).base); })
   return true;
 }
+
+// Create stub installer that will then download all the requirements
+gulp.task('package-simple', function() {
+  return runSequence('clean', 'generate', 'package', '7zip-cleanup');
+});
 
 // Create bundled installer
 gulp.task('package-bundle', function() {
