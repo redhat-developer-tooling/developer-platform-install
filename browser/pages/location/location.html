@@ -19,9 +19,9 @@
           <label for="location-browse-input-folder" class="location-browse-label">
             Select the installation folder
           </label>
-          <dif><input type="text" id="location-browse-input-folder" name="location-browse-input-folder" class="location-browse-input"
-                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/></dif>
-          <dif><button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button></dif>
+          <input name="folder" type="text" id="location-browse-input-folder" name="location-browse-input-folder" class="location-browse-input"
+                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
+                 <button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
         </div>
         <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
         <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
@@ -33,23 +33,21 @@
           <strong>The selection is not a valid absolute path.</strong>
         </div>
         <div ng-show="!locationForm.folder.$invalid" class="form-group has-warning">
-          <div ng-show="confCtrl.folderExists && locationForm.folder.$valid" class="help-block">
+          <div ng-show="locCtrl.folderExists" class="help-block">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>The selected folder already exists, some files might be overwritten.</strong>
           </div>
-          <div ng-show="!confCtrl.folderExists && locationForm.folder.$valid" class="help-block">
+          <div ng-show="!locCtrl.folderExists"s class="help-block">
             <span class="pficon pficon-info"></span>
             <strong>The selected folder will be created.</strong>
           </div>
         </div>
       </div>
     </div>
-
     <div id="location-form-btns" class="pull-right form-buttons">
       <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="locCtrl.exit()">Cancel</button>
       <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="locCtrl.back()">Back</button>
-      <button type="submit" id="location-install-btn" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Continue</button>
+      <button type="submit" id="location-install-btn" ng-disabled="locationForm.folder.$invalid" class="btn btn-primary btn-lg btn-rightside">Continue</button>
     </div>
-
   </form>
 </main>

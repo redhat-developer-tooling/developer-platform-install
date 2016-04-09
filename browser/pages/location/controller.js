@@ -14,7 +14,7 @@ class LocationController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-    
+
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
     this.installables = {};
@@ -49,10 +49,9 @@ class LocationController {
   }
 
   folderChanged() {
-    this.folder = folder.value;
     this.checkFolder()
   }
-  
+
   exit() {
     Logger.info('Closing the installer window');
     remote.getCurrentWindow().close();
