@@ -102,16 +102,9 @@ class InstallableItem {
   }
 
   changeIsCollapsed() {
-    let element = document.getElementById(`arrow-${this.keyName}`);
-    if (this.isCollapsed) {
-      this.isCollapsed = false;
-      element.classList.add("arrow-down");
-    } else {
-      this.isCollapsed = true;
-      element.classList.remove("arrow-down");
-    }
+      this.isCollapsed = !this.isCollapsed;
   }
-  
+
 }
 
 export default InstallableItem;

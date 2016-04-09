@@ -3,7 +3,7 @@
   <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12">
+<main class="col-sm-12" border="1">
   <div id="shadow" ng-class="{'dimmed': detectionStyle}">
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
 
@@ -11,7 +11,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-virtualbox" class="arrow" ng-click="checkboxModel.virtualbox.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" ng-click="checkboxModel.virtualbox.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">Oracle VirtualBox</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
@@ -70,7 +70,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-cygwin" class="arrow" ng-click="checkboxModel.cygwin.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" ng-click="checkboxModel.cygwin.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">Cygwin</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
@@ -129,7 +129,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-vagrant" class="arrow" ng-click="checkboxModel.vagrant.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" ng-click="checkboxModel.vagrant.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">Vagrant</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
@@ -188,7 +188,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-cdk" class="arrow" ng-click="checkboxModel.cdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" ng-click="checkboxModel.cdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
@@ -247,7 +247,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-jdk" class="arrow" ng-click="checkboxModel.jdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" ng-click="checkboxModel.jdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
@@ -306,7 +306,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="checkbox-container">
-          <div id="arrow-jbds" class="arrow" ng-click="checkboxModel.jbds.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" ng-click="checkboxModel.jbds.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
