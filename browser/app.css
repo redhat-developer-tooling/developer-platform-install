@@ -228,6 +228,25 @@ footer {
     padding-left: 5px;
   }
 
+  .btn-style-link {
+    color: #00a8e1;
+    background-color: #FFFFFF;
+    display: inline-block;
+    padding: 6px 10px;
+    margin-bottom: 0;
+    margin-right: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3333333;
+    width: 80px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  #loginButton {
+    margin-bottom: 3px;
+  }
+
   .btn-rightside {
     float: right;
   }
