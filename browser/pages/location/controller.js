@@ -1,9 +1,12 @@
 'use strict';
 
 let dialog = require('remote').require('dialog');
+let remote = require('remote');
 let fs = require('fs');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
+
+import Logger from '../../services/logger';
 
 class LocationController {
   constructor($scope, $state, $timeout, installerDataSvc) {
@@ -16,7 +19,6 @@ class LocationController {
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
-    $scope.detectionStyle = false;
   }
 
   confirm() {
@@ -49,6 +51,16 @@ class LocationController {
   folderChanged() {
     this.folder = folder.value;
     this.checkFolder()
+  }
+  
+  exit() {
+    Logger.info('Closing the installer window');
+    remote.getCurrentWindow().close();
+  }
+
+  back() {
+    Logger.info('Going back a page');
+    this.router.go('account');
   }
 }
 

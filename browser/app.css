@@ -248,8 +248,58 @@ footer {
     background: rgba(0, 0, 0, 0.5);
   }
 
-  #confirmForm {
+  #locationForm {
+    margin-top: 8%;
+  }
 
+    #location-form-container {
+      padding-right: 25%;
+    }
+
+      .location-form-elements {
+        margin-bottom: 10px;
+      }
+
+        #location-form-instructions {
+
+        }
+
+        #location-form-note {
+          color: grey;
+        }
+
+        #location-form-browse {
+          margin-top: 25px;
+        }
+
+          .location-browse-container {
+
+          }
+
+            .location-browse-label {
+              margin-right: 10px;
+            }
+
+            #location-browse-input-folder {
+
+            }
+
+            .location-browse-input {
+              width: 60%;
+              margin-right: -4px;
+            }
+
+            .location-browse-btn {
+              margin-top: -2px;
+            }
+
+       #location-form-btns {
+
+      }
+
+
+
+  #confirmForm {
   }
 
     .animate-show {
@@ -289,7 +339,7 @@ footer {
           .confirm-browse-container {
 
           }
-            .browse-browse-label {
+            .confirm-browse-label {
               margin-right: 10px;
             }
 

@@ -4,52 +4,51 @@
 </header>
 
 <main class="col-sm-12">
-  <h5>Select Traget Location</h5>
-  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="product-name">Select Installation Folder:</span>
-        <div class="form-group has-feedback" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
-          <div class="input-group">
-            <div style="position:relative">
-              <input type="text" name="folder" ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" class="form-control" ng-model="locCtrl.folder" placeholder="Installation Folder" required aria-describedby="folderStatus" id="folder" path-validator/>
-              <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="confirmForm.folder.$invalid"></span>
-            </div>
-            <span class="input-group-btn">
-              <button type="button" ng-click="locCtrl.selectFolder()" class="btn btn-primary">Browse</button>
-            </span>
+  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
+    <div id="location-form-container">
+      <div id="location-form-instructions" class="location-form-elements">
+        This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
+        <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
+          folder or use the default location.
+      </div>
+      <div id="location-form-note" class="location-form-elements">
+        Note: You can NOT choose the folder again once components start to get installed.
+      </div>
+      <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
+        <div class="location-browse-container">
+          <label for="location-browse-input-folder" class="location-browse-label">
+            Select the installation folder
+          </label>
+          <dif><input type="text" id="location-browse-input-folder" name="location-browse-input-folder" class="location-browse-input"
+                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/></dif>
+          <dif><button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button></dif>
+        </div>
+        <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
+        <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
+          <span class="pficon-error-circle-o"></span>
+          <strong>Please select an installation folder.</strong>
+        </div>
+        <div ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
+          <span class="pficon-error-circle-o"></span>
+          <strong>The selection is not a valid absolute path.</strong>
+        </div>
+        <div ng-show="!locationForm.folder.$invalid" class="form-group has-warning">
+          <div ng-show="confCtrl.folderExists && locationForm.folder.$valid" class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The selected folder already exists, some files might be overwritten.</strong>
           </div>
-          <span id="folderStatus" class="sr-only" ng-show="confirmForm.folder.$invalid">(error)</span>
-          <div ng-show="confirmForm.folder.$error.required" class="help-block has-error">
-            <span class="pficon-error-circle-o"></span>
-            <strong>Please select an installation folder.</strong>
-          </div>
-          <div ng-show="confirmForm.folder.$error.folderPath && !confirmForm.folder.$error.required" class="help-block has-error">
-            <span class="pficon-error-circle-o"></span>
-            <strong>The selection is not a valid absolute path.</strong>
-          </div>
-          <div ng-show="!confirmForm.folder.$invalid" class="form-group has-warning">
-              <div ng-show="confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected folder already exists, some files might be overwritten.</strong>
-              </div>
-              <div ng-show="!confCtrl.folderExists && confirmForm.folder.$valid" class="help-block">
-                <span class="pficon pficon-info"></span>
-                <strong>The selected folder will be created.</strong>
-              </div>
+          <div ng-show="!confCtrl.folderExists && locationForm.folder.$valid" class="help-block">
+            <span class="pficon pficon-info"></span>
+            <strong>The selected folder will be created.</strong>
           </div>
         </div>
       </div>
     </div>
 
-
-
-    <div class="row">
-      <div class="form-group" style="margin-bottom: 20px">
-        <div class="col-sm-12 pull-right">
-          <button type="submit" ng-disabled="confirmForm.folder.$invalid" class="btn btn-primary btn-lg btn-rightside">Continue</button>
-        </div>
-      </div>
+    <div id="location-form-btns" class="pull-right form-buttons">
+      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="locCtrl.exit()">Cancel</button>
+      <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="locCtrl.back()">Back</button>
+      <button type="submit" id="location-install-btn" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Continue</button>
     </div>
 
   </form>
