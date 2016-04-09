@@ -37,10 +37,7 @@ let mainModule =
               .state('account', {
                 url: '/account',
                 controller: 'AccountController as acctCtrl',
-                templateUrl: 'pages/account/account.html',
-                data: {
-                  displayName: 'Install Setup'
-                }
+                templateUrl: 'pages/account/account.html'
               })
               .state('location', {
                 url: '/location',
