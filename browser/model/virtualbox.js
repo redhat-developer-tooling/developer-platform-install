@@ -53,6 +53,8 @@ class VirtualBoxInstall extends InstallableItem {
       command = 'which virtualbox';
     }
 
+    let tempDetectedLocation = '';
+
     Util.executeCommand(command, 1).then((output) => {
       return new Promise((resolve, reject) => {
         if (process.platform === 'win32') {
@@ -84,7 +86,7 @@ class VirtualBoxInstall extends InstallableItem {
       }
     }).then((output) => {
       return new Promise((resolve, reject) => {
-      this.addOption('detected','',output,false)
+        tempDetectedLocation = output;
         resolve(output);
       });
     }).then((output) => {
@@ -94,8 +96,7 @@ class VirtualBoxInstall extends InstallableItem {
       return Util.executeCommand(command, 1);
     }).then((output) => {
       let version =  versionRegex.exec(output)[1];
-      this.option['detected'].version = version;
-      this.option['detected'].valid = Version.GE(version,this.minimumVersion) ;
+      addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
       this.selectedOption = 'detected';
       cb();
     }).catch((error) => {

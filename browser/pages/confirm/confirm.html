@@ -33,7 +33,7 @@
             Use the detected version {{checkboxModel.virtualbox.option['detected'].version}} at {{checkboxModel.virtualbox.option['detected'].location}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="checkboxModel.virtualbox.hasOption('different')" ng-hide="true" >
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn"
             value="different">
           <label for="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn-label">
@@ -152,7 +152,7 @@
             Use the existing version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('different')" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">

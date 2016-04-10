@@ -43,6 +43,10 @@ class InstallerDataService {
     this.cdkVagrantRoot = path.join(this.cdkRoot, 'components', 'rhel', 'rhel-ose');
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
 
+    if (!fs.existsSync(this.installRoot)) {
+      fs.mkdirSync(this.installRoot);
+    }
+    
     Logger.initialize(this.installRoot);
   }
 
