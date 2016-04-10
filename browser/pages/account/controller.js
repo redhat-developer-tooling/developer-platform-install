@@ -14,6 +14,7 @@ if(fs.existsSync(packageJsonForTests)) {
 }
 
 class AccountController {
+
   constructor($state, $http, $base64, installerDataSvc) {
     this.router = $state;
     this.http = $http;
@@ -25,8 +26,9 @@ class AccountController {
     this.authFailed = false;
     this.tandcNotSigned = false;
     this.pdkVersion = pjson.version;
+    this.isLoginBtnClicked = false;
   }
-
+  
   login() {
     this.authFailed = false;
     this.tandcNotSigned = false;
@@ -57,9 +59,11 @@ class AccountController {
       if (result.data == true) {
         this.installerDataSvc.setCredentials(this.username, this.password);
         this.router.go('location');
+        this.isLoginBtnClicked = false;
         return;
       } else if (result.data == false) {
         this.tandcNotSigned = true;
+        this.isLoginBtnClicked = false;
         return;
       }
     }
@@ -68,6 +72,7 @@ class AccountController {
 
   handleHttpFailure() {
     this.authFailed = true;
+    this.isLoginBtnClicked = false;
   }
 }
 

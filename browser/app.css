@@ -134,6 +134,7 @@ footer {
   .arrow:hover {
     border-color:#444;
   }
+
   header {
   }
 
@@ -436,7 +437,36 @@ footer {
           }
 
           .btn-med-size {
-            width: 80px;
+            width: 90px;
+          }
+
+          #account-form-btn-text {
+            vertical-align: super;
+            margin-right: 13px;
+          }
+
+          .spinner {
+            display: inline-block;
+            opacity: 0;
+            width: 0;
+
+            -webkit-transition: opacity 0.25s, width 0.25s;
+            -moz-transition: opacity 0.25s, width 0.25s;
+            -o-transition: opacity 0.25s, width 0.25s;
+            transition: opacity 0.25s, width 0.25s;
+          }
+
+          .has-spinner.active {
+            cursor:progress;
+          }
+
+          .has-spinner.active .spinner {
+            opacity: 1;
+            width: auto; /* This doesn't work, just fix for unkown width elements */
+          }
+
+          .has-spinner.btn.active .spinner {
+            width: 24px;
           }
 
   #welcome-text {
@@ -485,4 +515,5 @@ footer {
     /*text-overflow: ellipsis;*/
     white-space: nowrap;
   }
+
 }

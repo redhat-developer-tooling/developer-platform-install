@@ -35,7 +35,11 @@
         </div>
         <div class="form-group pull-right form-buttons">
           <a id="registerLink" type="button" class="btn-style-link" ng-click="acctCtrl.createAccount()">Register</a>
-          <button id="loginButton" type="submit" class="btn-med-size btn btn-primary btn-lg" ng-disabled="accountForm.$invalid">Log in</button>
+          <button id="loginButton" type="submit" class="btn-med-size btn btn-primary btn-lg btn-success has-spinner"
+                  ng-disabled="accountForm.$invalid" ng-class="{'active':acctCtrl.isLoginBtnClicked}" ng-click="acctCtrl.isLoginBtnClicked = true">
+            <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+            <span id="account-form-btn-text">Log in</span>
+          </button>
         </div>
         <div class="pull-right">
           Forgot your <a id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">username or password</a>?
