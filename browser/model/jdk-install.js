@@ -16,9 +16,9 @@ class JdkInstall extends InstallableItem {
     super('jdk',
           'OpenJDK',
           'v8',
-          'Java Development Kit for running JBoss Developer Studio', 
-          260, 
-          downloadUrl, 
+          'Java Development Kit for running JBoss Developer Studio',
+          260,
+          downloadUrl,
           installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -28,14 +28,7 @@ class JdkInstall extends InstallableItem {
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.jdkZipEntryPrefix = prefix;
-  }
-
-  isConfigured() {
-    return (this.existingVersion
-        && this.existingInstallLocation
-        && this.existingInstall
-        && this.existingVersion >= this.minimumVersion)
-        || this.selected;
+    this.addOption('install', this.minimumVersion, '', true);
   }
 
   detectExistingInstall(cb = new function(){}) {
@@ -99,7 +92,7 @@ class JdkInstall extends InstallableItem {
 
   install(progress, success, failure) {
     let cdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
-    if(!this.hasExistingInstall()) {
+    if(this.selectedOption === "install") {
       progress.setStatus('Installing');
       let installer = new Installer(JdkInstall.key(), progress, success, failure);
 

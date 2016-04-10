@@ -33,20 +33,11 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
     this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
+
   }
 
   static key() {
     return 'virtualbox';
-  }
-
-  // Override parent "true" and check if we have something setup
-  isConfigured() {
-    return (this.existingVersion
-        && this.existingInstallLocation
-        && this.existingInstall
-        && this.existingVersion >= this.minimumVersion)
-        || (this.selected
-        && this.existingInstallLocation === '');
   }
 
   detectExistingInstall(cb = new function(){}) {
@@ -93,7 +84,7 @@ class VirtualBoxInstall extends InstallableItem {
       }
     }).then((output) => {
       return new Promise((resolve, reject) => {
-        this.existingInstallLocation = output;
+      this.addOption('detected','',output,false)
         resolve(output);
       });
     }).then((output) => {
@@ -102,13 +93,14 @@ class VirtualBoxInstall extends InstallableItem {
       var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
       return Util.executeCommand(command, 1);
     }).then((output) => {
-      this.existingVersion = versionRegex.exec(output)[1];
-      this.existingInstall = Version.GE(this.existingVersion,this.minimumVersion) ;
-      this.detected = true;
-      this.selected = false;
+      let version =  versionRegex.exec(output)[1];
+      this.option['detected'].version = version;
+      this.option['detected'].valid = Version.GE(version,this.minimumVersion) ;
+      this.selectedOption = 'detected';
       cb();
     }).catch((error) => {
-      this.existingInstall = false;
+      this.addOption('install','5.0.8','',true);
+      this.addOption('different','','',false);
       cb();
     });
   }
@@ -136,7 +128,7 @@ class VirtualBoxInstall extends InstallableItem {
 
   install(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.key(), progress, success, failure);
-    if(!this.hasExistingInstall()) {
+    if(this.selectedOption === "install") {
       installer.execFile(this.downloadedFile,
           ['--extract',
             '-path',

@@ -15,11 +15,11 @@ import VirtualBoxInstall from './virtualbox';
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
     super('cygwin',
-          'Cygwin', 
+          'Cygwin',
           'v2',
-          'A distribution of popular GNU and other Open Source tools running on Microsoft Windows.', 
-          720, 
-          downloadUrl, 
+          'A distribution of popular GNU and other Open Source tools running on Microsoft Windows.',
+          720,
+          downloadUrl,
           installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -27,6 +27,7 @@ class CygwinInstall extends InstallableItem {
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
+    this.addOption('install','','',true);
   }
 
   static key() {

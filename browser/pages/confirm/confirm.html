@@ -19,29 +19,30 @@
         </div>
       </div>
       <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.virtualbox.isCollapsed">
-        <div class="confirm-radio-container">
-          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.virtualbox.selected">
+        <div class="confirm-radio-container" ng-show="checkboxModel.virtualbox.hasOption('install')">
           <label for="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn-label">
+            <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn"
+                 ng-model="checkboxModel.virtualbox.selectedOption" value="install">
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="!checkboxModel.virtualbox.existingInstallLocation">
+        <div class="confirm-radio-container" ng-show="checkboxModel.virtualbox.hasOption('detected')">
           <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn"
-                 ng-model="checkboxModel.virtualbox.existingInstall">
+                 ng-model="checkboxModel.virtualbox.selectedOption" value="detected">
           <label for="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.virtualbox.existingVersion}}
+            Use the detected version {{checkboxModel.virtualbox.option['detected'].version}} at {{checkboxModel.virtualbox.option['detected'].location}}
           </label>
         </div>
-        <div class="confirm-radio-container">
-          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn">
+        <div class="confirm-radio-container" ng-show="checkboxModel.virtualbox.hasOption('different')" ng-hide="true" >
+          <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn"
+            value="different">
           <label for="confirm-radio-btn-virtualbox-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
               <label for="confirm-browse-input-virtualbox" class="browse-browse-label">
                 Use a different version
               </label>
               <input type="text" id="confirm-browse-input-virtualbox" name="confirm-browse-input-virtualbox" class="confirm-browse-input"
-                     ng-model="checkboxModel.virtualbox.existingInstallLocation"/>
+                     ng-model="checkboxModel.virtualbox.option.different.location" value="different"/>
               <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('virtualbox')">Browse</button>
             </div>
             <div ng-hide="checkboxModel.virtualbox.detected" class="has-warning">
@@ -80,7 +81,7 @@
       <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cygwin.isCollapsed">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.cygwin.selected">
+                 ng-model="checkboxModel.cygwin.selectedOption" value="install">
           <label for="confirm-radio-btn-cygwin-install" class="confirm-radio-btn-label">
             Install
           </label>
@@ -136,22 +137,22 @@
           <div>A container provisioning tool.</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.vagrant.isCollapsed">
-        <div class="confirm-radio-container">
+      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.vagrant.isCollapsed" >
+        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('install')">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.vagrant.selected">
+                 ng-model="checkboxModel.vagrant.selectedOption" value="install">
           <label for="confirm-radio-btn-vagrant-install" class="confirm-radio-btn-label">
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="!checkboxModel.vagrant.existingInstallLocation">
+        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('detected')">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn"
-                 ng-model="checkboxModel.vagrant.existingInstall">
+                 ng-model="checkboxModel.vagrant.selectedOption" value="detected">
           <label for="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.vagrant.existingVersion}}
+            Use the existing version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
           </label>
         </div>
-        <div class="confirm-radio-container">
+        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('different')" ng-hide="true">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -159,7 +160,7 @@
                 Use a different version
               </label>
               <input type="text" id="confirm-browse-input-vagrant" name="confirm-browse-input-vagrant" class="confirm-browse-input"
-                     ng-model="checkboxModel.vagrant.existingInstallLocation"/>
+                     ng-model="checkboxModel.vagrant.selectedOption" value="different"/>
               <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('vagrant')">Browse</button>
             </div>
             <div ng-hide="checkboxModel.vagrant.detected" class="has-warning">
@@ -198,7 +199,7 @@
       <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cdk.isCollapsed">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.cdk.selected">
+                 ng-model="checkboxModel.cdk.selectedOption" value="install">
           <label for="confirm-radio-btn-cdk-install" class="confirm-radio-btn-label">
             Install
           </label>
@@ -257,19 +258,19 @@
       <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jdk.isCollapsed">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.jdk.selected">
+                 ng-model="checkboxModel.jdk.selectedOption" value='install'>
           <label for="confirm-radio-btn-jdk-install" class="confirm-radio-btn-label">
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="!checkboxModel.jdk.existingInstallLocation">
+        <div class="confirm-radio-container" ng-show="!checkboxModel.jdk.existingInstallLocation" ng-hide="true">
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.jdk.existingInstall">
           <label for="confirm-radio-btn-jdk-exists" class="confirm-radio-btn-label">
             Use the existing version {{checkboxModel.jdk.existingVersion}}
           </label>
         </div>
-        <div class="confirm-radio-container">
+        <div class="confirm-radio-container" ng-hide="true">
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-jdk-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -316,19 +317,19 @@
       <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jbds.isCollapsed">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.jbds.selected">
+                 ng-model="checkboxModel.jbds.selectedOption" value="install">
           <label for="confirm-radio-btn-jbds-install" class="confirm-radio-btn-label">
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-show="!checkboxModel.jbds.existingInstallLocation">
+        <div class="confirm-radio-container" ng-show="!checkboxModel.jbds.existingInstallLocation" ng-hide="true">
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.jbds.existingInstall">
           <label for="confirm-radio-btn-jbds-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.jbds.existingVersion}}
+            Use the existing version {{checkboxModel.jbds.detected.version}} at {{checkboxModel.jbds.detected.location}}
           </label>
         </div>
-        <div class="confirm-radio-container">
+        <div class="confirm-radio-container" ng-hide="true">
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-jbds-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">

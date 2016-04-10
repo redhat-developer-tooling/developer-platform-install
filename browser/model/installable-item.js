@@ -9,14 +9,17 @@ class InstallableItem {
     this.installTime = installTime;
     this.existingInstall = false;
     this.existingInstallLocation = '';
+    this.existingVersion = '';
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
-    // We assume all items are going to be selected for installation
+
     this.selected = true;
     this.version = '';
-    this.existingVersion = '';
-    this.isCollapsed = true;
+
+    this.detected = false;
+    this.detectedVersion = 'unknown';
+    this.detectedInstallLocation = '';
 
     if (downloadUrl == null || downloadUrl == '') {
     	throw(new Error('No download URL set'));
@@ -28,6 +31,10 @@ class InstallableItem {
       this.useDownload = false;
       this.installFile = installFile;
     }
+
+    this.isCollapsed = true;
+    this.option = new Set();
+    this.selectedOption = "install";
   }
 
   getProductName() {
@@ -97,12 +104,25 @@ class InstallableItem {
     success();
   }
 
-  isConfigured() {
-    return true;
-  }
-
   changeIsCollapsed() {
       this.isCollapsed = !this.isCollapsed;
+  }
+
+  hasOption(name) {
+    return this.option[name] && true;
+  }
+
+  addOption(name, version, location, valid) {
+    this.option[name] = {
+      'version' : version,
+      'location' : location,
+      'valid' : valid
+    };
+  }
+
+  // Override parent "true" and check if we have something setup
+  isConfigured() {
+    return this.option[this.selectedOption] && this.option[this.selectedOption].valid;
   }
 
 }

@@ -19,10 +19,10 @@ class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
     super('jbds',
           'RED HAT JBOSS DEVELOPER STUDIO',
-          'v9.1', 
-          'An IDE with tooling that will help you easily code, test, and deploy your projects.', 
-          1600, 
-          downloadUrl, 
+          'v9.1',
+          'An IDE with tooling that will help you easily code, test, and deploy your projects.',
+          1600,
+          downloadUrl,
           installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -31,6 +31,7 @@ class JbdsInstall extends InstallableItem {
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
+    this.addOption('install', '9.1.0', '', true);
   }
 
   static key() {
@@ -141,7 +142,7 @@ class JbdsInstall extends InstallableItem {
 
   postInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    if(!this.hasExistingInstall()) {
+    if(this.selectedOption === "install") {
       this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir());
       let installer = new Installer(JbdsInstall.key(), progress, success, failure);
 

@@ -42,6 +42,8 @@ class CDKInstall extends InstallableItem {
     this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
 
     this.downloads = path.normalize(path.join(__dirname,"../../.."));
+
+    this.addOption('install','2.0.0','',true);
   }
 
   static key() {

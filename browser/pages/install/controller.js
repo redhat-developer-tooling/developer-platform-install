@@ -16,10 +16,10 @@ class InstallController {
         writable: true,
         value: itemProgress
       });
-      if(value.selected || value.hasExistingInstall()) {
-        this.processInstallable(key, value,itemProgress);
+      if( value.selectedOption === "skip" ) {
+          this.installerDataSvc.setupDone(itemProgress,key);
       } else {
-        this.installerDataSvc.setupDone(itemProgress,key);
+        this.processInstallable(key, value,itemProgress);
       }
     }
   }

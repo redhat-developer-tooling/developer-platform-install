@@ -10,15 +10,16 @@ import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import CygwinInstall from './cygwin';
 import Util from './helpers/util';
+import Version from './helpers/version';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile) {
     super('vagrant',
           'Vagrant',
           'v1.7',
-          'A container provisioning tool.', 
-          900, 
-          downloadUrl, 
+          'A container provisioning tool.',
+          900,
+          downloadUrl,
           installFile);
 
     this.installerDataSvc = installerDataSvc;
@@ -33,19 +34,6 @@ class VagrantInstall extends InstallableItem {
 
   static key() {
     return 'vagrant';
-  }
-
-  // Vagrant validation rules:
-  // - cannot install vagrant if another one is already present in classpath
-  // - minimal version required is 1.7.4 the same downloaded by installer
-  // -
-  isConfigured() {
-    return this.existingVersion
-        && this.existingInstallLocation
-        && this.existingInstall
-        && this.existingVersion >= this.minimumVersion
-        || this.selected
-        && this.existingInstallLocation === '';
   }
 
   detectExistingInstall(cb = new function(){}) {
@@ -63,16 +51,17 @@ class VagrantInstall extends InstallableItem {
 
     Util.executeCommand(command, 1)
     .then((output) => {
-      this.existingInstallLocation = path.dirname(path.dirname(output));
+      this.addOption('detected','',path.dirname(path.dirname(output)),false);
       return Util.executeCommand(output + ' -v', 1)
     }).then((output) => {
-      this.existingVersion = versionRegex.exec(output)[1];
-      this.existingInstall = true;
-      this.detected = true;
-      this.selected = false;
+      let version = versionRegex.exec(output)[1];
+      this.option['detected'].version = version;
+      this.option['detected'].valid = Version.GE(version,this.minimumVersion);
+      this.selectedOption = 'detected';
       cb();
     }).catch((error) => {
-      this.existingInstall = false;
+      this.addOption('install','5.0.8','',true);
+      this.addOption('different','','',false);
       cb(error);
     });
   }
@@ -116,7 +105,7 @@ class VagrantInstall extends InstallableItem {
 
   postCygwinInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    if(!this.hasExistingInstall()) {
+    if(this.selectedOption === "install") {
       let installer = new Installer(VagrantInstall.key(), progress, success, failure);
       installer.execFile('msiexec', [
         '/i',
