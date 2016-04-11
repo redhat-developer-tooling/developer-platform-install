@@ -54,7 +54,7 @@ describe('CDK installer', function() {
   installerDataSvc.virtualBoxDir.returns(path.join(installerDataSvc.installDir(), 'virtualbox'));
   installerDataSvc.cdkVagrantfileDir.returns(path.join(installerDataSvc.cdkDir(), 'components', 'rhel', 'rhel-ose'));
   let vagrantInstallStub = new VagrantInstall(installerDataSvc,'url', null, 'vagrant');
-  vagrantInstallStub.addOption('install', '1.7.4','installFolder\\vagrant\\bin',true);
+  vagrantInstallStub.addOption('install', '1.7.4', path.join('installFolder', 'vagrant', 'bin'), true);
   installerDataSvc.getInstallable.returns(vagrantInstallStub);
   installerDataSvc.cdkBoxDir.returns(path.join(installerDataSvc.cdkDir(), 'boxes'));
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
