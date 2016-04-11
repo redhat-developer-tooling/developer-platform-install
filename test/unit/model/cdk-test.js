@@ -54,7 +54,7 @@ describe('CDK installer', function() {
   installerDataSvc.virtualBoxDir.returns(path.join(installerDataSvc.installDir(), 'virtualbox'));
   installerDataSvc.cdkVagrantfileDir.returns(path.join(installerDataSvc.cdkDir(), 'components', 'rhel', 'rhel-ose'));
   let vagrantInstallStub = new VagrantInstall(installerDataSvc,'url', null, 'vagrant');
-  vagrantInstallStub.addOption('install', '1.7.4','installFolder\\vagrant\\bin',true);
+  vagrantInstallStub.addOption('install', '1.7.4','installFolder\\vagrant',true);
   installerDataSvc.getInstallable.returns(vagrantInstallStub);
   installerDataSvc.cdkBoxDir.returns(path.join(installerDataSvc.cdkDir(), 'boxes'));
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
@@ -201,7 +201,7 @@ describe('CDK installer', function() {
     it('createEnvironment should return path to vagrant/bin', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let env = installer.createEnvironment();
-      expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';' +path.join(installerDataSvc.vagrantDir(), 'bin') + ';');
+      expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';' + installerDataSvc.vagrantDir() + ';');
     });
 
     it('setupVagrant should wait for vagrant install to complete', function() {

@@ -181,7 +181,7 @@ class CDKInstall extends InstallableItem {
     let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
     let vgrPath = vagrantInstall.getLocation();
     let vboxPath = vboxInstall.getLocation();
-    env['path'] = vgrPath + ';' + vboxPath + ';';
+    env['path'] = path.join(vgrPath,'bin') + ';' + vboxPath + ';';
     return env;
   }
 
@@ -209,7 +209,6 @@ class CDKInstall extends InstallableItem {
   postVagrantSetup(installer, promise) {
     Logger.info(CDKInstall.key() + ' - postVagrantSetup called');
     let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
-    console.log(vagrantInstall);
     if (vagrantInstall.isInstalled()) {
       // Vagrant is installed, add CDK bits
       let env = this.createEnvironment();
