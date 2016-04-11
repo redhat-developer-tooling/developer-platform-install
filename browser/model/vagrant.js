@@ -57,14 +57,30 @@ class VagrantInstall extends InstallableItem {
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
       this.option['detected'].version = version;
-      this.option['detected'].valid = Version.GE(version,this.minimumVersion);
       this.selectedOption = 'detected';
+      this.validateVersion();
       cb();
     }).catch((error) => {
       this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'vagrant'),true);
       this.addOption('different','','',false);
       cb(error);
     });
+  }
+
+  validateVersion() {
+    let installOption = this.option[this.selectedOption];
+    installOption.valid = true;
+    installOption.error = '';
+    installOption.warning = '';
+      if(Version.LT(installOption.version,this.minimumVersion)) {
+        installOption.valid = false;
+        installOption.error = 'oldVersion';
+        installOption.warning = '';
+      } else if(Version.GT(installOption.version,this.minimumVersion)) {
+        installOption.valid = true;
+        installOption.error = '';
+        installOption.warning = 'newerVersion';
+      }
   }
 
   validateSelectedFolder(selection) {

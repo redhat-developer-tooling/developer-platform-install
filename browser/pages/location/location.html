@@ -22,24 +22,25 @@
           <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
                  <button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
-        </div>
-        <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
-        <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
-          <span class="pficon-error-circle-o"></span>
-          <strong>Please select an installation folder.</strong>
-        </div>
-        <div ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
-          <span class="pficon-error-circle-o"></span>
-          <strong>The selection is not a valid absolute path.</strong>
-        </div>
-        <div ng-show="!locationForm.folder.$invalid" class="form-group has-warning">
-          <div ng-show="locCtrl.folderExists" class="help-block">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>The selected folder already exists, some files might be overwritten.</strong>
+
+          <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
+          <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>Please select an installation folder.</strong>
           </div>
-          <div ng-show="!locCtrl.folderExists" class="help-block">
-            <span class="pficon pficon-info"></span>
-            <strong>The selected folder will be created.</strong>
+          <div ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
+            <span class="pficon-error-circle-o"></span>
+            <strong>The selection is not a valid absolute path.</strong>
+          </div>
+          <div ng-show="!locationForm.folder.$invalid" class="form-group has-warning">
+            <div ng-show="locCtrl.folderExists" class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The selected folder already exists, some files might be overwritten.</strong>
+            </div>
+            <div ng-show="!locCtrl.folderExists" class="help-block">
+              <span class="pficon pficon-info"></span>
+              <strong>The selected folder will be created.</strong>
+            </div>
           </div>
         </div>
       </div>

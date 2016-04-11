@@ -116,9 +116,11 @@ class InstallableItem {
 
   addOption(name, version, location, valid) {
     this.option[name] = {
-      'version' : version,
+      'version'  : version,
       'location' : location,
-      'valid' : valid
+      'valid'    : valid,
+      'error'    : '',
+      'warning'  : ''
     };
   }
 
@@ -135,6 +137,10 @@ class InstallableItem {
 
   getLocation() {
     return this.option[this.selectedOption].location;
+  }
+
+  validateVersion() {
+
   }
 
 }

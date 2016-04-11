@@ -228,4 +228,33 @@ describe('Virtualbox installer', function() {
       }
     });
   });
+  describe('when-validating-version', function() {
+    it('should-add-warning-for-newer-version',function(){
+      let installer = new VirtualBoxInstall("version", "revision", installerDataSvc, "downloadUrl", null);
+      installer.addOption('detected','5.0.16','',false);
+      installer.selectedOption = 'detected';
+      installer.validateVersion();
+      expect(installer.option.detected.error).to.equal('');
+      expect(installer.option.detected.warning).to.equal('newerVersion');
+      expect(installer.option.detected.valid).to.equal(true);
+    });
+    it('should add error for older version',function(){
+      let installer = new VirtualBoxInstall("version", "revision", installerDataSvc, "downloadUrl", null);
+      installer.addOption('detected','5.0.1','',false);
+      installer.selectedOption = 'detected';
+      installer.validateVersion();
+      expect(installer.option.detected.error).to.equal('oldVersion');
+      expect(installer.option.detected.warning).to.equal('');
+      expect(installer.option.detected.valid).to.equal(false);
+    })
+    it('should add nither warning nor error for recomended version',function(){
+      let installer = new VirtualBoxInstall("version", "revision", installerDataSvc, "downloadUrl", null);
+      installer.addOption('detected','5.0.8','',false);
+      installer.selectedOption = 'detected';
+      installer.validateVersion();
+      expect(installer.option.detected.error).to.equal('');
+      expect(installer.option.detected.warning).to.equal('');
+      expect(installer.option.detected.valid).to.equal(true);
+    })
+  })
 });

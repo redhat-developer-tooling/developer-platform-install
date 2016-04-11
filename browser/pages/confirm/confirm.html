@@ -30,7 +30,23 @@
           <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.virtualbox.selectedOption" value="detected">
           <label for="confirm-radio-btn-virtualbox-exists" class="confirm-radio-btn-label">
-            Use the detected version {{checkboxModel.virtualbox.option['detected'].version}} at {{checkboxModel.virtualbox.option['detected'].location}}
+            <div class="confirm-browse-container">
+              <label for="confirm-browse-input-virtualbox" class="browse-browse-label">
+                  Use the detected version {{checkboxModel.virtualbox.option['detected'].version}} at {{checkboxModel.virtualbox.option['detected'].location}}
+              </label>
+            </div>
+            <div ng-show="checkboxModel.virtualbox.option.detected.warning!==''" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The detected VirtualBox installation is newer that recommended {{checkboxModel.virtualbox.minimumVersion}}</strong>
+              </div>
+            </div>
+            <div ng-show="checkboxModel.virtualbox.option.detected.error!==''" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>The detected VirtualBox installation is older that recommended {{checkboxModel.virtualbox.minimumVersion}}</strong>
+              </div>
+            </div>
           </label>
         </div>
         <div class="confirm-radio-container" ng-show="false">
@@ -151,6 +167,18 @@
           <label for="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn-label">
             Use the existing version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
           </label>
+          <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The detected Vagrant installation is newer that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+            </div>
+          </div>
+          <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <strong>The detected Vagrant installation is older that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+            </div>
+          </div>
         </div>
         <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn">

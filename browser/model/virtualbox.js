@@ -15,7 +15,7 @@ class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('virtualbox',
           'Oracle VirtualBox',
-          'v5.0.16',
+          'v5.0.8',
           'A virtualization software package developed by Oracle',
           700,
           downloadUrl,
@@ -96,14 +96,31 @@ class VirtualBoxInstall extends InstallableItem {
       return Util.executeCommand(command, 1);
     }).then((output) => {
       let version =  versionRegex.exec(output)[1];
-      addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
+      this.addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
       this.selectedOption = 'detected';
+      this.validateVersion();
       cb();
     }).catch((error) => {
       this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
       this.addOption('different','','',false);
       cb();
     });
+  }
+
+  validateVersion() {
+    let installOption = this.option[this.selectedOption];
+    installOption.valid = true;
+    installOption.error = '';
+    installOption.warning = '';
+      if(Version.LT(installOption.version,this.minimumVersion)) {
+        installOption.valid = false;
+        installOption.error = 'oldVersion';
+        installOption.warning = '';
+      } else if(Version.GT(installOption.version,this.minimumVersion)) {
+        installOption.valid = true;
+        installOption.error = '';
+        installOption.warning = 'newerVersion';
+      }
   }
 
   validateSelectedFolder(selection) {

@@ -24,6 +24,11 @@ class ConfirmController {
 
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
+      $scope.$watch(()=>{
+        return $scope.checkboxModel[key].selectedOption;
+      },(newVal,oldVal)=>{
+        $scope.checkboxModel[key].validateVersion();
+      });
     }
 
     $scope.isConfigurationValid = this.isConfigurationValid;
@@ -49,15 +54,6 @@ class ConfirmController {
         });
       });
     });
-  }
-
-  // Get the install location if you can. Check if there is an existing install.
-  itemRoot(key) {
-    let root = this.installables[key] ? this.installables[key][0].existingInstallLocation : null;
-    if (root && (root.length === 0 || !this.installables[key][0].existingInstall)) {
-      root = null;
-    }
-    return root;
   }
 
   // Prep the install location path for each product, then go to the next page.
