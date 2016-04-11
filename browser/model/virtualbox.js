@@ -175,19 +175,28 @@ class VirtualBoxInstall extends InstallableItem {
 
   installMsi(installer,resolve,reject) {
     installer.progress.setStatus('Installing');
-    return installer.execFile('msiexec', [
-      '/i',
-      this.msiFile,
-      'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-      '/qb!',
-      '/norestart',
-      '/Liwe',
-      path.join(this.installerDataSvc.installDir(), 'vbox.log')
-    ]).then((res) => {
-      return resolve(res);
-    }) .catch((err) => {
-      return reject(err);
-    });
+    let ps1InstallData = [
+      'Start-Process msiexec.exe "/qn /norestart /i ""' + this.msiFile + '"" '
+      + 'INSTALLDIR=""' + this.installerDataSvc.virtualBoxDir() + '"" '
+      + '/log ""' + path.join(this.installerDataSvc.installDir(), 'vbox.log') + '"""'
+      + '-Verb runas '
+      + '-Wait'
+    ].join('\r\n');
+    let vboxInstallScript = path.join(this.installerDataSvc.tempDir(), 'install-vbox.ps1');
+    return installer.writeFile(vboxInstallScript, ps1InstallData)
+        .then((result) => {
+          let args = [
+            '-ExecutionPolicy',
+            'ByPass',
+            '-File',
+            vboxInstallScript
+          ];
+          return installer.execFile('powershell', args, result);
+        }).then((result)=>{
+          return resolve(result);
+        }).catch((err) => {
+          return reject(err);
+        });
   }
 }
 
