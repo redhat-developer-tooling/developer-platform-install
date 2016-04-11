@@ -70,7 +70,6 @@
     "sinon": "1.17.3",
     "sinon-as-promised": "4.0.0",
     "sinon-chai": "2.8.0",
-    "start": "^4.0.1",
     "tmp": "0.0.28",
     "xunit-file": "0.0.9",
     "yargs": "4.4.0"
