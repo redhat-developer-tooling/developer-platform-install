@@ -79,7 +79,7 @@ class JdkInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    if(!this.hasExistingInstall() && !fs.existsSync(this.bundledFile)) {
+    if(this.selectedOption == 'install' && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloader = new Downloader(progress, success, failure);
