@@ -16,16 +16,16 @@ import JdkInstall from './jdk-install';
 import Util from './helpers/util';
 
 class JbdsInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile) {
+  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('jbds',
           'RED HAT JBOSS DEVELOPER STUDIO',
           'v9.1',
           'An IDE with tooling that will help you easily code, test, and deploy your projects.',
           1600,
           downloadUrl,
-          installFile);
-
-    this.installerDataSvc = installerDataSvc;
+          installFile,
+          targetFolderName,
+          installerDataSvc);
 
     this.downloadedFileName = 'jbds.jar';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);

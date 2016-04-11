@@ -12,16 +12,17 @@ import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, installFile) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, installFile, targetFolderName) {
     super('cdk',
           'Red Hat Container Development Kit',
           'v2.0.beta5',
           'Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications',
           900,
           cdkUrl,
-          installFile);
+          installFile,
+          targetFolderName,
+          installerDataSvc);
 
-    this.installerDataSvc = installerDataSvc;
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
@@ -49,6 +50,7 @@ class CDKInstall extends InstallableItem {
   static key() {
     return 'cdk';
   }
+
 
   checkForExistingInstall() {
   }
@@ -176,12 +178,10 @@ class CDKInstall extends InstallableItem {
 
     //TODO Need to get this info from VagrantInstaller rather than hard code
     let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
-    if(vagrantInstall) {
-      env['path'] = vagrantInstall.existingInstallLocation ? path.join(vagrantInstall.existingInstallLocation,'bin')
-          : path.join(this.installerDataSvc.vagrantDir(), 'bin');
-    } else {
-      env['path'] = path.join(this.installerDataSvc.vagrantDir(), 'bin') + ';';
-    }
+    let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
+    let vgrPath = vagrantInstall.getLocation();
+    let vboxPath = vboxInstall.getLocation();
+    env['path'] = vgrPath + ';' + vboxPath + ';';
     return env;
   }
 
@@ -209,15 +209,13 @@ class CDKInstall extends InstallableItem {
   postVagrantSetup(installer, promise) {
     Logger.info(CDKInstall.key() + ' - postVagrantSetup called');
     let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
-
-    if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
+    console.log(vagrantInstall);
+    if (vagrantInstall.isInstalled()) {
       // Vagrant is installed, add CDK bits
       let env = this.createEnvironment();
       let opts = {
-        cwd: env['path'],
         env: env
       };
-
       let res = installer.exec(
         'vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem'), opts, promise
       ).then((result) => {
@@ -233,7 +231,6 @@ class CDKInstall extends InstallableItem {
       }).then((result) => {
         return installer.exec('vagrant plugin install ' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.0.0.gem'), opts, result);
       });
-
       return res;
     }
   }

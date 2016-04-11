@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CDKInstall from 'model/cdk';
 import VagrantInstall from "model/vagrant";
+import VirtualboxInstall from "model/virtualbox";
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
@@ -21,16 +22,17 @@ describe('CDK installer', function() {
   let infoStub, errorStub;
   let fakeData = {
     tempDir: function() { return 'temporaryFolder'; },
-    installDir: function() { return 'installFolder'; },
+    installDir: function() { return 'c:\\installFolder'; },
     getUsername: function() { return 'user'; },
     getPassword: function() { return 'password'; },
     ocDir: function() {},
     vagrantDir: function() {},
+    virtualBoxDir: function() {},
     cdkVagrantfileDir: function() {},
     cdkBoxDir: function() {},
     cdkMarker: function() {},
     cdkDir: function() {},
-    getInstallable: function(key) {return new VagrantInstall(installerDataSvc,'url', null);}
+    getInstallable: function(key) {}
   };
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -49,8 +51,11 @@ describe('CDK installer', function() {
   installerDataSvc.cdkDir.returns(path.join(installerDataSvc.installDir(), 'cdk'));
   installerDataSvc.ocDir.returns(path.join(installerDataSvc.cdkDir(), 'bin'));
   installerDataSvc.vagrantDir.returns(path.join(installerDataSvc.installDir(), 'vagrant'));
+  installerDataSvc.virtualBoxDir.returns(path.join(installerDataSvc.installDir(), 'virtualbox'));
   installerDataSvc.cdkVagrantfileDir.returns(path.join(installerDataSvc.cdkDir(), 'components', 'rhel', 'rhel-ose'));
-  
+  let vagrantInstallStub = new VagrantInstall(installerDataSvc,'url', null, 'vagrant');
+  vagrantInstallStub.addOption('install', '1.7.4','installFolder\\vagrant\\bin',true);
+  installerDataSvc.getInstallable.returns(vagrantInstallStub);
   installerDataSvc.cdkBoxDir.returns(path.join(installerDataSvc.cdkDir(), 'boxes'));
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
 
@@ -173,6 +178,7 @@ describe('CDK installer', function() {
 
   describe('when installing cdk', function() {
     it('should set progress to "Installing"', function() {
+
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
@@ -195,8 +201,7 @@ describe('CDK installer', function() {
     it('createEnvironment should return path to vagrant/bin', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let env = installer.createEnvironment();
-
-      expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';');
+      expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';' +path.join(installerDataSvc.vagrantDir(), 'bin') + ';');
     });
 
     it('setupVagrant should wait for vagrant install to complete', function() {
@@ -230,7 +235,9 @@ describe('CDK installer', function() {
       let envSpy = sandbox.spy(installer, 'createEnvironment');
 
       let fakeInstall = {
-        isInstalled: function() { return false; }
+        isInstalled: function() {
+          console.log('installed true');
+          return false; }
       };
       installerDataSvc.getInstallable.returns(fakeInstall);
 
@@ -240,14 +247,19 @@ describe('CDK installer', function() {
     });
 
     it('postVagrantSetup should execute when vagrant installation is complete', function() {
-      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
+      let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null, 'cdk');
       let helper = new Installer('cdk', fakeProgress, function() {}, function (err) {});
       let spy = sandbox.spy(installer, 'createEnvironment');
       let execStub = sandbox.stub(helper, 'exec');
       execStub.resolves(true);
 
       let fakeInstall = {
-        isInstalled: function() { return true; }
+        isInstalled: function() {
+          return true;
+        },
+        getLocation: function() {
+          return 'location';
+        }
       };
       installerDataSvc.getInstallable.returns(fakeInstall);
 

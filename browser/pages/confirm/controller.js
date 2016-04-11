@@ -16,12 +16,12 @@ class ConfirmController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-    
+
     this.installables = {};
     $scope.checkboxModel = {};
 
     $scope.detectionStyle = false;
-    
+
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
     }
@@ -35,7 +35,7 @@ class ConfirmController {
         $scope.checkboxModel.jbds.selected = false;
       }
     });
-    
+
     $scope.$watch('$viewContentLoaded', ()=>{
       console.log('content loaded');
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
@@ -51,7 +51,7 @@ class ConfirmController {
     });
   }
 
-  // Get the install location if you can. Check if there is an existing install. 
+  // Get the install location if you can. Check if there is an existing install.
   itemRoot(key) {
     let root = this.installables[key] ? this.installables[key][0].existingInstallLocation : null;
     if (root && (root.length === 0 || !this.installables[key][0].existingInstall)) {
@@ -63,12 +63,12 @@ class ConfirmController {
   // Prep the install location path for each product, then go to the next page.
   install() {
     this.installerDataSvc.setup(
-      this.itemRoot('virtualbox'),
-      this.itemRoot('jdk'),
-      this.itemRoot('jbds'),
-      this.itemRoot('vagrant'),
-      this.itemRoot('cygwin'),
-      this.itemRoot('cdk')
+      this.installerDataSvc.getInstallable('virtualbox').getLocation(),
+      this.installerDataSvc.getInstallable('jdk').getLocation(),
+      this.installerDataSvc.getInstallable('jbds').getLocation(),
+      this.installerDataSvc.getInstallable('vagrant').getLocation(),
+      this.installerDataSvc.getInstallable('cygwin').getLocation(),
+      this.installerDataSvc.getInstallable('cdk').getLocation()
     );
     this.router.go('install');
   }
@@ -79,7 +79,7 @@ class ConfirmController {
       properties: [ 'openDirectory' ],
       defaultPath: this.installables[key] && this.installables[key][0].existingInstallLocation ? this.installables[key][0].existingInstallLocation : this.installerDataSvc.installRoot
     });
-    
+
     let item = this.installerDataSvc.allInstallables().get(key);
 
     // If the browsed for dir is found then expect it to be JBDS
@@ -96,7 +96,7 @@ class ConfirmController {
   }
 
   // Check if the product is already installed
-  // ATM this is only JBDS 
+  // ATM this is only JBDS
   checkItem(key) {
     let item = this.installerDataSvc.allInstallables().get(key);
     item.checkForExistingInstall();

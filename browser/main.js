@@ -78,13 +78,13 @@ let mainModule =
             let reqs = null;
             let installersJsonForTests = path.resolve('./requirements.json');
             let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
-            
+
             if(fs.existsSync(installersJsonForTests)) {
               reqs = require(installersJsonForTests);
             } else if ( fs.existsSync(installersJsonForRT) ) {
               reqs = require(installersJsonForRT);
             }
-            
+
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),
                 new VirtualBoxInstall(
@@ -92,25 +92,28 @@ let mainModule =
                     reqs['virtualbox.exe'].revision,
                     installerDataSvc,
                     reqs['virtualbox.exe'].url,
-                    null)
+                    null,
+                    'virtualbox')
             );
-            
+
             installerDataSvc.addItemToInstall(
                 CygwinInstall.key(),
                 new CygwinInstall(
                     installerDataSvc,
                     reqs['cygwin.exe'].url,
-                    null)
+                    null,
+                    'cygwin')
             );
-            
+
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
                 new VagrantInstall(
                     installerDataSvc,
                     reqs['vagrant.msi'].url,
-                    null)
+                    null,
+                    'vagrant')
             );
-            
+
             installerDataSvc.addItemToInstall(
                 CDKInstall.key(),
                 new CDKInstall(
@@ -120,7 +123,8 @@ let mainModule =
                     reqs['rhel-vagrant-virtualbox.box'].url,
                     reqs['oc.zip'].url,
                     reqs['pscp.exe'].url,
-                    null)
+                    null,
+                    'cdk')
             );
 
             installerDataSvc.addItemToInstall(
@@ -129,7 +133,8 @@ let mainModule =
                     installerDataSvc,
                     reqs['jdk.zip'].url,
                     null,
-                    reqs['jdk.zip'].prefix)
+                    reqs['jdk.zip'].prefix,
+                    'jdk8')
             );
 
             installerDataSvc.addItemToInstall(
@@ -137,7 +142,8 @@ let mainModule =
                 new JbdsInstall(
                     installerDataSvc,
                     reqs['jbds.jar'].url,
-                    null)
+                    null,
+                    'developer-studio')
             );
           }]);
 

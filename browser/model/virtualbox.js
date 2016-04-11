@@ -12,16 +12,17 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class VirtualBoxInstall extends InstallableItem {
-  constructor(version, revision, installerDataSvc, downloadUrl, installFile) {
+  constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('virtualbox',
           'Oracle VirtualBox',
           'v5.0.16',
           'A virtualization software package developed by Oracle',
           700,
           downloadUrl,
-          installFile);
+          installFile,
+          targetFolderName,
+          installerDataSvc);
 
-    this.installerDataSvc = installerDataSvc;
     this.minimumVersion = '5.0.8';
     this.version = version;
     this.revision = revision;
@@ -33,7 +34,6 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
     this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
-
   }
 
   static key() {
@@ -100,7 +100,7 @@ class VirtualBoxInstall extends InstallableItem {
       this.selectedOption = 'detected';
       cb();
     }).catch((error) => {
-      this.addOption('install','5.0.8','',true);
+      this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
       this.addOption('different','','',false);
       cb();
     });
@@ -116,7 +116,7 @@ class VirtualBoxInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    if(this.isDownloadRequired()) {
+    if(this.isDownloadRequired() && this.selectedOption === "install") {
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloader = new Downloader(progress, success, failure);
       downloader.setWriteStream(writeStream);
@@ -184,8 +184,20 @@ class VirtualBoxInstall extends InstallableItem {
       '/Liwe',
       path.join(this.installerDataSvc.installDir(), 'vbox.log')
     ]).then((res) => {
-      return resolve(res);
-    }) .catch((err) => {
+      // msiexec logs are in UCS-2
+      Util.findText(path.join(this.installerDataSvc.installDir(), 'vbox.log'),'CopyDir: DestDir=','ucs2').then((result)=>{
+        let regexTargetDir = /CopyDir: DestDir=(.*)\,.*/
+        let targetDir = regexTargetDir.exec(result)[1];
+        if(targetDir !== this.getLocation()) {
+          Logger.info(VirtualBoxInstall.key() + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
+          this.setOptionLocation('install', targetDir);
+        }
+        resolve(res);
+      }).catch((err)=>{
+        // location doesn't parsed correctly, nothing to verify just resolve and keep going
+        resolve(res);
+      });
+    }).catch((err) => {
       return reject(err);
     });
   }

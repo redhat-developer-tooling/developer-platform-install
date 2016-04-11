@@ -12,16 +12,17 @@ import CDKInstall from './cdk';
 import Util from './helpers/util';
 
 class JdkInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, prefix) {
+  constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName) {
     super('jdk',
           'OpenJDK',
           'v8',
           'Java Development Kit for running JBoss Developer Studio',
           260,
           downloadUrl,
-          installFile);
+          installFile,
+          targetFolderName,
+          installerDataSvc);
 
-    this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'jdk.zip';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);

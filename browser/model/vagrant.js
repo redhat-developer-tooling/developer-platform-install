@@ -13,16 +13,17 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class VagrantInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile) {
+  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('vagrant',
           'Vagrant',
           'v1.7',
           'A container provisioning tool.',
           900,
           downloadUrl,
-          installFile);
+          installFile,
+          targetFolderName,
+          installerDataSvc);
 
-    this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'vagrant.msi';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
@@ -60,7 +61,7 @@ class VagrantInstall extends InstallableItem {
       this.selectedOption = 'detected';
       cb();
     }).catch((error) => {
-      this.addOption('install','5.0.8','',true);
+      this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'vagrant'),true);
       this.addOption('different','','',false);
       cb(error);
     });
@@ -76,7 +77,7 @@ class VagrantInstall extends InstallableItem {
 
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
-    if(this.isDownloadRequired()) {
+    if(this.isDownloadRequired() && this.selectedOption === "install") {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       let downloadSize = 199819264;

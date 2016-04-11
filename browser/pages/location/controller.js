@@ -23,6 +23,9 @@ class LocationController {
 
   confirm() {
     this.installerDataSvc.installRoot = this.folder;
+    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      value.setOptionLocation('install',path.join(this.folder,value.targetFolderName));
+    }
     this.router.go('confirm');
   }
 
@@ -31,6 +34,7 @@ class LocationController {
       properties: [ 'openDirectory' ],
       defaultPath: this.folder
     });
+    this.installerDataSvc.installRoot = this.folder;
 
     if (selection) {
       this.folder = selection[0] || this.folder;

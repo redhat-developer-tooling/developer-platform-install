@@ -1,12 +1,14 @@
 'use strict';
 
 class InstallableItem {
-  constructor(keyName, productName, productVersion, productDesc, installTime, downloadUrl, installFile) {
+  constructor(keyName, productName, productVersion, productDesc, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
     this.keyName = keyName;
     this.productName = productName;
     this.productVersion = productVersion;
     this.productDesc = productDesc;
     this.installTime = installTime;
+    this.targetFolderName = targetFolderName;
+    this.installerDataSvc = installerDataSvc;
     this.existingInstall = false;
     this.existingInstallLocation = '';
     this.existingVersion = '';
@@ -120,9 +122,19 @@ class InstallableItem {
     };
   }
 
+  setOptionLocation(name,location) {
+    if(this.option[name]) {
+      this.option[name].location = location;
+    }
+  }
+
   // Override parent "true" and check if we have something setup
   isConfigured() {
     return this.option[this.selectedOption] && this.option[this.selectedOption].valid;
+  }
+
+  getLocation() {
+    return this.option[this.selectedOption].location;
   }
 
 }
