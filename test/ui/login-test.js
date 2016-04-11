@@ -32,11 +32,10 @@ describe('Login page', function() {
 
   it('Should display links for forgotten username or password', function() {
     expect(element(By.id('usernameLink')).isDisplayed()).toBe(true);
-    expect(element(By.id('passwordLink')).isDisplayed()).toBe(true);
   });
 
   it('Should contain a Register button', function() {
-    expect(element(By.id('registerButton')).isDisplayed()).toBe(true);
+    expect(element(By.id('registerLink')).isDisplayed()).toBe(true);
   });
 
   describe('Login form', function() {
