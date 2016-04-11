@@ -52,7 +52,7 @@ describe('version', function() {
     it('should return true for valid version',function() {
       expect(new Version('1.2.3').valid()).equals('1.2.3');
     });
-    it('should return false for invalid version',function() {
+    it('should return null for invalid version',function() {
       expect(new Version('a.2.3').valid()).equals(null);
     });
   });
