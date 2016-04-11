@@ -26,8 +26,8 @@
   },
   "jbds.jar": {
     "bundle": "yes",
-    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1a-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar",
-    "sha256sum": "618c413cb8b0b68bc9b5075ce724354717d81b14d9fdfa8e234f20c5730dcf8f"
+    "url": "https://devstudio.redhat.com/9.0/staging/builds/devstudio-9.1.0.CR1b-build-product/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar",
+    "sha256sum": "e9d01681b2a7b87fd515c3eadce72e12d1e0f9f9ed12aae04fc94d20e5e3639a"
   },
   "jdk.zip": {
     "bundle": "yes",
