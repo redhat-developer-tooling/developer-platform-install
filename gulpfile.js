@@ -221,17 +221,17 @@ gulp.task('unzip-resource-hacker', ['download-resource-hacker'], function() {
 gulp.task('prepare-resource-hacker', ['unzip-resource-hacker', 'download-resource-hacker']);
 
 // Create stub installer that will then download all the requirements
-gulp.task('package-simple', function() {
+gulp.task('package-simple', ['check-requirements'], function() {
   return runSequence('clean', 'generate', 'package', 'cleanup');
 });
 
   // Create bundled installer
-gulp.task('package-bundle', function() {
+gulp.task('package-bundle', ['check-requirements'], function() {
   return runSequence('clean', 'generate', 'prefetch', 'package', '7zip-cleanup');
 });
 
 // Create both installers
-gulp.task('dist', function() {
+gulp.task('dist', ['check-requirements'], function() {
   return runSequence('clean', 'generate', 'package', 'prefetch', 'package', 'cleanup');
 });
 
@@ -302,3 +302,8 @@ gulp.task('prefetch', function(cb) {
   }
   artifactType = "-bundle";
 });
+
+//check if URLs in requirements.json return 200 and generally point to their appropriate tools
+gulp.task('check-requirements', function(cb) {
+  return exec('node test/check-requirements.js', createExecCallback(cb, false));
+})
