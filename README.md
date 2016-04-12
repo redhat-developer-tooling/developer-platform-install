@@ -1,5 +1,11 @@
-Red Hat Developer Platform Installer
+Red Hat JBoss Developer Studio Platform Installer
 ====================================
+
+This installer aims to produce ready to use development environment for Red Hat Container Development Kit v2.0.
+
+Deliverables
+------------
+Build output is two installers. Both are self extracting executable files made with 7-zip file archiver with a high compression ratio (more details on <https://www.7zip.org>). The main difference between them is a file size. One installer is lightweight and download everything during installation. Second one bundles most of binary dependencies and downloads during installation only binaries that cannot be included.
 
 Architecture
 ------------
@@ -7,6 +13,7 @@ Architecture
 This installer is built on Windows using [Electron](http://electron.atom.io/).
 
 You will also require the [Node.js, NPM](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [jspm](http://jspm.io/).
+
 
 Installing dependencies
 -----------------------
@@ -35,10 +42,10 @@ Running the application
 
 There are multiple ways how to run the installer.
 
-1. When fixing bugs and/or creating new features, run the application using 
-        
+1. When fixing bugs and/or creating new features, run the application using
+
         npm start
-   
+
    This way, you can open Chrome developer tools using `Ctrl+Alt+I` or reload application using `Ctrl+R`.
 
 2. Build a Windows binary and run it:
@@ -52,14 +59,14 @@ There are multiple ways how to run the installer.
         dist/win/DeveloperPlatformInstaller-win32-x64-*.exe
 
 4. Build a distribution Windows binary including almost all dependencies, except of Vagrant and VirtualBox (will download them):
- 
+
         npm run package-bundle
         dist/win/DeveloperPlatformInstaller-win32-x64-*-bundle.exe
 
 5. To build both installers in a single step:
 
         npm run dist
- 
+
 Local build with clean up
 -------------------------
 
