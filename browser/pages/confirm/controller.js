@@ -7,16 +7,25 @@ let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
 
 import Logger from '../../services/logger';
+
 /*import {remote, ipcRenderer} from 'electron-prebuilt';*/
+
+// sadly we had to hoist this outside the controller so that it could be seen and used. Maybe a better way can be found.
+let confCtrl = null;
 
 class ConfirmController {
 
   constructor($scope, $state, $timeout, installerDataSvc) {
+    confCtrl = this;
     this.router = $state;
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
 
+    confCtrl.installedSearchNote = ' The system is checking if you have any installed components.';
+    confCtrl.isDisabled = true;
+    confCtrl.numberOfExistingInstallations = 0;
+    
     this.installables = {};
     $scope.checkboxModel = {};
 
@@ -33,6 +42,7 @@ class ConfirmController {
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
+    // IF the JDK is not Configured then you can't install JBDS
     $scope.$watch(()=>{
       return $scope.checkboxModel.jdk.isConfigured()
     },(nVal,oVal)=>{
@@ -42,14 +52,11 @@ class ConfirmController {
     });
 
     $scope.$watch('$viewContentLoaded', ()=>{
-      console.log('content loaded');
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
         $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
           $scope.checkboxModel.jdk.detectExistingInstall(()=> {
-            $timeout(()=>{
-              $scope.detectionStyle = false;
-              $scope.$apply();
-            });
+            // Once all the Existing installations have been searched, enable the screen.
+            confCtrl.setIsDisabled();
           });
         });
       });
@@ -69,6 +76,24 @@ class ConfirmController {
     this.router.go('install');
   }
 
+  setIsDisabled() {
+    // Uncomment the timeout to see the initial disabled view.
+//    this.timeout( () => {
+      // Switch this boolean flag when the app is done looking for existing installations.
+      confCtrl.isDisabled = !confCtrl.isDisabled;
+      // Count the number of existing installations.
+      // TODO: count the number of existing installations and add them to confCtrl.numberOfExistingInstallations
+      // Set the message depending on if the view is disabled or not.
+      if (confCtrl.isDisabled) {
+        confCtrl.installedSearchNote = '  The system is checking if you have any installed components.';
+      } else {
+        confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component that meets the requirement.`;
+      }
+      // Call the digest cycle so that the view gets updated.
+      confCtrl.sc.$apply();
+//    }, 5000);
+  }
+  
   // Open up a browse dialog and select the dir that has the installed product you are looking for.
   selectItem(key) {
     let selection = dialog.showOpenDialog({

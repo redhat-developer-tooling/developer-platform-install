@@ -3,9 +3,18 @@
   <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12" border="1">
-  <div id="shadow" ng-class="{'dimmed': detectionStyle}">
-  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()">
+<main class="col-sm-12" >
+  <p id="installation-note" class="has-spinner" ng-class="{'active':confCtrl.isDisabled}">
+    <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
+    <span class="pficon-info" ng-show="!confCtrl.isDisabled"></span>
+    {{confCtrl.installedSearchNote}}
+    <br>
+    <span id="installation-instruction" ng-show="!confCtrl.isDisabled">
+      These are the components that will be installed.
+    </span>
+  </p>
+
+  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- VirtualBox -->
     <div class="panel panel-default">
@@ -102,14 +111,14 @@
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.cygwin.existingInstall">
           <label for="confirm-radio-btn-cygwin-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.cygwin.existingVersion}}
+            Use the detected version {{checkboxModel.cygwin.existingVersion}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-cygwin-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -165,7 +174,7 @@
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.vagrant.selectedOption" value="detected">
           <label for="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
+            Use the detected version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
           </label>
           <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
             <div class="help-block">
@@ -232,14 +241,14 @@
             Install
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.cdk.existingInstall">
           <label for="confirm-radio-btn-cdk-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.cdk.existingVersion}}
+            Use the detected version {{checkboxModel.cdk.existingVersion}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-cdk-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -295,10 +304,10 @@
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.jdk.existingInstall">
           <label for="confirm-radio-btn-jdk-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.jdk.existingVersion}}
+            Use the detected version {{checkboxModel.jdk.existingVersion}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-jdk-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -354,10 +363,10 @@
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-exists" class="confirm-radio-btn"
                  ng-model="checkboxModel.jbds.existingInstall">
           <label for="confirm-radio-btn-jbds-exists" class="confirm-radio-btn-label">
-            Use the existing version {{checkboxModel.jbds.detected.version}} at {{checkboxModel.jbds.detected.location}}
+            Use the detected version {{checkboxModel.jbds.detected.version}} at {{checkboxModel.jbds.detected.location}}
           </label>
         </div>
-        <div class="confirm-radio-container" ng-hide="true">
+        <div class="confirm-radio-container" ng-show="false">
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-browse" class="confirm-radio-btn">
           <label for="confirm-radio-btn-jbds-browse" class="confirm-radio-btn-label">
             <div class="confirm-browse-container">
@@ -397,5 +406,4 @@
     </div>
 
   </form>
-  </div>
 </main>
