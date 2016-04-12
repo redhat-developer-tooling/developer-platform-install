@@ -3,11 +3,12 @@
 let remote = require('remote');
 let path = require('path');
 let fs = require('fs-extra');
+let shell = require('electron').shell;
 
 import Logger from '../../services/logger';
 
 class StartController {
-  
+
   constructor(installerDataSvc) {
     this.startJBDS = true;
     this.installerDataSvc = installerDataSvc;
@@ -82,15 +83,15 @@ class StartController {
             {
                 timeout: 2000,
             });
-    runJbdsBat.stdout.on('data', 
+    runJbdsBat.stdout.on('data',
                 (data) => {
                     Logger.info("JBDS Start - [" + runJbdsFile + "]: " + data);
                 });
-    runJbdsBat.stderr.on('data', 
+    runJbdsBat.stderr.on('data',
                 (data) => {
                     Logger.info("JBDS Start ERROR - [" + runJbdsFile + "]: " + data);
                 });
-    runJbdsBat.on('exit', 
+    runJbdsBat.on('exit',
                 (code) => {
                     Logger.info("JBDS Start Exit - Code: " + code);
                     this.exit();
