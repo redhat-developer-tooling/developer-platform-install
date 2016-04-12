@@ -236,7 +236,7 @@ gulp.task('dist', ['check-requirements'], function() {
 });
 
 gulp.task('7zip-cleanup', function() {
-    del([buildFolderRoot + 'DeveloperPlatformInstaller-w32-x64.7z',buildFolderRoot + '7zS.sfx', buildFolderRoot + '7za.exe', buildFolderRoot + '7za920.zip', buildFolderRoot + '7z920_extra.7z'], { force: true });
+    del([buildFolderRoot + 'DeveloperPlatformInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {
