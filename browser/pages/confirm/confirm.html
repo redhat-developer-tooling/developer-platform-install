@@ -17,17 +17,20 @@
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- VirtualBox -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" ng-click="checkboxModel.virtualbox.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Oracle VirtualBox</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
           <div>A virtualization software package developed by Oracle</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.virtualbox.isCollapsed">
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.virtualbox.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
         <div class="confirm-radio-container" ng-show="checkboxModel.virtualbox.hasOption('install')">
           <label for="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn-label">
             <input type="radio" name="confirm-radio-btn-virtualbox-group" id="confirm-radio-btn-virtualbox-install" class="confirm-radio-btn"
@@ -93,17 +96,20 @@
     </div>
 
     <!-- Cygwin -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" ng-click="checkboxModel.cygwin.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Cygwin</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
           <div>A distribution of popular GNU and other Open Source tools running on Microsoft Windows.</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cygwin.isCollapsed">
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.cygwin.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-cygwin-group" id="confirm-radio-btn-cygwin-install" class="confirm-radio-btn"
                  ng-model="checkboxModel.cygwin.selectedOption" value="install">
@@ -152,17 +158,20 @@
     </div>
 
     <!-- Vagrant-->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" ng-click="checkboxModel.vagrant.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Vagrant</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
           <div>A container provisioning tool.</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.vagrant.isCollapsed" >
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.vagrant.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
         <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('install')">
           <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-install" class="confirm-radio-btn"
                  ng-model="checkboxModel.vagrant.selectedOption" value="install">
@@ -223,17 +232,20 @@
     </div>
 
     <!-- CDK -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" ng-click="checkboxModel.cdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
           <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.cdk.isCollapsed">
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.cdk.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-cdk-group" id="confirm-radio-btn-cdk-install" class="confirm-radio-btn"
                  ng-model="checkboxModel.cdk.selectedOption" value="install">
@@ -282,17 +294,20 @@
     </div>
 
     <!-- JDK -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" ng-click="checkboxModel.jdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
           <div>Java Development Kit for running JBoss Developer Studio</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jdk.isCollapsed">
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.jdk.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-jdk-group" id="confirm-radio-btn-jdk-install" class="confirm-radio-btn"
                  ng-model="checkboxModel.jdk.selectedOption" value='install'>
@@ -341,17 +356,20 @@
     </div>
 
     <!-- JBDS -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
+      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
         <div class="checkbox-container">
           <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" ng-click="checkboxModel.jbds.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
+          <span class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">RED HAT JBOSS DEVELOPER STUDIO</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
           <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
         </div>
       </div>
-      <div class="animate-show confirm-radio-container" ng-hide="checkboxModel.jbds.isCollapsed">
+      <div class="animate-show confirm-radio-container"
+           ng-hide="checkboxModel.jbds.isCollapsed"
+           ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
         <div class="confirm-radio-container">
           <input type="radio" name="confirm-radio-btn-jbds-group" id="confirm-radio-btn-jbds-install" class="confirm-radio-btn"
                  ng-model="checkboxModel.jbds.selectedOption" value="install">

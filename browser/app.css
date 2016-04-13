@@ -274,6 +274,29 @@ footer {
   #confirmForm {
   }
 
+    .zero-border {
+      border: 0;
+    }
+
+    .panel .dotted-panel {
+      border-style:dashed;
+      background-color: #FFFFFF;
+      border-width: 2px;
+    }
+
+    .confirm-radio-container.dotted-panel {
+      border-style:dashed;
+      background-color: #FFFFFF;
+      border-width: 2px;
+      border-color: #dddddd;
+      border-top: 0;
+    }
+
+    .installed-note {
+      float: right;
+      padding-top: 20px;
+    }
+
     .animate-show {
       line-height: 20px;
       opacity: 1;
