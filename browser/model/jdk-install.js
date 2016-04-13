@@ -15,7 +15,7 @@ class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName) {
     super('jdk',
           'OpenJDK',
-          'v8',
+          '1.8.0.77',
           'Java Development Kit for running JBoss Developer Studio',
           260,
           downloadUrl,
@@ -28,6 +28,7 @@ class JdkInstall extends InstallableItem {
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
+    this.version = '1.8.0.77';
     this.jdkZipEntryPrefix = prefix;
     this.addOption('install', this.minimumVersion, '', true);
   }

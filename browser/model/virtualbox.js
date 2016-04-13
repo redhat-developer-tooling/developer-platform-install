@@ -24,7 +24,7 @@ class VirtualBoxInstall extends InstallableItem {
           installerDataSvc);
 
     this.minimumVersion = '5.0.8';
-    this.version = version;
+    this.version = version || '5.0.8';
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
