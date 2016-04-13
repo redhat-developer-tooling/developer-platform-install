@@ -4,12 +4,12 @@
 </header>
 
 <main class="col-sm-12" >
-  <p id="installation-note" class="has-spinner" ng-class="{'active':confCtrl.isDisabled}">
+  <p class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
     <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
     <span class="pficon-info" ng-show="!confCtrl.isDisabled"></span>
     {{confCtrl.installedSearchNote}}
     <br>
-    <span id="installation-instruction" ng-show="!confCtrl.isDisabled">
+    <span class="installation-instruction" ng-show="!confCtrl.isDisabled">
       These are the components that will be installed.
     </span>
   </p>
@@ -19,15 +19,33 @@
     <!-- VirtualBox -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}"
-           ng-click="checkboxModel.virtualbox.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
+           <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <div class="warnings-in-panel">
+            <span class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')">
+              <i class="fa fa-check"></i> Using detected version {{checkboxModel.virtualbox.option['detected'].version}}
+            </span>
+            <div ng-show="checkboxModel.virtualbox.hasOption('detected')">
+              <div ng-show="checkboxModel.virtualbox.option.detected.warning!==''" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <strong>Newer that recommended!</strong>
+                </div>
+              </div>
+              <div ng-show="checkboxModel.virtualbox.option.detected.error!==''" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <strong>Older that recommended!</strong>
+                </div>
+              </div>
+            </div>
+          </div>
           <span class="product-name">Oracle VirtualBox</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
-          <div>A virtualization software package developed by Oracle</div>
+          <div>A virtualization software package developed by Oracle.</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -100,9 +118,9 @@
     <!-- Cygwin -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}"
-           ng-click="checkboxModel.cygwin.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
+           <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
@@ -153,7 +171,7 @@
             <div ng-show="checkboxModel.cygwin.existingVersion > checkboxModel.cygwin.minimumVersion" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected cygwin installation is newer that recommended {{checkboxModel.cygwin.minimumVersion}}</strong>
+                <strong>The selected cygwin installation is newer than recommended {{checkboxModel.cygwin.minimumVersion}}</strong>
               </div>
             </div>
           </label>
@@ -164,13 +182,31 @@
     <!-- Vagrant-->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}"
-           ng-click="checkboxModel.vagrant.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
+           <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <div class="warnings-in-panel">
+            <span class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')">
+              <i class="fa fa-check"></i> Using detected version {{checkboxModel.vagrant.option.detected.version}}
+            </span>
+            <div ng-show="checkboxModel.vagrant.hasOption('detected')">
+              <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <strong>Newer than recommended!</strong>
+                </div>
+              </div>
+              <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <strong>Older than recommended!</strong>
+                </div>
+              </div>
+            </div>
+          </div>
           <span class="product-name">Vagrant</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
           <div>A container provisioning tool.</div>
         </div>
@@ -194,13 +230,13 @@
           <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
             <div class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
-              <strong>The detected Vagrant installation is newer that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+              <strong>The detected Vagrant installation is newer than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
             </div>
           </div>
           <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
             <div class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
-              <strong>The detected Vagrant installation is older that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+              <strong>The detected Vagrant installation is older than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
             </div>
           </div>
         </div>
@@ -229,7 +265,7 @@
             <div ng-show="checkboxModel.vagrant.existingVersion > checkboxModel.vagrant.minimumVersion" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected vagrant installation is newer that recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
+                <strong>The selected vagrant installation is newer than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
               </div>
             </div>
           </label>
@@ -240,15 +276,15 @@
     <!-- CDK -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}"
-           ng-click="checkboxModel.cdk.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
+           <!--ng-click="checkboxModel.cdk.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
-          <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications</div>
+          <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications.</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -293,7 +329,7 @@
             <div ng-show="checkboxModel.cdk.existingVersion > checkboxModel.cdk.minimumVersion" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected cdk installation is newer that recommended {{checkboxModel.cdk.minimumVersion}}</strong>
+                <strong>The selected cdk installation is newer than recommended {{checkboxModel.cdk.minimumVersion}}</strong>
               </div>
             </div>
           </label>
@@ -304,15 +340,15 @@
     <!-- JDK -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}"
-           ng-click="checkboxModel.jdk.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}">
+           <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
-          <div>Java Development Kit for running JBoss Developer Studio</div>
+          <div>Java Development Kit for running JBoss Developer Studio.</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -357,7 +393,7 @@
             <div ng-show="checkboxModel.jdk.existingVersion > checkboxModel.jdk.minimumVersion" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected jdk installation is newer that recommended {{checkboxModel.jdk.minimumVersion}}</strong>
+                <strong>The selected jdk installation is newer than recommended {{checkboxModel.jdk.minimumVersion}}</strong>
               </div>
             </div>
           </label>
@@ -368,9 +404,9 @@
     <!-- JBDS -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
       <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}"
-           ng-click="checkboxModel.jbds.changeIsCollapsed()">
-        <div class="checkbox-container">
+           ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
+           <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
+        <div class="checkbox-container" ng-show="false">
           <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
@@ -421,7 +457,7 @@
             <div ng-show="checkboxModel.jbds.existingVersion > checkboxModel.jbds.minimumVersion" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected jbds installation is newer that recommended {{checkboxModel.jbds.minimumVersion}}</strong>
+                <strong>The selected jbds installation is newer than recommended {{checkboxModel.jbds.minimumVersion}}</strong>
               </div>
             </div>
           </label>

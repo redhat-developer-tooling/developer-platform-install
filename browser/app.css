@@ -85,27 +85,28 @@ footer {
 
       .branding {
         width: 180px;
-        height: auto;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        float: right;
+        position: absolute;
+        top: 24px;
+        right: 30px;
       }
 
-      #branding-title {
-        width: 70%;
-        padding-top: 10%;
+        .branding-login {
+          margin-top: 21px;
+        }
+        
+      .login-title {
+        margin-top: 100px;
+        margin-left: 25px;
+      }  
+
+      .branding-title {
+        height:30px;
         padding-bottom: 11px;
       }
 
-      #login-title-post-text {
-        font-size: 2em;
-        vertical-align: bottom;
-        padding-left: 5px;
-      }
-
-      #login-branding-logo {
-        padding-top: 0;
-        margin-top: -15px;
+      .login-title-post-text {
+        font-size: 18px;
+        padding-left: 9px;
       }
 
       .branding-name {
@@ -253,6 +254,7 @@ footer {
 
 
   .product-container {
+    padding-left: 10px;
   }
 
   .product-name {
@@ -354,17 +356,18 @@ footer {
 
       }
 
-  #installation-note {
+  .installation-note {
+    margin-top: 15px;
     margin-bottom: 15px;
     font-size: 16px;
   }
 
-    #installation-note .med-spinner {
+    .installation-note .med-spinner {
       width: 16px;
       height: 16px;
     }
 
-    #installation-instruction {
+    .installation-instruction {
       margin-left: 24px;
     }
 
@@ -392,6 +395,10 @@ footer {
     .installed-note {
       float: right;
       padding-top: 20px;
+    }
+    
+    .warnings-in-panel {
+      float: right;
     }
 
     .animate-show {
