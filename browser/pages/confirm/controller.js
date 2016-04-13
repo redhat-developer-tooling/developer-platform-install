@@ -82,7 +82,7 @@ class ConfirmController {
       // Switch this boolean flag when the app is done looking for existing installations.
       confCtrl.isDisabled = !confCtrl.isDisabled;
       
-    // Count the number of existing installations.
+      // Count the number of existing installations.
       for (var [key, value] of confCtrl.installerDataSvc.allInstallables().entries()) {
         if (confCtrl.sc.checkboxModel[key].hasOption('detected')) {
           ++confCtrl.numberOfExistingInstallations;

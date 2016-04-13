@@ -18,9 +18,11 @@
 
     <!-- VirtualBox -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}"
+           ng-click="checkboxModel.virtualbox.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" ng-click="checkboxModel.virtualbox.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
@@ -97,9 +99,11 @@
 
     <!-- Cygwin -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}"
+           ng-click="checkboxModel.cygwin.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" ng-click="checkboxModel.cygwin.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
@@ -159,9 +163,11 @@
 
     <!-- Vagrant-->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}"
+           ng-click="checkboxModel.vagrant.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" ng-click="checkboxModel.vagrant.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
@@ -233,9 +239,11 @@
 
     <!-- CDK -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}"
+           ng-click="checkboxModel.cdk.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" ng-click="checkboxModel.cdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
@@ -295,9 +303,11 @@
 
     <!-- JDK -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}"
+           ng-click="checkboxModel.jdk.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" ng-click="checkboxModel.jdk.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
@@ -357,9 +367,11 @@
 
     <!-- JBDS -->
     <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
-      <div class="panel-heading" ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
+      <div class="panel-heading"
+           ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}"
+           ng-click="checkboxModel.jbds.changeIsCollapsed()">
         <div class="checkbox-container">
-          <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" ng-click="checkboxModel.jbds.changeIsCollapsed()" aria-label="Toggle ngHide"></div>
+          <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
