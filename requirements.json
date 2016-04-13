@@ -11,8 +11,8 @@
   },
   "oc.zip": {
     "bundle": "yes",
-    "url": "https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-windows.zip",
-    "sha256sum": "b05877aab75004cc30181f25960cfc3c09b5336678fc1cbad80c51848ed15a0f"
+    "url": "https://github.com/openshift/origin/releases/download/v1.1.6/openshift-origin-client-tools-v1.1.6-ef1caba-windows.zip",
+    "sha256sum": "5d29a8725785dfc783dc3d0768931462f2cc1f47f09acf232f79b03a3ef4edb2"
   },
   "pscp.exe": {
     "bundle": "yes",
