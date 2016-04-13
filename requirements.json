@@ -1,12 +1,12 @@
 {
   "cdk.zip": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/08-Apr-2016.1/cdk.zip",
-    "sha256sum": "106eccc4246522e7a5672b266086fa5e987009cd9d94b08529ef607cbff6d02a"
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/cdk.zip",
+    "sha256sum": "ced1ae9a5017c1cc70758eb9f57c933726a97852749b087eb966396f7b63ddf4"
   },
   "rhel-vagrant-virtualbox.box": {
     "bundle": "yes",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/08-Apr-2016.1/rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-virtualbox.box",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-virtualbox.box",
     "sha256sum": "4c2fb4754592f79a644f1bd0416d1d1af82686b7c7e0c360bc45932303210cff"
   },
   "oc.zip": {
