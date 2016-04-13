@@ -31,9 +31,9 @@
   },
   "jdk.zip": {
     "bundle": "yes",
-    "prefix": "java-1.8.0-openjdk",
-    "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/8u91/1/win/java-1.8.0-openjdk-1.8.0.91-1.b14.windows.x86_64.zip",
-    "sha256sum": "bc59c41cc7853cdc4bc7c4b9276b9b3bf204a8fd6318b88402b834ae6ad48349"
+    "prefix": "java-1.8.0-openjdk-1.8.0.77",
+    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
+    "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
   },
   "vagrant.msi": {
     "bundle": "no",
