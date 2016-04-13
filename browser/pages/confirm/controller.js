@@ -81,14 +81,21 @@ class ConfirmController {
 //    this.timeout( () => {
       // Switch this boolean flag when the app is done looking for existing installations.
       confCtrl.isDisabled = !confCtrl.isDisabled;
-      // Count the number of existing installations.
-      // TODO: count the number of existing installations and add them to confCtrl.numberOfExistingInstallations
+      
+    // Count the number of existing installations.
+      for (var [key, value] of confCtrl.installerDataSvc.allInstallables().entries()) {
+        if (confCtrl.sc.checkboxModel[key].hasOption('detected')) {
+          ++confCtrl.numberOfExistingInstallations;
+        }
+      }
+  
       // Set the message depending on if the view is disabled or not.
       if (confCtrl.isDisabled) {
         confCtrl.installedSearchNote = '  The system is checking if you have any installed components.';
       } else {
         confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component that meets the requirement.`;
       }
+      
       // Call the digest cycle so that the view gets updated.
       confCtrl.sc.$apply();
 //    }, 5000);
