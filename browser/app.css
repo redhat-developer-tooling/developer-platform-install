@@ -83,77 +83,174 @@ footer {
       padding-bottom: 35px;
     }
 
-    .branding {
-      width: 180px;
-      height: auto;
-      padding-top: 20px;
-      padding-bottom: 20px;
-      float: right;
-    }
-
-    .branding-logo {
-      width: 180px;
-      height: auto;
-      /*padding-bottom: 25px;*/
-    }
-
-    .branding-name {
-      color: #c00;
-      text-transform: uppercase;
-      font-weight: bold;
-      font-size: x-large;
-    }
-
-    .breadcrumbs {
-      list-style: none;
-      padding-top: 35px;
-      padding-left: 0;
-      margin-left: -20px;
-      margin-bottom: 0;
-      width: 70%;
-      float: left;
-    }
-
-      .breadcrumbs:before {
-        content: "";
-        display: block;
-        height: 3px;
-        background: #d1d1d1;
-        position: relative;
-        top: 6px;
-        margin-right: 12.5%;
+      .branding {
+        width: 180px;
+        height: auto;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        float: right;
       }
 
-      .breadcrumbs li {
-        display: block;
+      #branding-title {
+        width: 70%;
+        padding-top: 10%;
+        padding-bottom: 11px;
+      }
+
+      #login-title-post-text {
+        font-size: 2em;
+        vertical-align: bottom;
+        padding-left: 5px;
+      }
+
+      #login-branding-logo {
+        padding-top: 0;
+        margin-top: -15px;
+      }
+
+      .branding-name {
+        color: #c00;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: x-large;
+      }
+
+      .breadcrumbs {
+        list-style: none;
+        padding-top: 35px;
+        padding-left: 0;
+        margin-left: -20px;
+        margin-bottom: 0;
+        width: 70%;
         float: left;
-        text-align: center;
-        color: #d1d1d1;
-        width: 25%;
-        position: relative;
-        padding-top: 15px;
       }
 
-        .breadcrumbs li:before {
+        .breadcrumbs:before {
           content: "";
           display: block;
-          width: 10px;
-          height: 10px;
+          height: 3px;
           background: #d1d1d1;
-          border-radius: 50%;
-          position: absolute;
-          top: 0;
-          left: 50%;
-          margin-left: -5px;
+          position: relative;
+          top: 6px;
+          margin-right: 12.5%;
         }
 
-        .breadcrumbs li.active {
-          color: #0088ce;
+        .breadcrumbs li {
+          display: block;
+          float: left;
+          text-align: center;
+          color: #d1d1d1;
+          width: 25%;
+          position: relative;
+          padding-top: 15px;
         }
 
-        .breadcrumbs li.active:before {
-          background: #0088ce;
+          .breadcrumbs li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            background: #d1d1d1;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -5px;
+          }
+
+          .breadcrumbs li.active {
+            color: #0088ce;
+          }
+
+          .breadcrumbs li.active:before {
+            background: #0088ce;
+          }
+
+  #login-section {
+    float: left;
+    width: 50%;
+  }
+
+    #accountForm {
+      padding-right: 20%;
+    }
+
+      #accountForm div {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .login-form-input-container {
+        float: right;
+      }
+
+      .login-form-label {
+        width: 80px;
+        vertical-align: middle;
+      }
+
+      .login-form-input {
+        display: inline;
+        width: 250px;
+      }
+
+      .align-to-input {
+        padding-left: 83px;
+      }
+
+      .form-buttons {
+        width: 100%;
+        text-align: right;
+        margin-top: 10px;
+      }
+
+        .btn-plain {
+          color: #00a8e1;
+          background-color: #FFFFFF;
+          border-color: #00a8e1;
         }
+
+        .btn-spacer {
+          margin-right: 10px;
+        }
+
+        .btn-med-size {
+          width: 90px;
+        }
+
+          #account-form-btn-text {
+            vertical-align: super;
+            margin-right: 13px;
+          }
+
+            .spinner {
+              display: inline-block;
+              opacity: 0;
+              width: 0;
+
+              -webkit-transition: opacity 0.25s, width 0.25s;
+              -moz-transition: opacity 0.25s, width 0.25s;
+              -o-transition: opacity 0.25s, width 0.25s;
+              transition: opacity 0.25s, width 0.25s;
+            }
+
+            .has-spinner.active {
+              cursor:progress;
+            }
+
+            .has-spinner.active .spinner {
+              opacity: 1;
+              /* width: auto;  /* This doesn't work, just fix for unknown width elements */
+            }
+
+            .has-spinner.btn.active .spinner {
+              width: 24px;
+            }
+
+    #welcome-text {
+      padding-right: 2.5%;
+    }
+
 
   .product-container {
   }
@@ -361,91 +458,6 @@ footer {
   .checkbox-container {
     float: left;
     padding: 15px 25px 15px 10px;
-  }
-
-  #login-section {
-    float: left;
-    width: 50%;
-  }
-
-    #accountForm {
-      padding-right: 20%;
-    }
-
-      #accountForm div {
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-        .login-form-input-container {
-          float: right;
-        }
-
-        .login-form-label {
-          width: 80px;
-          vertical-align: middle;
-        }
-
-        .login-form-input {
-          display: inline;
-          width: 250px;
-        }
-
-        .align-to-input {
-          padding-left: 83px;
-        }
-
-        .form-buttons {
-          width: 100%;
-          text-align: right;
-          margin-top: 10px;
-        }
-
-          .btn-plain {
-            color: #00a8e1;
-            background-color: #FFFFFF;
-            border-color: #00a8e1;
-          }
-
-          .btn-spacer {
-            margin-right: 10px;
-          }
-
-          .btn-med-size {
-            width: 90px;
-          }
-
-          #account-form-btn-text {
-            vertical-align: super;
-            margin-right: 13px;
-          }
-
-          .spinner {
-            display: inline-block;
-            opacity: 0;
-            width: 0;
-
-            -webkit-transition: opacity 0.25s, width 0.25s;
-            -moz-transition: opacity 0.25s, width 0.25s;
-            -o-transition: opacity 0.25s, width 0.25s;
-            transition: opacity 0.25s, width 0.25s;
-          }
-
-          .has-spinner.active {
-            cursor:progress;
-          }
-
-          .has-spinner.active .spinner {
-            opacity: 1;
-            /* width: auto;  /* This doesn't work, just fix for unknown width elements */
-          }
-
-          .has-spinner.btn.active .spinner {
-            width: 24px;
-          }
-
-  #welcome-text {
-    padding-right: 2.5%;
   }
 
   .overflow-parent {
