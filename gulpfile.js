@@ -285,10 +285,9 @@ gulp.task('prefetch', function(cb) {
           if (reqs[currentKey].bundle === 'yes') {
             counter++;
             console.log('DOWNLOADING -> ' + currentUrl);
-            request({url:currentUrl,"rejectUnauthorized": false})
+            request(currentUrl)
               .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
                 // create a sha256sum file
-                createSHA256File(currentFile);
                 counter--;
                 if(counter===0) {
                   cb();
