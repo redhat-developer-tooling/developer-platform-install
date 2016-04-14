@@ -16,7 +16,7 @@ class StartController {
   }
 
   learnCDK() {
-    shell.openExternal('http://developers.redhat.com/products/cdk/get-started/');
+    shell.openExternal('http://developers.redhat.com/devstudio-preview');
   }
 
   start() {
