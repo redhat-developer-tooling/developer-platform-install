@@ -227,7 +227,7 @@ gulp.task('package-simple', ['check-requirements'], function() {
 
   // Create bundled installer
 gulp.task('package-bundle', ['check-requirements'], function() {
-  return runSequence('clean', 'generate', 'prefetch', 'package', '7zip-cleanup');
+  return runSequence('clean', 'generate', 'prefetch', 'package', 'cleanup');
 });
 
 // Create both installers
@@ -301,8 +301,14 @@ gulp.task('prefetch', function(cb) {
           if (fs.existsSync(destFile)) { // if file exists in buildFolder, we're done 
             console.log('DOWNLOADED <- ' + destFile);
           } else if (fs.existsSync(currentFile)) { // if file exists in prefetchFolder cache, copy it into buildFolder
+            counter++;
+            // TODO make this block until the copy is done, THEN reduce counter and callback
             console.log('FROM CACHE -> ' + currentFile);
             gulp.src(currentFile).pipe(gulp.dest(buildFolder));
+            counter--;
+            if(counter===0) {
+              cb();
+            }
           }
         }
       });
