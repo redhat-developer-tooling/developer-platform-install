@@ -3,6 +3,8 @@
 let fs = require('fs');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
+var rimraf = require('rimraf');
+
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -97,6 +99,10 @@ class JdkInstall extends InstallableItem {
     if(this.selectedOption === "install") {
       progress.setStatus('Installing');
       let installer = new Installer(JdkInstall.key(), progress, success, failure);
+
+      if(fs.existsSync(this.installerDataSvc.jdkDir())) {
+        rimraf.sync(this.installerDataSvc.jdkDir());
+      }
 
       installer.unzip(this.downloadedFile, this.installerDataSvc.installDir())
           .then((result) => {
