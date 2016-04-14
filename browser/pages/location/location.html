@@ -6,14 +6,14 @@
 <main class="col-sm-12">
   <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
     <div id="location-form-container">
-      <div id="location-form-instructions" class="location-form-elements">
+      <p id="location-form-instructions" class="location-form-elements">
         This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
         <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
           folder or use the default location.
-      </div>
-      <div id="location-form-note" class="location-form-elements">
+      </p>
+      <p id="location-form-note" class="location-form-elements">
         Note: You can NOT choose the folder again once components start to get installed.
-      </div>
+      </p>
       <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
         <div class="location-browse-container">
           <label for="location-browse-input-folder" class="location-browse-label">
@@ -21,8 +21,7 @@
           </label>
           <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
-                 <button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
-
+          <button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
           <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
           <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
             <span class="pficon-error-circle-o"></span>
@@ -45,10 +44,34 @@
         </div>
       </div>
     </div>
+
     <div id="location-form-btns" class="pull-right form-buttons">
-      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="locCtrl.exit()">Cancel</button>
+      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="locCtrl.setCloseDialog()">Cancel</button>
       <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="locCtrl.back()">Back</button>
       <button type="submit" id="location-install-btn" ng-disabled="locationForm.folder.$invalid" class="btn btn-primary btn-lg btn-rightside">Continue</button>
     </div>
+
   </form>
 </main>
+
+<div class="greyed-out-background" ng-show="locCtrl.showCloseDialog"></div>
+<div class="close-modal " id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" ng-show="locCtrl.showCloseDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close" ng-click="locCtrl.setCloseDialog()"></span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Confirm Close</h4>
+      </div>
+      <div class="modal-body centered">
+        <p>Are you sure you want to close the installer?</p>
+      </div>
+      <div class="modal-footer centered">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="locCtrl.exit()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="locCtrl.setCloseDialog()">Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -466,10 +466,32 @@
     </div>
 
     <div class="pull-right form-buttons">
-      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="confCtrl.exit()">Cancel</button>
+      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="confCtrl.setCloseDialog()">Cancel</button>
       <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="confCtrl.back()">Back</button>
       <button type="submit" id="confirm-install-btn" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
     </div>
 
   </form>
 </main>
+
+<div class="greyed-out-background" ng-show="confCtrl.showCloseDialog"></div>
+<div class="close-modal " id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" ng-show="confCtrl.showCloseDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close" ng-click="confCtrl.setCloseDialog()"></span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Confirm Close</h4>
+      </div>
+      <div class="modal-body centered">
+        <p>Are you sure you want to close the installer?</p>
+      </div>
+      <div class="modal-footer centered">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="confCtrl.exit()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="confCtrl.setCloseDialog()">Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+

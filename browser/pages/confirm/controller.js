@@ -25,6 +25,8 @@ class ConfirmController {
     confCtrl.installedSearchNote = ' The system is checking if you have any installed components.';
     confCtrl.isDisabled = true;
     confCtrl.numberOfExistingInstallations = 0;
+
+    confCtrl.showCloseDialog = false;
     
     this.installables = {};
     $scope.checkboxModel = {};
@@ -145,6 +147,10 @@ class ConfirmController {
   back() {
     Logger.info('Going back a page');
     this.router.go('location');
+  }
+  
+  setCloseDialog () {
+    confCtrl.showCloseDialog = !confCtrl.showCloseDialog;
   }
 }
 

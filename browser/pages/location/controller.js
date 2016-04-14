@@ -19,6 +19,7 @@ class LocationController {
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
+    this.showCloseDialog = false;
   }
 
   confirm() {
@@ -65,6 +66,11 @@ class LocationController {
     Logger.info('Going back a page');
     this.router.go('account');
   }
+  
+  setCloseDialog () {
+    this.showCloseDialog = !this.showCloseDialog;
+  }
+
 }
 
 LocationController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc'];
