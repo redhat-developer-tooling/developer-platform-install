@@ -339,15 +339,15 @@ footer {
     bottom: 40px;
   }
 
-  .back-btn {
+  .cancel-btn {
     left: 40px;
   }
 
-  .cancel-btn {
+  .back-btn {
     right: 150px;
   }
 
-  .cancel-btn-spacer {
+  .back-btn-spacer {
     right: 210px;
   }
 
