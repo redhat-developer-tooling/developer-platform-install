@@ -42,9 +42,9 @@
   },
   "virtualbox.exe": {
     "bundle": "no",
-    "version": "5.0.8",
-    "revision": "103449",
-    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download",
-    "sha256sum": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280"
+    "version": "5.0.16",
+    "revision": "105871",
+    "url": "http://download.virtualbox.org/virtualbox/5.0.16/VirtualBox-5.0.16-105871-Win.exe",
+    "sha256sum": "5a6d9b62700812f34fd13d63189e4aac6794b511457c140a6f359193da3e5f0e"
   }
 }
