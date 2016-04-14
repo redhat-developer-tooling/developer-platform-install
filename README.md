@@ -5,7 +5,7 @@ This installer aims to produce ready to use development environment for Red Hat 
 
 Deliverables
 ------------
-Build output is two installers. Both are self extracting executable files made with 7-zip file archiver with a high compression ratio (more details on <https://www.7zip.org>). The main difference between them is a file size. One installer is lightweight and download everything during installation. Second one bundles most of binary dependencies and downloads during installation only binaries that cannot be included.
+Build output is two installers. The main difference between them is a file size. One installer is lightweight and download everything during installation. Second one bundles most of binary dependencies and downloads during installation only binaries that cannot be included. Both are self extracting executable files made with 7-zip file archiver with a high compression ratio (7-Zip is licensed under the GNU LGPL license, more details on <https://www.7zip.org>).
 
 Architecture
 ------------
