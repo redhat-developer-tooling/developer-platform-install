@@ -28,7 +28,7 @@ var artifactName = 'DeveloperPlatformInstaller',
 var buildFolderRoot = 'dist/win/';
 var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifactArch;
 var buildFolder = buildFolderRoot + buildFileNamePrefix;
-var prefetchFolder = buildFolderRoot + buildFileNamePrefix; // or just use downloads/ folder to that a clean doesn't wipe out the downloads
+var prefetchFolder = 'prefetch-dependencies'; // use folder outside buildFolder so that a 'clean' task won't wipe out the cache
 
 let zaRoot = path.resolve(buildFolderRoot);
 let zaZip = path.join(zaRoot, '7za920.zip');
@@ -48,7 +48,7 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('./main'));
 });
 
-// clean dist/ AND downloads/ folder
+// clean dist/ AND prefetch-dependencies/ folder
 gulp.task('clean-all', ['clean'], function() {
   return del([prefetchFolder], { force: true });
 });
@@ -81,7 +81,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
-  cmd += ' --prune --ignore=test';
+  cmd += ' --prune --ignore="test|prefetch-dependencies"';
   cmd += ' --icon="' + configIcon + '"';
   //console.log(cmd);
   exec(cmd,createExecCallback(cb, true));
@@ -227,7 +227,7 @@ gulp.task('package-simple', ['check-requirements'], function() {
 
   // Create bundled installer
 gulp.task('package-bundle', ['check-requirements'], function() {
-  return runSequence('clean', 'generate', 'prefetch', 'package', '7zip-cleanup');
+  return runSequence('clean', 'generate', 'prefetch', 'package', 'cleanup');
 });
 
 // Create both installers
@@ -267,7 +267,7 @@ function isExistingSHA256Current(currentFile, sha256sum, processResult) {
   }
 }
 
-// download all the installer dependencies so we can package them up into the .exe
+// prefetch all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
   let counter=0;
   for (var key in reqs) {
@@ -285,6 +285,7 @@ gulp.task('prefetch', function(cb) {
           if (reqs[currentKey].bundle === 'yes') {
             counter++;
             console.log('DOWNLOADING -> ' + currentUrl);
+            if (!fs.existsSync(prefetchFolder)) { fs.mkdirSync(prefetchFolder); }
             request({url:currentUrl,"rejectUnauthorized": false})
               .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
                 // create a sha256sum file
@@ -296,7 +297,19 @@ gulp.task('prefetch', function(cb) {
               });
           }
         } else {
-          console.log('DOWNLOADED <- ' + currentFile);
+          let destFile = path.join(buildFolder, key);
+          if (fs.existsSync(destFile)) { // if file exists in buildFolder, we're done 
+            console.log('DOWNLOADED <- ' + destFile);
+          } else if (fs.existsSync(currentFile)) { // if file exists in prefetchFolder cache, copy it into buildFolder
+            counter++;
+            // TODO make this block until the copy is done, THEN reduce counter and callback
+            console.log('FROM CACHE -> ' + currentFile);
+            gulp.src(currentFile).pipe(gulp.dest(buildFolder));
+            counter--;
+            if(counter===0) {
+              cb();
+            }
+          }
         }
       });
     }
