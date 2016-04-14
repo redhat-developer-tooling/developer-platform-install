@@ -2,6 +2,8 @@
 
 let request = require('request');
 
+import Hash from './hash';
+
 class Downloader {
   constructor(progress, success, failure, downloadSize = 0, totalDownloads = 1) {
     this.downloadSize = downloadSize;
@@ -42,13 +44,24 @@ class Downloader {
     stream.end();
   }
 
-  closeHandler() {
+  closeHandler(file,sha) {
     if (--this.totalDownloads == 0) {
-      return this.success();
+      if(sha) {
+        var h = new Hash();
+        h.SHA256(file,(dlSha) => {
+          if(sha === dlSha) {
+            this.success();
+          } else {
+            this.failure('SHA256 checksum verification failed');
+          }
+        });
+      } else {
+        this.success();
+      }
     }
   }
 
-  download(options) {
+  download(options,file,sha) {
     let stream = this.writeStream;
     request.get(options, {timeout:15000}, (error, response, body) => {
           if(error) {
@@ -60,10 +73,10 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this));
+      .on('close', this.closeHandler.bind(this,file,sha));
   }
 
-  downloadAuth(options, username, password) {
+  downloadAuth(options, username, password,file,sha) {
     let stream = this.writeStream;
     request.get(options)
       .auth(username, password)
@@ -72,7 +85,7 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this));
+      .on('close', this.closeHandler.bind(this,file,sha));
   }
 }
 

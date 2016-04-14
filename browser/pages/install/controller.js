@@ -40,6 +40,7 @@ class InstallController {
       },
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
+        progress.setStatus("Failed");
       }
     )
   }

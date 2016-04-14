@@ -93,7 +93,8 @@ let mainModule =
                     installerDataSvc,
                     reqs['virtualbox.exe'].url,
                     null,
-                    'virtualbox')
+                    'virtualbox',
+                    reqs['virtualbox.exe'].sha256sum)
             );
 
             installerDataSvc.addItemToInstall(
@@ -111,7 +112,8 @@ let mainModule =
                     installerDataSvc,
                     reqs['vagrant.msi'].url,
                     null,
-                    'vagrant')
+                    'vagrant',
+                    reqs['vagrant.msi'].sha256sum)
             );
 
             installerDataSvc.addItemToInstall(
