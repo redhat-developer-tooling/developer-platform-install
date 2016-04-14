@@ -31,7 +31,7 @@
             <span class="pficon-error-circle-o"></span>
             <strong>The selection is not a valid absolute path.</strong>
           </div>
-          <div ng-show="!locationForm.folder.$invalid" class="form-group has-warning">
+          <div ng-show="!locationForm.folder.$invalid" class="has-warning">
             <div ng-show="locCtrl.folderExists" class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
               <strong>The selected folder already exists, some files might be overwritten.</strong>
@@ -40,6 +40,10 @@
               <span class="pficon pficon-info"></span>
               <strong>The selected folder will be created.</strong>
             </div>
+          </div>
+          <div ng-show="false"> <!--ng-show="locationForm.folder.$invalid.hasSpaces" class="help-block has-warning">-->
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The path has spaces. Please choose another location with NO spaces.</strong>
           </div>
         </div>
       </div>
