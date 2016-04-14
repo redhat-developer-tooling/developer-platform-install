@@ -23,7 +23,7 @@ html {
 
 footer {
   bottom: 0;
-  height: 90px;
+  height: 66px;
   width: 100%;
   background-color: #FFFFFF;
   z-index: 3;
@@ -331,12 +331,12 @@ footer {
     background-color: #FFFFFF;
     border-width: 2px 0;
     border-color: lightgray;
-    opacity: .8;
+    /*opacity: .8;*/
   }
 
   .footer-btns {
     position: absolute;
-    bottom: 40px;
+    bottom: 16px;
   }
 
   .cancel-btn {

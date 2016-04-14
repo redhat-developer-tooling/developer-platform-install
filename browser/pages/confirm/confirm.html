@@ -475,7 +475,7 @@
   <button type="button" id="confirm-back-btn" class="back-btn-spacer footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm"
           ng-click="confCtrl.back()">Back</button>
   <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm"
-          ng-disabled="!isConfigurationValid()">Download & Install</button>
+          ng-disabled="!isConfigurationValid()" autofocus>Download & Install</button>
 </footer>
 
 <div class="greyed-out-background" ng-show="confCtrl.showCloseDialog"></div>
