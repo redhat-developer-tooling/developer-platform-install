@@ -1,4 +1,8 @@
 /* Generic styles */
+html {
+  height: 100%;
+}
+
 .centered {
   text-align: center;
 }
@@ -19,13 +23,17 @@
 
 footer {
   bottom: 0;
-  height: 1.875em; /* 30px / 16px */
+  height: 90px;
   width: 100%;
   background-color: #FFFFFF;
   z-index: 3;
   position: fixed;
+  margin-left: -19px;
 }
 
+.no-background-color {
+  background-color: transparent;
+}
 
 
 @media only all {
@@ -305,6 +313,46 @@ footer {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.5);
+  }
+
+  .bottom-spacer {
+    padding-bottom: 100px;
+  }
+
+  .footer-version {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+  }
+
+  .footer-border{
+    height: 100%;
+    border-style: solid;
+    background-color: #FFFFFF;
+    border-width: 2px 0;
+    border-color: lightgray;
+    opacity: .8;
+  }
+
+  .footer-btns {
+    position: absolute;
+    bottom: 40px;
+  }
+
+  .back-btn {
+    left: 40px;
+  }
+
+  .cancel-btn {
+    right: 150px;
+  }
+
+  .cancel-btn-spacer {
+    right: 210px;
+  }
+
+  .go-btn {
+    right: 40px;
   }
 
   #locationForm {

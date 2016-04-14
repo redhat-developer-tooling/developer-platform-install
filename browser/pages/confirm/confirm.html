@@ -3,7 +3,7 @@
   <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12" >
+<main class="col-sm-12 bottom-spacer" >
   <p class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
     <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
     <span class="pficon-info" ng-show="!confCtrl.isDisabled"></span>
@@ -465,14 +465,18 @@
       </div>
     </div>
 
-    <div class="pull-right form-buttons">
-      <button type="button" id="cancel-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg pull-left" ng-click="confCtrl.setCloseDialog()">Cancel</button>
-      <button type="button" id="back-btn" class="btn-plain btn-spacer btn-med-size btn btn-lg" ng-click="confCtrl.back()">Back</button>
-      <button type="submit" id="confirm-install-btn" ng-disabled="!isConfigurationValid()" class="btn btn-primary btn-lg btn-rightside">Download & Install</button>
-    </div>
-
   </form>
 </main>
+
+<footer class="no-background-color">
+  <div class="footer-border"></div>
+  <button type="button" id="confirm-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm"
+          ng-click="confCtrl.back()">Back</button>
+  <button type="button" id="confirm-cancel-btn" class="cancel-btn-spacer footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="confirmForm"
+          ng-click="confCtrl.setCloseDialog()">Cancel</button>
+  <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm"
+          ng-disabled="!isConfigurationValid()">Download & Install</button>
+</footer>
 
 <div class="greyed-out-background" ng-show="confCtrl.showCloseDialog"></div>
 <div class="close-modal " id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" ng-show="confCtrl.showCloseDialog">
@@ -488,8 +492,8 @@
         <p>Are you sure you want to close the installer?</p>
       </div>
       <div class="modal-footer centered">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="confCtrl.exit()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="confCtrl.setCloseDialog()">Back</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="confCtrl.setCloseDialog()">No</button>
+        <button type="button" class="btn btn-primary" ng-click="confCtrl.exit()">Yes</button>
       </div>
     </div>
   </div>
