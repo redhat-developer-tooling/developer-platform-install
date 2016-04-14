@@ -21,7 +21,7 @@
   },
   "cygwin.exe": {
     "bundle": "yes",
-    "url": "http://cygwin.com/setup-x86_64.exe",
+    "url": "https://cygwin.com/setup-x86_64.exe",
     "sha256sum": "08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56"
   },
   "jbds.jar": {
