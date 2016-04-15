@@ -7,6 +7,7 @@ let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
 
 import Logger from '../../services/logger';
+import Util from '../../model/helpers/util';
 
 class LocationController {
   constructor($scope, $state, $timeout, installerDataSvc) {
@@ -20,6 +21,7 @@ class LocationController {
     this.installables = {};
     $scope.checkboxModel = {};
     this.showCloseDialog = false;
+    this.vagrantHomeHasSpace = true;
   }
 
   confirm() {
@@ -66,11 +68,29 @@ class LocationController {
     Logger.info('Going back a page');
     this.router.go('account');
   }
-  
+
   setCloseDialog () {
     this.showCloseDialog = !this.showCloseDialog;
   }
 
+  checkUserProfileLocation() {
+
+    Util.executeCommand('echo %USERPROFILE%',1).then((profile)=>{
+      if(profile.includes(' ') ) {
+        Util.executeCommand('echo %VAGRANT_HOME%').then((vagrantHome)=>{
+          if(vagrantHome==='%VAGRANT_HOME%') {
+            this.vagrantHomeHasSpace = true;
+          } else {
+            this.vagrantHomeHasSpace = false;
+          }
+          this.sc.$apply();
+        })
+      } else {
+        this.vagrantHomeHasSpace = false;
+        this.sc.$apply();
+      }
+    })
+  }
 }
 
 LocationController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc'];

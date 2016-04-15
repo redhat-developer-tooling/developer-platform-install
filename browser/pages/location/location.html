@@ -4,7 +4,7 @@
 </header>
 
 <main class="col-sm-12">
-  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
+  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()" ng-init="locCtrl.checkUserProfileLocation()">
     <div id="location-form-container">
       <p id="location-form-instructions" class="location-form-elements">
         This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
@@ -41,9 +41,19 @@
               <strong>The selected folder will be created.</strong>
             </div>
           </div>
-          <div ng-show="false"> <!--ng-show="locationForm.folder.$invalid.hasSpaces" class="help-block has-warning">-->
+          <div ng-show="locationForm.folder.$error.hasSpaces" class="help-block has-warning">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>The path has spaces. Please choose another location with NO spaces.</strong>
+          </div>
+          <div ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>
+              The directory where vagrant plugins are installed (the Vagrant home directory)
+              has a space(s) in it. On Windows, there is a bug in Ruby when compiling
+              plugins into directories with spaces. Please move your Vagrant home
+              directory to a path without spaces by setting VAGRANT_HOME envronment
+              variable and try again.
+            </strong>
           </div>
         </div>
       </div>
@@ -59,7 +69,7 @@
   <button type="button" id="location-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="locationForm"
           ng-click="locCtrl.back()">Back</button>
   <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="locationForm"
-          ng-disabled="locationForm.folder.$invalid" autofocus>Continue</button>
+          ng-disabled="locationForm.folder.$invalid || locCtrl.vagrantHomeHasSpace" autofocus>Continue</button>
 </footer>
 
 <div class="greyed-out-background" ng-show="locCtrl.showCloseDialog"></div>
@@ -82,4 +92,3 @@
     </div>
   </div>
 </div>
-

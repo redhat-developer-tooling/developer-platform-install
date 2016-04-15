@@ -14,6 +14,7 @@ function pathValidator() {
         } else {
           mCtrl.$setValidity('folderPath', false);
         }
+        mCtrl.$setValidity('hasSpaces',!value.includes(' '));
         return value;
       }
       mCtrl.$parsers.push(pathValidation);
