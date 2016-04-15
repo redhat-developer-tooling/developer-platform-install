@@ -54,6 +54,10 @@ class AccountController {
     shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
   }
 
+  gotoDRH() {
+    shell.openExternal('https://developers.redhat.com');
+  }
+
   handleHttpSuccess(result) {
     if (result.status == 200) {
       if (result.data == true) {
