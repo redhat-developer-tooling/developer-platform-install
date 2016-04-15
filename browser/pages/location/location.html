@@ -48,11 +48,10 @@
           <div ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>
-              The directory where vagrant plugins are installed (the Vagrant home directory)
+              The directory where vagrant is/will be installed (the Vagrant home directory)
               has a space(s) in it. On Windows, there is a bug in Ruby when compiling
-              plugins into directories with spaces. Please move your Vagrant home
-              directory to a path without spaces by setting VAGRANT_HOME envronment
-              variable and try again.
+              plugins into directories with spaces. Please set up a VAGRANT_HOME user environment
+              variable pointing to a location with NO spaces and restart this installer.
             </strong>
           </div>
         </div>
