@@ -1,8 +1,8 @@
 {
-  "name": "developer-platform-install",
+  "name": "devstudio-platform-installer",
   "productName": "Red Hat JBoss Developer Studio Platform Installer",
-  "version": "1.0.0",
-  "description": "Installer for Red Hat Developer Platform",
+  "version": "9.1.0-Beta1",
+  "description": "Red Hat JBoss Developer Studio Platform Installer",
   "main": "main/index.js",
   "repository": {
     "type": "git",

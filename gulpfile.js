@@ -20,7 +20,7 @@ var gulp = require('gulp'),
 
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'DeveloperPlatformInstaller',
+var artifactName = 'jboss-devstudio-platform',
     artifactType = '',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
@@ -77,7 +77,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
   cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
   cmd += ' --version-string.ProductName="' + pjson.productName + '"';
-  cmd += ' --version-string.OriginalFilename="' + artifactName + '.exe"';
+  cmd += ' --version-string.OriginalFilename="' + artifactName + '-' + pjson.version + '-installer.exe"';
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
@@ -123,10 +123,10 @@ gulp.task('prepare-7zip', ['download-7zip', 'unzip-7zip', 'download-7zip-extra',
 // Wrap electron-generated app to self extractring 7zip archive
 gulp.task('package', ['prepare-7zip', 'prepare-resource-hacker'], function (cb) {
 
-  let zaElectronPackage = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64');
+  let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
-  let bundled7z = path.join(zaRoot, 'DeveloperPlatformInstaller-w32-x64.7z');
-  let installerExe = path.join(zaRoot, 'DeveloperPlatformInstaller-win32-x64' + artifactType + '-' + pjson.version + '.exe');
+  let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
+  let installerExe = path.join(zaRoot, artifactName + '-' + pjson.version + artifactType + '-installer.exe');
 
   console.log("Creating " + installerExe);
 

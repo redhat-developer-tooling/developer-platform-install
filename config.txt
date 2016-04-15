@@ -1,4 +1,4 @@
 ;!@Install@!UTF-8!
 Title="Red Hat Developer Platform"
-RunProgram="DeveloperPlatformInstaller.exe"
+RunProgram="jboss-devstudio-platform.exe"
 ;!@InstallEnd@!
