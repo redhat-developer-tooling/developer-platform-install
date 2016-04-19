@@ -198,10 +198,10 @@ describe('CDK installer', function() {
       expect(spy).calledWith(installer.cdkDownloadedFile, installerDataSvc.installDir());
     });
 
-    it('createEnvironment should return path to vagrant/bin', function() {
+    it('createEnvironment should return path with vagrant/bin', function() {
       let installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
       let env = installer.createEnvironment();
-      expect(env['path']).equal(path.join(installerDataSvc.vagrantDir(), 'bin') + ';' + installerDataSvc.vagrantDir() + ';');
+      expect(env['path']).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
     });
 
     it('setupVagrant should wait for vagrant install to complete', function() {

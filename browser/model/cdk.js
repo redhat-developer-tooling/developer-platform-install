@@ -175,14 +175,14 @@ class CDKInstall extends InstallableItem {
   }
 
   createEnvironment() {
-    let env = {};
-
-    //TODO Need to get this info from VagrantInstaller rather than hard code
+    let env = process.env;
     let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
     let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
     let vgrPath = vagrantInstall.getLocation();
     let vboxPath = vboxInstall.getLocation();
-    env['path'] = path.join(vgrPath,'bin') + ';' + vboxPath + ';';
+    env['path'] = env['path']
+      + path.delimiter + path.join(vgrPath,'bin')
+      + path.delimiter + vboxPath;
     return env;
   }
 
