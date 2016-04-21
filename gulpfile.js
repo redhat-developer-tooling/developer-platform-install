@@ -16,7 +16,8 @@ var gulp = require('gulp'),
     path = require('path'),
     minimatch = require('minimatch'),
     copy = require('gulp-copy'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    mkdirp = require('mkdirp');
 
 require('./gulp-tasks/tests')(gulp);
 
@@ -72,6 +73,10 @@ function createExecCallback(cb, quiet) {
   }
 }
 
+gulp.task('create-dist-win-dir', function(cb) {
+  return mkdirp(buildFolderPath, cb);
+})
+
 gulp.task('generate', ['transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
   let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
@@ -101,7 +106,7 @@ gulp.task('download-7zip', function() {
       .pipe(fs.createWriteStream(zaZip));
 });
 
-gulp.task('unzip-7zip', ['download-7zip'], function() {
+gulp.task('unzip-7zip', function() {
   return gulp.src(zaZip)
       .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
       .pipe(gulp.dest(buildFolderRoot));
@@ -112,14 +117,27 @@ gulp.task('download-7zip-extra', function() {
       .pipe(fs.createWriteStream(zaExtra7z));
 });
 
-gulp.task('unzip-7zip-extra', ['download-7zip-extra', 'unzip-7zip'], function(cb) {
+gulp.task('unzip-7zip-extra', function(cb) {
   let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
   // console.log(cmd);
   exec(cmd, createExecCallback(cb, true));
 });
 
-// download-7zip and download-7zip-extra are listed here only for easier understanding
-gulp.task('prepare-7zip', ['download-7zip', 'unzip-7zip', 'download-7zip-extra', 'unzip-7zip-extra']);
+gulp.task('download-resource-hacker', function() {
+  return request('http://www.angusj.com/resourcehacker/resource_hacker.zip')
+      .pipe(fs.createWriteStream(rhZip));
+});
+
+gulp.task('unzip-resource-hacker', function() {
+  return gulp.src(rhZip)
+      .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/ResourceHacker.*") } }))
+      .pipe(gulp.dest(buildFolderRoot));
+});
+
+gulp.task('prepare-tools', function(cb) {
+  runSequence(['download-7zip', 'download-7zip-extra', 'download-resource-hacker'],
+    ['unzip-7zip', 'unzip-resource-hacker'], 'unzip-7zip-extra', cb);
+});
 
 // wrap electron-generated app to 7zip archive
 gulp.task('create-7zip-archive', function(cb) {
@@ -147,6 +165,7 @@ gulp.task('create-final-exe', function(cb) {
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
   let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
   // console.log(packageCmd);
+
   exec(packageCmd, createExecCallback(cb, true));
 });
 
@@ -194,37 +213,26 @@ function createSHA256File(filename, cb) {
   });
 }
 
-gulp.task('download-resource-hacker', function() {
-  return request('http://www.angusj.com/resourcehacker/resource_hacker.zip')
-      .pipe(fs.createWriteStream(rhZip));
-});
-
-gulp.task('unzip-resource-hacker', ['download-resource-hacker'], function() {
-  return gulp.src(rhZip)
-      .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/ResourceHacker.*") } }))
-      .pipe(gulp.dest(buildFolderRoot));
-});
-
-// download-resource-hacker and download-resource-hacker are listed here only for easier understanding
-gulp.task('prepare-resource-hacker', ['unzip-resource-hacker', 'download-resource-hacker']);
-
 // Create stub installer that will then download all the requirements
 gulp.task('package-simple', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'generate', ['prepare-7zip', 'prepare-resource-hacker'], 'package', 'cleanup', cb);
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+    'prepare-tools'], 'package', 'cleanup', cb);
 });
 
   // Create bundled installer
 gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'generate', ['prepare-7zip', 'prepare-resource-hacker'], 'prefetch', 'package', 'cleanup', cb);
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
 });
 
 // Create both installers
 gulp.task('dist', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'generate', ['prepare-7zip', 'prepare-resource-hacker'], 'package', 'prefetch', 'package', 'cleanup', cb);
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+    'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
 });
 
 gulp.task('7zip-cleanup', function() {
-    return del([buildFolderRoot + 'DeveloperPlatformInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
+  return del([buildFolderRoot + 'DeveloperPlatformInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {
