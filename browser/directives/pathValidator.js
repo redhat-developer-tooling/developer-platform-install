@@ -14,6 +14,8 @@ function pathValidator() {
         } else {
           mCtrl.$setValidity('folderPath', false);
         }
+        // 90 comes from 260 - longest path inside jbds and cygwin
+        mCtrl.$setValidity('tooLong',value.length<=90)
         mCtrl.$setValidity('hasSpaces',!value.includes(' '));
         return value;
       }

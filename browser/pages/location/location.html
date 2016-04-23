@@ -45,6 +45,10 @@
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>The path has spaces. Please choose another location with NO spaces.</strong>
           </div>
+          <div ng-show="locationForm.folder.$error.tooLong" class="help-block has-warning">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>The path is too long.</strong>
+          </div>
           <div ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>
