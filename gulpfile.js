@@ -28,7 +28,8 @@ var artifactName = 'jboss-devstudio-platform',
 var buildFolderRoot = 'dist/win/';
 var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifactArch;
 var buildFolder = buildFolderRoot + buildFileNamePrefix;
-var prefetchFolder = buildFolderRoot + buildFileNamePrefix; // or just use downloads/ folder to that a clean doesn't wipe out the downloads
+// use folder outside buildFolder so that a 'clean' task won't wipe out the cache
+var prefetchFolder = 'requirements-cache';
 let buildFolderPath = path.resolve(buildFolderRoot);
 
 let zaRoot = path.resolve(buildFolderRoot);
@@ -43,6 +44,12 @@ let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
 let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
 let installerExe = resolveInstallerExePath('');
 
+process.on('uncaughtException', function(err) {
+    if(err) {
+      throw err;
+    }
+});
+
 gulp.task('transpile:app', function() {
   return gulp.src(['./main/*.es6.js'])
     .pipe(babel())
@@ -52,7 +59,7 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('./main'));
 });
 
-// clean dist/ AND downloads/ folder
+// clean dist/ AND prefetch-dependencies/ folder
 gulp.task('clean-all', ['clean'], function() {
   return del([prefetchFolder], { force: true });
 });
@@ -88,7 +95,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
-  cmd += ' --prune --ignore=test';
+  cmd += ' --prune --ignore="test|' + prefetchFolder + '"';
   cmd += ' --icon="' + configIcon + '"';
   //console.log(cmd);
   exec(cmd,createExecCallback(cb, true));
@@ -120,7 +127,7 @@ gulp.task('download-7zip-extra', function() {
 gulp.task('unzip-7zip-extra', function(cb) {
   let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
   // console.log(cmd);
-  exec(cmd, createExecCallback(cb, true));
+  exec(cmd, createExecCallback(cb,true));
 });
 
 gulp.task('download-resource-hacker', function() {
@@ -141,7 +148,12 @@ gulp.task('prepare-tools', function(cb) {
 
 // wrap electron-generated app to 7zip archive
 gulp.task('create-7zip-archive', function(cb) {
-  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*';
+  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
+  // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
+  if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
+    packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
+  }
+  //console.log('[DEBUG]' + packCmd);
   exec(packCmd, createExecCallback(cb, true));
 });
 
@@ -178,38 +190,28 @@ gulp.task('package', function(cb) {
 });
 
 // for a given filename, return the sha256sum
-// eg., a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-// getSHA256("C:\\Program Files\\Internet Explorer\\iexplore.exe", function(hashstring) { console.log("Got sha256 = "+ hashstring); } );
 function getSHA256(filename, cb) {
   var hashstring = "NONE";
   var hash = crypto.createHash('sha256');
-  //console.log("Generate SHA256 for " + filename);
   var readStream = fs.createReadStream(filename);
-  readStream
-    .on('readable', function () {
-      var chunk;
-      while (null !== (chunk = readStream.read())) {
-        hash.update(chunk);
-      }
-    })
-    .on('end', function () {
-      // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
-      hashstring = hash.digest('hex');
-      // console.log("[1] SHA256 = " + hashstring);
-      cb(hashstring);
-    });
-  return hashstring;
+  readStream.on('readable', function () {
+    var chunk;
+    while (null !== (chunk = readStream.read())) {
+      hash.update(chunk);
+    }
+  }).on('end', function () {
+    hashstring = hash.digest('hex');
+    cb(hashstring);
+  });
 }
 
 // writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
 function createSHA256File(filename, cb) {
+  !cb && cb();
   getSHA256(filename, function(hashstring) {
-    fs.writeFileSync(filename + ".sha256", hashstring + " *" + path.parse(filename).base);
-    if (cb) {
-      cb();
-    } else {
-      return true;
-    }
+    fs.writeFile(filename + ".sha256", hashstring + " *" + path.parse(filename).base,(err)=>{
+      cb(err);
+    });
   });
 }
 
@@ -219,10 +221,9 @@ gulp.task('package-simple', function(cb) {
     'prepare-tools'], 'package', 'cleanup', cb);
 });
 
-  // Create bundled installer
 gulp.task('package-bundle', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
-    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
+   'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
 });
 
 // Create both installers
@@ -256,7 +257,7 @@ function isExistingSHA256Current(currentFile, sha256sum, processResult) {
   if (fs.existsSync(currentFile)) {
     getSHA256(currentFile, function(hashstring) {
       if (sha256sum !== hashstring) {
-        console.log('[WARNING] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
+        console.log('[WARN] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
       }
       processResult(sha256sum === hashstring);
     });
@@ -269,41 +270,49 @@ function resolveInstallerExePath(artifactType) {
   return path.join(zaRoot, artifactName + '-' + pjson.version + artifactType + '-installer.exe');
 }
 
-// download all the installer dependencies so we can package them up into the .exe
-gulp.task('prefetch', function(cb) {
-  let counter=0;
-  for (var key in reqs) {
-    if (reqs.hasOwnProperty(key)) {
-      let currentUrl = reqs[key].url;
-      let currentKey = key;
-      let currentFile = path.join(prefetchFolder, key);
-      let alreadyDownloaded = false;
+gulp.task('create-prefetch-cache-dir',function() {
+  if (!fs.existsSync(prefetchFolder)) {
+     mkdirp(prefetchFolder);
+  }
+});
 
+// prefetch all the installer dependencies so we can package them up into the .exe
+gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
+  let promises = new Set();
+  for (let key in reqs) {
+    if (reqs[key].bundle === 'yes') {
+      let currentUrl = reqs[key].url;
+      let currentFile = path.join(prefetchFolder, key);
+      promises.add(new Promise((resolve,reject)=>{
       // if file is already downloaded, check its sha against the stored one
-      isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
-        //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
-        if(!alreadyDownloaded) {
-          // download only what can be included in offline installer
-          if (reqs[currentKey].bundle === 'yes') {
-            counter++;
-            console.log('DOWNLOADING -> ' + currentUrl);
-            request(currentUrl)
-              .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
-                // create a sha256sum file
-                counter--;
-                if(counter===0) {
-                  cb();
-                }
-              });
-          }
-        } else {
-          console.log('DOWNLOADED <- ' + currentFile);
-        }
-      });
+        isExistingSHA256Current(currentFile, reqs[key].sha256sum, (dl)=>
+          dl ? resolve(true) : downloadFileAndCreateSha256(key,reqs[key],resolve,reject)
+        );
+      }));
     }
   }
-  installerExe = resolveInstallerExePath('-bundle');
+  return Promise.all(promises).then((result)=>
+    installerExe = resolveInstallerExePath('-bundle')
+  );
 });
+
+function downloadFileAndCreateSha256(fileName, req, resolve, reject) {
+  let currentFile = path.join(prefetchFolder, fileName);
+  console.log('[INFO] Download ' + req.url + ' to ' + currentFile);
+  downloadFile(req.url, currentFile, (err, res)=>{
+    if (err) {
+      reject(err);
+    } else {
+      createSHA256File(currentFile,(shaGenError)=>{
+        shaGenError ? reject(shaGenError) : resolve(res);
+      });
+    }
+  });
+}
+
+function downloadFile(fromUrl, toFile, onFinish) {
+  request(fromUrl).pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
+}
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
 gulp.task('check-requirements', function(cb) {

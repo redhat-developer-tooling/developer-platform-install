@@ -12,7 +12,7 @@
   "oc.zip": {
     "bundle": "yes",
     "url": "https://github.com/openshift/origin/releases/download/v1.1.6/openshift-origin-client-tools-v1.1.6-ef1caba-windows.zip",
-    "sha256sum": "5d29a8725785dfc783dc3d0768931462f2cc1f47f09acf232f79b03a3ef4edb2"
+    "sha256sum": "517e5b32cf9c592a6a4a10b43766410d9e3234807a9746b0cd0abbba15660350"
   },
   "pscp.exe": {
     "bundle": "yes",
@@ -22,7 +22,7 @@
   "cygwin.exe": {
     "bundle": "yes",
     "url": "https://cygwin.com/setup-x86_64.exe",
-    "sha256sum": "08079a13888b74f6466def307a687e02cb26fc257ea2fa78d40f02e28330fd56"
+    "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a"
   },
   "jbds.jar": {
     "bundle": "yes",
