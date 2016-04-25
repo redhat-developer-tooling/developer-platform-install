@@ -64,6 +64,7 @@
     "karma-junit-reporter": "0.4.1",
     "karma-ng-html2js-preprocessor": "0.2.1",
     "minimatch": "3.0.0",
+    "mkdirp": "^0.5.1",
     "mocha": "2.4.5",
     "mock-fs": "3.8.0",
     "protractor": "3.2.2",

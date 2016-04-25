@@ -28,7 +28,7 @@ var artifactName = 'jboss-devstudio-platform',
 var buildFolderRoot = 'dist/win/';
 var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifactArch;
 var buildFolder = buildFolderRoot + buildFileNamePrefix;
-var prefetchFolder = buildFolderRoot + buildFileNamePrefix; // or just use downloads/ folder to that a clean doesn't wipe out the downloads
+var prefetchFolder = 'requirements'; // use folder outside buildFolder so that a 'clean' task won't wipe out the cache
 let buildFolderPath = path.resolve(buildFolderRoot);
 
 let zaRoot = path.resolve(buildFolderRoot);
@@ -52,7 +52,7 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('./main'));
 });
 
-// clean dist/ AND downloads/ folder
+// clean dist/ AND prefetch-dependencies/ folder
 gulp.task('clean-all', ['clean'], function() {
   return del([prefetchFolder], { force: true });
 });
@@ -88,7 +88,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
-  cmd += ' --prune --ignore=test';
+  cmd += ' --prune --ignore="(test|' + prefetchFolder + ')"';
   cmd += ' --icon="' + configIcon + '"';
   //console.log(cmd);
   exec(cmd,createExecCallback(cb, true));
@@ -141,7 +141,13 @@ gulp.task('prepare-tools', function(cb) {
 
 // wrap electron-generated app to 7zip archive
 gulp.task('create-7zip-archive', function(cb) {
-  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*';
+  var packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
+  // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
+  if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0)
+  {
+    packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
+  }
+  //console.log('[DEBUG]' + packCmd);
   exec(packCmd, createExecCallback(cb, true));
 });
 
@@ -221,8 +227,8 @@ gulp.task('package-simple', function(cb) {
 
   // Create bundled installer
 gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
-    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
+  runSequence(['check-requirements', 'clean'], ['prefetch','create-dist-win-dir'], ['generate',
+    'prepare-tools'], 'package', 'cleanup', cb);
 });
 
 // Create both installers
@@ -256,7 +262,7 @@ function isExistingSHA256Current(currentFile, sha256sum, processResult) {
   if (fs.existsSync(currentFile)) {
     getSHA256(currentFile, function(hashstring) {
       if (sha256sum !== hashstring) {
-        console.log('[WARNING] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
+        console.log('[WARN] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
       }
       processResult(sha256sum === hashstring);
     });
@@ -269,40 +275,49 @@ function resolveInstallerExePath(artifactType) {
   return path.join(zaRoot, artifactName + '-' + pjson.version + artifactType + '-installer.exe');
 }
 
-// download all the installer dependencies so we can package them up into the .exe
+// prefetch all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
-  let counter=0;
+  let promises = [];
+  if (!fs.existsSync(prefetchFolder)) { mkdirp(prefetchFolder); }
   for (var key in reqs) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
       let currentFile = path.join(prefetchFolder, key);
       let alreadyDownloaded = false;
-
+      promises.push(new Promise((resolve,reject)=>{
       // if file is already downloaded, check its sha against the stored one
-      isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
-        //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
-        if(!alreadyDownloaded) {
-          // download only what can be included in offline installer
-          if (reqs[currentKey].bundle === 'yes') {
-            counter++;
-            console.log('DOWNLOADING -> ' + currentUrl);
-            request(currentUrl)
-              .pipe(fs.createWriteStream(currentFile)).on('finish',function() {
-                // create a sha256sum file
-                counter--;
-                if(counter===0) {
-                  cb();
-                }
-              });
+        isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
+          //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
+          if(!alreadyDownloaded) {
+            // download only what can be included in offline installer
+            if (reqs[currentKey].bundle === 'yes') {
+              promises.push(new Promise(function(resolve, reject) {
+                console.log('[INFO] Download ' + currentUrl + ' to ' + currentFile);
+                request(currentUrl)
+                  .pipe(fs.createWriteStream(currentFile)).on('finish',function(err, res) {
+                    if (err) { 
+                      reject(err);
+                    } else {
+                      //console.log('[DEBUG] Downloaded ' + currentFile);
+                      createSHA256File(currentFile);
+                      resolve(res);
+                    }
+                  });
+              }));
+            }
           }
-        } else {
-          console.log('DOWNLOADED <- ' + currentFile);
-        }
-      });
+        });
+      }));
     }
   }
-  installerExe = resolveInstallerExePath('-bundle');
+  Promise.all(promises).then((result) => {
+    installerExe = resolveInstallerExePath('-bundle');
+    cb();
+  }).catch((error)=>{
+    cb(error);
+  });
+
 });
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
