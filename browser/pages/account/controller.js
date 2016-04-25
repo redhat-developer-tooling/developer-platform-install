@@ -28,7 +28,7 @@ class AccountController {
     this.pdkVersion = pjson.version;
     this.isLoginBtnClicked = false;
   }
-  
+
   login() {
     this.authFailed = false;
     this.tandcNotSigned = false;
@@ -77,6 +77,10 @@ class AccountController {
   handleHttpFailure() {
     this.authFailed = true;
     this.isLoginBtnClicked = false;
+  }
+
+  isMockRun() {
+    return (process.env['PDKI_MOCK'] === 'true' || process.env['PDKI_MOCK'] === '1');
   }
 }
 

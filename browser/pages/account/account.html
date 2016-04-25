@@ -1,6 +1,11 @@
 <header class="login-header">
   <div class="login-title">
     <img class="branding-title" src="images/RHDSP.svg"/><span class="login-title-post-text">BETA</span>
+
+    <div class="help-block" ng-show="acctCtrl.isMockRun()">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>Mocked installation mode - nothing will be installed for real</strong>
+    </div>
   </div>
   <img class="branding branding-login" src="images/logo_RHD_RGB_default.svg"/>
 </header>
