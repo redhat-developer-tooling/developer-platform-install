@@ -1,0 +1,97 @@
+{
+  "cdk": {
+    "download": {
+      "skip": true,
+      "result": "success",
+      "time": 5000
+    },
+    "install": {
+      "result": "success",
+      "time": 13000
+    },
+    "setup": {
+      "result": "success",
+      "time": 1000
+    }
+  },
+
+  "cygwin": {
+    "download": {
+      "skip": true,
+      "result": "success",
+      "time": 2000
+    },
+    "install": {
+      "result": "success",
+      "time": 15000
+    },
+    "setup": {
+      "result": "success",
+      "time": 0
+    }
+  },
+
+  "jbds": {
+    "download": {
+      "skip": true,
+      "result": "success",
+      "time": 5000
+    },
+    "install": {
+      "result": "success",
+      "time": 20000
+    },
+    "setup": {
+      "result": "success",
+      "time": 1000
+    }
+  },
+
+  "jdk": {
+    "download": {
+      "skip": true,
+      "result": "success",
+      "time": 2000
+    },
+    "install": {
+      "result": "success",
+      "time": 1000
+    },
+    "setup": {
+      "result": "success",
+      "time": 0
+    }
+  },
+
+  "vagrant": {
+    "download": {
+      "skip": false,
+      "result": "success",
+      "time": 3000
+    },
+    "install": {
+      "result": "success",
+      "time": 16000
+    },
+    "setup": {
+      "result": "success",
+      "time": 0
+    }
+  },
+
+  "virtualbox": {
+    "download": {
+      "skip": false,
+      "result": "success",
+      "time": 3000
+    },
+    "install": {
+      "result": "success",
+      "time": 8000
+    },
+    "setup": {
+      "result": "success",
+      "time": 0
+    }
+  }
+}
