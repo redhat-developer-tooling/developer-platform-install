@@ -145,9 +145,9 @@ gulp.task('create-7zip-archive', function(cb) {
   // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
   if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0)
   {
-    packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
+    packCmd = zaExe + ' a -x!*.sha256 ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*' + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
   }
-  //console.log('[DEBUG]' + packCmd);
+  console.log('[INFO] ' + packCmd);
   exec(packCmd, createExecCallback(cb, true));
 });
 
@@ -227,7 +227,7 @@ gulp.task('package-simple', function(cb) {
 
   // Create bundled installer
 gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], ['prefetch','create-dist-win-dir'], ['generate',
+  runSequence(['check-requirements', 'clean'], 'prefetch','create-dist-win-dir', ['generate',
     'prepare-tools'], 'package', 'cleanup', cb);
 });
 
@@ -277,47 +277,33 @@ function resolveInstallerExePath(artifactType) {
 
 // prefetch all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', function(cb) {
-  let promises = [];
   if (!fs.existsSync(prefetchFolder)) { mkdirp(prefetchFolder); }
+  let counter=0;
   for (var key in reqs) {
     if (reqs.hasOwnProperty(key)) {
       let currentUrl = reqs[key].url;
       let currentKey = key;
       let currentFile = path.join(prefetchFolder, key);
       let alreadyDownloaded = false;
-      promises.push(new Promise((resolve,reject)=>{
       // if file is already downloaded, check its sha against the stored one
-        isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
-          //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
-          if(!alreadyDownloaded) {
-            // download only what can be included in offline installer
-            if (reqs[currentKey].bundle === 'yes') {
-              promises.push(new Promise(function(resolve, reject) {
-                console.log('[INFO] Download ' + currentUrl + ' to ' + currentFile);
-                request(currentUrl)
-                  .pipe(fs.createWriteStream(currentFile)).on('finish',function(err, res) {
-                    if (err) { 
-                      reject(err);
-                    } else {
-                      //console.log('[DEBUG] Downloaded ' + currentFile);
-                      createSHA256File(currentFile);
-                      resolve(res);
-                    }
-                  });
-              }));
+      isExistingSHA256Current(currentFile, reqs[currentKey].sha256sum, (alreadyDownloaded)=> {
+        //console.log('For ' + currentFile + ": " + alreadyDownloaded + ", " + reqs[currentKey].bundle);
+        if(!alreadyDownloaded && reqs[currentKey].bundle === 'yes') { // download only what can be included in offline installer
+          console.log('[INFO] Download [' + counter + '] ' + currentUrl + ' to ' + currentFile);
+          counter++;
+          request(currentUrl).pipe(fs.createWriteStream(currentFile)).on('finish',function() {
+            createSHA256File(currentFile);
+            counter--;
+            if(counter===0) {
+              installerExe = resolveInstallerExePath('-bundle');
+              cb();
             }
-          }
-        });
-      }));
+          });
+        }
+      });
     }
   }
-  Promise.all(promises).then((result) => {
-    installerExe = resolveInstallerExePath('-bundle');
-    cb();
-  }).catch((error)=>{
-    cb(error);
-  });
-
+  installerExe = resolveInstallerExePath('-bundle');
 });
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
