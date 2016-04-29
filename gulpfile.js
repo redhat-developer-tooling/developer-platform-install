@@ -284,10 +284,14 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
       let currentUrl = reqs[key].url;
       let currentFile = path.join(prefetchFolder, key);
       promises.add(new Promise((resolve,reject)=>{
-      // if file is already downloaded, check its sha against the stored one
-        isExistingSHA256Current(currentFile, reqs[key].sha256sum, (dl)=>
-          dl ? resolve(true) : downloadFileAndCreateSha256(key,reqs[key],resolve,reject)
-        );
+        // if file is already downloaded, check its sha against the stored one
+          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=> 
+          {
+            // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
+            isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
+              dl ? resolve(true) : downloadFileAndCreateSha256(key, reqs[key].url, resolve, reject)
+            );
+          });
       }));
     }
   }
@@ -296,10 +300,34 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
   );
 });
 
-function downloadFileAndCreateSha256(fileName, req, resolve, reject) {
+function downloadAndReadSHA256(fileName, reqURL,  reject, processResult) {
   let currentFile = path.join(prefetchFolder, fileName);
-  console.log('[INFO] Download ' + req.url + ' to ' + currentFile);
-  downloadFile(req.url, currentFile, (err, res)=>{
+  var currentSHA256 = 'NOSHA256SUM';
+  if (reqURL.length == 64 && reqURL.indexOf("http")<0 && reqURL.indexOf("ftp")<0)
+  {
+    // return the hardcoded SHA256sum in requirements.json
+    processResult(reqURL);
+  } else {
+    // download the remote SHA256sum, save the file, and return its value to compare to existing downloaded file
+    console.log('[INFO] Check ' + fileName);
+    downloadFile(reqURL, currentFile, (err, res)=>{
+      if (err) {
+        reject(err);
+      } else {
+        // read the contents of the sha256sum file
+        currentSHA256 = fs.readFileSync(currentFile,'utf8');
+        // console.log ("[DEBUG] SHA256 = " + currentSHA256 + " for " + fileName);
+        processResult(currentSHA256);
+      }
+    });
+  }
+}
+
+function downloadFileAndCreateSha256(fileName, reqURL, resolve, reject) {
+  let currentFile = path.join(prefetchFolder, fileName);
+  var currentSHA256 = '';
+  console.log('[INFO] Download ' + reqURL + ' to ' + currentFile);
+  downloadFile(reqURL, currentFile, (err, res)=>{
     if (err) {
       reject(err);
     } else {

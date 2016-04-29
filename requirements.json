@@ -27,7 +27,7 @@
   "jbds.jar": {
     "bundle": "yes",
     "url": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar",
-    "sha256sum": ""
+    "sha256sum": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar.sha256"
   },
   "jdk.zip": {
     "bundle": "yes",
