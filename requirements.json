@@ -32,7 +32,7 @@
   "jdk.zip": {
     "bundle": "yes",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
-    "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
+    "url": "http://download-ipv4.eng.brq.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
     "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
   },
   "vagrant.msi": {
