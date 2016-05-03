@@ -6,6 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import request from 'request';
 import Downloader from 'model/helpers/downloader';
 import { Readable, PassThrough, Writable } from 'stream';
+import Hash from 'model/helpers/hash';
 chai.use(sinonChai);
 
 describe('Downloader', function() {
@@ -18,16 +19,50 @@ describe('Downloader', function() {
     setTotalDownloadSize: function(size) {},
     downloaded: function(amt, time) {}
   };
+  let sandbox;
+  let succ = function() {};
+  let fail = function() {};
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  })
 
   it('should set totalDownloads to 1 by default', function() {
     downloader = new Downloader(fakeProgress, function() {}, function() {});
     expect(downloader.totalDownloads).to.equal(1);
   });
 
+  it('responseHandler should set the total download size', function() {
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
+    let response = { headers: { 'content-length': 1024 } };
+    let spy = sandbox.spy(fakeProgress, 'setTotalDownloadSize');
+
+    downloader.responseHandler(response);
+
+    expect(downloader.downloadSize).to.equal(1024);
+    expect(spy).to.have.been.calledOnce;
+    expect(spy).to.have.been.calledWith(1024);
+  });
+
+  it('dataHandler should update the progress', function() {
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
+    let data = { length: 1024 };
+    let spy = sandbox.spy(fakeProgress, 'downloaded');
+
+    downloader.dataHandler(data);
+
+    expect(spy).to.have.been.calledOnce;
+    expect(spy).to.have.been.calledWith(1024);
+  });
+
   it('errorHandler should close the stream', function() {
-    let errorSpy = sinon.spy();
+    let errorSpy = sandbox.spy();
     let stream = { close: function() {} };
-    let streamSpy = sinon.spy(stream, 'close');
+    let streamSpy = sandbox.spy(stream, 'close');
 
     downloader = new Downloader(fakeProgress, function() {}, errorSpy);
     downloader.setWriteStream(stream);
@@ -40,13 +75,47 @@ describe('Downloader', function() {
 
   it('endHandler should end the stream', function() {
     let stream = { end: function() {} };
-    let streamSpy = sinon.spy(stream, 'end');
+    let streamSpy = sandbox.spy(stream, 'end');
 
     downloader = new Downloader(fakeProgress, function() {}, function() {});
     downloader.setWriteStream(stream);
     downloader.endHandler(stream);
 
     expect(streamSpy).to.be.calledOnce;
+  });
+
+  it('closeHandler should verify downloaded files checksum', function() {
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
+    let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+
+    downloader.closeHandler('file', 'hash');
+
+    expect(stub).to.have.been.calledOnce;
+    expect(stub).to.have.been.calledWith('file');
+  });
+
+  it('closeHandler should call success when verification succeeds', function() {
+    downloader = new Downloader(fakeProgress, succ, fail);
+    let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    let successSpy = sandbox.spy(downloader, 'success');
+    let failureSpy = sandbox.spy(downloader, 'failure');
+
+    downloader.closeHandler('file', 'hash');
+
+    expect(successSpy).to.have.been.calledOnce;
+    expect(failureSpy).to.have.not.been.called;
+  });
+
+  it('closeHandler should call failure when verification fails', function() {
+    downloader = new Downloader(fakeProgress, succ, fail);
+    let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    let successSpy = sandbox.spy(downloader, 'success');
+    let failureSpy = sandbox.spy(downloader, 'failure');
+
+    downloader.closeHandler('file', 'hash1');
+
+    expect(failureSpy).to.have.been.calledOnce;
+    expect(successSpy).to.have.not.been.called;
   });
 
   describe('download', function() {
@@ -57,12 +126,8 @@ describe('Downloader', function() {
       }
     };
 
-    afterEach(function() {
-      request.get.restore();
-    })
-
     it('should make a request with given options', function() {
-      let requestGetSpy = sinon.spy(request, 'get');
+      let requestGetSpy = sandbox.spy(request, 'get');
       downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(new PassThrough());
       downloader.download(options);
@@ -73,12 +138,12 @@ describe('Downloader', function() {
 
     it('should call endHandler when end event is emitted', function() {
       let response = new Readable();
-      sinon.stub(request, 'get').returns(response);
+      sandbox.stub(request, 'get').returns(response);
 
       let stream = new PassThrough();
       downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(stream);
-      let endHandler = sinon.stub(downloader, 'endHandler');
+      let endHandler = sandbox.stub(downloader, 'endHandler');
       downloader.download(options);
       response.emit('end');
 
@@ -88,13 +153,13 @@ describe('Downloader', function() {
 
     it('should call errorHandler when error event is emitted', function() {
       let response = new Readable();
-      sinon.stub(request, 'get').returns(response);
+      sandbox.stub(request, 'get').returns(response);
       let error = new Error('something bad happened');
 
       let stream = new Writable();
       downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(stream);
-      let errorHandler = sinon.stub(downloader, 'errorHandler');
+      let errorHandler = sandbox.stub(downloader, 'errorHandler');
       downloader.download(options);
       response.emit('error', error);
 

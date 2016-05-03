@@ -24,7 +24,8 @@ describe('Installer', function() {
     setTotalDownloadSize: function(size) {},
     downloaded: function(amt, time) {}
   };
-  let installer = new Installer('test', fakeProgress, () => { return 'success'; }, (err) => { return err; });
+  let failureCallback = (err) => { return err; };
+  let installer = new Installer('test', fakeProgress, () => { return 'success'; }, failureCallback);
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
@@ -193,10 +194,46 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sandbox.stub(fs, 'move');
-      proc.throws(err);
+      let proc = sandbox.stub(fs, 'move').throws(err);
 
       return installer.moveFile(source, target)
+      .then(function(result) {
+        expect.fail('it did not reject');
+      })
+      .catch(function(error) {
+        expect(error).to.equal(err);
+      });
+    });
+  });
+
+  describe('copyFile', function() {
+    let source = path.join('.','someTempFolder', 'somefile');
+    let target = path.join('anInstallFolder', 'target');
+
+    it('should call fs#copy with correct arguments', function() {
+      let stub = sandbox.stub(fs, 'copy').yields();
+
+      return installer.copyFile(source, target)
+      .then(function(result) {
+        expect(stub).to.have.been.calledOnce;
+        expect(stub).to.have.been.calledWith(source, target);
+      });
+    });
+
+    it('should resolve as true when no error occurs', function() {
+      let stub = sandbox.stub(fs, 'copy').yields();
+
+      return installer.copyFile(source, target)
+      .then(function(result) {
+        expect(result).to.equal(true);
+      });
+    });
+
+    it('should reject when an error occurs', function() {
+      let err = new Error('fatal error');
+      let proc = sandbox.stub(fs, 'copy').throws(err);
+
+      return installer.copyFile(source, target)
       .then(function(result) {
         expect.fail('it did not reject');
       })
@@ -256,6 +293,25 @@ describe('Installer', function() {
       installer.succeed(false);
 
       expect(spy).to.have.not.been.called;
+    });
+  });
+
+  describe('fail', function() {
+    it('should set progress to Failed', function() {
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      installer.fail(new Error('Failed'));
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('Failed');
+    });
+
+    it('should call the fail callback with the error', function() {
+      let err = new Error('Failed');
+      let spy = sandbox.spy(installer, 'failure');
+      installer.fail(err);
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(err);
     });
   });
 });

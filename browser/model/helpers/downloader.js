@@ -76,7 +76,7 @@ class Downloader {
       .on('close', this.closeHandler.bind(this,file,sha));
   }
 
-  downloadAuth(options, username, password,file,sha) {
+  downloadAuth(options, username, password, file, sha) {
     let stream = this.writeStream;
     request.get(options)
       .auth(username, password)

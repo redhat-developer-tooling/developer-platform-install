@@ -54,7 +54,7 @@ class Util {
     });
   }
 
-  static findText(file, text, encoding = 'uft8') {
+  static findText(file, text, encoding = 'utf8') {
     return new Promise((resolve, reject) => {
       fs.readFile(file, encoding, (err, data) => {
         if(err) {
