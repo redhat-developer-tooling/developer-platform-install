@@ -95,7 +95,7 @@ describe('JBDS installer', function() {
   });
 
   describe('when downloading jbds', function() {
-    let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
+    let downloadUrl = 'https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar';
     let downloadStub;
 
     beforeEach(function() {
@@ -135,7 +135,7 @@ describe('JBDS installer', function() {
   });
 
   describe('when installing', function() {
-    let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
+    let downloadUrl = 'https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar';
     let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbds.jar');
     let fsextra = require('fs-extra');
 
