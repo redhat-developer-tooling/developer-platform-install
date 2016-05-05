@@ -11,11 +11,13 @@ import JdkInstall from 'model/jdk-install';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import rimraf from 'rimraf';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
-  let DataStub, installerDataSvc, sandbox;
+  let installerDataSvc, sandbox, installer;
   let infoStub, errorStub;
+  let downloadUrl = 'http://www.azulsystems.com/products/zulu/downloads';
   let fakeInstallable = {
     isInstalled: function() { return true; }
   };
@@ -59,13 +61,14 @@ describe('JDK installer', function() {
   });
 
   after(function() {
+    mockfs.restore();
     infoStub.restore();
     errorStub.restore();
-    mockfs.restore();
   });
 
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
+    installer = new JdkInstall(installerDataSvc, downloadUrl, null);
   });
 
   afterEach(function () {
@@ -106,7 +109,6 @@ describe('JDK installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
@@ -116,7 +118,6 @@ describe('JDK installer', function() {
     });
 
     it('should write the data into temp/jdk.zip', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
       let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
@@ -126,13 +127,18 @@ describe('JDK installer', function() {
     });
 
     it('should call downloader#download with the specified parameters once', function() {
-      let downloadUrl = 'http://www.azulsystems.com/products/zulu/downloads';
-      let installer = new JdkInstall(installerDataSvc, downloadUrl, null);
-
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(downloadUrl);
+    });
+
+    it('should skip download when the file is found in the download folder', function() {
+      sandbox.stub(fs, 'existsSync').returns(true);
+
+      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+
+      expect(downloadStub).not.called;
     });
   });
 
@@ -140,7 +146,6 @@ describe('JDK installer', function() {
     let downloadedFile = path.join('tempDirectory', 'jdk.zip');
 
     it('should set progress to "Installing"', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.install(fakeProgress, null, null);
@@ -149,9 +154,17 @@ describe('JDK installer', function() {
       expect(spy).to.have.been.calledWith('Installing');
     });
 
-    it('should unzip the downloaded file into install folder', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+    it('should remove an existing folder with the same name', function() {
+      sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
+      sandbox.stub(fs, 'existsSync').returns(true);
+      let stub = sandbox.stub(rimraf, 'sync').returns();
 
+      installer.install(fakeProgress, function() {}, function (err) {})
+
+      expect(stub).calledOnce;
+    });
+
+    it('should unzip the downloaded file into install folder', function() {
       let spy = sandbox.spy(Installer.prototype, 'unzip');
       installer.install(fakeProgress, function() {}, function (err) {});
 
@@ -160,9 +173,7 @@ describe('JDK installer', function() {
     });
 
     it('should catch errors during the installation', function(done) {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let stub = sandbox.stub(require('unzip'), 'Extract');
-      stub.throws(new Error('critical error'));
+      sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
 
       try {
         installer.install(fakeProgress, function() {}, function (err) {});
@@ -172,51 +183,83 @@ describe('JDK installer', function() {
       }
     });
 
-    it('getFolderContents should list files in a folder', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let spy = sandbox.spy(fs, 'readdir');
+    it('should skip the installation if it is not selected', function() {
+      installer.selectedOption = 'do nothing';
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      let calls = 0;
+      let succ = function() { return calls++; };
 
-      return installer.getFolderContents('tempDirectory')
-      .then((files) => {
-        expect(spy).calledOnce;
-        expect(spy).calledWith('tempDirectory');
-        expect(files).to.contain('jdk.zip');
-      });
+      installer.install(fakeProgress, succ, function (err) {});
+
+      expect(spy).not.called;
+      expect(calls).to.equal(1);
     });
 
-    it('getFolderContents should reject on error', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
+    it('setup should call success callback', function() {
+      let calls = 0;
+      let succ = function() { return calls++; };
+
+      installer.setup(fakeProgress, succ, function (err) {});
+
+      expect(calls).to.equal(1);
+    });
+
+    describe('files manipulation', function() {
       let err = new Error('critical error');
-      let stub = sandbox.stub(fs, 'readdir').throws(err);
 
-      return installer.getFolderContents('tempDirectory')
-      .then((files) => {
-        expect.fail('it did not reject');
-      })
-      .catch((error) => {
-        expect(error).to.equal(err);
+      it('getFolderContents should list files in a folder', function() {
+        let spy = sandbox.spy(fs, 'readdir');
+
+        return installer.getFolderContents('tempDirectory')
+        .then((files) => {
+          expect(spy).calledOnce;
+          expect(spy).calledWith('tempDirectory');
+          expect(files).to.contain('jdk.zip');
+        });
       });
-    });
 
-    it('getFileByName should return a filename from an array', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let files = ['abc', 'def', 'ghi'];
+      it('getFolderContents should reject on error', function() {
+        let stub = sandbox.stub(fs, 'readdir').yields(err);
 
-      return installer.getFileByName('de', files)
-      .then((filename) => {
-        expect(filename).to.equal('def');
+        return installer.getFolderContents('tempDirectory')
+        .then((files) => {
+          expect.fail('it did not reject');
+        })
+        .catch((error) => {
+          expect(error).to.equal(err);
+        });
       });
-    });
 
-    it('renameFile should rename a file with given path', function() {
-      let installer = new JdkInstall(installerDataSvc, 'http://www.azulsystems.com/products/zulu/downloads', null);
-      let spy = sandbox.spy(fs, 'rename');
+      it('getFileByName should return a filename from an array', function() {
+        let files = ['abc', 'def', 'ghi'];
 
-      return installer.renameFile('tempDirectory', 'test', 'newName')
-      .then((result) => {
-        expect(result).to.be.true;
-        expect(spy).calledOnce;
-        expect(spy).calledWith(path.join('tempDirectory', 'test'), 'newName');
+        return installer.getFileByName('de', files)
+        .then((filename) => {
+          expect(filename).to.equal('def');
+        });
+      });
+
+      it('renameFile should rename a file with given path', function() {
+        let spy = sandbox.spy(fs, 'rename');
+
+        return installer.renameFile('tempDirectory', 'test', 'newName')
+        .then((result) => {
+          expect(result).to.be.true;
+          expect(spy).calledOnce;
+          expect(spy).calledWith(path.join('tempDirectory', 'test'), 'newName');
+        });
+      });
+
+      it('renameFile should reject on error', function() {
+        sandbox.stub(fs, 'rename').yields(err);
+
+        return installer.renameFile('tempDirectory', 'test', 'newName')
+        .then((result) => {
+          expect.fail('it did not reject');
+        })
+        .catch((error) => {
+          expect(error).to.equal(err);
+        });
       });
     });
   });

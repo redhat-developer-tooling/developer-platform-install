@@ -81,7 +81,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sandbox.stub(child_process, 'exec').throws(err);
+      let proc = sandbox.stub(child_process, 'exec').yields(err);
 
       return installer.exec(command, args)
       .then(function(result) {
@@ -118,7 +118,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sandbox.stub(child_process, 'execFile').throws(err);
+      let proc = sandbox.stub(child_process, 'execFile').yields(err);
 
       return installer.execFile(file, args)
       .then(function(result) {
@@ -194,7 +194,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sandbox.stub(fs, 'move').throws(err);
+      let proc = sandbox.stub(fs, 'move').yields(err);
 
       return installer.moveFile(source, target)
       .then(function(result) {
@@ -231,7 +231,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let proc = sandbox.stub(fs, 'copy').throws(err);
+      let proc = sandbox.stub(fs, 'copy').yields(err);
 
       return installer.copyFile(source, target)
       .then(function(result) {
@@ -268,7 +268,7 @@ describe('Installer', function() {
 
     it('should reject when an error occurs', function() {
       let err = new Error('fatal error');
-      let stub = sandbox.stub(fs, 'writeFile').throws(err);
+      let stub = sandbox.stub(fs, 'writeFile').yields(err);
 
       return installer.writeFile(file, data)
       .then(function(result) {

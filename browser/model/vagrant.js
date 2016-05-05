@@ -113,7 +113,7 @@ class VagrantInstall extends InstallableItem {
     if( cygwinInstall !== undefined && cygwinInstall.isInstalled() ) {
       this.postCygwinInstall(progress, success, failure);
     } else {
-      progress.setStatus('Waiting for  Cygwin to finish installation');
+      progress.setStatus('Waiting for Cygwin to finish installation');
       ipcRenderer.on('installComplete', (event, arg) => {
         if (arg == 'cygwin') {
           this.postCygwinInstall(progress, success, failure);

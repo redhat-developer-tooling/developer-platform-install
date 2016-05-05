@@ -11,13 +11,15 @@ import CygwinInstall from 'model/cygwin';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import child_process from 'child_process';
 chai.use(sinonChai);
 
 describe('Cygwin installer', function() {
-  let DataStub, installerDataSvc, sandbox;
+  let installerDataSvc, sandbox, installer;
   let infoStub, errorStub;
+  let downloadUrl = 'https://cygwin.com/setup-x86_64.exe';
   let fakeInstallable = {
-    isInstalled: function() { return true; }
+    isInstalled: function() { return false; }
   };
 
   let fakeData = {
@@ -31,7 +33,7 @@ describe('Cygwin installer', function() {
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.cygwinDir.returns('install/Cygwin');
-  installerDataSvc.getInstallable
+  installerDataSvc.getInstallable.returns(fakeInstallable)
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -43,6 +45,9 @@ describe('Cygwin installer', function() {
   };
 
   before(function() {
+    infoStub = sinon.stub(Logger, 'info');
+    errorStub = sinon.stub(Logger, 'error');
+
     mockfs({
       temporaryFolder: {},
       install: {}
@@ -50,18 +55,16 @@ describe('Cygwin installer', function() {
       createCwd: false,
       createTmp: false
     });
-
-    infoStub = sinon.stub(Logger, 'info');
-    errorStub = sinon.stub(Logger, 'error');
   });
 
   after(function() {
+    mockfs.restore();
     infoStub.restore();
     errorStub.restore();
-    mockfs.restore();
   });
 
   beforeEach(function () {
+    installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
     sandbox = sinon.sandbox.create();
   });
 
@@ -95,17 +98,14 @@ describe('Cygwin installer', function() {
       path.join('tempDirectory', 'cygwin.exe'));
   });
 
-  describe('when downloading cygwin', function() {
+  describe('installer download', function() {
     let downloadStub;
 
     beforeEach(function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
     });
 
-    let downloadUrl = 'https://cygwin.com/setup-x86_64.exe';
-
     it('should set progress to "Downloading"', function() {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
@@ -115,7 +115,6 @@ describe('Cygwin installer', function() {
     });
 
     it('should write the data into temp/cygwin.exe', function() {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
       let spy = sandbox.spy(fs, 'createWriteStream');
       let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
 
@@ -127,22 +126,51 @@ describe('Cygwin installer', function() {
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
+
+    it('should skip download when the file is found in the download folder', function() {
+      sandbox.stub(fs, 'existsSync').returns(true);
+
+      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+
+      expect(downloadStub).not.called;
+    });
   });
 
-  describe('when installing', function() {
-    let downloadUrl = 'https://cygwin.com/setup-x86_64.exe';
+  describe('installation', function() {
     let downloadedFile = path.join(installerDataSvc.tempDir(), 'cygwin.exe');
 
-    it('should set progress to "Installing"', function() {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
+    it('should not start until virtualbox has finished installing', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
+      let installSpy = sandbox.spy(installer, 'postVirtualboxInstall');
+
+      try {
+        installer.install(fakeProgress, null, null);
+      } catch (err) {
+        //workaround for ipcRenderer
+      } finally {
+        expect(installSpy).not.called;
+        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWith('Waiting for VirtualBox to finish installation');
+      }
+    });
+
+    it('should install once virtualbox has finished', function() {
+      let stub = sandbox.stub(installer, 'postVirtualboxInstall').returns();
+      sandbox.stub(fakeInstallable, 'isInstalled').returns(true);
+
+      installer.install(fakeProgress, () => {}, (err) => {});
+
+      expect(stub).calledOnce;
+    });
+
+    it('should set progress to "Installing"', function() {
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
       installer.postVirtualboxInstall(fakeProgress, null, null);
 
@@ -151,8 +179,7 @@ describe('Cygwin installer', function() {
     });
 
     it('should run the installer with correct parameters', function() {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'execFile').yields();
+      let stub = sandbox.stub(child_process, 'execFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'execFile');
 
       installer.postVirtualboxInstall(fakeProgress, null, null);
@@ -166,10 +193,8 @@ describe('Cygwin installer', function() {
     });
 
     it('should catch errors thrown during the installation', function(done) {
-      let installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
-      let stub = sandbox.stub(require('child_process'), 'execFile');
       let err = new Error('critical error');
-      stub.throws(err);
+      let stub = sandbox.stub(child_process, 'execFile').yields(err);
 
       try {
         installer.postVirtualboxInstall(fakeProgress, null, null);
