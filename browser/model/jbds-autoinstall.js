@@ -12,7 +12,7 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir) {
-    let jbdsVersion = "9.1";
+    let pjson = require('../../package.json');
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
@@ -38,15 +38,16 @@ class JbdsAutoInstallGenerator {
         '<jrelocation>' + path.join(jdkInstallDir, 'bin', 'javaw.exe') + '</jrelocation>',
         '</com.jboss.devstudio.core.installer.CreateLinkPanel>',
         '<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
-        '<programGroup name="Red Hat JBoss Developer Studio ' + jbdsVersion + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="false" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="-jar &quot;' + path.join(jbdsInstallDir, 'Uninstaller', 'uninstaller.jar') + '&quot;" createForAll="false" description="Uninstall Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds_uninstall.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Uninstall Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jdkInstallDir, 'bin', 'javaw.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
+        '<programGroup name="Red Hat JBoss Developer Studio ' + pjson.version + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + pjson.version + '" encoding="" group="false" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + pjson.version + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + pjson.version + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + pjson.version + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="-jar &quot;' + path.join(jbdsInstallDir, 'Uninstaller', 'uninstaller.jar') + '&quot;" createForAll="false" description="Uninstall Red Hat JBoss Developer Studio ' + pjson.version + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds_uninstall.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Uninstall Red Hat JBoss Developer Studio ' + pjson.version + '" target="' + path.join(jdkInstallDir, 'bin', 'javaw.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
         '</com.izforge.izpack.panels.ShortcutPanel>',
         '<com.jboss.devstudio.core.installer.ShortcutPanelPatch id="shortcutpatch"/>',
         '<com.izforge.izpack.panels.SimpleFinishPanel id="finish"/>',
         '</AutomatedInstallation>'
       ].join('\r\n');
+      console.log('[DEBUG] pjson.version = ' + pjson.version)
 
       return temp;
   }

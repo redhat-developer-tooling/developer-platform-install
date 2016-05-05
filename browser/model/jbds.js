@@ -7,6 +7,8 @@ let ipcRenderer = require('electron').ipcRenderer;
 let Glob = require("glob").Glob;
 let replace = require("replace-in-file");
 
+var pjson = JSON.parse(fs.readFileSync('./package.json'));
+
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -19,7 +21,7 @@ class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('jbds',
           'RED HAT JBOSS DEVELOPER STUDIO',
-          '9.1.0',
+          pjson.version,
           'An IDE with tooling that will help you easily code, test, and deploy your projects.',
           1600,
           downloadUrl,
@@ -28,11 +30,11 @@ class JbdsInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jbds.jar';
-    this.version = '9.1.0';
+    this.version = pjson.version;
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
-    this.addOption('install', '9.1.0', '', true);
+    this.addOption('install', pjson.version, '', true);
   }
 
   static key() {
