@@ -33,7 +33,8 @@ class LocationController {
   }
 
   selectFolder() {
-    let selection = dialog.showOpenDialog({
+    let selection = dialog.showOpenDialog(
+      remote.getCurrentWindow(),{
       properties: [ 'openDirectory' ],
       defaultPath: this.folder
     });
