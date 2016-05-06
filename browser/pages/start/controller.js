@@ -73,6 +73,9 @@ class StartController {
     Logger.info('JBDS Start - Write temp file SUCCESS');
 
     Logger.info('JBDS Start - Run runJbdsFile: ' + runJbdsFile);
+
+    let env = process.env;
+    env['rhel.subscription.password'] = this.installerDataSvc.password;
     let runJbdsBat = require('child_process')
         .spawn(
             'cmd.exe',
@@ -81,6 +84,7 @@ class StartController {
                 runJbdsFile
             ],
             {
+                env: env,
                 timeout: 2000,
             });
     runJbdsBat.stdout.on('data',
