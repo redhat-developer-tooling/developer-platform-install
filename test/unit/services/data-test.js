@@ -15,10 +15,20 @@ chai.use(sinonChai);
 
 
 describe('InstallerDataService', function() {
-  let sandbox;
+  let sandbox, svc, vagrant, vbox;
 
   beforeEach(function() {
+    svc = new InstallerDataService();
+    svc.ipcRenderer = {
+      send: function(event, key) {}
+    };
+    svc.router = {
+      go: function(route) {}
+    };
     sandbox = sinon.sandbox.create();
+    vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
+    vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
+      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
   });
 
   afterEach(function() {
@@ -27,7 +37,8 @@ describe('InstallerDataService', function() {
 
   let logStub, fsStub, infoStub, errorStub;
   let fakeProgress = {
-    installTrigger: function() {}
+    installTrigger: function() {},
+    setStatus: function(status) {}
   };
 
   before(function() {
@@ -46,7 +57,6 @@ describe('InstallerDataService', function() {
 
   describe('initial state', function() {
     it('should set installation folder according to OS', function() {
-      let svc = new InstallerDataService();
       if (process.platform === 'win32') {
         expect(svc.installRoot).to.equal('c:\\DeveloperPlatform');
       } else {
@@ -55,7 +65,6 @@ describe('InstallerDataService', function() {
     });
 
     it('should set default values correctly', function() {
-      let svc = new InstallerDataService();
       expect(svc.tmpDir).to.equal(os.tmpdir());
 
       expect(svc.username).to.equal('');
@@ -68,8 +77,6 @@ describe('InstallerDataService', function() {
     });
 
     it('setup should correctly initialize folders', function() {
-      let svc = new InstallerDataService();
-
       svc.installRoot = 'installRoot';
 
       svc.setup();
@@ -89,8 +96,6 @@ describe('InstallerDataService', function() {
 
   describe('installables', function() {
     it('should be able to handle installables', function() {
-      let svc = new InstallerDataService();
-      let vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
       svc.addItemToInstall('key', vagrant);
 
       expect(svc.installableItems.size).to.equal(1);
@@ -100,12 +105,15 @@ describe('InstallerDataService', function() {
   });
 
   describe('downloading', function() {
-    it('startDownload should queue the installable for download', function() {
-      let svc = new InstallerDataService();
-      let vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
-      sandbox.stub(vagrant, 'downloadInstaller').returns();
-
+    beforeEach(function() {
       svc.addItemToInstall('vagrant', vagrant);
+      svc.addItemToInstall('vbox', vbox);
+
+      sandbox.stub(vagrant, 'downloadInstaller').returns();
+      sandbox.stub(vbox, 'downloadInstaller').returns();
+    })
+
+    it('startDownload should queue the installable for download', function() {
       svc.startDownload('vagrant');
       expect(svc.isDownloading()).to.be.true;
       expect(svc.toDownload.size).to.equal(1);
@@ -113,20 +121,9 @@ describe('InstallerDataService', function() {
     });
 
     it('downloadDone should signal that the download has finished', function() {
-      let svc = new InstallerDataService();
-      let vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
-      let vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
-        'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
-
-      svc.addItemToInstall('vagrant', vagrant);
-      svc.addItemToInstall('vbox', vbox);
-
       svc.startDownload('vagrant');
       svc.startDownload('vbox');
-
-      sandbox.stub(vagrant, 'downloadInstaller').returns();
-      sandbox.stub(vbox, 'downloadInstaller').returns();
-      let stub = sandbox.stub(vagrant, 'install');
+      sandbox.stub(vagrant, 'install');
 
       svc.downloadDone(fakeProgress, 'vagrant');
 
@@ -135,19 +132,9 @@ describe('InstallerDataService', function() {
     });
 
     it('downloadDone should trigger install on the installable', function() {
-      let svc = new InstallerDataService();
-      let vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
-      let vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
-        'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
-
-      svc.addItemToInstall('vagrant', vagrant);
-      svc.addItemToInstall('vbox', vbox);
-
       svc.startDownload('vagrant');
       svc.startDownload('vbox');
 
-      sandbox.stub(vagrant, 'downloadInstaller').returns();
-      sandbox.stub(vbox, 'downloadInstaller').returns();
       let spy = sandbox.spy(svc, 'startInstall');
       let stub = sandbox.stub(vagrant, 'install').returns();
 
@@ -156,18 +143,74 @@ describe('InstallerDataService', function() {
       expect(spy).calledWith('vagrant');
       expect(stub).calledOnce;
     });
+
+    it('downloadDone should send an event when all downloads have finished', function() {
+      svc.startDownload('vagrant');
+      svc.startDownload('vbox');
+
+      sandbox.stub(vagrant, 'install').returns();
+      sandbox.stub(vbox, 'install').returns();
+      let spy = sandbox.spy(svc.ipcRenderer, 'send');
+
+      svc.downloadDone(fakeProgress, 'vagrant');
+      svc.downloadDone(fakeProgress, 'vbox');
+
+      expect(spy).calledOnce;
+      expect(spy).calledWith('downloadingComplete', 'all');
+    });
   });
 
   describe('installing', function() {
-    it('startInstall should queue the installable for installing', function() {
-      let svc = new InstallerDataService();
-      let vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
-
+    beforeEach(function() {
       svc.addItemToInstall('vagrant', vagrant);
       svc.startInstall('vagrant');
+    });
+
+    it('startInstall should queue the installable for installing', function() {
       expect(svc.isInstalling()).to.be.true;
       expect(svc.toInstall.size).to.equal(1);
       expect(svc.toInstall.has('vagrant')).to.be.true;
+    });
+
+    it('installDone should trigger item setup', function() {
+      let stub = sandbox.stub(vagrant, 'setup').returns();
+
+      svc.installDone(fakeProgress, 'vagrant');
+
+      expect(svc.toInstall.size).to.equal(1);
+      expect(stub).calledOnce;
+    });
+  });
+
+  describe('setup', function() {
+    beforeEach(function() {
+      svc.addItemToInstall('vagrant', vagrant);
+      svc.addItemToInstall('vbox', vbox);
+
+      svc.startInstall('vagrant');
+      svc.startInstall('vbox');
+    });
+
+    it('setupDone should send an event that a component has finished installing', function() {
+      let spy = sandbox.spy(svc.ipcRenderer, 'send');
+
+      svc.setupDone(fakeProgress, 'vagrant');
+      svc.setupDone(fakeProgress, 'vbox');
+
+      expect(spy).calledTwice;
+      expect(spy).calledWith('installComplete', 'vagrant');
+      expect(spy).calledWith('installComplete', 'vbox');
+    });
+
+    it('setupDone should switch to final page when all installs have finished', function() {
+      let spy = sandbox.spy(svc.router, 'go');
+
+      svc.setupDone(fakeProgress, 'vagrant');
+      svc.setupDone(fakeProgress, 'vbox');
+
+      expect(svc.installing).to.be.false;
+      expect(spy).calledOnce;
+      expect(spy).calledWith('start');
     });
   });
 });
