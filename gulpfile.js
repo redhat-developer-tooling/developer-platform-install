@@ -21,7 +21,7 @@ var gulp = require('gulp'),
 
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'jboss-devstudio-platform',
+var artifactName = 'red-hat-devstudio-platform',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 

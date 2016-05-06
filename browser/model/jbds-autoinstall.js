@@ -12,7 +12,7 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir) {
-    let jbdsVersion = "9.1";
+    let jbdsVersion = "10.0";
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
