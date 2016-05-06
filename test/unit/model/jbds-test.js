@@ -13,6 +13,8 @@ import Installer from 'model/helpers/installer';
 import JbdsAutoInstallGenerator from 'model/jbds-autoinstall';
 chai.use(sinonChai);
 
+let reqs = require('../../../requirements.json');
+
 describe('JBDS installer', function() {
   let DataStub, installerDataSvc;
   let infoStub, errorStub, sandbox;
@@ -95,7 +97,8 @@ describe('JBDS installer', function() {
   });
 
   describe('when downloading jbds', function() {
-    let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
+    let downloadUrl = reqs['jbds.jar'].url;
+    // console.log('[DEBUG] downloadUrl = ' + downloadUrl);
     let downloadStub;
 
     beforeEach(function() {
@@ -135,7 +138,8 @@ describe('JBDS installer', function() {
   });
 
   describe('when installing', function() {
-    let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
+    let downloadUrl = reqs['jbds.jar'].url;
+    // console.log('[DEBUG] downloadUrl = ' + downloadUrl);
     let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbds.jar');
     let fsextra = require('fs-extra');
 
