@@ -64,9 +64,7 @@ class VirtualBoxInstall extends InstallableItem {
                 resolve(output);
             });
           } else {
-            return new Promise((resolve, reject) => {
-	             resolve(output);
-	            });
+	           resolve(output);
           }
         } else {
           return Util.findText(output, 'INSTALL_DIR=').then((result) => {
