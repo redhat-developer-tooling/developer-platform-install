@@ -1,13 +1,13 @@
 exports.config = {
   directConnect: true,
 
-  specs: ['test/ui/**/*.js'],
+  specs: ['test/ui/login-test.js', 'test/ui/**/*!(login)-test.js'],
   framework: 'jasmine2',
 
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: './dist/win/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe'
+      binary: './dist/win/jboss-devstudio-platform-win32-x64/jboss-devstudio-platform.exe'
     },
 
     onPrepare: function() {

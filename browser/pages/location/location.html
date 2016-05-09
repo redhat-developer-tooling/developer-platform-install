@@ -21,36 +21,36 @@
           </label>
           <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
-          <button type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
+          <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
           <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
           <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
             <span class="pficon-error-circle-o"></span>
             <strong>Please select an installation folder.</strong>
           </div>
-          <div ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
+          <div id="invalidPathStatus" ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
             <span class="pficon-error-circle-o"></span>
             <strong>The selection is not a valid absolute path.</strong>
           </div>
           <div ng-show="!locationForm.folder.$invalid" class="has-warning">
-            <div ng-show="locCtrl.folderExists" class="help-block">
+            <div id="existingFolderStatus" ng-show="locCtrl.folderExists" class="help-block has-warning">
               <span class="pficon pficon-warning-triangle-o"></span>
               <strong>The selected folder already exists, some files might be overwritten.</strong>
             </div>
-            <div ng-show="!locCtrl.folderExists" class="help-block">
+            <div id="createFolderStatus" ng-show="!locCtrl.folderExists" class="help-block">
               <span class="pficon pficon-info"></span>
               <strong>The selected folder will be created.</strong>
             </div>
           </div>
-          <div ng-show="locationForm.folder.$error.hasSpaces" class="help-block has-warning">
-            <span class="pficon pficon-warning-triangle-o"></span>
+          <div id="pathWithSpacesStatus" ng-show="locationForm.folder.$error.hasSpaces" class="help-block has-error">
+            <span class="pficon pficon-error-circle-o"></span>
             <strong>The path has spaces. Please choose another location with NO spaces.</strong>
           </div>
-          <div ng-show="locationForm.folder.$error.tooLong" class="help-block has-warning">
-            <span class="pficon pficon-warning-triangle-o"></span>
+          <div id="pathTooLongStatus" ng-show="locationForm.folder.$error.tooLong" class="help-block has-error">
+            <span class="pficon pficon-error-circle-o"></span>
             <strong>The path is too long.</strong>
           </div>
-          <div ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
-            <span class="pficon pficon-warning-triangle-o"></span>
+          <div id="vagrantHomeStatus" ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
+            <span class="pficon pficon-error-circle-o"></span>
             <strong>
               The directory where vagrant is/will be installed (the Vagrant home directory)
               has a space(s) in it. On Windows, there is a bug in Ruby when compiling
