@@ -108,18 +108,15 @@ describe('Install controller', function() {
   });
 
   describe('triggerDownload', function() {
-    let dlStub;
-    before(function() {
-      dlStub = sinon.stub(InstallableItem.prototype, 'downloadInstaller').returns();
-    });
+    let vagrantStub, vboxStub, doneStub;
 
-    after(function() {
-      dlStub.restore();
+    beforeEach(function() {
+      vagrantStub = sandbox.stub(vagrant, 'downloadInstaller').yields();
+      vboxStub = sandbox.stub(vbox, 'downloadInstaller').yields();
+      doneStub = sandbox.stub(installerDataSvc, 'downloadDone').returns();
     });
 
     it('data service should register the new downloads', function() {
-      sandbox.stub(vagrant, 'downloadInstaller').returns();
-      sandbox.stub(vbox, 'downloadInstaller').returns();
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
@@ -133,30 +130,35 @@ describe('Install controller', function() {
 
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
-      let vagrantSpy = sandbox.stub(vagrant, 'downloadInstaller').returns();
-      let vboxSpy = sandbox.stub(vbox, 'downloadInstaller').returns();
 
       controller = new InstallController(null, timeoutStub, installerDataSvc);
-      expect(vagrantSpy).calledOnce;
-      expect(vboxSpy).calledOnce;
+      expect(vagrantStub).calledOnce;
+      expect(vboxStub).calledOnce;
+    });
+
+    it('should call data services downloadDone when download finishes', function() {
+      sandbox.stub(installerDataSvc, 'startDownload').returns();
+
+      controller = new InstallController(null, timeoutStub, installerDataSvc);
+
+      expect(doneStub).calledTwice;
+      expect(doneStub).calledWith(sinon.match.any, 'vagrant');
+      expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
     });
   });
 
   describe('triggerInstall', function() {
-    let inStub;
-    before(function() {
-      inStub = sinon.stub(InstallableItem.prototype, 'install').returns();
-    });
+    let vagrantStub, vboxStub, doneStub;
 
-    after(function() {
-      inStub.restore();
-    })
-
-    it('data service should register the new install', function() {
-      sandbox.stub(vagrant, 'install').returns();
-      sandbox.stub(vbox, 'install').returns();
+    beforeEach(function() {
       sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
+      vagrantStub = sandbox.stub(vagrant, 'install').yields();
+      vboxStub = sandbox.stub(vbox, 'install').yields();
+      doneStub = sandbox.stub(installerDataSvc, 'installDone').returns();
+    });
+
+    it('data service should register the new install', function() {
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
       controller = new InstallController(null, timeoutStub, installerDataSvc);
 
@@ -169,15 +171,21 @@ describe('Install controller', function() {
     });
 
     it('should call the installables install method', function() {
-      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
-      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       sandbox.stub(installerDataSvc, 'startInstall').returns();
-      let vagrantSpy = sandbox.stub(vagrant, 'install').returns();
-      let vboxSpy = sandbox.stub(vbox, 'install').returns();
 
       controller = new InstallController(null, timeoutStub, installerDataSvc);
-      expect(vagrantSpy).calledOnce;
-      expect(vboxSpy).calledOnce;
+      expect(vagrantStub).calledOnce;
+      expect(vboxStub).calledOnce;
+    });
+
+    it('should call data services installDone when install finishes', function() {
+      sandbox.stub(installerDataSvc, 'startInstall').returns();
+
+      controller = new InstallController(null, timeoutStub, installerDataSvc);
+
+      expect(doneStub).calledTwice;
+      expect(doneStub).calledWith(sinon.match.any, 'vagrant');
+      expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
     });
   });
 });
