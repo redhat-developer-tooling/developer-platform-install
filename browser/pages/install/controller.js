@@ -60,21 +60,6 @@ class InstallController {
     )
   }
 
-  triggerSetup(installableKey, installableValue, progress) {
-    this.installerDataSvc.startSetup(installableKey);
-
-    progress.installTrigger();
-
-    installableValue.setup(progress,
-      () => {
-        this.installerDataSvc.setupDone(installableKey);
-      },
-      (error) => {
-        Logger.error(installableKey + ' setup failed: ' + error);
-      }
-    )
-  }
-
   productName(key) {
     return this.data[key].productName;
   }
