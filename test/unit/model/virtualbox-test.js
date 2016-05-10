@@ -48,7 +48,10 @@ describe('Virtualbox installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
 
-    mockfs({}, {
+    mockfs({
+      tempDirectory: {},
+      installationFolder: {}
+    }, {
       createCwd: false,
       createTmp: false
     });

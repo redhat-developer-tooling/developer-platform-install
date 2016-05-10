@@ -18,41 +18,47 @@ describe('Hash', function() {
       update: function(chunk) {},
       digest: function(type) {}
     }
-    let createHashStub, readStreamStub;
-    let stream = new Readable();
+    let sandbox, createHashStub, readStreamStub;
+    let stream;
 
-    before(function() {
-      createHashStub = sinon.stub(crypto, 'createHash').returns(fakeHash);
-      readStreamStub = sinon.stub(fs, 'createReadStream').returns(stream);
+    beforeEach(function() {
+      stream = new Readable();
+      stream._read = function(size) {};
+      sandbox = sinon.sandbox.create();
+      createHashStub = sandbox.stub(crypto, 'createHash').returns(fakeHash);
+      readStreamStub = sandbox.stub(fs, 'createReadStream').returns(stream);
     });
 
-    after(function() {
-      createHashStub.restore();
-      readStreamStub.restore();
+    afterEach(function() {
+      sandbox.restore();
     });
 
-    it('should use crypto to create a sha256 hash', function() {
-      hash.SHA256('file', () => {});
-
-      expect(createHashStub).to.have.been.calledOnce;
-      expect(createHashStub).to.have.been.calledWith('sha256');
-    });
-
-    it('should read the specified file', function() {
-      hash.SHA256('file', () => {});
-
-      expect(readStreamStub).to.have.been.called;
-      expect(readStreamStub).to.have.been.calledWith('file');
-    });
-
-    it('should create a hex string when the file is done reading', function() {
-      let spy = sinon.spy(fakeHash, 'digest');
-      hash.SHA256('file', () => {});
+    it('should use crypto to create a sha256 hash', function(done) {
+      hash.SHA256('file', () => {
+        expect(createHashStub).to.have.been.calledOnce;
+        expect(createHashStub).to.have.been.calledWith('sha256');
+        done();
+      });
       stream.emit('end');
+    });
 
-      expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWith('hex');
-      spy.restore();
+    it('should read the specified file', function(done) {
+      hash.SHA256('file', () => {
+        expect(readStreamStub).to.have.been.called;
+        expect(readStreamStub).to.have.been.calledWith('file');
+        done();
+      });
+      stream.emit('end');
+    });
+
+    it('should create a hex string when the file is done reading', function(done) {
+      let spy = sandbox.spy(fakeHash, 'digest');
+      hash.SHA256('file', () => {
+        expect(spy).to.have.been.called;
+        expect(spy).to.have.been.calledWith('hex');
+        done();
+      });
+      stream.emit('end');
     });
   })
 });

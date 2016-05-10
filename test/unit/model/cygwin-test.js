@@ -49,8 +49,8 @@ describe('Cygwin installer', function() {
     errorStub = sinon.stub(Logger, 'error');
 
     mockfs({
-      temporaryFolder: {},
-      install: {}
+      tempDirectory: {},
+      installationFolder: {}
     }, {
       createCwd: false,
       createTmp: false

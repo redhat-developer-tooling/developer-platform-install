@@ -138,6 +138,7 @@ describe('Downloader', function() {
 
     it('should call endHandler when end event is emitted', function() {
       let response = new Readable();
+      response._read = function(size) {};
       sandbox.stub(request, 'get').returns(response);
 
       let stream = new PassThrough();
