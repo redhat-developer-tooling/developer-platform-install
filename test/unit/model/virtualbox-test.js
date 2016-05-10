@@ -246,9 +246,15 @@ describe('Virtualbox installer', function() {
 
     beforeEach(function() {
       let stub = sandbox.stub(Util, 'executeCommand');
-      stub.onCall(0).resolves('folder/vbox');
-      stub.onCall(1).resolves('5.0.8r1234');
-      sandbox.stub(Util, 'findText').resolves('dir=folder/vbox');
+      if (process.platform === 'win32') {
+        stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
+        stub.onCall(1).resolves('folder/vbox');
+        stub.onCall(2).resolves('5.0.8r1234');
+      } else {
+        stub.onCall(0).resolves('folder/vbox');
+        stub.onCall(1).resolves('5.0.8r1234');
+        sandbox.stub(Util, 'findText').resolves('dir=folder/vbox');
+      }
       sandbox.stub(Util, 'folderContains').resolves('folder/vbox');
       validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
