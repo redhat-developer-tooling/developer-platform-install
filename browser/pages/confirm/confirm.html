@@ -4,12 +4,12 @@
 </header>
 
 <main class="col-sm-12 bottom-spacer" >
-  <p class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
+  <p id="detection-info" class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
     <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
     <span class="pficon-info" ng-show="!confCtrl.isDisabled"></span>
     {{confCtrl.installedSearchNote}}
     <br>
-    <span class="installation-instruction" ng-show="!confCtrl.isDisabled">
+    <span id="instructions" class="installation-instruction" ng-show="!confCtrl.isDisabled">
       Select the components to install.
     </span>
   </p>
@@ -17,7 +17,7 @@
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- VirtualBox -->
-    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
@@ -29,26 +29,26 @@
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
-            <span class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')">
+            <span id="virtualbox-installed-note" class="installed-note" ng-show="checkboxModel.virtualbox.hasOption('detected')">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.virtualbox.option['detected'].version}}
             </span>
             <div ng-show="checkboxModel.virtualbox.hasOption('detected')">
-              <div ng-show="checkboxModel.virtualbox.option.detected.warning!==''" class="has-warning">
+              <div id="virtualbox-newer-warning" ng-show="checkboxModel.virtualbox.option.detected.warning!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <span>Newer than recommended!</span>
+                  <span id="virtualbox-newer-message">Newer than recommended!</span>
                 </div>
               </div>
-              <div ng-show="checkboxModel.virtualbox.option.detected.error!==''" class="has-warning">
+              <div id="virtualbox-older-error" ng-show="checkboxModel.virtualbox.option.detected.error!==''" class="has-error">
                 <div class="help-block">
-                  <span class="pficon pficon-warning-triangle-o"></span>
-                  <span>Older than recommended!</span>
+                  <span class="pficon pficon-error-circle-o"></span>
+                  <span id="virtualbox-older-message">Older than recommended!</span>
                 </div>
               </div>
             </div>
           </div>
-          <span class="product-name">{{checkboxModel.virtualbox.productName}}</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
-          <div>{{checkboxModel.virtualbox.productDesc}}</div>
+          <span id="virtualbox-name" class="product-name">{{checkboxModel.virtualbox.productName}}</span><span id="virtualbox-version" class="product-version">{{checkboxModel.virtualbox.version}}</span>
+          <div id="virtualbox-description">{{checkboxModel.virtualbox.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -124,7 +124,7 @@
     </div>
 
     <!-- Cygwin -->
-    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
+    <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
@@ -136,8 +136,8 @@
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">{{checkboxModel.cygwin.productName}}</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
-          <div>{{checkboxModel.cygwin.productDesc}}</div>
+          <span id="cygwin-name" class="product-name">{{checkboxModel.cygwin.productName}}</span><span id="cygwin-version" class="product-version">{{checkboxModel.cygwin.version}}</span>
+          <div id="cygwin-description">{{checkboxModel.cygwin.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -191,7 +191,7 @@
     </div>
 
     <!-- Vagrant-->
-    <div class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
+    <div id="vagrant-panel" class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
            <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
@@ -200,26 +200,26 @@
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
-            <span class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')">
+            <span id="vagrant-installed-note" class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.vagrant.option.detected.version}}
             </span>
             <div ng-show="checkboxModel.vagrant.hasOption('detected')">
-              <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
+              <div id="vagrant-newer-warning" ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <span>Newer than recommended!</span>
+                  <span id="vagrant-newer-message">Newer than recommended!</span>
                 </div>
               </div>
-              <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
+              <div id="vagrant-older-error" ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-error">
                 <div class="help-block">
-                  <span class="pficon pficon-warning-triangle-o"></span>
-                  <span>Older than recommended!</span>
+                  <span class="pficon pficon-error-circle-o"></span>
+                  <span id="vagrant-older-message">Older than recommended!</span>
                 </div>
               </div>
             </div>
           </div>
-          <span class="product-name">{{checkboxModel.vagrant.productName}}</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
-          <div>{{checkboxModel.vagrant.productDesc}}</div>
+          <span id="vagrant-name" class="product-name">{{checkboxModel.vagrant.productName}}</span><span id="vagrant-version" class="product-version">{{checkboxModel.vagrant.version}}</span>
+          <div id="vagrant-description">{{checkboxModel.vagrant.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -290,7 +290,7 @@
     </div>
 
     <!-- CDK -->
-    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
+    <div id="cdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
            <!--ng-click="checkboxModel.cdk.changeIsCollapsed()">-->
@@ -300,8 +300,8 @@
           <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide" ng-show="false"></div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">{{checkboxModel.cdk.productName}}</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
-          <div>{{checkboxModel.cdk.productDesc}}</div>
+          <span id="cdk-name" class="product-name">{{checkboxModel.cdk.productName}}</span><span span id="cdk-version" class="product-version">{{checkboxModel.cdk.version}}</span>
+          <div id="cdk-description">{{checkboxModel.cdk.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -355,7 +355,7 @@
     </div>
 
     <!-- JDK -->
-    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
+    <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
@@ -385,8 +385,8 @@
               </div>
             </div>
           </div>
-          <span class="product-name">{{checkboxModel.jdk.productName}}</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
-          <div>{{checkboxModel.jdk.productDesc}}</div>
+          <span id="jdk-name" class="product-name">{{checkboxModel.jdk.productName}}</span><span id="jdk-version" class="product-version">{{checkboxModel.jdk.version}}</span>
+          <div id="jdk-description">{{checkboxModel.jdk.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -445,7 +445,7 @@
     </div>
 
     <!-- devstudio -->
-    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
+    <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
       <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
            <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
@@ -457,8 +457,8 @@
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">{{checkboxModel.jbds.productName}}</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
-          <div>{{checkboxModel.jbds.productDesc}}</div>
+          <span id="devstudio-name" class="product-name">{{checkboxModel.jbds.productName}}</span><span id="devstudio-version" class="product-version">{{checkboxModel.jbds.version}}</span>
+          <div id="devstudio-description">{{checkboxModel.jbds.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -513,7 +513,7 @@
   </form>
 </main>
 
-<footer class="no-background-color">
+<footer id="footer-navigation" class="no-background-color">
   <div class="footer-border"></div>
   <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="confirmForm"
           ng-click="confCtrl.setCloseDialog()">Cancel</button>
