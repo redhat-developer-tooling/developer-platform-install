@@ -10,4 +10,5 @@ test/jspm-config.js
 .idea
 xunit.xml
 browser-tests.xml
+ui-tests.xml
 requirements-cache/
