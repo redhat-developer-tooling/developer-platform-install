@@ -8,11 +8,14 @@ exports.config = {
     browserName: 'chrome',
     chromeOptions: {
       binary: './dist/win/jboss-devstudio-platform-win32-x64/jboss-devstudio-platform.exe'
-    },
-
-    onPrepare: function() {
-      browser.driver.manage().window().maximize();
-      browser.driver.get('browser/index.html');
     }
+  },
+
+  onPrepare: function() {
+    var jasmineReporters = require('jasmine-reporters');
+    jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
+      consolidateAll: true,
+      filePrefix: 'ui-tests'
+    }));
   }
 }
