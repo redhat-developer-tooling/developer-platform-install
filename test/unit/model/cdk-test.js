@@ -82,7 +82,7 @@ describe('CDK installer', function() {
   });
 
   beforeEach(function () {
-    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, pscpUrl, null);
+    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
     sandbox = sinon.sandbox.create();
   });
 
@@ -91,7 +91,7 @@ describe('CDK installer', function() {
   });
 
   it('should not download cdk when an installation exists', function() {
-    let cdk = new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'pscpUrl', 'installFile');
+    let cdk = new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'installFile');
     expect(cdk.useDownload).to.be.false;
   });
 
@@ -108,7 +108,7 @@ describe('CDK installer', function() {
   });
 
   it('should download files when no installation is found', function() {
-    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'pscpUrl', null).useDownload).to.be.true;
+    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', null).useDownload).to.be.true;
   });
 
   let reqs;
@@ -122,8 +122,7 @@ describe('CDK installer', function() {
 
   let cdkUrl = reqs['cdk.zip'].url,
       cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,
-      ocUrl = reqs['oc.zip'].url,
-      pscpUrl = reqs['pscp.exe'].url;
+      ocUrl = reqs['oc.zip'].url;
 
   describe('files download', function() {
     let downloadStub, authStub;
@@ -149,12 +148,11 @@ describe('CDK installer', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       //expect 4 streams to be set and created
-      expect(streamSpy.callCount).to.equal(4);
-      expect(fsSpy.callCount).to.equal(4);
+      expect(streamSpy.callCount).to.equal(3);
+      expect(fsSpy.callCount).to.equal(3);
       expect(fsSpy).calledWith(installer.cdkDownloadedFile);
       expect(fsSpy).calledWith(installer.cdkBoxDownloadedFile);
       expect(fsSpy).calledWith(installer.ocDownloadedFile);
-      expect(fsSpy).calledWith(installer.pscpDownloadedFile);
     });
 
     it('should call a correct downloader request for each file', function() {
@@ -166,12 +164,11 @@ describe('CDK installer', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       //we download 1 out of 4 files with authentication
-      expect(downloadStub.callCount).to.equal(3);
+      expect(downloadStub.callCount).to.equal(2);
       expect(authStub).to.have.been.calledOnce;
 
       expect(downloadStub).calledWith(cdkBoxUrl);
       expect(downloadStub).calledWith(ocUrl);
-      expect(downloadStub).calledWith(pscpUrl);
 
       expect(authStub).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
     });
@@ -184,7 +181,7 @@ describe('CDK installer', function() {
 
       expect(downloadStub).not.called;
       expect(authStub).not.called;
-      expect(spy.callCount).to.equal(4);
+      expect(spy.callCount).to.equal(3);
     });
   });
 
