@@ -86,6 +86,7 @@
       "angular-base64": "github:ninjatronic/angular-base64@2.0.5",
       "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
       "font-awesome": "npm:font-awesome@4.5.0",
+      "mkdirp": "npm:mkdirp@0.5.1",
       "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {

@@ -7,6 +7,7 @@ let os = require('os');
 let path = require('path');
 let fs = require('fs');
 let electron = require('electron');
+var mkdirp = require('mkdirp');
 
 class InstallerDataService {
   constructor($state) {
@@ -44,9 +45,8 @@ class InstallerDataService {
     this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
 
     if (!fs.existsSync(this.installRoot)) {
-      fs.mkdirSync(this.installRoot);
+      mkdirp.sync(path.resolve(this.installRoot));
     }
-    
     Logger.initialize(this.installRoot);
   }
 
