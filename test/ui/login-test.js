@@ -10,7 +10,7 @@ describe('Login page', function() {
   let usernameField, passwordField, loginButton;
 
   beforeAll(function() {
-    webdriver.wait(protractor.until.elementLocated(By.id('loginButton')), 10000)
+    webdriver.wait(protractor.until.elementLocated(By.id('loginButton')), 20000)
     .then(function(elm) {
       loginButton = elm;
       usernameField = element(By.id('username'));
