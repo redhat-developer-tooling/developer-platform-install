@@ -37,6 +37,8 @@ class InstallableItem {
     this.isCollapsed = true;
     this.option = new Set();
     this.selectedOption = "install";
+
+    this.downloader = null;
   }
 
   getProductName() {
@@ -141,6 +143,10 @@ class InstallableItem {
 
   validateVersion() {
 
+  }
+
+  restartDownload() {
+    this.downloader.restartDownload();
   }
 
 }

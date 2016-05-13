@@ -7,6 +7,7 @@ class InstallController {
     this.$scope = $scope;
     this.$timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
+    this.failedDownloads = new Set();
 
     this.data = Object.create(null);
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
@@ -41,8 +42,26 @@ class InstallController {
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
         progress.setStatus("Failed");
+        this.$timeout(()=>{
+          this.$scope.$apply(()=>{
+            this.failedDownloads.add(installableValue);
+          })
+        });
       }
     )
+  }
+
+  downloadAgain() {
+    Logger.info('Restarting download');
+    let dlCopy = new Set(this.failedDownloads);
+    this.closeDownloadAgainDialog();
+    dlCopy.forEach((value)=>{
+      value.restartDownload();
+    });
+  }
+
+  closeDownloadAgainDialog() {
+    this.failedDownloads.clear();
   }
 
   triggerInstall(installableKey, installableValue, progress) {
@@ -105,6 +124,7 @@ class ProgressState {
     this.lastInstallTime = 0;
     this.label = '';
     this.status = '';
+
   }
 
   setTotalDownloadSize(totalSize) {

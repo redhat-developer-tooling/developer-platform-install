@@ -160,7 +160,7 @@ describe('CDK installer', function() {
         url: cdkUrl,
         rejectUnauthorized: false
       };
-
+      installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       //we download 1 out of 4 files with authentication

@@ -59,17 +59,17 @@ class CDKInstall extends InstallableItem {
 
     let totalDownloads = 3;
 
-    let downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
+    this.downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
     if(!fs.existsSync(path.join(this.downloads, this.boxName))) {
       let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
-      downloader.setWriteStream(cdkBoxWriteStream);
-      downloader.download(this.cdkBoxUrl);
+      this.downloader.setWriteStream(cdkBoxWriteStream);
+      this.downloader.download(this.cdkBoxUrl);
     } else {
       this.cdkBoxDownloadedFile = path.join(this.downloads, this.boxName);
-      downloader.closeHandler();
+      this.downloader.closeHandler();
     }
 
     if(!fs.existsSync(path.join(this.downloads, this.cdkFileName))) {
@@ -80,15 +80,15 @@ class CDKInstall extends InstallableItem {
       //     rejectUnauthorized: false
       //   }, username, password);
       let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
-      downloader.setWriteStream(cdkWriteStream);
-      downloader.downloadAuth
+      this.downloader.setWriteStream(cdkWriteStream);
+      this.downloader.downloadAuth
       ({
         url: this.getDownloadUrl(),
         rejectUnauthorized: false
       }, username, password);
     } else {
       this.cdkDownloadedFile = path.join(this.downloads, this.cdkFileName);
-      downloader.closeHandler();
+      this.downloader.closeHandler();
     }
 
     if(!fs.existsSync(path.join(this.downloads, this.ocFileName))) {
@@ -96,17 +96,17 @@ class CDKInstall extends InstallableItem {
       if(!this.ocUrl.endsWith('.zip')) {
         request(this.ocUrl,(err,rsp,body) => {
           var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
-          downloader.setWriteStream(ocWriteStream);
+          this.downloader.setWriteStream(ocWriteStream);
           this.ocUrl=this.ocUrl.concat(fname);
-          downloader.download(this.ocUrl);
+          this.downloader.download(this.ocUrl);
         });
       } else {
-        downloader.setWriteStream(ocWriteStream);
-        downloader.download(this.ocUrl);
+        this.downloader.setWriteStream(ocWriteStream);
+        this.downloader.download(this.ocUrl);
       }
     } else {
       this.ocDownloadedFile = path.join(this.downloads, this.ocFileName);
-      downloader.closeHandler();
+      this.downloader.closeHandler();
     }
   }
 

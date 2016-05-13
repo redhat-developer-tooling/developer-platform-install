@@ -45,9 +45,9 @@ class CygwinInstall extends InstallableItem {
     if(!fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
-      let downloader = new Downloader(progress, success, failure);
-      downloader.setWriteStream(writeStream);
-      downloader.download(this.downloadUrl);
+      this.downloader = new Downloader(progress, success, failure);
+      this.downloader.setWriteStream(writeStream);
+      this.downloader.download(this.downloadUrl);
     } else {
       this.downloadedFile = this.bundledFile;
       success();
