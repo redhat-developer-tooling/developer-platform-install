@@ -58,12 +58,7 @@ class Downloader {
         var h = new Hash();
         h.SHA256(file,(dlSha) => {
           if(sha === dlSha) {
-            if(--this.totalDownloads == 0 ) {
-              if(this.downloads.get(file)) {
-                this.downloads.get(file)['failure'] = false;
-              }
-              this.success();
-            }
+            this.successHandler(file);
           } else {
             if(this.downloads.get(file)) {
               this.downloads.get(file)['failure'] = true;
@@ -72,13 +67,17 @@ class Downloader {
           }
         });
       } else {
-        if(this.downloads.get(file)) {
-          this.downloads.get(file)['failure'] = false;
-        }
-        if(--this.totalDownloads == 0 ) {
-          this.success();
-        }
+        this.successHandler(file);
       }
+  }
+
+  successHandler(file) {
+    if(this.downloads.get(file)) {
+      this.downloads.get(file)['failure'] = false;
+    }
+    if(--this.totalDownloads == 0 ) {
+      this.success();
+    }
   }
 
   download(options,file,sha) {
