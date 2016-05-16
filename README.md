@@ -1,4 +1,4 @@
-Red Hat JBoss Developer Studio Platform Installer
+Red Hat Developer Studio Platform Installer
 ====================================
 
 This installer aims to produce ready to use development environment for Red Hat Container Development Kit v2.0.

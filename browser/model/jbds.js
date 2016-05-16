@@ -18,7 +18,7 @@ import Util from './helpers/util';
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('jbds',
-          'RED HAT JBOSS DEVELOPER STUDIO',
+          'Red Hat Developer Studio',
           '9.1.0',
           'An IDE with tooling that will help you easily code, test, and deploy your projects.',
           1600,

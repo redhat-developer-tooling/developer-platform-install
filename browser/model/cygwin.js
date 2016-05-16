@@ -16,7 +16,7 @@ class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('cygwin',
           'Cygwin',
-          '2.5.0-1',
+          '2.5.1(0.297/5/3)', // uname -r 
           'A distribution of popular GNU and other Open Source tools running on Microsoft Windows.',
           720,
           downloadUrl,

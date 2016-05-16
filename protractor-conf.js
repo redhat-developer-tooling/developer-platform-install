@@ -7,7 +7,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: './dist/win/jboss-devstudio-platform-win32-x64/jboss-devstudio-platform.exe'
+      binary: './dist/win/devstudio-platform-win32-x64/devstudio-platform.exe'
     }
   },
 

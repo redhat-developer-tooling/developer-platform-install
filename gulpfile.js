@@ -21,7 +21,7 @@ var gulp = require('gulp'),
 
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'jboss-devstudio-platform',
+var artifactName = 'devstudio-platform',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 
@@ -285,7 +285,7 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
       let currentFile = path.join(prefetchFolder, key);
       promises.add(new Promise((resolve,reject)=>{
         // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=> 
+          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
           {
             // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
             isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
