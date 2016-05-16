@@ -1,45 +1,94 @@
 {
   "cdk.zip": {
+    "name": "Red Hat Container Development Kit",
+    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
+    "version": "2.0",
     "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/cdk.zip",
-    "sha256sum": "ced1ae9a5017c1cc70758eb9f57c933726a97852749b087eb966396f7b63ddf4"
+    "sha256sum": "ced1ae9a5017c1cc70758eb9f57c933726a97852749b087eb966396f7b63ddf4",
+    "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
+    "name": "Red Hat Container Development Kit RHEL 7.2 Vagrant box for VirtualBox",
+    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
+    "version": "7.2-23",
     "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "4c2fb4754592f79a644f1bd0416d1d1af82686b7c7e0c360bc45932303210cff"
+    "sha256sum": "4c2fb4754592f79a644f1bd0416d1d1af82686b7c7e0c360bc45932303210cff",
+    "vendor": "Red Hat, Inc."
   },
   "oc.zip": {
+    "name": "Openshift Origin",
+    "description": "The Open Source Container Application Platform",
     "bundle": "yes",
+    "version": "1.1.6",
     "url": "https://github.com/openshift/origin/releases/download/v1.1.6/openshift-origin-client-tools-v1.1.6-ef1caba-windows.zip",
-    "sha256sum": "517e5b32cf9c592a6a4a10b43766410d9e3234807a9746b0cd0abbba15660350"
+    "sha256sum": "517e5b32cf9c592a6a4a10b43766410d9e3234807a9746b0cd0abbba15660350",
+    "vendor": "Red Hat, Inc."
   },
   "cygwin.exe": {
+    "name": "Cygwin",
+    "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
     "bundle": "yes",
+    "version": "2.5.1(0.297/5/3)",
     "url": "https://cygwin.com/setup-x86_64.exe",
-    "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a"
+    "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a",
+    "vendor": "Community Project"
   },
   "jbds.jar": {
+    "name": "Red Hat Developer Studio",
+    "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
+    "version": "10.0.0.Alpha2",
     "url": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar",
-    "sha256sum": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar.sha256"
+    "sha256sum": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/jboss-devstudio-10.0.0.latest-installer-standalone.jar.sha256",
+    "vendor": "Red Hat, Inc."
   },
   "jdk.zip": {
+    "name": "OpenJDK",
+    "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
     "bundle": "yes",
+    "version": "1.8.0.77",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
     "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
-    "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065"
+    "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065",
+    "vendor": "Red Hat, Inc."
   },
   "vagrant.msi": {
+    "name": "Vagrant",
+    "description": "A container provisioning tool",
     "bundle": "no",
+    "version": "1.7.4",
     "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download",
-    "sha256sum": "a1ca7d99f162e001c826452a724341f421adfaef3e1366ee504b73ad19e3574f"
+    "sha256sum": "a1ca7d99f162e001c826452a724341f421adfaef3e1366ee504b73ad19e3574f",
+    "vendor": "HashiCorp"
   },
   "virtualbox.exe": {
+    "name": "Oracle VirtualBox",
+    "description": "A virtualization software package developed by Oracle",
     "bundle": "no",
     "version": "5.0.8",
     "revision": "103449",
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download",
-    "sha256sum": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280"
+    "sha256sum": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280",
+    "vendor": "Oracle, Inc."
+  },
+  "7zip.zip": {
+    "name": "7zip",
+    "description": "7Zip Command Line Version",
+    "bundle": "no",
+    "version": "9.20",
+    "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "sha256sum": "",
+    "vendor": "Igor Pavlov"
+  },
+  "7zip-extra.zip": {
+    "name": "7zipextra",
+    "description": "7Zip Extra: SFXs for installers",
+    "bundle": "no",
+    "version": "9.20",
+    "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "sha256sum": "",
+    "vendor": "Igor Pavlov"
   }
 }
