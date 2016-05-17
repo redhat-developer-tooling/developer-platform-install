@@ -18,23 +18,25 @@ function checkRequirements() {
   fileNames['cdk.zip'] = 'cdk';
   fileNames['rhel-vagrant-virtualbox.box'] = 'rhel-cdk';
   fileNames['oc.zip'] = 'origin-client-tools';
-  fileNames['pscp.exe'] = 'pscp.exe';
   fileNames['cygwin.exe'] = 'cygwin';
   fileNames['jbds.jar'] = 'devstudio';
   fileNames['jdk.zip'] = 'openjdk';
   fileNames['vagrant.msi'] = 'vagrant';
   fileNames['virtualbox.exe'] = 'virtualbox';
+  fileNames['7zip.zip'] = '7-Zip';
+  fileNames['7zip-extra.zip'] = '7-Zip';
 
   //to check if the files are rougly the size the should be
   minSizes['cdk.zip'] = 50 * 1024;
   minSizes['rhel-vagrant-virtualbox.box'] = 800 * 1024 * 1024;
   minSizes['oc.zip'] = 10 * 1024 * 1024;
-  minSizes['pscp.exe'] = 300 * 1024;
   minSizes['cygwin.exe'] = 500 * 1024;
   minSizes['jbds.jar'] = 400 * 1024 * 1024;
   minSizes['jdk.zip'] = 50 * 1024 *1024;
   minSizes['vagrant.msi'] = 120 * 1024 * 1024;
   minSizes['virtualbox.exe'] = 100 * 1024 * 1024;
+  minSizes['7zip.zip'] = 200 * 1024;
+  minSizes['7zip-extra.zip'] = 400 * 1024;
 
   console.log('-------------------------------');
   console.log('Checking download URLs');
