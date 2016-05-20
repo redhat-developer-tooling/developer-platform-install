@@ -60,11 +60,13 @@ class VagrantInstall extends InstallableItem {
       let version = versionRegex.exec(output)[1];
       this.option['detected'].version = version;
       this.selectedOption = 'detected';
+      this.selected = false;
       this.validateVersion();
       cb();
     }).catch((error) => {
-      this.addOption('install','1.7.4',path.join(this.installerDataSvc.installRoot,'vagrant'),true);
+      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
       this.addOption('different','','',false);
+      this.selectedOption = 'install';
       cb(error);
     });
   }
@@ -83,6 +85,11 @@ class VagrantInstall extends InstallableItem {
         installOption.error = '';
         installOption.warning = 'newerVersion';
       }
+  }
+
+  isSkipped() {
+    let t = this.selectedOption == 'detected' && this.installerDataSvc.getInstallable('cdk').isSkipped();
+    return t;
   }
 
   validateSelectedFolder(selection) {

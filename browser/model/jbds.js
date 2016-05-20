@@ -13,6 +13,7 @@ import Downloader from './helpers/downloader';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
+import CDKInstall from './cdk.js';
 import Util from './helpers/util';
 
 class JbdsInstall extends InstallableItem {
@@ -274,21 +275,26 @@ class JbdsInstall extends InstallableItem {
   }
 
   setupCdk(result) {
+    let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.key());
     let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
     Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location');
     return new Promise((resolve, reject) => {
-      fs.appendFile(
-        path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties'),
-        'CDKServer=' + escapedPath + ',true\r\n',
-        (err) => {
-          if (err) {
-            Logger.error(JbdsInstall.key() + ' - ' + err);
-            reject(err);
-          } else {
-            Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location SUCCESS');
-            resolve(true);
-          }
-        });
+      if(cdkInstall.isSkipped) {
+        resolve(true);
+      } else {
+        fs.appendFile(
+          path.join(this.installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties'),
+          'CDKServer=' + escapedPath + ',true\r\n',
+          (err) => {
+            if (err) {
+              Logger.error(JbdsInstall.key() + ' - ' + err);
+              reject(err);
+            } else {
+              Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location SUCCESS');
+              resolve(true);
+            }
+          });
+      }
     });
   }
 }
