@@ -10,17 +10,20 @@
     {{confCtrl.installedSearchNote}}
     <br>
     <span class="installation-instruction" ng-show="!confCtrl.isDisabled">
-      These are the components that will be installed.
+      Select the components to install.
     </span>
   </p>
 
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- VirtualBox -->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
-      <div class="panel-heading"
+    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+      <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
+           <div class="checkbox-container verticalLine">
+             <input type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+           </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
@@ -33,13 +36,13 @@
               <div ng-show="checkboxModel.virtualbox.option.detected.warning!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <strong>Newer than recommended!</strong>
+                  <span>Newer than recommended!</span>
                 </div>
               </div>
               <div ng-show="checkboxModel.virtualbox.option.detected.error!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <strong>Older than recommended!</strong>
+                  <span>Older than recommended!</span>
                 </div>
               </div>
             </div>
@@ -115,11 +118,19 @@
       </div>
     </div>
 
+    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Oracle VirtualBox 5.0.8 or newer. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
+    </div>
+
     <!-- Cygwin -->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
-      <div class="panel-heading"
+    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
+      <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
+           <div class="checkbox-container verticalLine" ng-show="!checkboxModel.cygwin.hasOption('detected')">
+             <input type="checkbox" ng-disabled="checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
@@ -180,12 +191,12 @@
     </div>
 
     <!-- Vagrant-->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
-      <div class="panel-heading"
+    <div class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
+      <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
            <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
-        <div class="checkbox-container" ng-show="false">
-          <div id="arrow-vagrant" class="arrow" ng-class="{'arrow-down':!checkboxModel.vagrant.isCollapsed}" aria-label="Toggle ngHide"></div>
+        <div class="checkbox-container verticalLine">
+          <input type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
@@ -196,13 +207,13 @@
               <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <strong>Newer than recommended!</strong>
+                  <span>Newer than recommended!</span>
                 </div>
               </div>
               <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
-                  <strong>Older than recommended!</strong>
+                  <span>Older than recommended!</span>
                 </div>
               </div>
             </div>
@@ -273,14 +284,20 @@
       </div>
     </div>
 
+    <div class="message-container error-message" ng-show="!checkboxModel.vagrant.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Vagrant 1.7.4 or newer. Please uninstall detected Vagrand and restart Installer to continue.</span>
+    </div>
+
     <!-- CDK -->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
-      <div class="panel-heading"
+    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
+      <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
            <!--ng-click="checkboxModel.cdk.changeIsCollapsed()">-->
-        <div class="checkbox-container" ng-show="false">
-          <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide"></div>
-        </div>
+          <div class="checkbox-container verticalLine" ng-show="!checkboxModel.cdk.hasOption('detected')">
+            <input type="checkbox" ng-model="checkboxModel.cdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+          </div>
+          <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide" ng-show="false"></div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
@@ -338,15 +355,36 @@
     </div>
 
     <!-- JDK -->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')}">
-      <div class="panel-heading"
-           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')}">
+    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
+      <div class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
+           <div class="checkbox-container verticalLine">
+             <input type="checkbox" ng-disabled="checkboxModel.jbds.selectedOption === 'install'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <div class="warnings-in-panel">
+            <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.selectedOption === 'detected' && checkboxModel.jdk.option['detected'].valid">
+              <i class="fa fa-check"></i> Using detected version {{checkboxModel.jdk.option.detected.version}}
+            </span>
+            <div ng-show="checkboxModel.jdk.hasOption('detected')">
+              <div ng-show="checkboxModel.jdk.option.detected.warning!==''" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span>Newer than recommended!</span>
+                </div>
+              </div>
+              <div ng-show="checkboxModel.jdk.option.detected.error!=='' && checkboxModel.jdk.selectedOption === 'detected'" class="has-error">
+                <div class="help-block">
+                  <span class="pficon pficon-error-circle-o"></span>
+                  <span>Detected version {{checkboxModel.jdk.option.detected.version}}<br>is older than recommended!</span>
+                </div>
+              </div>
+            </div>
+          </div>
           <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
           <div>Java Development Kit for running Red Hat Developer Studio.</div>
         </div>
@@ -401,11 +439,19 @@
       </div>
     </div>
 
+    <div class="message-container error-message" ng-show="!checkboxModel.jdk.isConfigured() && checkboxModel.jbds.selectedOption == 'install'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>You are required to install OpenJDK because you've selected Red Hat JBoss Developer Studio and that requires Java VM version 1.8.0 or higher to run installation.</span>
+    </div>
+
     <!-- JBDS -->
-    <div class="panel panel-default" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
-      <div class="panel-heading"
+    <div class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
+      <div class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
            <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
+           <div class="checkbox-container verticalLine"> <!--ng-show="!checkboxModel.jbds.hasOption('detected')"-->
+             <input type="checkbox" ng-model="checkboxModel.jbds.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
@@ -464,7 +510,6 @@
         </div>
       </div>
     </div>
-
   </form>
 </main>
 
@@ -475,7 +520,7 @@
   <button type="button" id="confirm-back-btn" class="back-btn-spacer footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm"
           ng-click="confCtrl.back()">Back</button>
   <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm"
-          ng-disabled="!isConfigurationValid()" autofocus>Download & Install</button>
+          ng-disabled="!confCtrl.isConfigurationValid()" autofocus>Download & Install</button>
 </footer>
 
 <div class="greyed-out-background" ng-show="confCtrl.showCloseDialog"></div>

@@ -17,8 +17,8 @@ class InstallController {
         writable: true,
         value: itemProgress
       });
-      if( value.selectedOption === "skip" ) {
-          this.installerDataSvc.setupDone(itemProgress,key);
+      if(value.isSkipped()) {
+        this.installerDataSvc.setupDone(itemProgress,key);
       } else {
         this.processInstallable(key, value,itemProgress);
       }
@@ -41,7 +41,7 @@ class InstallController {
       },
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
-        progress.setStatus("Failed");
+        progress.setStatus("Download failed");
         this.$timeout(()=>{
           this.$scope.$apply(()=>{
             this.failedDownloads.add(installableValue);
@@ -100,7 +100,7 @@ class InstallController {
   }
 
   show(key) {
-    return this.installerDataSvc.getInstallable(key).selected;
+    return !this.installerDataSvc.getInstallable(key).isSkipped();
   }
 
   status(key) {
@@ -137,21 +137,24 @@ class ProgressState {
     if (time == 0) return;
     let rate = amt / time;
     let remainingDownloadTime = (this.totalDownloadSize - this.downloadedSize) / rate;
-    this.setCurrent(Math.round((this.timeSpent / (this.timeSpent + (this.installTime * 1000) + remainingDownloadTime)) * 100));
+    this.setCurrent(this.calcCurrentValue());
   }
 
   installTrigger() {
     this.lastInstallTime = Date.now();
-    this.$timeout(this.installUpdate.bind(this), 10000);
+    this.$timeout(this.installUpdate.bind(this));
   }
 
   installUpdate() {
     let now = Date.now();
     this.timeSpentInstall += (now - this.lastInstallTime);
     this.lastInstallTime = now;
-    this.setCurrent(Math.round(((this.timeSpent + this.timeSpentInstall) / (this.timeSpent + (this.installTime * 1000))) * 100));
-
-    this.$timeout(this.installUpdate.bind(this), 5000);
+    this.$timeout(()=>{
+      this.$scope.$apply(()=>{
+        this.setCurrent(this.calcCurrentValue());
+      })
+       this.$timeout(this.installUpdate.bind(this), 1000);
+    });
   }
 
   setCurrent(newVal) {
@@ -163,6 +166,10 @@ class ProgressState {
 
   setStatus(newStatus) {
     this.status = newStatus;
+  }
+
+  calcCurrentValue() {
+    return Math.round( this.downloadedSize/this.totalDownloadSize * 100)
   }
 
   setComplete() {

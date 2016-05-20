@@ -42,6 +42,7 @@ class CDKInstall extends InstallableItem {
     this.downloads = path.normalize(path.join(__dirname,"../../.."));
 
     this.addOption('install','2.0.0','',true);
+    this.selected = false;
   }
 
   static key() {
