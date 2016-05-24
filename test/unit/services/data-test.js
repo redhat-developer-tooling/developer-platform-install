@@ -58,9 +58,9 @@ describe('InstallerDataService', function() {
   describe('initial state', function() {
     it('should set installation folder according to OS', function() {
       if (process.platform === 'win32') {
-        expect(svc.installRoot).to.equal('c:\\DeveloperPlatform');
+        expect(svc.installRoot).to.equal('c:\\DevelopmentSuite');
       } else {
-        expect(svc.installRoot).to.equal(process.env.HOME + '/DeveloperPlatform');
+        expect(svc.installRoot).to.equal(process.env.HOME + '/DevelopmentSuite');
     	}
     });
 

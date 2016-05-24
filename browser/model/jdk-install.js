@@ -18,7 +18,7 @@ class JdkInstall extends InstallableItem {
     super('jdk',
           'OpenJDK',
           '1.8.0.77',
-          'Java Development Kit for running Red Hat Developer Studio',
+          'Java Development Kit for running Red Hat JBoss Developer Studio',
           260,
           downloadUrl,
           installFile,

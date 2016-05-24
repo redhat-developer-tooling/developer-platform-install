@@ -21,7 +21,7 @@ var gulp = require('gulp'),
 
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'devstudio-platform',
+var artifactName = 'development-suite',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 
@@ -233,7 +233,7 @@ gulp.task('dist', function(cb) {
 });
 
 gulp.task('7zip-cleanup', function() {
-  return del([buildFolderRoot + 'DeveloperPlatformInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
+  return del([buildFolderRoot + 'DevelopmentSuiteInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {

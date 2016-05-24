@@ -1,4 +1,4 @@
-Red Hat Developer Studio Platform Installer
+Red Hat Development Suite Installer
 ====================================
 
 This installer aims to produce ready to use development environment for Red Hat Container Development Kit v2.0.
@@ -51,17 +51,17 @@ There are multiple ways how to run the installer.
 2. Build a Windows binary and run it:
 
         npm run generate
-        dist/win/DeveloperPlatformInstaller-win32-x64/DeveloperPlatformInstaller.exe
+        dist/win/DevelopmentSuiteInstaller-win32-x64/DevelopmentSuiteInstaller.exe
 
 3. Build a distribution Windows binary that downloads Vagrant, VirtualBox, JBDS, etc. from the Internet (it will download about 1.6G):
 
         npm run package-simple
-        dist/win/DeveloperPlatformInstaller-win32-x64-*.exe
+        dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
 
 4. Build a distribution Windows binary including almost all dependencies, except of Vagrant and VirtualBox (will download them):
 
         npm run package-bundle
-        dist/win/DeveloperPlatformInstaller-win32-x64-*-bundle.exe
+        dist/win/DevelopmentSuiteInstaller-win32-x64-*-bundle.exe
 
 5. To build both installers in a single step:
 
