@@ -2,7 +2,7 @@
 
 let webdriver = browser.driver;
 let ACCOUNT_URL = '/account';
-let PAGE_TITLE = 'Red Hat Developer Studio Platform';
+let PAGE_TITLE = 'Red Hat Development Suite';
 let BAD_USERNAME = "badusername1";
 let BAD_PASSWORD = "badpassword1";
 

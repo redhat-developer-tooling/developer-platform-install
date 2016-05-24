@@ -1,5 +1,5 @@
 param(
-[string]$folder = 'c:\DeveloperPlatform'
+[string]$folder = 'c:\DevelopmentSuite'
 )
 echo '(1/6) Removing VirtualBox'
 $vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*VirtualBox*'}
@@ -19,7 +19,7 @@ $vagrant = Get-WmiObject Win32_Product | where {$_.Name -like '*Vagrant*'}
 msiexec /x $vagrant.IdentifyingNumber /qb /norestart | Out-Null
 echo 'DONE'
 
-echo '(5/6) Removing the DeveloperPlatform installation folder'
+echo '(5/6) Removing the DevelopmentSuite installation folder'
 Cmd /C "rmdir /S /Q $folder" | Out-Null
 echo 'DONE'
 
