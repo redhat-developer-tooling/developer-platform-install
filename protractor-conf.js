@@ -7,7 +7,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: './dist/win/devstudio-platform-win32-x64/devstudio-platform.exe'
+      binary: './dist/win/development-suite-win32-x64/development-suite.exe'
     }
   },
 

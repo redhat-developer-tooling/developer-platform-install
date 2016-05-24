@@ -36,7 +36,7 @@
     "vendor": "Community Project"
   },
   "jbds.jar": {
-    "name": "Red Hat Developer Studio",
+    "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
     "version": "10.0.0.Alpha2",

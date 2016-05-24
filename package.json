@@ -1,8 +1,8 @@
 {
   "name": "devstudio-platform-installer",
-  "productName": "Red Hat Developer Studio Platform Installer",
+  "productName": "Red Hat Development Suite Installer",
   "version": "10.0.0-Alpha1",
-  "description": "Red Hat Developer Studio Platform Installer",
+  "description": "Red Hat Development Suite Installer",
   "main": "main/index.js",
   "repository": {
     "type": "git",

@@ -17,8 +17,8 @@ describe('Location page', function() {
     });
   });
 
-  it('should set the default target folder to c:\\DeveloperPlatform', function() {
-    expect(locationField.getAttribute('value')).toEqual(path.join('c:', 'DeveloperPlatform'));
+  it('should set the default target folder to c:\\DevelopmentSuite', function() {
+    expect(locationField.getAttribute('value')).toEqual(path.join('c:', 'DevelopmentSuite'));
   });
 
   it('should have the Browse button enabled', function() {

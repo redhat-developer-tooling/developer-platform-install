@@ -7,7 +7,7 @@ import * as logger from './logging';
 
 // Report crashes to our server.
 crashReporter.start({
-  productName: 'Developer Platform Install',
+  productName: 'Development Suite Install',
   companyName: 'Red Hat',
   autoSubmit: true
 });
