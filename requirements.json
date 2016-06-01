@@ -3,18 +3,18 @@
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "2.0",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/cdk.zip",
-    "sha256sum": "ced1ae9a5017c1cc70758eb9f57c933726a97852749b087eb966396f7b63ddf4",
+    "version": "2.1",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/01-Jun-2016/cdk.zip",
+    "sha256sum": "8B7263F794E285A52DFFC204F631387A0138054A5281B3B97F92458A2D2BDA70",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
     "name": "Red Hat Container Development Kit RHEL 7.2 Vagrant box for VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "7.2-23",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/13-Apr-2016.rc3/rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "4c2fb4754592f79a644f1bd0416d1d1af82686b7c7e0c360bc45932303210cff",
+    "version": "7.2.01062016-1",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/01-Jun-2016/rhel-7-cdk-vagrant-scratch-7.2.01062016-1.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "7D35462BADCBB08C96E4D9BEA7003672EE3B3756E711477AD9F80C0538BA6AF4",
     "vendor": "Red Hat, Inc."
   },
   "oc.zip": {

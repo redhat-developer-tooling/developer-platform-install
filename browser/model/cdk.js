@@ -15,7 +15,7 @@ class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName) {
     super('cdk',
           'Red Hat Container Development Kit',
-          '2.0',
+          '2.1',
           'Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications',
           900,
           cdkUrl,
@@ -215,7 +215,7 @@ class CDKInstall extends InstallableItem {
       }).then((result) => {
         return installer.exec('vagrant box add --name cdkv2 "' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName) + '"', opts, result);
       }).then((result) => {
-        return installer.exec('vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.0.1.gem') + '"', opts, result);
+        return installer.exec('vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.1.0.beta.1.gem') + '"', opts, result);
       });
       return res;
     }
