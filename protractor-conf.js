@@ -1,7 +1,19 @@
+var files;
+var report;
+
+if (process.env.PTOR_TEST_RUN === 'system') {
+  files = ['test/system/*.js'];
+  report = 'system-tests';
+} else {
+  files = ['test/ui/login-test.js', 'test/ui/**/*!(login)-test.js'];
+  report = 'ui-tests';
+}
+
+
 exports.config = {
   directConnect: true,
 
-  specs: ['test/ui/login-test.js', 'test/ui/**/*!(login)-test.js'],
+  specs: files,
   framework: 'jasmine2',
 
   capabilities: {
@@ -15,7 +27,7 @@ exports.config = {
     var jasmineReporters = require('jasmine-reporters');
     jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
       consolidateAll: true,
-      filePrefix: 'ui-tests'
+      filePrefix: report
     }));
   }
 }

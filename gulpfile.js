@@ -248,9 +248,15 @@ gulp.task('test', function() {
   return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink', 'browser-test');
 });
 
-gulp.task('ui-test', function() {
-  return runSequence('generate', 'protractor-install', 'protractor-run');
+gulp.task('ui-test', function(cb) {
+  process.env.PTOR_TEST_RUN = 'ui';
+  return runSequence(['generate', 'protractor-install'], 'protractor-run', cb);
 });
+
+gulp.task('system-test', function(cb) {
+  process.env.PTOR_TEST_RUN = 'system';
+  return runSequence(['generate', 'protractor-install'], 'protractor-run', cb);
+})
 
 // read the existing .sha256 file and compare it to the existing file's SHA
 function isExistingSHA256Current(currentFile, sha256sum, processResult) {
