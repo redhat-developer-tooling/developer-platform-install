@@ -12,7 +12,7 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir) {
-    let jbdsVersion = "9.1";
+    let jbdsVersion = "10.0";
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
@@ -39,8 +39,8 @@ class JbdsAutoInstallGenerator {
         '</com.jboss.devstudio.core.installer.CreateLinkPanel>',
         '<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
         '<programGroup name="Red Hat JBoss Developer Studio ' + jbdsVersion + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="false" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'jbdevstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="false" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'devstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jbdsInstallDir, 'studio', 'devstudio.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + path.join(jbdsInstallDir, 'studio') + '"/>',
         '<shortcut KdeSubstUID="false" categories="" commandLine="-jar &quot;' + path.join(jbdsInstallDir, 'Uninstaller', 'uninstaller.jar') + '&quot;" createForAll="false" description="Uninstall Red Hat JBoss Developer Studio ' + jbdsVersion + '" encoding="" group="true" icon="' + path.join(jbdsInstallDir, 'studio', 'jbds_uninstall.ico') + '" iconIndex="0" initialState="1" mimetype="" name="Uninstall Red Hat JBoss Developer Studio ' + jbdsVersion + '" target="' + path.join(jdkInstallDir, 'bin', 'javaw.exe') + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
         '</com.izforge.izpack.panels.ShortcutPanel>',
         '<com.jboss.devstudio.core.installer.ShortcutPanelPatch id="shortcutpatch"/>',
