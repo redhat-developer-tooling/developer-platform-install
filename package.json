@@ -24,7 +24,8 @@
     "test": "gulp test",
     "unit-test": "gulp unit-test",
     "browser-test": "gulp browser-test",
-    "ui-test": "gulp ui-test"
+    "ui-test": "gulp ui-test",
+    "system-test": "gulp system-test"
   },
   "dependencies": {
     "fs-extra": "0.26.7",
