@@ -97,11 +97,13 @@ class VirtualBoxInstall extends InstallableItem {
       let version =  versionRegex.exec(output)[1];
       this.addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
       this.selectedOption = 'detected';
+      this.selected = false;
       this.validateVersion();
       cb();
     }).catch((error) => {
-      this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
+      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
       this.addOption('different','','',false);
+      this.selectedOption = 'install';
       cb();
     });
   }
@@ -120,6 +122,11 @@ class VirtualBoxInstall extends InstallableItem {
         installOption.error = '';
         installOption.warning = 'newerVersion';
       }
+  }
+
+  isSkipped() {
+    let t = this.selectedOption == 'detected' && this.installerDataSvc.getInstallable('cdk').isSkipped();
+    return t;
   }
 
   validateSelectedFolder(selection) {

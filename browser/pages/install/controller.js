@@ -17,8 +17,8 @@ class InstallController {
         writable: true,
         value: itemProgress
       });
-      if( value.selectedOption === "skip" ) {
-          this.installerDataSvc.setupDone(itemProgress,key);
+      if(value.isSkipped()) {
+        this.installerDataSvc.setupDone(itemProgress,key);
       } else {
         this.processInstallable(key, value,itemProgress);
       }
@@ -41,7 +41,7 @@ class InstallController {
       },
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
-        progress.setStatus("Failed");
+        progress.setStatus("Download failed");
         this.$timeout(()=>{
           this.$scope.$apply(()=>{
             this.failedDownloads.add(installableValue);
@@ -100,7 +100,7 @@ class InstallController {
   }
 
   show(key) {
-    return this.installerDataSvc.getInstallable(key).selected;
+    return !this.installerDataSvc.getInstallable(key).isSkipped();
   }
 
   status(key) {

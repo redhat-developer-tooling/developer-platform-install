@@ -101,11 +101,11 @@ footer {
         .branding-login {
           margin-top: 21px;
         }
-        
+
       .login-title {
         margin-top: 100px;
         margin-left: 25px;
-      }  
+      }
 
       .branding-title {
         height:30px;
@@ -263,6 +263,7 @@ footer {
 
   .product-container {
     padding-left: 10px;
+    width: 100%;
   }
 
   .product-name {
@@ -423,13 +424,26 @@ footer {
   }
 
     .zero-border {
-      border: 0;
+      border-style: dashed;
+      border-width: 2px
+    }
+
+    .panel2pxborder { 
+      border-width: 2px
+    }
+
+    .panel .panel-normal {
+      display: flex;
+      border-bottom: 0;
+      border-color: #DDDDDD;
     }
 
     .panel .dotted-panel {
-      border-style:dashed;
       background-color: #FFFFFF;
-      border-width: 2px;
+    }
+
+    .vallign-middle {
+      vertical-align:middle;
     }
 
     .confirm-radio-container.dotted-panel {
@@ -444,7 +458,7 @@ footer {
       float: right;
       padding-top: 20px;
     }
-    
+
     .warnings-in-panel {
       float: right;
     }
@@ -526,13 +540,25 @@ footer {
   }
 
   .verticalLine {
-    border-right: thin solid #888888;
+    border-right: 2px solid #dddddd;
     margin-right: 6%;
   }
 
   .checkbox-container {
     float: left;
     padding: 15px 25px 15px 10px;
+  }
+
+  .message-container {
+    padding: 0px 10px 15px 10px;
+  }
+
+  .warning-message {
+    color: #EF9235;
+  }
+
+  .error-message {
+    color: red;
   }
 
   .overflow-parent {

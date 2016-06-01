@@ -27,7 +27,7 @@ class ConfirmController {
     confCtrl.numberOfExistingInstallations = 0;
 
     confCtrl.showCloseDialog = false;
-    
+
     this.installables = {};
     $scope.checkboxModel = {};
 
@@ -46,20 +46,33 @@ class ConfirmController {
 
     // IF the JDK is not Configured then you can't install JBDS
     $scope.$watch(()=>{
-      return $scope.checkboxModel.jdk.isConfigured()
+      return $scope.checkboxModel.cdk.selectedOption;
     },(nVal,oVal)=>{
-      if(nVal===false) {
-        $scope.checkboxModel.jbds.selected = false;
+      if(nVal=='install') {
+        $scope.checkboxModel.cygwin.selectedOption = 'install';
+        if($scope.checkboxModel.vagrant.selectedOption == 'detected'
+          && !$scope.checkboxModel.vagrant.hasOption('detected')) {
+          $scope.checkboxModel.vagrant.selectedOption = 'install';
+        }
+        if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
+          && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
+          $scope.checkboxModel.virtualbox.selectedOption = 'install';
+        }
+      }
+    });
+
+    $scope.$watch(()=>{
+      return $scope.checkboxModel.jbds.selectedOption;
+    },(nVal,oVal)=>{
+      if(nVal=='install') {
+        $scope.checkboxModel.jdk.selectedOption = 'install';
       }
     });
 
     $scope.$watch('$viewContentLoaded', ()=>{
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
         $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
-          $scope.checkboxModel.jdk.detectExistingInstall(()=> {
-            // Once all the Existing installations have been searched, enable the screen.
-            confCtrl.setIsDisabled();
-          });
+          confCtrl.setIsDisabled();
         });
       });
     });
@@ -83,26 +96,26 @@ class ConfirmController {
 //    this.timeout( () => {
       // Switch this boolean flag when the app is done looking for existing installations.
       confCtrl.isDisabled = !confCtrl.isDisabled;
-      
+
       // Count the number of existing installations.
       for (var [key, value] of confCtrl.installerDataSvc.allInstallables().entries()) {
         if (confCtrl.sc.checkboxModel[key].hasOption('detected')) {
           ++confCtrl.numberOfExistingInstallations;
         }
       }
-  
+
       // Set the message depending on if the view is disabled or not.
       if (confCtrl.isDisabled) {
         confCtrl.installedSearchNote = '  The system is checking if you have any installed components.';
       } else {
         confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component that meets the requirement.`;
       }
-      
+
       // Call the digest cycle so that the view gets updated.
       confCtrl.sc.$apply();
 //    }, 5000);
   }
-  
+
   // Open up a browse dialog and select the dir that has the installed product you are looking for.
   selectItem(key) {
     let selection = dialog.showOpenDialog({
@@ -132,11 +145,31 @@ class ConfirmController {
     item.checkForExistingInstall();
   }
 
+  jbdsIsConfigured() {
+    return this.sc.checkboxModel.jdk.isConfigured() && this.sc.checkboxModel.jbds.isConfigured();
+  }
+
+  cdkIsConfigured() {
+    return this.sc.checkboxModel.cdk.isConfigured()
+      && this.sc.checkboxModel.virtualbox.isConfigured()
+      && this.sc.checkboxModel.cygwin.isConfigured()
+      && this.sc.checkboxModel.vagrant.isConfigured()
+      || this.sc.checkboxModel.cdk.isSkipped();
+  }
+
   isConfigurationValid() {
-    return this.checkboxModel.virtualbox.isConfigured()
-        && this.checkboxModel.cygwin.isConfigured()
-        && this.checkboxModel.vagrant.isConfigured()
-        && this.checkboxModel.cdk.isConfigured();
+    return this.jbdsIsConfigured()
+      && this.cdkIsConfigured()
+      && this.isAtLeastOneSelected();
+  }
+
+  isAtLeastOneSelected() {
+    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      if(!value.isSkipped()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   exit() {
@@ -148,7 +181,7 @@ class ConfirmController {
     Logger.info('Going back a page');
     this.router.go('location');
   }
-  
+
   setCloseDialog () {
     confCtrl.showCloseDialog = !confCtrl.showCloseDialog;
   }
