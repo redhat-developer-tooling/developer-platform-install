@@ -55,7 +55,7 @@ class CDKInstall extends InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
 
-    let downloadSize = 869598013;
+    let downloadSize = 0; // downloader will request and set real download size
 
     let totalDownloads = 3;
 
