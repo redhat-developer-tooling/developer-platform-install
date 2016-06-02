@@ -41,7 +41,6 @@ let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
 let rhZip = path.join(zaRoot, 'resource_hacker.zip');
 let rhExe = path.join(zaRoot, 'ResourceHacker.exe');
 let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
-let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
 let installerExe = resolveInstallerExePath('');
 
 process.on('uncaughtException', function(err) {
@@ -148,7 +147,7 @@ gulp.task('prepare-tools', function(cb) {
 
 // wrap electron-generated app to 7zip archive
 gulp.task('create-7zip-archive', function(cb) {
-  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
+  let packCmd = zaExe + ' a ' + installerExe.replace('.exe','.zip') + ' ' + zaElectronPackage + path.sep + '*'
   // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
   if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
     packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
@@ -175,7 +174,7 @@ gulp.task('update-metadata', function(cb) {
 
 gulp.task('create-final-exe', function(cb) {
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
-  let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
+  let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + installerExe.replace('.exe','.zip') + ' ' + installerExe;
   // console.log(packageCmd);
 
   exec(packageCmd, createExecCallback(cb, true));
@@ -233,7 +232,7 @@ gulp.task('dist', function(cb) {
 });
 
 gulp.task('7zip-cleanup', function() {
-  return del([buildFolderRoot + 'DevelopmentSuiteInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
+  return del([path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {
