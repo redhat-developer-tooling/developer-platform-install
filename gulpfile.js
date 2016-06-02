@@ -41,7 +41,6 @@ let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
 let rhZip = path.join(zaRoot, 'resource_hacker.zip');
 let rhExe = path.join(zaRoot, 'ResourceHacker.exe');
 let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
-let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
 let installerExe = resolveInstallerExePath('');
 
 process.on('uncaughtException', function(err) {
@@ -146,14 +145,33 @@ gulp.task('prepare-tools', function(cb) {
     ['unzip-7zip', 'unzip-resource-hacker'], 'unzip-7zip-extra', cb);
 });
 
+gulp.task('create-zip-archive', function(cb) {
+  // TODO unpack requirements-cache\cdk.zip\cdk\README.md into dist\win\development-suite-win32-x64
+  gulp.src(path.resolve(prefetchFolder) + path.sep + reqs['cdk.zip'].filename)
+      .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/README.md") } }))
+      .pipe(gulp.dest(buildFolderRoot));
+  let README = path.resolve(buildFolderRoot) + path.sep + "cdk" + path.sep + "README.md"
+  let packCmd = zaExe + ' a ' + installerExe.replace('-bundle-installer.exe','.zip').replace('-installer.exe','.zip') + ' ' + README;
+  // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
+  if (fs.existsSync(path.resolve(prefetchFolder))) {
+    for (let key in reqs) {
+      if (reqs[key].bundle === 'yes') {
+        packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + reqs[key].filename;
+      }
+    }
+  }
+  // console.log('[DEBUG] ' + packCmd);
+  exec(packCmd, createExecCallback(cb, true));
+});
+
 // wrap electron-generated app to 7zip archive
 gulp.task('create-7zip-archive', function(cb) {
-  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
+  let packCmd = zaExe + ' a ' + installerExe.replace('.exe','.7z') + ' ' + zaElectronPackage + path.sep + '*';
   // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
   if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
     packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
   }
-  //console.log('[DEBUG]' + packCmd);
+  //console.log('[DEBUG] ' + packCmd);
   exec(packCmd, createExecCallback(cb, true));
 });
 
@@ -175,10 +193,14 @@ gulp.task('update-metadata', function(cb) {
 
 gulp.task('create-final-exe', function(cb) {
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
-  let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
+  let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + installerExe.replace('.exe','.7z') + ' ' + installerExe;
   // console.log(packageCmd);
 
   exec(packageCmd, createExecCallback(cb, true));
+});
+
+gulp.task('create-sha256sum-of-zip', function(cb) {
+  createSHA256File(installerExe.replace('-bundle-installer.exe','.zip').replace('-installer.exe','.zip'), cb);
 });
 
 gulp.task('create-sha256sum-of-exe', function(cb) {
@@ -221,19 +243,26 @@ gulp.task('package-simple', function(cb) {
     'prepare-tools'], 'package', 'cleanup', cb);
 });
 
+// Create bundle installer that includes all the requirements
 gulp.task('package-bundle', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
 });
 
+// create zip that includes all the requirements
+gulp.task('package-zip', function(cb) {
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+   'prepare-tools'], 'prefetch', 'create-zip-archive', 'create-sha256sum-of-zip', 'cleanup', cb);
+});
+
 // Create both installers
 gulp.task('dist', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
-    'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
+    'prepare-tools'], 'package', 'prefetch', 'package', 'create-zip-archive', 'create-sha256sum-of-zip', 'cleanup', cb);
 });
 
 gulp.task('7zip-cleanup', function() {
-  return del([buildFolderRoot + 'DevelopmentSuiteInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
+  return del([path.resolve(path.join(buildFolderRoot, '*7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {
@@ -288,14 +317,14 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
   for (let key in reqs) {
     if (reqs[key].bundle === 'yes') {
       let currentUrl = reqs[key].url;
-      let currentFile = path.join(prefetchFolder, key);
+      let currentFile = path.join(prefetchFolder, reqs[key].filename);
       promises.add(new Promise((resolve,reject)=>{
         // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
+          downloadAndReadSHA256(reqs[key].filename + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
           {
             // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
             isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
-              dl ? resolve(true) : downloadFileAndCreateSha256(key, reqs[key].url, resolve, reject)
+              dl ? resolve(true) : downloadFileAndCreateSha256(reqs[key].filename, reqs[key].url, resolve, reject)
             );
           });
       }));
