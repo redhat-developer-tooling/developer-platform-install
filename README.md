@@ -53,7 +53,7 @@ There are multiple ways how to run the installer.
         npm run generate
         dist/win/DevelopmentSuiteInstaller-win32-x64/DevelopmentSuiteInstaller.exe
 
-3. Build a distribution Windows binary that downloads Vagrant, VirtualBox, JBDS, etc. from the Internet (it will download about 1.6G):
+3. Build a distribution Windows binary that downloads Vagrant, VirtualBox, devstudio, etc. from the Internet (it will download about 1.6G):
 
         npm run package-simple
         dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe

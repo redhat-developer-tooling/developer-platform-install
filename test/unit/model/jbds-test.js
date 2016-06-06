@@ -13,7 +13,7 @@ import Installer from 'model/helpers/installer';
 import JbdsAutoInstallGenerator from 'model/jbds-autoinstall';
 chai.use(sinonChai);
 
-describe('JBDS installer', function() {
+describe('devstudio installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox, installer;
   let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';

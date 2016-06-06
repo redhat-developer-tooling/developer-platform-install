@@ -44,7 +44,7 @@ class ConfirmController {
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
-    // IF the JDK is not Configured then you can't install JBDS
+    // IF the JDK is not Configured then you can't install devstudio
     $scope.$watch(()=>{
       return $scope.checkboxModel.cdk.selectedOption;
     },(nVal,oVal)=>{
@@ -125,9 +125,9 @@ class ConfirmController {
 
     let item = this.installerDataSvc.allInstallables().get(key);
 
-    // If the browsed for dir is found then expect it to be JBDS
+    // If the browsed for dir is found then expect it to be devstudio
     if (selection) {
-      // only JBDS at the moment
+      // only devstudio at the moment
       item.checkForExistingInstall(selection, this.installables);
     } else {
       this.timeout(()=>{
@@ -139,7 +139,7 @@ class ConfirmController {
   }
 
   // Check if the product is already installed
-  // ATM this is only JBDS
+  // ATM this is only devstudio
   checkItem(key) {
     let item = this.installerDataSvc.allInstallables().get(key);
     item.checkForExistingInstall();

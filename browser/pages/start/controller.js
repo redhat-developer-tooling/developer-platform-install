@@ -10,7 +10,7 @@ import Logger from '../../services/logger';
 class StartController {
 
   constructor(installerDataSvc) {
-    this.startJBDS = true;
+    this.startDevstudio = true;
     this.installerDataSvc = installerDataSvc;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
   }
@@ -20,16 +20,16 @@ class StartController {
   }
 
   start() {
-    if(this.startJBDS && (this.jbdsInstall.selected || this.jbdsInstall.existingInstall)) {
-      // Start JBDS
-      this.launchJBDS();
+    if(this.startDevstudio && (this.jbdsInstall.selected || this.jbdsInstall.existingInstall)) {
+      // Start devstudio
+      this.launchDevstudio();
     } else {
       this.exit();
     }
   }
 
-  launchJBDS() {
-    Logger.info('JBDS Start - Write temp files...');
+  launchDevstudio() {
+    Logger.info('devstudio Start - Write temp files...');
     let devstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
         :  this.jbdsInstall.existingInstallLocation, 'devstudio.bat');
 
@@ -56,9 +56,9 @@ class StartController {
         'oFile.WriteLine("SET PATH=" & path)',
         'oFile.Close'
     ].join('\r\n');
-    Logger.info('JBDS Start - Write resetvarsVbsFile: ' + resetvarsVbsFile);
+    Logger.info('devstudio Start - Write resetvarsVbsFile: ' + resetvarsVbsFile);
     fs.writeFileSync(resetvarsVbsFile, resetvarsVbsFileData);
-    Logger.info('JBDS Start - Write resetvarsVbsFile: ' + resetvarsVbsFile + ' - SUCCESS');
+    Logger.info('devstudio Start - Write resetvarsVbsFile: ' + resetvarsVbsFile + ' - SUCCESS');
 
     let runJbdsFile = path.join(this.installerDataSvc.tempDir(), 'runjbds.bat');
     let runJbdsFileData = [
@@ -66,13 +66,13 @@ class StartController {
         'call "' + resetvarsBatFile + '"',
         'call "' + devstudioBat + '"'
     ].join('\r\n');
-    Logger.info('JBDS Start - Write runJbdsFile: ' + runJbdsFile);
+    Logger.info('devstudio Start - Write runJbdsFile: ' + runJbdsFile);
     fs.writeFileSync(runJbdsFile, runJbdsFileData);
-    Logger.info('JBDS Start - Write runJbdsFile: ' + runJbdsFile + ' - SUCCESS');
+    Logger.info('devstudio Start - Write runJbdsFile: ' + runJbdsFile + ' - SUCCESS');
 
-    Logger.info('JBDS Start - Write temp file SUCCESS');
+    Logger.info('devstudio Start - Write temp file SUCCESS');
 
-    Logger.info('JBDS Start - Run runJbdsFile: ' + runJbdsFile);
+    Logger.info('devstudio Start - Run runJbdsFile: ' + runJbdsFile);
 
     let env = process.env;
     env['rhel.subscription.password'] = this.installerDataSvc.password;
@@ -89,15 +89,15 @@ class StartController {
             });
     runJbdsBat.stdout.on('data',
                 (data) => {
-                    Logger.info("JBDS Start - [" + runJbdsFile + "]: " + data);
+                    Logger.info("devstudio Start - [" + runJbdsFile + "]: " + data);
                 });
     runJbdsBat.stderr.on('data',
                 (data) => {
-                    Logger.info("JBDS Start ERROR - [" + runJbdsFile + "]: " + data);
+                    Logger.info("devstudio Start ERROR - [" + runJbdsFile + "]: " + data);
                 });
     runJbdsBat.on('exit',
                 (code) => {
-                    Logger.info("JBDS Start Exit - Code: " + code);
+                    Logger.info("devstudio Start Exit - Code: " + code);
                     this.exit();
                 });
   }
