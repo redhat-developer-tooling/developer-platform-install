@@ -156,10 +156,7 @@ gulp.task('create-zip-archive', function(cb) {
   if (fs.existsSync(path.resolve(prefetchFolder))) {
     for (let key in reqs) {
       if (reqs[key].bundle === 'yes') {
-        let currentFilename = reqs[key].filename;
-        if (!fs.existsSync(path.resolve(prefetchFolder) + path.sep + currentFilename)) {
-          currentFilename = key;
-        }
+        let currentFilename = key; // TODO use reqs[key].filename for versioned filenames instead of generic ones; must update models and tests for this to work, however
         packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + currentFilename;
         // console.log('[DEBUG] ' + currentFilename + " [" + reqs[key].version + "] = " + reqs[key].filename);
         fs.appendFileSync(path.resolve(buildFolderRoot) + path.sep + 'VERSIONS.txt', currentFilename + " [" + reqs[key].version + "] = " + reqs[key].filename + "\n\r");
@@ -326,10 +323,7 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
   for (let key in reqs) {
     if (reqs[key].bundle === 'yes') {
       let currentUrl = reqs[key].url;
-      let currentFilename= reqs[key].filename;
-      if (!fs.existsSync(path.resolve(prefetchFolder) + path.sep + currentFilename)) {
-        currentFilename = key;
-      }
+      let currentFilename = key; // TODO use reqs[key].filename for versioned filenames instead of generic ones; must update models and tests for this to work, however
       let currentFile = path.join(prefetchFolder, currentFilename);
       promises.add(new Promise((resolve,reject)=>{
         // if file is already downloaded, check its sha against the stored one
