@@ -216,7 +216,7 @@ class CDKInstall extends InstallableItem {
       }).then((result) => {
         return installer.exec('vagrant box add --name cdkv2 "' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName) + '"', opts, result);
       }).then((result) => {
-        return installer.exec('vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.1.0.beta.1.gem') + '"', opts, result);
+        return installer.exec('vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.0.1.gem') + '"', opts, result);
       });
       return res;
     }
