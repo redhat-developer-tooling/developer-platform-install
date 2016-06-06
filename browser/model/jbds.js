@@ -148,9 +148,9 @@ class JbdsInstall extends InstallableItem {
       this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir());
       let installer = new Installer(JbdsInstall.key(), progress, success, failure);
 
-      Logger.info(JbdsInstall.key() + ' - Generate JBDS auto install file content');
+      Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content');
       let data = this.installGenerator.fileContent();
-      Logger.info(JbdsInstall.key() + ' - Generate JBDS auto install file content SUCCESS');
+      Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content SUCCESS');
 
       installer.writeFile(this.installConfigFile, data)
           .then((result) => {
@@ -207,7 +207,7 @@ class JbdsInstall extends InstallableItem {
   }
 
   setupJDK(jdk, installer, result) {
-    //for when the user has JBDS but wants to install JDK anyway
+    //for when the user has devstudio but wants to install JDK anyway
     return new Promise((resolve, reject) => {
       if (!jdk.hasExistingInstall()) {
         Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot);
@@ -277,7 +277,7 @@ class JbdsInstall extends InstallableItem {
   setupCdk(result) {
     let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.key());
     let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
-    Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location');
+    Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to devstudio runtime location');
     return new Promise((resolve, reject) => {
       if(cdkInstall.isSkipped) {
         resolve(true);
@@ -290,7 +290,7 @@ class JbdsInstall extends InstallableItem {
               Logger.error(JbdsInstall.key() + ' - ' + err);
               reject(err);
             } else {
-              Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to JBDS runtime location SUCCESS');
+              Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to devstudio runtime location SUCCESS');
               resolve(true);
             }
           });
