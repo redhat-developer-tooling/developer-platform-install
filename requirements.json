@@ -5,6 +5,7 @@
     "bundle": "yes",
     "version": "2.1",
     "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Jun-2016/cdk.zip",
+    "filename": "cdk_2.1.0_20160603.zip",
     "sha256sum": "bf6e1bfadf531d68bd77ff2cdf4bf6a193dd76047ab2a942e54f029a756c6968",
     "vendor": "Red Hat, Inc."
   },
@@ -14,6 +15,7 @@
     "bundle": "yes",
     "version": "7.2.01062016-1",
     "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Jun-2016/rhel-7-cdk-vagrant-scratch-7.2.03062016-1.x86_64.vagrant-virtualbox.box",
+    "filename": "rhel-7-cdk-vagrant-scratch-7.2.03062016-1.x86_64.vagrant-virtualbox.box",
     "sha256sum": "3bd3dd8647bf645e2180502c78a1ad8cb58ae3a9b5d265f6a7a5703018a4f4ee",
     "vendor": "Red Hat, Inc."
   },
@@ -23,6 +25,7 @@
     "bundle": "yes",
     "version": "1.1.6",
     "url": "https://github.com/openshift/origin/releases/download/v1.1.6/openshift-origin-client-tools-v1.1.6-ef1caba-windows.zip",
+    "filename": "openshift-origin-client-tools-v1.1.6-ef1caba-windows.zip",
     "sha256sum": "517e5b32cf9c592a6a4a10b43766410d9e3234807a9746b0cd0abbba15660350",
     "vendor": "Red Hat, Inc."
   },
@@ -32,6 +35,7 @@
     "bundle": "yes",
     "version": "2.5.1(0.297/5/3)",
     "url": "https://cygwin.com/setup-x86_64.exe",
+    "filename": "cygwin_2.5.1_0.297_5_3.exe",
     "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a",
     "vendor": "Community Project"
   },
@@ -41,6 +45,7 @@
     "bundle": "yes",
     "version": "10.0.0.GA",
     "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-build-product/2016-06-03_06-23-43-B5510/all/devstudio-10.0.0.GA-v20160603-1025-B5510-installer-standalone.jar",
+    "filename": "devstudio-10.0.0.GA-v20160603-1025-B5510-installer-standalone.jar",
     "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-build-product/2016-06-03_06-23-43-B5510/all/devstudio-10.0.0.GA-v20160603-1025-B5510-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
@@ -51,6 +56,7 @@
     "version": "1.8.0.77",
     "prefix": "java-1.8.0-openjdk-1.8.0.77",
     "url": "http://download.devel.redhat.com/brewroot/packages/openjdk8-win/8u77/0/win/java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
+    "filename": "java-1.8.0-openjdk-1.8.0.77-0.b03.windows.x86_64.zip",
     "sha256sum": "5bbac313926cd6646b90f169daee9d11cc3d9fd9ec672d3f1c52836d27503065",
     "vendor": "Red Hat, Inc."
   },
@@ -60,6 +66,7 @@
     "bundle": "no",
     "version": "1.7.4",
     "url": "http://developers.redhat.com/redirect/to/vagrant-1.7.4.download",
+    "filename": "vagrant_1.7.4.msi",
     "sha256sum": "a1ca7d99f162e001c826452a724341f421adfaef3e1366ee504b73ad19e3574f",
     "vendor": "HashiCorp"
   },
@@ -70,6 +77,7 @@
     "version": "5.0.8",
     "revision": "103449",
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.8.download",
+    "filename": "virtualbox_5.0.8.exe",
     "sha256sum": "767af01ea46626bf4cf4d607c18c863501b959b41115eabddef5604d522f6280",
     "vendor": "Oracle, Inc."
   },
@@ -79,6 +87,7 @@
     "bundle": "no",
     "version": "9.20",
     "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "filename": "7za920.zip",
     "sha256sum": "",
     "vendor": "Igor Pavlov"
   },
@@ -88,6 +97,7 @@
     "bundle": "no",
     "version": "9.20",
     "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "filename": "7z920_extra.7z",
     "sha256sum": "",
     "vendor": "Igor Pavlov"
   }
