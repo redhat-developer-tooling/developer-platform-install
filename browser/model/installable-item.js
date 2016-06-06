@@ -113,7 +113,7 @@ class InstallableItem {
   }
 
   hasOption(name) {
-    return this.option[name] && true;
+    return this.option[name]!=undefined;
   }
 
   addOption(name, version, location, valid) {
@@ -134,11 +134,23 @@ class InstallableItem {
 
   // Override parent "true" and check if we have something setup
   isConfigured() {
-    return this.option[this.selectedOption] && this.option[this.selectedOption].valid;
+    let t =
+      this.selectedOption == 'install'
+        ||
+      this.selectedOption == 'detected' && this.hasOption('detected') && this.option['detected'].valid
+        ||
+      this.selectedOption == 'detected' && !this.hasOption('detected');
+    return t;
   }
 
+  isSkipped() {
+    let t = this.selectedOption == 'detected' && !this.hasOption('detected');
+    return t;
+  }
+
+
   getLocation() {
-    return this.option[this.selectedOption].location;
+    return this.isSkipped() ? "" : this.option[this.selectedOption].location;
   }
 
   validateVersion() {

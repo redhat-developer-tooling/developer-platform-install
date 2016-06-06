@@ -57,6 +57,7 @@ describe('CDK installer', function() {
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
 
   let vagrantInstallStub = new VagrantInstall(installerDataSvc,'url', null, 'vagrant');
+  vagrantInstallStub.isSkipped = function() {return false;};
   vagrantInstallStub.addOption('install', '1.7.4',path.join('installFolder','vagrant'),true);
   installerDataSvc.getInstallable.returns(vagrantInstallStub);
 

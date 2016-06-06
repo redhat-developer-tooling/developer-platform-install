@@ -12,6 +12,7 @@ import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import CDKInstall from './cdk';
 import Util from './helpers/util';
+import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName) {
@@ -32,7 +33,9 @@ class JdkInstall extends InstallableItem {
     this.minimumVersion = '1.8.0';
     this.version = '1.8.0.77';
     this.jdkZipEntryPrefix = prefix;
-    this.addOption('install', this.minimumVersion, '', true);
+    this.addOption('install',this.version,this.installerDataSvc.jdkDir());
+    //this.addOption('detected', this.minimumVersion, '', true);
+
   }
 
   detectExistingInstall(cb = new function(){}) {
@@ -52,8 +55,16 @@ class JdkInstall extends InstallableItem {
     .then((output) => {
       return new Promise((resolve, reject) => {
         let version = versionRegex.exec(output);
-        if (version && version.length > 0) {
-          this.existingVersion = version[1];
+        if (version && version.length > 1) {
+          this.option['detected'].version = version[1];
+          this.selected = false;
+          this.selectedOption = 'detected';
+          this.validateVersion();
+          if(this.option['detected'].valid) {
+            this.selectedOption = 'detected';
+          } else {
+            this.selectedOption = 'install';
+          }
           resolve(true);
         } else {
           reject("No java detected");
@@ -65,15 +76,28 @@ class JdkInstall extends InstallableItem {
         var locationRegex = /java.home*\s=*\s(.*)[\s\S]/;
         var t = locationRegex.exec(output);
         if(t.length > 1) {
-          this.existingInstallLocation = t[1];
-          this.existingInstall = true;
-          this.detected = true;
+          this.option['detected'].location = t[1];
         }
         cb();
     }).catch((error) => {
-      this.existingInstall = false;
       cb();
     });
+  }
+
+  validateVersion() {
+    let installOption = this.option[this.selectedOption];
+    installOption.valid = true;
+    installOption.error = '';
+    installOption.warning = '';
+      if(Version.LT(installOption.version,this.minimumVersion)) {
+        installOption.valid = false;
+        installOption.error = 'oldVersion';
+        installOption.warning = '';
+      } else if(Version.GT(installOption.version,this.minimumVersion)) {
+        installOption.valid = true;
+        installOption.error = '';
+        installOption.warning = 'newerVersion';
+      }
   }
 
   static key() {
