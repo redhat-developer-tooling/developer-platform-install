@@ -156,8 +156,17 @@ gulp.task('create-zip-archive', function(cb) {
   if (fs.existsSync(path.resolve(prefetchFolder))) {
     for (let key in reqs) {
       if (reqs[key].bundle === 'yes') {
-        packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + reqs[key].filename;
+        let currentFilename = reqs[key].filename;
+        if (!fs.existsSync(path.resolve(prefetchFolder) + path.sep + currentFilename)) {
+          currentFilename = key;
+        }
+        packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + currentFilename;
+        // console.log('[DEBUG] ' + currentFilename + " [" + reqs[key].version + "] = " + reqs[key].filename);
+        fs.appendFileSync(path.resolve(buildFolderRoot) + path.sep + 'VERSIONS.txt', currentFilename + " [" + reqs[key].version + "] = " + reqs[key].filename + "\n\r");
       }
+    }
+    if (fs.existsSync(path.resolve(buildFolderRoot) + path.sep + 'VERSIONS.txt')) {
+      packCmd = packCmd + ' ' + path.resolve(buildFolderRoot) + path.sep + 'VERSIONS.txt';
     }
   }
   // console.log('[DEBUG] ' + packCmd);
@@ -317,14 +326,18 @@ gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
   for (let key in reqs) {
     if (reqs[key].bundle === 'yes') {
       let currentUrl = reqs[key].url;
-      let currentFile = path.join(prefetchFolder, reqs[key].filename);
+      let currentFilename= reqs[key].filename;
+      if (!fs.existsSync(path.resolve(prefetchFolder) + path.sep + currentFilename)) {
+        currentFilename = key;
+      }
+      let currentFile = path.join(prefetchFolder, currentFilename);
       promises.add(new Promise((resolve,reject)=>{
         // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(reqs[key].filename + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
+          downloadAndReadSHA256(currentFilename + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
           {
             // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
             isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
-              dl ? resolve(true) : downloadFileAndCreateSha256(reqs[key].filename, reqs[key].url, resolve, reject)
+              dl ? resolve(true) : downloadFileAndCreateSha256(currentFilename, reqs[key].url, resolve, reject)
             );
           });
       }));
