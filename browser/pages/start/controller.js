@@ -30,7 +30,7 @@ class StartController {
 
   launchJBDS() {
     Logger.info('JBDS Start - Write temp files...');
-    let jbdevstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
+    let devstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
         :  this.jbdsInstall.existingInstallLocation, 'devstudio.bat');
 
     let resetvarsBatFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.bat');
@@ -64,7 +64,7 @@ class StartController {
     let runJbdsFileData = [
         '"' + resetvarsVbsFile + '"',
         'call "' + resetvarsBatFile + '"',
-        'call "' + jbdevstudioBat + '"'
+        'call "' + devstudioBat + '"'
     ].join('\r\n');
     Logger.info('JBDS Start - Write runJbdsFile: ' + runJbdsFile);
     fs.writeFileSync(runJbdsFile, runJbdsFileData);
