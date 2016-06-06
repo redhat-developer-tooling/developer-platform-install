@@ -67,10 +67,10 @@ class JbdsInstall extends InstallableItem {
 
     if (process.platform === 'win32') {
       directory = selection ? selection[0] : 'c:';
-      pattern = selection ? 'studio/jbdevstudio.exe' : '**/studio/jbdevstudio.exe';
+      pattern = selection ? 'studio/devstudio.exe' : '**/studio/devstudio.exe';
     } else {
       directory = selection ? selection[0] : process.env.HOME;
-      pattern = selection ? 'studio/jbdevstudio' : '{*,*/*,*/*/*,*/*/*/*}/studio/jbdevstudio';
+      pattern = selection ? 'studio/devstudio' : '{*,*/*,*/*/*,*/*/*/*}/studio/devstudio';
     }
 
     let globster = new Glob(pattern, { cwd: directory, silent: true, nodir: true , strict : false});
@@ -211,7 +211,7 @@ class JbdsInstall extends InstallableItem {
     return new Promise((resolve, reject) => {
       if (!jdk.hasExistingInstall()) {
         Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot);
-        let config = path.join(this.existingInstallLocation, 'studio', 'jbdevstudio.ini');
+        let config = path.join(this.existingInstallLocation, 'studio', 'devstudio.ini');
         let javaExecutable = path.join(this.installerDataSvc.jdkRoot, 'bin', 'java');
         if (process.platform === 'win32') {
           javaExecutable += 'w.exe';
@@ -226,7 +226,7 @@ class JbdsInstall extends InstallableItem {
             reject(error)
           } else {
             if (changedFiles.length !== 1) {
-              reject('jbdevstudio.ini was not changed properly');
+              reject('devstudio.ini was not changed properly');
             } else {
               Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot + ' SUCCESS');
               resolve(true);
