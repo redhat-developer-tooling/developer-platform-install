@@ -16,7 +16,7 @@ class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('cygwin',
           'Cygwin',
-          '2.5.1(0.297/5/3)', // uname -r 
+          '2.5.1', // uname -r
           'A distribution of popular GNU and other Open Source tools running on Microsoft Windows.',
           720,
           downloadUrl,
@@ -25,7 +25,7 @@ class CygwinInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'cygwin.exe';
-    this.version = '2.5.0-1';
+    this.version = '2.5.1';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');

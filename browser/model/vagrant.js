@@ -16,7 +16,7 @@ class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super('vagrant',
           'Vagrant',
-          'v1.7',
+          '1.7.4',
           'A container provisioning tool.',
           900,
           downloadUrl,

@@ -15,7 +15,7 @@ class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super('virtualbox',
           'Oracle VirtualBox',
-          'v5.0.8',
+          '5.0.8',
           'A virtualization software package developed by Oracle',
           700,
           downloadUrl,

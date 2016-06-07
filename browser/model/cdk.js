@@ -29,7 +29,7 @@ class CDKInstall extends InstallableItem {
 
     this.cdkFileName = 'cdk.zip';
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
-    this.version = '2.0';
+    this.version = '2.1';
 
     this.boxName = 'rhel-vagrant-virtualbox.box';
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
