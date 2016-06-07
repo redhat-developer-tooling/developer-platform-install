@@ -33,8 +33,20 @@ class JdkInstall extends InstallableItem {
     this.minimumVersion = '1.8.0';
     this.version = '1.8.0.77';
     this.jdkZipEntryPrefix = prefix;
-    this.addOption('install',this.version,this.installerDataSvc.jdkDir());
+    //this.addOption('install',this.version,this.installerDataSvc.jdkDir());
     //this.addOption('detected', this.minimumVersion, '', true);
+  }
+  
+  isSkipped() {
+    let t = this.selectedOption === 'detected';
+    return t;
+  }
+
+  getLocation() {
+    if(this.hasOption(this.selectedOption)) {
+      return this.option[this.selectedOption].location;
+    }
+    return this.installerDataSvc.jdkDir();
   }
 
   detectExistingInstall(cb = new function(){}) {
@@ -50,11 +62,13 @@ class JdkInstall extends InstallableItem {
     } else {
       command = 'which java';
     }
+    this.addOption('install',this.version,'',true);
     Util.executeCommand('java -version', 2)
     .then((output) => {
       return new Promise((resolve, reject) => {
         let version = versionRegex.exec(output);
         if (version && version.length > 1) {
+          this.addOption('detected', version[1], '', true);
           this.option['detected'].version = version[1];
           this.selected = false;
           this.selectedOption = 'detected';
@@ -79,6 +93,7 @@ class JdkInstall extends InstallableItem {
         }
         cb();
     }).catch((error) => {
+      this.selectedOption = 'install';
       cb();
     });
   }

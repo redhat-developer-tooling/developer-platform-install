@@ -145,7 +145,9 @@ class JbdsInstall extends InstallableItem {
   postInstall(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === "install") {
-      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir());
+      let jdkInstall = this.installerDataSvc.getInstallable('jdk');
+      let jdkLocation = this.installerDataSvc.jdkDir();
+      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), jdkLocation);
       let installer = new Installer(JbdsInstall.key(), progress, success, failure);
 
       Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content');

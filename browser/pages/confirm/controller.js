@@ -65,14 +65,19 @@ class ConfirmController {
       return $scope.checkboxModel.jbds.selectedOption;
     },(nVal,oVal)=>{
       if(nVal=='install') {
-        $scope.checkboxModel.jdk.selectedOption = 'install';
+        // if jdk detected and valid use it else switch to included version
+        if(!$scope.checkboxModel.jdk.isConfigured()) {
+          $scope.checkboxModel.jdk.selectedOption = 'install';
+        }
       }
     });
 
     $scope.$watch('$viewContentLoaded', ()=>{
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
         $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
-          confCtrl.setIsDisabled();
+          $scope.checkboxModel.jdk.detectExistingInstall(()=> {
+            confCtrl.setIsDisabled();
+          });
         });
       });
     });
@@ -146,7 +151,9 @@ class ConfirmController {
   }
 
   jbdsIsConfigured() {
-    return this.sc.checkboxModel.jdk.isConfigured() && this.sc.checkboxModel.jbds.isConfigured();
+    return this.sc.checkboxModel.jdk.isConfigured()
+      && this.sc.checkboxModel.jbds.isConfigured()
+      || this.sc.checkboxModel.jbds.isSkipped();
   }
 
   cdkIsConfigured() {
