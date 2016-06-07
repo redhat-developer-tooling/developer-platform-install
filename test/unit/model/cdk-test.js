@@ -112,14 +112,7 @@ describe('CDK installer', function() {
     expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', null).useDownload).to.be.true;
   });
 
-  let reqs;
-  let installersJsonForTests = path.resolve('./requirements.json');
-  let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
-  if(fs.existsSync(installersJsonForTests)) {
-    reqs = require(installersJsonForTests);
-  } else if ( fs.existsSync(installersJsonForRT) ) {
-    reqs = require(installersJsonForRT);
-  }
+  let reqs = require(path.resolve('./requirements.json'));
 
   let cdkUrl = reqs['cdk.zip'].url,
       cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,

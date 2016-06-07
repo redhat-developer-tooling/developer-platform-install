@@ -15,9 +15,6 @@ import Version from './helpers/version';
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super('vagrant',
-          'Vagrant',
-          '1.7.4',
-          'A container provisioning tool.',
           900,
           downloadUrl,
           installFile,
@@ -30,7 +27,6 @@ class VagrantInstall extends InstallableItem {
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
     this.detected = false;
     this.minimumVersion = "1.7.4";
-    this.version = "1.7.4";
     this.existingVersion = "";
     this.sha256 = sha256;
   }
