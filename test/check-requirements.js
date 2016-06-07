@@ -28,7 +28,7 @@ function checkRequirements() {
 
   //to check if the files are rougly the size the should be
   minSizes['cdk.zip'] = 50 * 1024;
-  minSizes['rhel-vagrant-virtualbox.box'] = 800 * 1024 * 1024;
+  minSizes['rhel-vagrant-virtualbox.box'] = 750 * 1024 * 1024;
   minSizes['oc.zip'] = 10 * 1024 * 1024;
   minSizes['cygwin.exe'] = 500 * 1024;
   minSizes['jbds.jar'] = 400 * 1024 * 1024;
