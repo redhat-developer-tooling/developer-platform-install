@@ -42,7 +42,7 @@ class VagrantInstall extends InstallableItem {
   isSkipped() {
     let cdkInstall = this.installerDataSvc.getInstallable('cdk');
     let t = this.selectedOption == 'detected' && !this.hasOption('detected')
-      || cdkInstall!==undefined && cdkInstall.isSkipped();
+      || cdkInstall!==undefined && cdkInstall.isSkipped() && this.selectedOption !== 'install';
     return t;
   }
 
