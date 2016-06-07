@@ -137,24 +137,21 @@ class ProgressState {
     if (time == 0) return;
     let rate = amt / time;
     let remainingDownloadTime = (this.totalDownloadSize - this.downloadedSize) / rate;
-    this.setCurrent(this.calcCurrentValue());
+    this.setCurrent(Math.round((this.timeSpent / (this.timeSpent + (this.installTime * 1000) + remainingDownloadTime)) * 100));
   }
 
   installTrigger() {
     this.lastInstallTime = Date.now();
-    this.$timeout(this.installUpdate.bind(this));
+    this.$timeout(this.installUpdate.bind(this), 10000);
   }
 
   installUpdate() {
     let now = Date.now();
     this.timeSpentInstall += (now - this.lastInstallTime);
     this.lastInstallTime = now;
-    this.$timeout(()=>{
-      this.$scope.$apply(()=>{
-        this.setCurrent(this.calcCurrentValue());
-      })
-       this.$timeout(this.installUpdate.bind(this), 1000);
-    });
+    this.setCurrent(Math.round(((this.timeSpent + this.timeSpentInstall) / (this.timeSpent + (this.installTime * 1000))) * 100));
+
+    this.$timeout(this.installUpdate.bind(this), 5000);
   }
 
   setCurrent(newVal) {
@@ -166,10 +163,6 @@ class ProgressState {
 
   setStatus(newStatus) {
     this.status = newStatus;
-  }
-
-  calcCurrentValue() {
-    return Math.round( this.downloadedSize/this.totalDownloadSize * 100)
   }
 
   setComplete() {
