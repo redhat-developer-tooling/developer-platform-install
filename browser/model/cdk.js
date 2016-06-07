@@ -165,10 +165,13 @@ class CDKInstall extends InstallableItem {
     let env = process.env;
     let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
     let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
+    let cygwinInstall = this.installerDataSvc.getInstallable('cygwin');
     let vgrPath = vagrantInstall.getLocation();
     let vboxPath = vboxInstall.getLocation();
+    let cygwinPath = cygwinInstall.getLocation();
     env['path'] = env['path']
       + path.delimiter + path.join(vgrPath,'bin')
+      + path.delimiter + path.join(cygwinPath,'bin')
       + path.delimiter + vboxPath;
     return env;
   }
