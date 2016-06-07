@@ -16,9 +16,6 @@ import Util from './helpers/util.js';
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName) {
     super('cdk',
-          'Red Hat Container Development Kit',
-          '2.1',
-          'Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications',
           900,
           cdkUrl,
           installFile,
@@ -31,7 +28,6 @@ class CDKInstall extends InstallableItem {
 
     this.cdkFileName = 'cdk.zip';
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
-    this.version = '2.1';
 
     this.boxName = 'rhel-vagrant-virtualbox.box';
     this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);

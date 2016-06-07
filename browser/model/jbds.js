@@ -19,9 +19,6 @@ import Util from './helpers/util';
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
     super('jbds',
-          'Red Hat JBoss Developer Studio',
-          '10.0.0',
-          'An IDE with tooling that will help you easily code, test, and deploy your projects.',
           1600,
           downloadUrl,
           installFile,
@@ -29,7 +26,6 @@ class JbdsInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jbds.jar';
-    this.version = '10.0.0';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
@@ -145,9 +141,7 @@ class JbdsInstall extends InstallableItem {
   postInstall(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === "install") {
-      let jdkInstall = this.installerDataSvc.getInstallable('jdk');
-      let jdkLocation = this.installerDataSvc.jdkDir();
-      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), jdkLocation);
+      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
       let installer = new Installer(JbdsInstall.key(), progress, success, failure);
 
       Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content');
