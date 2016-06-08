@@ -46,8 +46,8 @@ class InstallableItem {
   }
 
   getProductVersion() {
-    if(this.selectedOption==='detected') {
-      return this.option[this.selectedOption].version ;
+    if(this.hasOption(this.selectedOption) && this.selectedOption==='detected') {
+      return this.option[this.selectedOption].version;
     }
     return this.productVersion;
   }
