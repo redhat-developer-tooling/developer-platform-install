@@ -107,7 +107,7 @@ class VirtualBoxInstall extends InstallableItem {
       this.validateVersion();
       cb();
     }).catch((error) => {
-      this.addOption('install','5.0.8',path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
+      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
       this.addOption('different','','',false);
       cb();
     });

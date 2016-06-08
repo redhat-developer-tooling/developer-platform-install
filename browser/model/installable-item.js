@@ -46,6 +46,9 @@ class InstallableItem {
   }
 
   getProductVersion() {
+    if(this.selectedOption==='detected') {
+      return this.option[this.selectedOption].version ;
+    }
     return this.productVersion;
   }
 
