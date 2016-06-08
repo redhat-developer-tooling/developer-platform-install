@@ -47,8 +47,8 @@
               </div>
             </div>
           </div>
-          <span class="product-name">Oracle VirtualBox</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
-          <div>A virtualization software package developed by Oracle.</div>
+          <span class="product-name">{{checkboxModel.virtualbox.productName}}</span><span class="product-version">{{checkboxModel.virtualbox.version}}</span>
+          <div>{{checkboxModel.virtualbox.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -136,8 +136,8 @@
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">Cygwin</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
-          <div>A distribution of popular GNU and other Open Source tools running on Microsoft Windows.</div>
+          <span class="product-name">{{checkboxModel.cygwin.productName}}</span><span class="product-version">{{checkboxModel.cygwin.version}}</span>
+          <div>{{checkboxModel.cygwin.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -218,8 +218,8 @@
               </div>
             </div>
           </div>
-          <span class="product-name">Vagrant</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
-          <div>A container provisioning tool.</div>
+          <span class="product-name">{{checkboxModel.vagrant.productName}}</span><span class="product-version">{{checkboxModel.vagrant.version}}</span>
+          <div>{{checkboxModel.vagrant.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -300,8 +300,8 @@
           <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide" ng-show="false"></div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">Red Hat Container Development Kit</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
-          <div>Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications.</div>
+          <span class="product-name">{{checkboxModel.cdk.productName}}</span><span class="product-version">{{checkboxModel.cdk.version}}</span>
+          <div>{{checkboxModel.cdk.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -385,8 +385,8 @@
               </div>
             </div>
           </div>
-          <span class="product-name">OpenJDK</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
-          <div>Java Development Kit for running Red Hat JBoss Developer Studio.</div>
+          <span class="product-name">{{checkboxModel.jdk.productName}}</span><span class="product-version">{{checkboxModel.jdk.version}}</span>
+          <div>{{checkboxModel.jdk.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"
@@ -457,8 +457,8 @@
         </div>
         <div class="product-container">
           <span class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span class="product-name">Red Hat JBoss Developer Studio</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
-          <div>An IDE with tooling that will help you easily code, test, and deploy your projects.</div>
+          <span class="product-name">{{checkboxModel.jbds.productName}}</span><span class="product-version">{{checkboxModel.jbds.version}}</span>
+          <div>{{checkboxModel.jbds.productDesc}}</div>
         </div>
       </div>
       <div class="animate-show confirm-radio-container"

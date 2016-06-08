@@ -1,7 +1,8 @@
 'use strict';
 
-let path = require('path');
-let reqs = require(path.resolve('./requirements.json'));
+import Util from './helpers/util';
+
+let reqs = Util.resolveFile('.', 'requirements.json');
 
 class InstallableItem {
   constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
@@ -9,7 +10,8 @@ class InstallableItem {
 
     let requirement;
     for (let key in reqs) {
-      if (key.indexOf(keyName) > -1) {
+      let regex = new RegExp('^' + keyName + '\\.\\w+');
+      if (regex.test(key)) {
         requirement = reqs[key];
         break;
       }

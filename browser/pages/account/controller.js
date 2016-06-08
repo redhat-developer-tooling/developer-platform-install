@@ -1,17 +1,9 @@
 'use strict';
 
-const shell = require('electron').shell;
-let path = require('path');
-let fs = require('fs-extra');
+import Util from '../../model/helpers/util';
 
-let pjson = { 'version' : 'Unknown' };
-let packageJsonForTests = path.resolve('./package.json');
-let packageJsonForRT = path.join(path.resolve('.'),'resources/app.asar/package.json');
-if(fs.existsSync(packageJsonForTests)) {
-  pjson = require(packageJsonForTests);
-} else if ( fs.existsSync(packageJsonForRT) ) {
-  pjson = require(packageJsonForRT);
-}
+const shell = require('electron').shell;
+let pjson = Util.resolveFile('.', 'package.json');
 
 class AccountController {
 
@@ -28,7 +20,7 @@ class AccountController {
     this.pdkVersion = pjson.version;
     this.isLoginBtnClicked = false;
   }
-  
+
   login() {
     this.authFailed = false;
     this.tandcNotSigned = false;
