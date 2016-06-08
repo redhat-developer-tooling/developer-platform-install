@@ -29,7 +29,7 @@ class CygwinInstall extends InstallableItem {
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
-    this.addOption('install','','',true);
+    this.addOption('install',this.version,'',true);
   }
 
   static key() {

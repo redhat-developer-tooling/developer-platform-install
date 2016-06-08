@@ -35,7 +35,6 @@ class JdkInstall extends InstallableItem {
     this.jdkZipEntryPrefix = prefix;
     this.addOption('install',this.version,this.installerDataSvc.jdkDir());
     //this.addOption('detected', this.minimumVersion, '', true);
-
   }
 
   detectExistingInstall(cb = new function(){}) {
