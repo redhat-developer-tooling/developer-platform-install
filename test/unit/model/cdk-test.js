@@ -12,6 +12,9 @@ import VirtualboxInstall from "model/virtualbox";
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import chaiAsPromised from 'chai-as-promised';
+
+chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 let sinon  = require('sinon');
@@ -69,7 +72,13 @@ describe('CDK installer', function() {
 
     mockfs({
       temporaryFolder: {},
-      installFolder: {}
+      installFolder: {
+        cdk: {
+          plugins : {
+            'some-file.gem': 'file content here'
+          }
+        }
+      }
     }, {
       createCwd: false,
       createTmp: false
@@ -275,10 +284,10 @@ describe('CDK installer', function() {
       it('should execute when vagrant installation is complete', function() {
         sandbox.stub(vagrantInstallStub, 'isInstalled').returns(true);
 
-        installer.setupVagrant(helper);
+        let p = installer.setupVagrant(helper);
 
         expect(envSpy).calledOnce;
-        expect(execStub).called;
+        return expect(p).to.eventually.equal(true);
       });
     });
   });

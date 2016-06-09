@@ -77,6 +77,14 @@ class Util {
       });
     });
   }
+
+  // Execute a list of Promise return functions in series
+  static runPromiseSequence(list) {
+    return list.reduce(
+      function(pacc, fn) {
+        return pacc.then(fn);
+      },Promise.resolve());
+  }
 }
 
 export default Util;

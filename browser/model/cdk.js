@@ -1,6 +1,7 @@
 'use strict';
 
 let fs = require('fs-extra');
+var filesystem = require("fs");
 let request = require('request');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
@@ -10,6 +11,7 @@ import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
+import Util from './helpers/util.js';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName) {
@@ -179,7 +181,6 @@ class CDKInstall extends InstallableItem {
   setupVagrant(installer, result) {
     return new Promise((resolve, reject) => {
       let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
-
       if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
         return this.postVagrantSetup(installer, result)
         .then((res) => { return resolve(res); })
@@ -202,13 +203,14 @@ class CDKInstall extends InstallableItem {
     let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
     if (vagrantInstall.isInstalled()) {
       // Vagrant is installed, add CDK bits
-      let env = this.createEnvironment();
       let opts = {
-        env: env
+        env: this.createEnvironment()
       };
-      let res = installer.exec(
-        'vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-registration-1.2.1.gem') + '"', opts, promise
-      ).then((result) => {
+      let cdkPluginsDir = path.join(this.installerDataSvc.cdkDir(), 'plugins');
+      // fill gem installation chain
+      let execs = this.createGemInstalls(installer,cdkPluginsDir, opts);
+      // add command to remove existing box and to add it back again
+      execs.push((result)=>{
         return new Promise((resolve,reject) => {
           installer.exec('vagrant box remove cdkv2 -f',opts, promise).then((result)=> {
             resolve(result);
@@ -216,13 +218,25 @@ class CDKInstall extends InstallableItem {
             resolve(result);
           });
         });
-      }).then((result) => {
+      },(result)=>{
         return installer.exec('vagrant box add --name cdkv2 "' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName) + '"', opts, result);
-      }).then((result) => {
-        return installer.exec('vagrant plugin install "' + path.join(this.installerDataSvc.cdkDir(), 'plugins', 'vagrant-service-manager-1.1.0.beta.1.gem') + '"', opts, result);
       });
-      return res;
+      return Util.runPromiseSequence(execs);
     }
+  }
+
+  createGemInstalls(installer,dir,opts) {
+    var results = [];
+    filesystem.readdirSync(dir).forEach((file)=>{
+        file = path.join(dir,file);
+        var stat = filesystem.statSync(file);
+        if (stat && !stat.isDirectory() && path.extname(file)=='.gem') {
+          results.push((result)=>{
+            return installer.exec('vagrant plugin install "' + file + '"', opts, result);
+          });
+        }
+    });
+    return results;
   }
 }
 
