@@ -62,7 +62,7 @@ class VagrantInstall extends InstallableItem {
     Util.executeCommand(command, 1)
     .then((output) => {
       this.addOption('detected','',path.dirname(path.dirname(output)),false);
-      return Util.executeCommand(output + ' -v', 1)
+      return Util.executeCommand('"' + output + '"' + ' -v', 1)
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
       this.option['detected'].version = version;
