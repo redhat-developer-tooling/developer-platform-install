@@ -65,9 +65,13 @@ class ConfirmController {
       return $scope.checkboxModel.jbds.selectedOption;
     },(nVal,oVal)=>{
       if(nVal=='install') {
-        // if jdk detected and valid use it else switch to included version
-        if(!$scope.checkboxModel.jdk.isConfigured()) {
-          $scope.checkboxModel.jdk.selectedOption = 'install';
+        let jdk = $scope.checkboxModel.jdk;
+        // if jdk is not selected for install and there is no detected version
+        if(jdk.selectedOption == 'detected' && !jdk.hasOption('detected')
+          // or java detected but not valid
+          || jdk.hasOption('detected') && !jdk.option.detected.valid) {
+          // force to install included version
+          jdk.selectedOption = 'install';
         }
       }
     });

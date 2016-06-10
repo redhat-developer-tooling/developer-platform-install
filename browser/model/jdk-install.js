@@ -36,7 +36,7 @@ class JdkInstall extends InstallableItem {
     //this.addOption('install',this.version,this.installerDataSvc.jdkDir());
     //this.addOption('detected', this.minimumVersion, '', true);
   }
-  
+
   isSkipped() {
     let t = this.selectedOption === 'detected';
     return t;
