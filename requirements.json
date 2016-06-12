@@ -4,9 +4,9 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "2.1.CR1",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/08-Jun-2016.rc1/cdk.zip",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/10-Jun-2016.rc2/cdk.zip",
     "filename": "cdk_2.1.0.CR1-20160608.zip",
-    "sha256sum": "807e2a151fe63fcc4f91c65e4e4b67589b3115a3c53795a4e84ddeec8a80d78b",
+    "sha256sum": "1c318947663985ee33d19b3f60392dc9cd1900c9f5647fa716d741cadcd2726d",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
@@ -14,7 +14,7 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "7.2.01062016-1",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/08-Jun-2016.rc1/rhel-cdk-kubernetes-7.2-25.x86_64.vagrant-virtualbox.box",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/10-Jun-2016.rc2/rhel-cdk-kubernetes-7.2-25.x86_64.vagrant-virtualbox.box",
     "filename": "rhel-cdk-kubernetes-7.2-25.x86_64.vagrant-virtualbox.box",
     "sha256sum": "466160fff23c4a7aec2f52e9e2a47e20e74dbd6c694d316cc0cc5843d789acae",
     "vendor": "Red Hat, Inc."
