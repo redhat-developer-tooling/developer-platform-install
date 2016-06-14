@@ -4,9 +4,9 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "2.1",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/10-Jun-2016.rc2/cdk.zip",
-    "filename": "cdk_2.1.0.CR1-20160608.zip",
-    "sha256sum": "1c318947663985ee33d19b3f60392dc9cd1900c9f5647fa716d741cadcd2726d",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/14-Jun-2016.rc3/cdk.zip",
+    "filename": "cdk_2.1.0.CR3-20160608.zip",
+    "sha256sum": "840904e7421e79a623138f671c63b5ba5e0d9eb901a0d69092a25598a65d4bee",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
