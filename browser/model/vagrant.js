@@ -59,12 +59,25 @@ class VagrantInstall extends InstallableItem {
       command = 'which vagrant';
     }
 
+    let detectedPath = '';
+
     Util.executeCommand(command, 1)
     .then((output) => {
-      this.addOption('detected','',path.dirname(path.dirname(output)),false);
-      return Util.executeCommand('"' + output + '"' + ' -v', 1)
+      let lines = output.split('\n');
+      if (lines.length = 1) {
+        detectedPath = lines[0];
+      } else {
+        for( let line of lines) {
+          if(line.endsWith('.exe')) {
+            detectedPath = line;
+            break;
+          }
+        }
+      }
+      return Util.executeCommand('"' + detectedPath + '"' + ' -v', 1)
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
+      this.addOption('detected','',path.dirname(path.dirname(detectedPath)),false);
       this.option['detected'].version = version;
       this.selectedOption = 'detected';
       this.validateVersion();
