@@ -23,8 +23,8 @@ function checkRequirements() {
   fileNames['jdk.zip'] = 'openjdk';
   fileNames['vagrant.msi'] = 'vagrant';
   fileNames['virtualbox.exe'] = 'virtualbox';
-  fileNames['7zip.zip'] = '7-Zip';
-  fileNames['7zip-extra.zip'] = '7-Zip';
+  fileNames['7zip.zip'] = '7-zip';
+  fileNames['7zip-extra.zip'] = '7-zip';
 
   //to check if the files are rougly the size the should be
   minSizes['cdk.zip'] = 50 * 1024;
