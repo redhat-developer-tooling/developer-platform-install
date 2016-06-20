@@ -1,7 +1,9 @@
 'use strict';
 
 let webdriver = browser.driver;
+let context = { pageName: 'Target Folder' };
 let path = require('path');
+let breadcrumbBase = require('./breadcrumbs-base');
 
 describe('Location page', function() {
   let locationField, backButton, nextButton, cancelButton, browseButton;
@@ -33,6 +35,8 @@ describe('Location page', function() {
     expect(backButton.isEnabled()).toBe(true);
     expect(cancelButton.isEnabled()).toBe(true);
   });
+
+  breadcrumbBase.describeBreadcrumbs(context);
 
   describe('validation', function() {
     let invalidPathStatus, existingFolderStatus, createFolderStatus,

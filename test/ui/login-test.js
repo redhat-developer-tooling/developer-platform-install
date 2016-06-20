@@ -1,10 +1,13 @@
 'use strict';
 
 let webdriver = browser.driver;
+let context = { pageName: 'Login' };
 let ACCOUNT_URL = '/account';
 let PAGE_TITLE = 'Red Hat Development Suite';
 let BAD_USERNAME = "badusername1";
 let BAD_PASSWORD = "badpassword1";
+
+let breadcrumbBase = require('./breadcrumbs-base');
 
 describe('Login page', function() {
   let usernameField, passwordField, loginButton;
@@ -37,6 +40,8 @@ describe('Login page', function() {
   it('Should contain a Register button', function() {
     expect(element(By.id('registerLink')).isDisplayed()).toBe(true);
   });
+
+  breadcrumbBase.describeBreadcrumbs(context);
 
   describe('Login form', function() {
     let usernameStatus, passwordStatus;
