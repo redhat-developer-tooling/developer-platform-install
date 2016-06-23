@@ -51,7 +51,7 @@ describe('System tests', function() {
       progress['cygwin'] = element(By.id('cygwin-progress'));
       progress['cdk'] = element(By.id('cdk-progress'));
       progress['jdk'] = element(By.id('jdk-progress'));
-      progress['jbds'] = element(By.id('jbds-progress'));
+      progress['jbds'] = element(By.id('devstudio-progress'));
 
       let startTime = new Date().getTime();
 

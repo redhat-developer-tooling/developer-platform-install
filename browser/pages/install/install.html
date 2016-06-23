@@ -7,19 +7,19 @@
   <div class="col-sm-12">
     <h3>Installation Details{{checkboxModel.jdk.selected}}</h3>
     <div>
-      <progress-bar ng-show="instCtrl.show('virtualbox')" name="virtualbox" product_name="instCtrl.productName('virtualbox')" product_version="instCtrl.productVersion('virtualbox')" current="instCtrl.current('virtualbox')" min="0" max="100" label="instCtrl.label('virtualbox')" product_desc="instCtrl.productDesc('virtualbox')" status="instCtrl.status('virtualbox')">
+      <progress-bar id="virtualbox-progress" ng-show="instCtrl.show('virtualbox')" name="virtualbox" product_name="instCtrl.productName('virtualbox')" product_version="instCtrl.productVersion('virtualbox')" current="instCtrl.current('virtualbox')" min="0" max="100" label="instCtrl.label('virtualbox')" product_desc="instCtrl.productDesc('virtualbox')" status="instCtrl.status('virtualbox')">
       </progress-bar>
     </div>
     <div>
-      <progress-bar ng-show="instCtrl.show('cygwin')" name="cygwin" product_name="instCtrl.productName('cygwin')" product_version="instCtrl.productVersion('cygwin')" current="instCtrl.current('cygwin')" min="0" max="100" label="instCtrl.label('cygwin')" product_desc="instCtrl.productDesc('cygwin')" status="instCtrl.status('cygwin')">
+      <progress-bar id="cygwin-progress" ng-show="instCtrl.show('cygwin')" name="cygwin" product_name="instCtrl.productName('cygwin')" product_version="instCtrl.productVersion('cygwin')" current="instCtrl.current('cygwin')" min="0" max="100" label="instCtrl.label('cygwin')" product_desc="instCtrl.productDesc('cygwin')" status="instCtrl.status('cygwin')">
       </progress-bar>
     </div>
     <div>
-      <progress-bar ng-show="instCtrl.show('vagrant')" name="vagrant" product_name="instCtrl.productName('vagrant')" product_version="instCtrl.productVersion('vagrant')" current="instCtrl.current('vagrant')" min="0" max="100" label="instCtrl.label('vagrant')" product_desc="instCtrl.productDesc('vagrant')" status="instCtrl.status('vagrant')">
+      <progress-bar id="vagrant-progress" ng-show="instCtrl.show('vagrant')" name="vagrant" product_name="instCtrl.productName('vagrant')" product_version="instCtrl.productVersion('vagrant')" current="instCtrl.current('vagrant')" min="0" max="100" label="instCtrl.label('vagrant')" product_desc="instCtrl.productDesc('vagrant')" status="instCtrl.status('vagrant')">
       </progress-bar>
     </div>
     <div>
-      <progress-bar ng-show="instCtrl.show('cdk')" name="cdk" product_name="instCtrl.productName('cdk')" product_version="instCtrl.productVersion('cdk')" current="instCtrl.current('cdk')" min="0" max="100" label="instCtrl.label('cdk')" product_desc="instCtrl.productDesc('cdk')" status="instCtrl.status('cdk')">
+      <progress-bar id="cdk-progress" ng-show="instCtrl.show('cdk')" name="cdk" product_name="instCtrl.productName('cdk')" product_version="instCtrl.productVersion('cdk')" current="instCtrl.current('cdk')" min="0" max="100" label="instCtrl.label('cdk')" product_desc="instCtrl.productDesc('cdk')" status="instCtrl.status('cdk')">
       </progress-bar>
     </div>
     <div>
@@ -27,7 +27,7 @@
       </progress-bar>
     </div>
     <div>
-      <progress-bar id="jbds-progress" ng-show="instCtrl.show('jbds')" name="jbds" product_name="instCtrl.productName('jbds')" product_version="instCtrl.productVersion('jbds')" current="instCtrl.current('jbds')" min="0" max="100" label="instCtrl.label('jbds')" product_desc="instCtrl.productDesc('jbds')" status="instCtrl.status('jbds')">
+      <progress-bar id="devstudio-progress" ng-show="instCtrl.show('jbds')" name="jbds" product_name="instCtrl.productName('jbds')" product_version="instCtrl.productVersion('jbds')" current="instCtrl.current('jbds')" min="0" max="100" label="instCtrl.label('jbds')" product_desc="instCtrl.productDesc('jbds')" status="instCtrl.status('jbds')">
       </progress-bar>
     </div>
   </div>
