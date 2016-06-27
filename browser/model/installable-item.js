@@ -1,11 +1,25 @@
 'use strict';
 
+import Util from './helpers/util';
+
+let reqs = Util.resolveFile('.', 'requirements.json');
+
 class InstallableItem {
-  constructor(keyName, productName, productVersion, productDesc, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
+  constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
     this.keyName = keyName;
-    this.productName = productName;
-    this.productVersion = productVersion;
-    this.productDesc = productDesc;
+
+    let requirement;
+    for (let key in reqs) {
+      let regex = new RegExp('^' + keyName + '\\.\\w+');
+      if (regex.test(key)) {
+        requirement = reqs[key];
+        break;
+      }
+    }
+
+    this.productName = requirement.name;
+    this.productVersion = requirement.version;
+    this.productDesc = requirement.description;
     this.installTime = installTime;
     this.targetFolderName = targetFolderName;
     this.installerDataSvc = installerDataSvc;
@@ -17,7 +31,7 @@ class InstallableItem {
     this.installed = false;
 
     this.selected = true;
-    this.version = '';
+    this.version = requirement.version;
 
     this.detected = false;
     this.detectedVersion = 'unknown';

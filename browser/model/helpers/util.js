@@ -2,6 +2,7 @@
 
 let child_process = require('child_process');
 let fs = require('fs');
+let path = require('path');
 
 class Util {
   static executeCommand(command, outputCode) {
@@ -84,6 +85,21 @@ class Util {
       function(pacc, fn) {
         return pacc.then(fn);
       },Promise.resolve());
+  }
+
+  static resolveFile(relativePath, filename) {
+    let pathForBuild = path.join('resources', 'app.asar');
+    let fileForTests = path.resolve(path.join(relativePath, filename));
+    let fileForRT = path.join(path.resolve('.'), pathForBuild, relativePath, filename);
+
+    let reqs;
+    if (fs.existsSync(fileForTests)) {
+      reqs = require(fileForTests);
+    } else if ( fs.existsSync(fileForRT) ) {
+      reqs = require(fileForRT);
+    }
+
+    return reqs;
   }
 }
 
