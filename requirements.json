@@ -44,9 +44,9 @@
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
     "version": "10.0.0.GA",
-    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-b-build-product/2016-06-15_14-51-47-B33/all/devstudio-10.0.0.GA-v20160615-1853-B33-installer-standalone.jar",
-    "filename": "devstudio-10.0.0.GA-v20160615-1853-B33-installer-standalone.jar",
-    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-b-build-product/2016-06-15_14-51-47-B33/all/devstudio-10.0.0.GA-v20160615-1853-B33-installer-standalone.jar.sha256",
+    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-b-build-product/2016-06-15_14-51-47-B33/all/devstudio-10.0.0.GA-installer-standalone.jar",
+    "filename": "devstudio-10.0.0.GA-installer-standalone.jar",
+    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.0.0.GA-b-build-product/2016-06-15_14-51-47-B33/all/devstudio-10.0.0.GA-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
   "jdk.zip": {
