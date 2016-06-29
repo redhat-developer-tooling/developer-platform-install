@@ -3,16 +3,15 @@
 let path = require('path');
 
 class JbdsAutoInstallGenerator {
-  constructor(jbdsInstallDir, jdkInstallDir) {
-    this.autoInstall = this.generate(jbdsInstallDir, jdkInstallDir);
+  constructor(jbdsInstallDir, jdkInstallDir, version) {
+    this.autoInstall = this.generate(jbdsInstallDir, jdkInstallDir, version);
   }
 
   fileContent() {
     return this.autoInstall;
   }
 
-  generate(jbdsInstallDir, jdkInstallDir) {
-    let jbdsVersion = "10.0";
+  generate(jbdsInstallDir, jdkInstallDir, jbdsVersion) {
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',

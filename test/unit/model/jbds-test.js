@@ -193,7 +193,7 @@ describe('devstudio installer', function() {
       let stub = sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
 
-      let data = new JbdsAutoInstallGenerator(installerDataSvc.jbdsDir(), installerDataSvc.jdkDir()).fileContent();
+      let data = new JbdsAutoInstallGenerator(installerDataSvc.jbdsDir(), installerDataSvc.jdkDir(), installer.version).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
       installer.postInstall(fakeProgress, null, null);
 

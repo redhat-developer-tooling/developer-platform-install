@@ -18,6 +18,7 @@ import JbdsInstall from './model/jbds';
 import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
+import Util from './model/helpers/util';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router', 'base64'])
@@ -73,17 +74,7 @@ let mainModule =
               });
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
-            let path = require('path');
-            let fs = require('fs-extra');
-            let reqs = null;
-            let installersJsonForTests = path.resolve('./requirements.json');
-            let installersJsonForRT = path.join(path.resolve('.'),'resources/app.asar/requirements.json');
-
-            if(fs.existsSync(installersJsonForTests)) {
-              reqs = require(installersJsonForTests);
-            } else if ( fs.existsSync(installersJsonForRT) ) {
-              reqs = require(installersJsonForRT);
-            }
+            let reqs = Util.resolveFile('.', 'requirements.json');
 
             installerDataSvc.addItemToInstall(
                 VirtualBoxInstall.key(),

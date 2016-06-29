@@ -14,9 +14,6 @@ import Version from './helpers/version';
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super('virtualbox',
-          'Oracle VirtualBox',
-          '5.0.8',
-          'A virtualization software package developed by Oracle',
           700,
           downloadUrl,
           installFile,
@@ -24,7 +21,6 @@ class VirtualBoxInstall extends InstallableItem {
           installerDataSvc);
 
     this.minimumVersion = '5.0.8';
-    this.version = version || '5.0.8';
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
     this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
