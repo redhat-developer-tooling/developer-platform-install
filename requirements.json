@@ -84,21 +84,32 @@
   "7zip.zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
-    "bundle": "no",
+    "bundle": "tools",
     "version": "9.20",
     "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
     "filename": "7za920.zip",
-    "sha256sum": "",
+    "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac",
     "vendor": "Igor Pavlov"
   },
   "7zip-extra.zip": {
     "name": "7zipextra",
     "description": "7Zip Extra: SFXs for installers",
-    "bundle": "no",
+    "bundle": "tools",
     "version": "9.20",
     "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
     "filename": "7z920_extra.7z",
-    "sha256sum": "",
+    "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757",
     "vendor": "Igor Pavlov"
+  },
+  "resource_hacker.zip": {
+    "name": "resourcehacker",
+    "description": "Resource Hacker",
+    "bundle": "tools",
+    "version": "4.2.5",
+    "url": "http://www.angusj.com/resourcehacker/resource_hacker.zip",
+    "filename": "resource_hacker_4.2.5.zip",
+    "sha256sum": "0978036e2f465adf113c0540ac0aa785569c9caa735bf0b76eba90028884f2bd",
+    "vendor": "Angus Johnson"
   }
+
 }

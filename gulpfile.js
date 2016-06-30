@@ -33,12 +33,12 @@ var prefetchFolder = 'requirements-cache';
 let buildFolderPath = path.resolve(buildFolderRoot);
 
 let zaRoot = path.resolve(buildFolderRoot);
-let zaZip = path.join(zaRoot, '7za920.zip');
+let zaZip = path.join(prefetchFolder, '7zip.zip');
 let zaExe = path.join(zaRoot, '7za.exe');
 let zaSfx = path.join(zaRoot, '7zS.sfx');
 let zaSfxExe = path.join(zaRoot, '7zS.exe');
-let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
-let rhZip = path.join(zaRoot, 'resource_hacker.zip');
+let zaExtra7z = path.join(prefetchFolder, '7zip-extra.zip');
+let rhZip = path.join(prefetchFolder, 'resource_hacker.zip');
 let rhExe = path.join(zaRoot, 'ResourceHacker.exe');
 let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
 let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
@@ -108,31 +108,16 @@ gulp.task('run', ['transpile:app'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron .',createExecCallback(cb));
 });
 
-gulp.task('download-7zip', function() {
-  return request('https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F')
-      .pipe(fs.createWriteStream(zaZip));
-});
-
 gulp.task('unzip-7zip', function() {
   return gulp.src(zaZip)
       .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
       .pipe(gulp.dest(buildFolderRoot));
 });
 
-gulp.task('download-7zip-extra', function() {
-  return request('https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F')
-      .pipe(fs.createWriteStream(zaExtra7z));
-});
-
 gulp.task('unzip-7zip-extra', function(cb) {
   let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
   // console.log(cmd);
   exec(cmd, createExecCallback(cb,true));
-});
-
-gulp.task('download-resource-hacker', function() {
-  return request('http://www.angusj.com/resourcehacker/resource_hacker.zip')
-      .pipe(fs.createWriteStream(rhZip));
 });
 
 gulp.task('unzip-resource-hacker', function() {
@@ -142,7 +127,7 @@ gulp.task('unzip-resource-hacker', function() {
 });
 
 gulp.task('prepare-tools', function(cb) {
-  runSequence(['download-7zip', 'download-7zip-extra', 'download-resource-hacker'],
+  runSequence('prefetch-tools',
     ['unzip-7zip', 'unzip-resource-hacker'], 'unzip-7zip-extra', cb);
 });
 
@@ -280,6 +265,28 @@ gulp.task('create-prefetch-cache-dir',function() {
   if (!fs.existsSync(prefetchFolder)) {
      mkdirp(prefetchFolder);
   }
+});
+
+// prefetch all the tools 
+gulp.task('prefetch-tools',['create-prefetch-cache-dir'], function() {
+  let promises = new Set();
+  for (let key in reqs) {
+    if (reqs[key].bundle === 'tools') {
+      let currentUrl = reqs[key].url;
+      let currentFile = path.join(prefetchFolder, key);
+      promises.add(new Promise((resolve,reject)=>{
+        // if file is already downloaded, check its sha against the stored one
+          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
+          {
+            // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
+            isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
+              dl ? resolve(true) : downloadFileAndCreateSha256(key, reqs[key].url, resolve, reject)
+            );
+          });
+      }));
+    }
+  }
+  return Promise.all(promises);
 });
 
 // prefetch all the installer dependencies so we can package them up into the .exe
