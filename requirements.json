@@ -86,7 +86,7 @@
     "description": "7Zip Command Line Version",
     "bundle": "no",
     "version": "9.20",
-    "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "url": "http://www.7-zip.org/a/7za920.zip",
     "filename": "7za920.zip",
     "sha256sum": "",
     "vendor": "Igor Pavlov"
@@ -96,7 +96,7 @@
     "description": "7Zip Extra: SFXs for installers",
     "bundle": "no",
     "version": "9.20",
-    "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+    "url": "http://www.7-zip.org/a/7z920_extra.7z",
     "filename": "7z920_extra.7z",
     "sha256sum": "",
     "vendor": "Igor Pavlov"
