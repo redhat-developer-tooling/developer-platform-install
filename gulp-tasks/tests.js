@@ -3,14 +3,9 @@ var angularProtractor = require('gulp-angular-protractor'),
   exec = require('child_process').exec
   mocha = require('gulp-spawn-mocha'),
   path = require('path'),
-  Server = require('karma').Server,
   symlink = require('gulp-symlink');
 
-var yargs = require('yargs')
-  .boolean('singleRun')
-  .default({
-    singleRun: true
-  });
+var yargs = require('yargs');
 
 module.exports = function(gulp) {
 
@@ -41,13 +36,6 @@ module.exports = function(gulp) {
         g: yargs.argv.g,
         reporter: yargs.argv.reporter
       }));
-  });
-
-  gulp.task('browser-test', function(done) {
-    new Server({
-      configFile: __dirname + '/../karma-conf.js',
-      singleRun: yargs.argv.singleRun
-    }, done).start();
   });
 
   gulp.task('protractor-install', function(cb) {

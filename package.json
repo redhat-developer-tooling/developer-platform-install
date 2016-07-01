@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
   "scripts": {
-    "postinstall": "jspm install --yes && cp browser/config.js test/jspm-config.js",
+    "postinstall": "jspm install --yes",
     "start": "gulp run",
     "generate": "gulp generate",
     "package-bundle": "gulp package-bundle",
@@ -23,7 +23,6 @@
     "dist": "gulp dist",
     "test": "gulp test",
     "unit-test": "gulp unit-test",
-    "browser-test": "gulp browser-test",
     "ui-test": "gulp ui-test",
     "system-test": "gulp system-test"
   },
@@ -59,13 +58,6 @@
     "jasmine-reporters": "2.1.1",
     "jquery": "2.2.4",
     "jspm": "0.16.31",
-    "karma": "0.13.22",
-    "karma-babel-preprocessor": "5.2.2",
-    "karma-electron-launcher": "0.1.0",
-    "karma-jasmine": "1.0.2",
-    "karma-jspm": "2.1.1",
-    "karma-junit-reporter": "1.0.0",
-    "karma-ng-html2js-preprocessor": "1.0.0",
     "minimatch": "3.0.0",
     "mkdirp": "0.5.1",
     "mocha": "2.5.3",
@@ -92,7 +84,6 @@
       "patternfly": "npm:patternfly@2.6.0"
     },
     "devDependencies": {
-      "angular-mocks": "npm:angular-mocks@1.5.3",
       "babel": "npm:babel-core@5.8.38",
       "babel-runtime": "npm:babel-runtime@5.8.38",
       "core-js": "npm:core-js@1.2.6"

@@ -245,7 +245,7 @@ gulp.task('cleanup', function(cb) {
 });
 
 gulp.task('test', function() {
-  return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink', 'browser-test');
+  return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink');
 });
 
 gulp.task('ui-test', function(cb) {
