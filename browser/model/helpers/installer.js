@@ -88,13 +88,13 @@ class Installer {
 
   copyFile(source, target, result) {
     return new Promise((resolve, reject) => {
-      Logger.info(this.key + ' - Move ' + source + ' to ' + target);
+      Logger.info(this.key + ' - Copy ' + source + ' to ' + target);
       fs.copy(source, target, (err) => {
         if (err) {
           Logger.error(this.key + ' - ' + err);
           reject(err);
         } else {
-          Logger.info(this.key + ' - Move ' + source + ' to ' + target + ' SUCCESS');
+          Logger.info(this.key + ' - Copy ' + source + ' to ' + target + ' SUCCESS');
           resolve(true);
         }
       });
