@@ -1,16 +1,9 @@
 'use strict';
 
-import { app, ipcMain, BrowserWindow, crashReporter } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import * as logger from './logging';
-
-// Report crashes to our server.
-crashReporter.start({
-  productName: 'Development Suite Install',
-  companyName: 'Red Hat',
-  autoSubmit: true
-});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -39,6 +32,7 @@ ipcMain.on('checkComplete', (event, arg) => {
 ipcMain.on('install-root', (event, installRoot) => {
   logger.init(installRoot, app.getVersion());
 });
+
 ipcMain.on('log', (event, arg) => {
   logger.log(arg);
 })
@@ -48,10 +42,15 @@ app.on('window-all-closed', function() {
   app.quit();
 });
 
+// Quit when all windows are closed.
+app.on('quit', function(event, exitCode) {
+  logger.log('INFO: Exit Code = ' + exitCode);
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-  
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000,
