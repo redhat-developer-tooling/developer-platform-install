@@ -44,7 +44,7 @@ class Util {
           reject(err);
         } else {
           for (var i = 0; i < fileNames.length; i++) {
-            if(!files.includes(fileNames[i])) {
+            if(files.indexOf(fileNames[i]) < 0) {
               reject(folder + ' does not contain ' + fileNames[i]);
               return;
             }
@@ -64,7 +64,7 @@ class Util {
           let lines = data.toString().split('\n');
           let result;
           for (var i = 0; i < lines.length; i++) {
-            if (lines[i].includes(text)) {
+            if (lines[i].indexOf(text) > -1) {
               result = lines[i];
               break;
             }
