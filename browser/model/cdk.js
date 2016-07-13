@@ -37,8 +37,6 @@ class CDKInstall extends InstallableItem {
 
     this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
 
-    this.downloads = path.normalize(path.join(__dirname,"../../.."));
-
     this.addOption('install','2.0.0','',true);
     this.selected = false;
   }
@@ -62,16 +60,16 @@ class CDKInstall extends InstallableItem {
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
-    if(!fs.existsSync(path.join(this.downloads, this.boxName))) {
+    if(!fs.existsSync(path.join(this.downloadFolder, this.boxName))) {
       let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
       this.downloader.setWriteStream(cdkBoxWriteStream);
       this.downloader.download(this.cdkBoxUrl);
     } else {
-      this.cdkBoxDownloadedFile = path.join(this.downloads, this.boxName);
+      this.cdkBoxDownloadedFile = path.join(this.downloadFolder, this.boxName);
       this.downloader.closeHandler();
     }
 
-    if(!fs.existsSync(path.join(this.downloads, this.cdkFileName))) {
+    if(!fs.existsSync(path.join(this.downloadFolder, this.cdkFileName))) {
       // TODO Switch back to auth download when CDK latest is in Customer Portal
       // downloader.downloadAuth
       //   ({
@@ -86,11 +84,11 @@ class CDKInstall extends InstallableItem {
         rejectUnauthorized: false
       }, username, password);
     } else {
-      this.cdkDownloadedFile = path.join(this.downloads, this.cdkFileName);
+      this.cdkDownloadedFile = path.join(this.downloadFolder, this.cdkFileName);
       this.downloader.closeHandler();
     }
 
-    if(!fs.existsSync(path.join(this.downloads, this.ocFileName))) {
+    if(!fs.existsSync(path.join(this.downloadFolder, this.ocFileName))) {
       let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
       if(!this.ocUrl.endsWith('.zip')) {
         request(this.ocUrl,(err,rsp,body) => {
@@ -104,7 +102,7 @@ class CDKInstall extends InstallableItem {
         this.downloader.download(this.ocUrl);
       }
     } else {
-      this.ocDownloadedFile = path.join(this.downloads, this.ocFileName);
+      this.ocDownloadedFile = path.join(this.downloadFolder, this.ocFileName);
       this.downloader.closeHandler();
     }
   }

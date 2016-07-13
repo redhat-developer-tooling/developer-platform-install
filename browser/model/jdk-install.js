@@ -24,7 +24,7 @@ class JdkInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jdk.zip';
-    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
+    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';

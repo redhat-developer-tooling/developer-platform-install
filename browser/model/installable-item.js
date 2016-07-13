@@ -1,6 +1,7 @@
 'use strict';
 
 import Util from './helpers/util';
+import path from 'path';
 
 let reqs = Util.resolveFile('.', 'requirements.json');
 
@@ -53,6 +54,7 @@ class InstallableItem {
     this.selectedOption = "install";
 
     this.downloader = null;
+    this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
   }
 
   getProductName() {

@@ -17,7 +17,8 @@ var gulp = require('gulp'),
     minimatch = require('minimatch'),
     copy = require('gulp-copy'),
     concat = require('gulp-concat'),
-    mkdirp = require('mkdirp');
+    mkdirp = require('mkdirp'),
+    merge = require('merge-stream');
 
 require('./gulp-tasks/tests')(gulp);
 
@@ -50,13 +51,24 @@ process.on('uncaughtException', function(err) {
     }
 });
 
-gulp.task('transpile:app', function() {
-  return gulp.src(['./main/*.es6.js'])
+// transpile sources and copy resources to a separate folder
+gulp.task('transpile:app', ['create-modules-link'], function() {
+  var sources = gulp.src(['browser/**/*.js', 'main/**/*.js', '*.js'], {base: '.'})
     .pipe(babel())
-    .pipe(rename(function (path) {
-      path.basename = path.basename.substring(0, path.basename.length - 4)
-    }))
-    .pipe(gulp.dest('./main'));
+    .pipe(gulp.dest('transpiled'));
+
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json'], {base: '.'})
+    .pipe(gulp.dest('transpiled'));
+
+  return merge(sources, resources);
+});
+
+// create symlink to node_modules in transpiled folder
+gulp.task('create-modules-link', function() {
+  return gulp.src('node_modules')
+    .pipe(symlink('transpiled/node_modules', {
+      force: true
+    }));
 });
 
 // clean dist/ AND prefetch-dependencies/ folder
@@ -87,7 +99,7 @@ gulp.task('create-dist-win-dir', function(cb) {
 gulp.task('generate', ['transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
   let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager . ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
   cmd += ' --version-string.ProductName="' + pjson.productName + '"';
@@ -105,7 +117,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
 gulp.task('default', ['run']);
 
 gulp.task('run', ['transpile:app'], function(cb) {
-  exec(path.join('node_modules', '.bin') + path.sep + 'electron .',createExecCallback(cb));
+  exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',createExecCallback(cb));
 });
 
 gulp.task('download-7zip', function() {

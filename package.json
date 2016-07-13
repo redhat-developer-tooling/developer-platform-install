@@ -21,7 +21,6 @@
     "package-simple": "gulp package-simple",
     "dist": "gulp dist",
     "test": "gulp test",
-    "unit-test": "gulp unit-test",
     "ui-test": "gulp ui-test",
     "system-test": "gulp system-test"
   },
@@ -60,8 +59,7 @@
     "gulp-zip": "3.2.0",
     "jasmine-core": "2.4.1",
     "jasmine-reporters": "2.1.1",
-    "jquery": "2.2.4",
-    "jspm": "0.16.31",
+    "merge-stream": "1.0.0",
     "minimatch": "3.0.0",
     "mkdirp": "0.5.1",
     "mocha": "2.5.3",

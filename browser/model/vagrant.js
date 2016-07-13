@@ -22,7 +22,7 @@ class VagrantInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'vagrant.msi';
-    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
+    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
     this.detected = false;

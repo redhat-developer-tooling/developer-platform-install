@@ -24,7 +24,7 @@ class VirtualBoxInstall extends InstallableItem {
     this.version = version || '5.0.8';
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
-    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
+    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);

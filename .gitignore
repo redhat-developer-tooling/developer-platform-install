@@ -1,10 +1,9 @@
 node_modules
 dist
 jspm_packages
+transpiled
 package
 build
-main/*.js
-!main/*.es6.js
 browser/config.js
 test/jspm-config.js
 .idea

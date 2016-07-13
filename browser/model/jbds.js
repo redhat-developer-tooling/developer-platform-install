@@ -26,7 +26,7 @@ class JbdsInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jbds.jar';
-    this.bundledFile = path.join(path.join(path.normalize(__dirname), "../../.."), this.downloadedFileName);
+    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
     this.addOption('install', this.version, '', true);
