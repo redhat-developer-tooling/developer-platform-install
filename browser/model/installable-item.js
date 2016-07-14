@@ -54,7 +54,7 @@ class InstallableItem {
     this.selectedOption = "install";
 
     this.downloader = null;
-    this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
+    this.downloadFolder = path.normalize(path.join(__dirname,"../../.."));
   }
 
   getProductName() {
