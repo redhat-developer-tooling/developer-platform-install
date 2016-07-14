@@ -18,7 +18,8 @@ var gulp = require('gulp'),
     copy = require('gulp-copy'),
     concat = require('gulp-concat'),
     mkdirp = require('mkdirp'),
-    merge = require('merge-stream');
+    merge = require('merge-stream'),
+    sourcemaps = require("gulp-sourcemaps");
 
 require('./gulp-tasks/tests')(gulp);
 
@@ -54,7 +55,9 @@ process.on('uncaughtException', function(err) {
 // transpile sources and copy resources to a separate folder
 gulp.task('transpile:app', ['create-modules-link'], function() {
   var sources = gulp.src(['browser/**/*.js', 'main/**/*.js', '*.js'], {base: '.'})
+    .pipe(sourcemaps.init())
     .pipe(babel())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
   var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json'], {base: '.'})

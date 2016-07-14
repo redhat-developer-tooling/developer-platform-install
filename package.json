@@ -53,6 +53,7 @@
     "gulp-copy": "0.0.2",
     "gulp-rename": "1.2.2",
     "gulp-run": "1.6.12",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-spawn-mocha": "2.2.2",
     "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.1.4",
