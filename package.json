@@ -21,6 +21,7 @@
     "package-simple": "gulp package-simple",
     "dist": "gulp dist",
     "test": "gulp test",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --recursive test/unit",
     "ui-test": "gulp ui-test",
     "system-test": "gulp system-test"
   },
@@ -58,6 +59,7 @@
     "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.1.4",
     "gulp-zip": "3.2.0",
+    "istanbul": "^1.1.0-alpha.1",
     "jasmine-core": "2.4.1",
     "jasmine-reporters": "2.1.1",
     "merge-stream": "1.0.0",

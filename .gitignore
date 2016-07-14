@@ -12,3 +12,4 @@ browser-tests.xml
 ui-tests.xml
 system-tests.xml
 requirements-cache/
+coverage/
