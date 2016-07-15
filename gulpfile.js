@@ -123,9 +123,8 @@ gulp.task('run', ['transpile:app'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',createExecCallback(cb));
 });
 
-gulp.task('download-7zip', function() {
-  return request('https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F')
-      .pipe(fs.createWriteStream(zaZip));
+gulp.task('download-7zip', function(cb) {
+  return downloadFile(reqs['7zip.zip'].url, zaZip, cb);
 });
 
 gulp.task('unzip-7zip', function() {
@@ -134,9 +133,8 @@ gulp.task('unzip-7zip', function() {
       .pipe(gulp.dest(buildFolderRoot));
 });
 
-gulp.task('download-7zip-extra', function() {
-  return request('https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F')
-      .pipe(fs.createWriteStream(zaExtra7z));
+gulp.task('download-7zip-extra', function(cb) {
+  return downloadFile(reqs['7zip-extra.zip'].url, zaExtra7z, cb);
 });
 
 gulp.task('unzip-7zip-extra', function(cb) {
@@ -145,9 +143,8 @@ gulp.task('unzip-7zip-extra', function(cb) {
   exec(cmd, createExecCallback(cb,true));
 });
 
-gulp.task('download-resource-hacker', function() {
-  return request('http://www.angusj.com/resourcehacker/resource_hacker.zip')
-      .pipe(fs.createWriteStream(rhZip));
+gulp.task('download-resource-hacker', function(cb) {
+  return downloadFile(reqs['resource_hacker.zip'].url, rhZip, cb);
 });
 
 gulp.task('unzip-resource-hacker', function() {
