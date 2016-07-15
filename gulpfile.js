@@ -248,11 +248,11 @@ gulp.task('dist', function(cb) {
 });
 
 gulp.task('7zip-cleanup', function() {
-  return del([buildFolderRoot + 'DevelopmentSuiteInstaller-w32-x64.7z', path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
+  return del([bundled7z, path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('resource-hacker-cleanup', function() {
-  return del([path.resolve(path.join(buildFolderRoot, 'resource_hacker.zip')), path.resolve(path.join(buildFolderRoot, 'ResourceHacker.*'))], { force: false });
+  return del([rhZip, path.resolve(path.join(buildFolderRoot, 'ResourceHacker.*'))], { force: false });
 });
 
 gulp.task('cleanup', function(cb) {
