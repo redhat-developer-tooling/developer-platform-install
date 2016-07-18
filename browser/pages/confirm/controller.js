@@ -1,7 +1,7 @@
 'use strict';
 
-let dialog = require('remote').require('dialog');
-let remote = require('remote');
+let remote = require('electron').remote;
+let dialog = remote.dialog;
 let fs = require('fs');
 let path = require('path');
 let ipcRenderer = require('electron').ipcRenderer;
