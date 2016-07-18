@@ -1,6 +1,6 @@
 'use strict';
 
-let remote = require('remote');
+let remote = require('electron').remote;
 let path = require('path');
 let fs = require('fs-extra');
 let shell = require('electron').shell;
