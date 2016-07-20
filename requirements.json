@@ -100,15 +100,5 @@
     "filename": "7z920_extra.7z",
     "sha256sum": "",
     "vendor": "Igor Pavlov"
-  },
-  "resource_hacker.zip": {
-    "name": "Resource Hacker",
-    "description": "Resource editing tool",
-    "bundle": "no",
-    "version": "4.2.5",
-    "url": "http://www.angusj.com/resourcehacker/resource_hacker.zip",
-    "filename": "resource_hacker.zip",
-    "sha256sum": "",
-    "vendor": "Angus Johnson"
   }
 }

@@ -25,7 +25,6 @@ function checkRequirements() {
   fileNames['virtualbox.exe'] = 'virtualbox';
   fileNames['7zip.zip'] = '7-Zip';
   fileNames['7zip-extra.zip'] = '7-Zip';
-  fileNames['resource_hacker.zip'] = 'resource_hacker';
 
   //to check if the files are rougly the size the should be
   minSizes['cdk.zip'] = 50 * 1024;
@@ -38,7 +37,6 @@ function checkRequirements() {
   minSizes['virtualbox.exe'] = 100 * 1024 * 1024;
   minSizes['7zip.zip'] = 200 * 1024;
   minSizes['7zip-extra.zip'] = 400 * 1024;
-  minSizes['resource_hacker.zip'] = 2 * 1024 * 1024;
 
   console.log('-------------------------------');
   console.log('Checking download URLs');

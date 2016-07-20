@@ -19,6 +19,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     mkdirp = require('mkdirp'),
     merge = require('merge-stream'),
+    rcedit = require('rcedit'),
     sourcemaps = require("gulp-sourcemaps");
 
 require('./gulp-tasks/tests')(gulp);
@@ -38,10 +39,7 @@ let zaRoot = path.resolve(buildFolderRoot);
 let zaZip = path.join(zaRoot, '7za920.zip');
 let zaExe = path.join(zaRoot, '7za.exe');
 let zaSfx = path.join(zaRoot, '7zS.sfx');
-let zaSfxExe = path.join(zaRoot, '7zS.exe');
 let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
-let rhZip = path.join(zaRoot, 'resource_hacker.zip');
-let rhExe = path.join(zaRoot, 'ResourceHacker.exe');
 let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
 let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
 let installerExe = resolveInstallerExePath('');
@@ -143,19 +141,9 @@ gulp.task('unzip-7zip-extra', function(cb) {
   exec(cmd, createExecCallback(cb,true));
 });
 
-gulp.task('download-resource-hacker', function(cb) {
-  return downloadFile(reqs['resource_hacker.zip'].url, rhZip, cb);
-});
-
-gulp.task('unzip-resource-hacker', function() {
-  return gulp.src(rhZip)
-      .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/ResourceHacker.*") } }))
-      .pipe(gulp.dest(buildFolderRoot));
-});
-
 gulp.task('prepare-tools', function(cb) {
-  runSequence(['download-7zip', 'download-7zip-extra', 'download-resource-hacker'],
-    ['unzip-7zip', 'unzip-resource-hacker'], 'unzip-7zip-extra', cb);
+  runSequence(['download-7zip', 'download-7zip-extra'],
+    ['unzip-7zip'], 'unzip-7zip-extra', cb);
 });
 
 // wrap electron-generated app to 7zip archive
@@ -170,25 +158,22 @@ gulp.task('create-7zip-archive', function(cb) {
 });
 
 gulp.task('update-metadata', function(cb) {
-  // compiling a .rc to .res doesn't work so have to do it by hand when the version in package.json changes
-  // let configRC = path.resolve(path.join(buildFolderRoot, '..', '..', 'resources', artifactName + '.rc')); // metadataincluding company info and copyright
-  let configRes = path.resolve(path.join(buildFolderRoot, '..', '..', 'resources', artifactName + '.res')); // resource ncluding icon & metadata
-  // let resHackCompileCmd = rhExe + ' -compile ' + configRC + ", " + configRes;
-  // console.log(resHackCompileCmd);
-  // run ResourceHacker.exe to insert a new icon into the installer .exe
-  // exec(resHackCompileCmd, function (err, stdout, stderr) {
-  //   console.log(stderr);
-  //   if (!err) {
-  let resHackModifyCmd = rhExe + ' -modify ' + zaSfx + ', ' + zaSfxExe + ', ' + configRes + ", , , "; // trailing commasrequired here!
-  // console.log(resHackModifyCmd);
-
-  exec(resHackModifyCmd, createExecCallback(cb, true));
+  return rcedit(zaSfx, {
+    'icon': 'resources/development-suite.ico',
+    'file-version': pjson.version,
+    'product-version': pjson.version,
+    'version-string': {
+      'ProductName': 'Red Hat Development Suite Installer',
+      'FileDescription': 'Red Hat Development Suite Installer v' + pjson.version,
+      'CompanyName': 'Red Hat, Inc.',
+      'LegalCopyright': 'Copyright 2016 Red Hat, Inc.'
+    }
+  }, cb);
 });
 
 gulp.task('create-final-exe', function(cb) {
   let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
-  let packageCmd = 'copy /b ' + zaSfxExe + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
-  // console.log(packageCmd);
+  let packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
 
   exec(packageCmd, createExecCallback(cb, true));
 });
@@ -244,16 +229,8 @@ gulp.task('dist', function(cb) {
     'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
 });
 
-gulp.task('7zip-cleanup', function() {
-  return del([bundled7z, path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
-});
-
-gulp.task('resource-hacker-cleanup', function() {
-  return del([rhZip, path.resolve(path.join(buildFolderRoot, 'ResourceHacker.*'))], { force: false });
-});
-
 gulp.task('cleanup', function(cb) {
-  runSequence(['7zip-cleanup', 'resource-hacker-cleanup'], cb);
+  return del([bundled7z, path.resolve(path.join(buildFolderRoot, '7z*'))], { force: false });
 });
 
 gulp.task('test', function() {

@@ -68,6 +68,7 @@
     "mocha": "2.5.3",
     "mock-fs": "3.11.0",
     "protractor": "4.0.0",
+    "rcedit": "0.5.1",
     "run-sequence": "1.2.2",
     "sinon": "1.17.4",
     "sinon-as-promised": "4.0.2",
