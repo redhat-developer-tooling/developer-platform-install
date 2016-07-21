@@ -4,6 +4,7 @@ jspm_packages
 transpiled
 package
 build
+tools
 browser/config.js
 test/jspm-config.js
 .idea

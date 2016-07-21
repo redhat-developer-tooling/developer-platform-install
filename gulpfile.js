@@ -33,14 +33,15 @@ var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifact
 var buildFolder = buildFolderRoot + buildFileNamePrefix;
 // use folder outside buildFolder so that a 'clean' task won't wipe out the cache
 var prefetchFolder = 'requirements-cache';
+let toolsFolder = 'tools';
 let buildFolderPath = path.resolve(buildFolderRoot);
 let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
 
 let zaRoot = path.resolve(buildFolderRoot);
-let zaZip = path.join(zaRoot, '7za920.zip');
+let zaZip = path.join(toolsFolder, '7zip.zip');
 let zaExe = path.join(zaRoot, '7za.exe');
 let zaSfx = path.join(zaRoot, '7zS.sfx');
-let zaExtra7z = path.join(zaRoot, '7z920_extra.7z');
+let zaExtra7z = path.join(toolsFolder, '7zip-extra.zip');
 let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
 let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
 let installerExe = resolveInstallerExePath('');
@@ -121,18 +122,10 @@ gulp.task('run', ['transpile:app'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',createExecCallback(cb));
 });
 
-gulp.task('download-7zip', function(cb) {
-  return downloadFile(reqs['7zip.zip'].url, zaZip, cb);
-});
-
 gulp.task('unzip-7zip', function() {
   return gulp.src(zaZip)
       .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
       .pipe(gulp.dest(buildFolderRoot));
-});
-
-gulp.task('download-7zip-extra', function(cb) {
-  return downloadFile(reqs['7zip-extra.zip'].url, zaExtra7z, cb);
 });
 
 gulp.task('unzip-7zip-extra', function(cb) {
@@ -142,8 +135,7 @@ gulp.task('unzip-7zip-extra', function(cb) {
 });
 
 gulp.task('prepare-tools', function(cb) {
-  runSequence(['download-7zip', 'download-7zip-extra'],
-    ['unzip-7zip'], 'unzip-7zip-extra', cb);
+  runSequence('prefetch-tools', ['unzip-7zip'], 'unzip-7zip-extra', cb);
 });
 
 // wrap electron-generated app to 7zip archive
@@ -272,32 +264,47 @@ gulp.task('create-prefetch-cache-dir',function() {
   }
 });
 
+gulp.task('create-tools-dir',function() {
+  if (!fs.existsSync(toolsFolder)) {
+     mkdirp(toolsFolder);
+  }
+});
+
 // prefetch all the installer dependencies so we can package them up into the .exe
-gulp.task('prefetch',['create-prefetch-cache-dir'], function() {
+gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {
+  return prefetch('yes', prefetchFolder);
+});
+
+gulp.task('prefetch-tools', ['create-tools-dir'], function() {
+  return prefetch('tools', toolsFolder);
+});
+
+function prefetch(bundle, targetFolder) {
   let promises = new Set();
   for (let key in reqs) {
-    if (reqs[key].bundle === 'yes') {
+    if (reqs[key].bundle === bundle) {
       let currentUrl = reqs[key].url;
-      let currentFile = path.join(prefetchFolder, key);
-      promises.add(new Promise((resolve,reject)=>{
+      let currentFile = path.join(targetFolder, key);
+      promises.add(new Promise((resolve,reject) => {
         // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256)=>
-          {
-            // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
-            isExistingSHA256Current(currentFile, currentSHA256, (dl)=>
-              dl ? resolve(true) : downloadFileAndCreateSha256(key, reqs[key].url, resolve, reject)
-            );
+        downloadAndReadSHA256(targetFolder, key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256) => {
+          // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
+          isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
+            dl ? resolve(true) : downloadFileAndCreateSha256(targetFolder, key, reqs[key].url, resolve, reject)
           });
+        });
       }));
     }
   }
-  return Promise.all(promises).then((result)=>
-    installerExe = resolveInstallerExePath('-bundle')
-  );
-});
+  return Promise.all(promises).then((result) => {
+    if (bundle === 'yes') {
+      installerExe = resolveInstallerExePath('-bundle');
+    }
+  });
+}
 
-function downloadAndReadSHA256(fileName, reqURL,  reject, processResult) {
-  let currentFile = path.join(prefetchFolder, fileName);
+function downloadAndReadSHA256(targetFolder, fileName, reqURL,  reject, processResult) {
+  let currentFile = path.join(targetFolder, fileName);
   var currentSHA256 = 'NOSHA256SUM';
   if (reqURL.length == 64 && reqURL.indexOf("http")<0 && reqURL.indexOf("ftp")<0)
   {
@@ -319,8 +326,8 @@ function downloadAndReadSHA256(fileName, reqURL,  reject, processResult) {
   }
 }
 
-function downloadFileAndCreateSha256(fileName, reqURL, resolve, reject) {
-  let currentFile = path.join(prefetchFolder, fileName);
+function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, resolve, reject) {
+  let currentFile = path.join(targetFolder, fileName);
   var currentSHA256 = '';
   console.log('[INFO] Download ' + reqURL + ' to ' + currentFile);
   downloadFile(reqURL, currentFile, (err, res)=>{
