@@ -34,6 +34,7 @@ var buildFolder = buildFolderRoot + buildFileNamePrefix;
 // use folder outside buildFolder so that a 'clean' task won't wipe out the cache
 var prefetchFolder = 'requirements-cache';
 let buildFolderPath = path.resolve(buildFolderRoot);
+let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
 
 let zaRoot = path.resolve(buildFolderRoot);
 let zaZip = path.join(zaRoot, '7za920.zip');
@@ -99,7 +100,6 @@ gulp.task('create-dist-win-dir', function(cb) {
 
 gulp.task('generate', ['transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron-prebuilt'];
-  let configIcon = path.resolve(path.join(buildFolderPath, '..', '..', 'resources', artifactName + '.ico'));
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
@@ -159,14 +159,15 @@ gulp.task('create-7zip-archive', function(cb) {
 
 gulp.task('update-metadata', function(cb) {
   return rcedit(zaSfx, {
-    'icon': 'resources/devsuite.ico',
+    'icon': configIcon,
     'file-version': pjson.version,
     'product-version': pjson.version,
     'version-string': {
-      'ProductName': 'Red Hat Development Suite Installer',
-      'FileDescription': 'Red Hat Development Suite Installer v' + pjson.version,
+      'ProductName': pjson.productName,
+      'FileDescription': pjson.description + ' v' + pjson.version,
       'CompanyName': 'Red Hat, Inc.',
-      'LegalCopyright': 'Copyright 2016 Red Hat, Inc.'
+      'LegalCopyright': 'Copyright 2016 Red Hat, Inc.',
+      'OriginalFilename': artifactName + '-' + pjson.version + '-installer.exe'
     }
   }, cb);
 });
