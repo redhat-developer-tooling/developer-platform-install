@@ -24,7 +24,7 @@ var gulp = require('gulp'),
 
 require('./gulp-tasks/tests')(gulp);
 
-var artifactName = 'development-suite',
+var artifactName = 'devsuite',
     artifactPlatform = 'win32',
     artifactArch = 'x64';
 
