@@ -159,7 +159,7 @@ gulp.task('create-7zip-archive', function(cb) {
 
 gulp.task('update-metadata', function(cb) {
   return rcedit(zaSfx, {
-    'icon': 'resources/development-suite.ico',
+    'icon': 'resources/devsuite.ico',
     'file-version': pjson.version,
     'product-version': pjson.version,
     'version-string': {
