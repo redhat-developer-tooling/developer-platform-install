@@ -158,7 +158,7 @@ class CDKInstall extends InstallableItem {
   }
 
   createEnvironment() {
-    let env = process.env;
+    let env = Object.assign({},process.env);
     let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
     let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
     let cygwinInstall = this.installerDataSvc.getInstallable('cygwin');
@@ -198,7 +198,8 @@ class CDKInstall extends InstallableItem {
     if (vagrantInstall.isInstalled()) {
       // Vagrant is installed, add CDK bits
       let opts = {
-        env: this.createEnvironment()
+        env: this.createEnvironment(),
+        cwd: this.installerDataSvc.cdkBoxDir()
       };
       let cdkPluginsDir = path.join(this.installerDataSvc.cdkDir(), 'plugins');
       // fill gem installation chain
@@ -213,7 +214,7 @@ class CDKInstall extends InstallableItem {
           });
         });
       },(result)=>{
-        return installer.exec('vagrant box add --name cdkv2 "' + path.join(this.installerDataSvc.cdkBoxDir(), this.boxName) + '"', opts, result);
+        return installer.exec('vagrant box add --name cdkv2 ' + this.boxName , opts, result);
       });
       return Util.runPromiseSequence(execs);
     }
