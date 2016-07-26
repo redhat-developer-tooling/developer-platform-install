@@ -233,7 +233,7 @@ describe('CDK installer', function() {
     describe('createEnvironment', function() {
       it('should return path with vagrant/bin', function() {
         let env = installer.createEnvironment();
-        expect(env['path']).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
+        expect(env['Path']).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
       });
     });
 
