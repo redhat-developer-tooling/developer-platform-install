@@ -39,15 +39,14 @@ describe('Location page', function() {
   breadcrumbBase.describeBreadcrumbs(context);
 
   describe('validation', function() {
-    let invalidPathStatus, existingFolderStatus, createFolderStatus,
-        pathWithSpacesStatus, pathTooLongStatus;
+    let existingFolderStatus,
+      createFolderStatus,
+      pathWithSpacesStatus;
 
     beforeAll(function() {
-      invalidPathStatus = element(By.id('invalidPathStatus'));
       existingFolderStatus = element(By.id('existingFolderStatus'));
       createFolderStatus = element(By.id('createFolderStatus'));
       pathWithSpacesStatus = element(By.id('pathWithSpacesStatus'));
-      pathTooLongStatus = element(By.id('pathTooLongStatus'));
     })
 
     beforeEach(function() {
@@ -55,14 +54,74 @@ describe('Location page', function() {
     });
 
     it('should not allow an empty path', function() {
-      expect(invalidPathStatus.isDisplayed()).toBe(true);
-      expect(invalidPathStatus.getAttribute('class')).toMatch('help-block has-error');
+      let pathRequiredStatus = element(By.id('pathRequiredStatus'));
+      expect(pathRequiredStatus.isDisplayed()).toBe(true);
+      expect(pathRequiredStatus.getAttribute('class')).toMatch('help-block has-error');
+      expect(nextButton.isEnabled()).toBe(false);
+    });
+
+    function testPathFomatWith(sequence) {
+      locationField.sendKeys('c:\\path\\path'+sequence);
+
+      let pathFormatStatus = element(By.id('pathFormatStatus'));
+      expect(pathFormatStatus.isDisplayed()).toBe(true);
+      expect(pathFormatStatus.getAttribute('class')).toMatch('help-block has-error');
+      expect(nextButton.isEnabled()).toBe(false);
+    }
+
+    it('should not allow path with "\\\\"', function() {
+      testPathFomatWith('\\\\');
+    });
+
+    it('should not allow path with ":"', function() {
+      testPathFomatWith(':');
+    });
+
+    it('should not allow path with "/"', function() {
+      testPathFomatWith('/');
+    });
+
+    it('should not allow path with "?"', function() {
+      testPathFomatWith('?');
+    });
+
+    it('should not allow path with \'"\'', function() {
+      testPathFomatWith('"');
+    });
+
+    it('should not allow path with ":"', function() {
+      testPathFomatWith(':');
+    });
+
+    it('should not allow path with "<"', function() {
+      testPathFomatWith('<');
+    });
+
+    it('should not allow path with ">"', function() {
+      testPathFomatWith('>');
+    });
+
+    it('should not allow path with "|"', function() {
+      testPathFomatWith('|');
+    });
+
+    it('should not allow path with "\\"', function() {
+      testPathFomatWith('\\\\');
+    });
+
+    it('should not allow a non-existing drive I:', function() {
+      locationField.sendKeys('I:\\path\\path');
+
+      let pathDriveStatus = element(By.id('pathDriveStatus'));
+      expect(pathDriveStatus.isDisplayed()).toBe(true);
+      expect(pathDriveStatus.getAttribute('class')).toMatch('help-block has-error');
       expect(nextButton.isEnabled()).toBe(false);
     });
 
     it('should not allow a non-absolute path', function() {
       locationField.sendKeys('path/path');
 
+      let invalidPathStatus = element(By.id('invalidPathStatus'));
       expect(invalidPathStatus.isDisplayed()).toBe(true);
       expect(invalidPathStatus.getAttribute('class')).toMatch('help-block has-error');
       expect(nextButton.isEnabled()).toBe(false);
@@ -79,6 +138,7 @@ describe('Location page', function() {
     it('should not allow a too long path', function() {
       locationField.sendKeys('c:\\thispathisgoingtobe\\sodamnlongthatitisnotgoingto\\letme\\proceedtotheactualinstallation\\anddisplayanerror');
 
+      let pathTooLongStatus = element(By.id('pathTooLongStatus'));
       expect(pathTooLongStatus.isDisplayed()).toBe(true);
       expect(pathTooLongStatus.getAttribute('class')).toMatch('help-block has-error');
       expect(nextButton.isEnabled()).toBe(false);

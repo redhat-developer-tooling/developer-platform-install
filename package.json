@@ -28,6 +28,7 @@
   "dependencies": {
     "angular": "1.5.7",
     "angular-base64": "2.0.5",
+    "angular-messages": "1.5.8",
     "angular-ui-router": "0.3.1",
     "fs-extra": "0.30.0",
     "glob": "7.0.5",

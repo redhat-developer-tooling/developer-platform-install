@@ -23,14 +23,8 @@
                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
           <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
           <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
-          <div ng-show="locationForm.folder.$error.required" class="help-block has-error">
-            <span class="pficon-error-circle-o"></span>
-            <strong>Please select an installation folder.</strong>
-          </div>
-          <div id="invalidPathStatus" ng-show="locationForm.folder.$error.folderPath && !locationForm.folder.$error.required" class="help-block has-error">
-            <span class="pficon-error-circle-o"></span>
-            <strong>The selection is not a valid absolute path.</strong>
-          </div>
+
+
           <div ng-show="!locationForm.folder.$invalid" class="has-warning">
             <div id="existingFolderStatus" ng-show="locCtrl.folderExists" class="help-block has-warning">
               <span class="pficon pficon-warning-triangle-o"></span>
@@ -41,14 +35,9 @@
               <strong>The selected folder will be created.</strong>
             </div>
           </div>
-          <div id="pathWithSpacesStatus" ng-show="locationForm.folder.$error.hasSpaces" class="help-block has-error">
-            <span class="pficon pficon-error-circle-o"></span>
-            <strong>The path has spaces. Please choose another location with NO spaces.</strong>
-          </div>
-          <div id="pathTooLongStatus" ng-show="locationForm.folder.$error.tooLong" class="help-block has-error">
-            <span class="pficon pficon-error-circle-o"></span>
-            <strong>The path is too long.</strong>
-          </div>
+          <ng-messages for="locationForm.folder.$error">
+            <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
+          </ng-messages>
           <div id="vagrantHomeStatus" ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
             <span class="pficon pficon-error-circle-o"></span>
             <strong>

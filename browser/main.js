@@ -3,6 +3,7 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import base64 from 'angular-base64';
+import messages from 'angular-messages';
 import acctCtrl from './pages/account/controller';
 import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
@@ -21,7 +22,7 @@ import CDKInstall from './model/cdk';
 import Util from './model/helpers/util';
 
 let mainModule =
-      angular.module('devPlatInstaller', ['ui.router', 'base64'])
+      angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
           .controller(acctCtrl.name, acctCtrl)
           .controller(locCtrl.name, locCtrl)
           .controller(confCtrl.name, confCtrl)

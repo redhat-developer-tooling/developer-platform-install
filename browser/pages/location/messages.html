@@ -1,0 +1,24 @@
+<div id="pathRequiredStatus" ng-message="notSelected" class="help-block has-error">
+  <span class="pficon-error-circle-o"></span>
+  <strong>Please select an installation folder.</strong>
+</div>
+<div id="invalidPathStatus" ng-message="notAbsolute" class="help-block has-error">
+  <span class="pficon-error-circle-o"></span>
+  <strong>The selection is not a valid absolute path.</strong>
+</div>
+<div id="pathFormatStatus" ng-message="invalidFormat" class="help-block has-error">
+  <span class="pficon pficon-error-circle-o"></span>
+  <strong>Selected path has invalid format.</strong>
+</div>
+<div id="pathDriveStatus" ng-message="invalidDisk" class="help-block has-error">
+  <span class="pficon pficon-error-circle-o"></span>
+  <strong>Selected disk does not exist.</strong>
+</div>
+<div id="pathTooLongStatus" ng-message="tooLong" class="help-block has-error">
+  <span class="pficon pficon-error-circle-o"></span>
+  <strong>The path is too long.</strong>
+</div>
+<div id="pathWithSpacesStatus" ng-message="hasSpaces" class="help-block has-error">
+  <span class="pficon pficon-error-circle-o"></span>
+  <strong>The path has spaces. Please choose another location with NO spaces.</strong>
+</div>
