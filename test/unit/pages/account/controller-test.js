@@ -64,7 +64,8 @@ describe('Login controller', function(){
         url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip',
         headers: {
           'Authorization': 'Basic username:password'
-        }
+        },
+        responseType: 'text'
       }
 
       controller = new AccountController({}, http, base64);

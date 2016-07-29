@@ -30,7 +30,8 @@ class AccountController {
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip',
       headers: {
         'Authorization': 'Basic ' + this.base64.encode(this.username + ':' + this.password)
-      }
+      },
+      responseType: 'text'
     };
 
     this.http(req)
