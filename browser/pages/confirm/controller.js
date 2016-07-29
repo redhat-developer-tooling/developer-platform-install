@@ -116,8 +116,8 @@ class ConfirmController {
       // Set the message depending on if the view is disabled or not.
       if (confCtrl.isDisabled) {
         confCtrl.installedSearchNote = '  The system is checking if you have any installed components.';
-      } else {
-        confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component that meets the requirement.`;
+      } else if (confCtrl.numberOfExistingInstallations>0) {
+        confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component.`;
       }
 
       // Call the digest cycle so that the view gets updated.
