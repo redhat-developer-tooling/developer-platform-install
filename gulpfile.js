@@ -151,6 +151,25 @@ gulp.task('create-7zip-archive', function(cb) {
   exec(packCmd, createExecCallback(cb, true));
 });
 
+gulp.task('update-devstudio-version', function(cb) {
+  let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf("/")) + '/content.json';
+  request(url, function(err, response, body) {
+    if (err) {
+      cb(err);
+    } else {
+      let versionRegex = /(\d+\.\d+\.\d+\.\w+\d+)-.*/;
+      let finalVersion = versionRegex.exec(body)[1];
+
+      if (reqs['jbds.jar'].version != finalVersion) {
+        reqs['jbds.jar'].version = finalVersion;
+        fs.writeFile('./requirements.json', JSON.stringify(reqs, null, 2), cb);
+      } else {
+        cb();
+      }
+    }
+  });
+});
+
 gulp.task('update-metadata', function(cb) {
   return rcedit(zaSfx, {
     'icon': configIcon,
@@ -209,18 +228,18 @@ function createSHA256File(filename, cb) {
 
 // Create stub installer that will then download all the requirements
 gulp.task('package-simple', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
     'prepare-tools'], 'package', 'cleanup', cb);
 });
 
 gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
 });
 
 // Create both installers
 gulp.task('dist', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
     'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
 });
 
