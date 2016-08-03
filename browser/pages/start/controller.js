@@ -13,6 +13,7 @@ class StartController {
     this.startDevstudio = true;
     this.installerDataSvc = installerDataSvc;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
+    remote.getCurrentWindow().removeAllListeners('close');
   }
 
   learnCDK() {

@@ -1,6 +1,5 @@
 'use strict';
-
-import { app, ipcMain, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import * as logger from './logging';
@@ -55,7 +54,8 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 650,
-    'autoHideMenuBar': true
+    'autoHideMenuBar': true,
+    resizable: false
   });
 
   // and load the index.html of the app.
@@ -71,5 +71,18 @@ app.on('ready', function() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+  });
+
+  mainWindow.on('close', function(e) {
+    let opt = {
+      type: 'none',
+      buttons: ['Yes', 'No'],
+      defaultId: 1,
+      cancelId: 1,
+      message: 'Are you sure you want to close the installer?'
+    }
+    if (dialog.showMessageBox(mainWindow, opt)) {
+      e.preventDefault();
+    }
   });
 });

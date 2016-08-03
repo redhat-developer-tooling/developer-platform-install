@@ -57,30 +57,9 @@
 <footer class="no-background-color">
   <div class="footer-border"></div>
   <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="locationForm"
-          ng-click="locCtrl.setCloseDialog()">Cancel</button>
+          ng-click="locCtrl.exit()">Cancel</button>
   <button type="button" id="location-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="locationForm"
           ng-click="locCtrl.back()">Back</button>
   <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="locationForm"
           ng-disabled="locationForm.folder.$invalid || locCtrl.vagrantHomeHasSpace" autofocus>Next</button>
 </footer>
-
-<div class="greyed-out-background" ng-show="locCtrl.showCloseDialog"></div>
-<div class="close-modal " id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" ng-show="locCtrl.showCloseDialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <span class="pficon pficon-close" ng-click="locCtrl.setCloseDialog()"></span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel">Confirm Close</h4>
-      </div>
-      <div class="modal-body centered">
-        <p>Are you sure you want to close the installer?</p>
-      </div>
-      <div class="modal-footer centered">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="locCtrl.setCloseDialog()">No</button>
-        <button type="button" class="btn btn-primary" ng-click="locCtrl.exit()">Yes</button>
-      </div>
-    </div>
-  </div>
-</div>
