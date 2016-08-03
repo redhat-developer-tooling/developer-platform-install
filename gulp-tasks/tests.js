@@ -1,6 +1,6 @@
 var angularProtractor = require('gulp-angular-protractor'),
   del = require('del'),
-  exec = require('child_process').exec
+  exec = require('child_process').exec,
   mocha = require('gulp-spawn-mocha'),
   path = require('path'),
   symlink = require('gulp-symlink');
@@ -34,7 +34,8 @@ module.exports = function(gulp) {
         },
         grep: yargs.argv.grep,
         g: yargs.argv.g,
-        reporter: yargs.argv.reporter
+        reporter: yargs.argv.reporter,
+        istanbul: true
       }));
   });
 

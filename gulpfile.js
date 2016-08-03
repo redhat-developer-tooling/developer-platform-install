@@ -20,7 +20,8 @@ var gulp = require('gulp'),
     mkdirp = require('mkdirp'),
     merge = require('merge-stream'),
     rcedit = require('rcedit'),
-    sourcemaps = require("gulp-sourcemaps");
+    sourcemaps = require("gulp-sourcemaps"),
+    symlink = require('gulp-symlink');
 
 require('./gulp-tasks/tests')(gulp);
 

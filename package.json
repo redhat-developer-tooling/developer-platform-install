@@ -21,7 +21,6 @@
     "package-simple": "gulp package-simple",
     "dist": "gulp dist",
     "test": "gulp test",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --recursive test/unit",
     "ui-test": "gulp ui-test",
     "system-test": "gulp system-test"
   },
@@ -56,7 +55,7 @@
     "gulp-rename": "1.2.2",
     "gulp-run": "1.7.1",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-spawn-mocha": "2.2.2",
+    "gulp-spawn-mocha": "3.0.0",
     "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.1.4",
     "gulp-zip": "3.2.0",
