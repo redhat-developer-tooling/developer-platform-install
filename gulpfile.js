@@ -21,7 +21,8 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     rcedit = require('rcedit'),
     sourcemaps = require("gulp-sourcemaps"),
-    symlink = require('gulp-symlink');
+    symlink = require('gulp-symlink'),
+    progress = require('request-progress');
 
 require('./gulp-tasks/tests')(gulp);
 
@@ -281,32 +282,39 @@ gulp.task('prefetch-tools', ['create-tools-dir'], function() {
 });
 
 function prefetch(bundle, targetFolder) {
-  let promises = new Set();
+  let promises = new Array();
   for (let key in reqs) {
     if (reqs[key].bundle === bundle) {
       let currentUrl = reqs[key].url;
-      let currentFile = path.join(targetFolder, key);
-      promises.add(new Promise((resolve,reject) => {
-        // if file is already downloaded, check its sha against the stored one
-        downloadAndReadSHA256(targetFolder, key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256) => {
-          // console.log('[DEBUG] SHA256SUM for '+key+' = ' + currentSHA256);
-          isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
-            dl ? resolve(true) : downloadFileAndCreateSha256(targetFolder, key, reqs[key].url, resolve, reject)
+      let currentFile = path.join(targetFolder, reqs[key].filename);
+      promises.push(() => {
+        return new Promise((resolve,reject) => {
+          // if file is already downloaded, check its sha against the stored one
+          downloadAndReadSHA256(targetFolder, key + ".sha256", reqs[key].sha256sum, reject, (currentSHA256) => {
+            //console.log('[DEBUG] SHA256SUM for ' + key + ' = ' + currentSHA256);
+            isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
+              dl ? resolve(true) : downloadFileAndCreateSha256(targetFolder, key, reqs[key].url, resolve, reject)
+            });
           });
-        });
-      }));
+        })
+      });
     }
   }
-  return Promise.all(promises).then((result) => {
-    if (bundle === 'yes') {
-      installerExe = resolveInstallerExePath('-bundle');
-    }
+  promises.push(() => {
+    return new Promise((resolve, reject)=>{
+      if (bundle === 'yes') {
+          installerExe = resolveInstallerExePath('-bundle');
+        }
+        resolve(true);
+    });
   });
-}
+  console.log(promises.length);
+  return promises.reduce( function(pacc, fn) { return pacc.then(fn); }, Promise.resolve() );
+};
 
-function downloadAndReadSHA256(targetFolder, fileName, reqURL,  reject, processResult) {
+function downloadAndReadSHA256(targetFolder, fileName, reqURL, reject, processResult) {
   let currentFile = path.join(targetFolder, fileName);
-  var currentSHA256 = 'NOSHA256SUM';
+  let currentSHA256 = 'NOSHA256SUM';
   if (reqURL.length == 64 && reqURL.indexOf("http")<0 && reqURL.indexOf("ftp")<0)
   {
     // return the hardcoded SHA256sum in requirements.json
@@ -329,8 +337,8 @@ function downloadAndReadSHA256(targetFolder, fileName, reqURL,  reject, processR
 
 function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, resolve, reject) {
   let currentFile = path.join(targetFolder, fileName);
-  var currentSHA256 = '';
-  console.log('[INFO] Download ' + reqURL + ' to ' + currentFile);
+  let currentSHA256 = '';
+  //console.log('[INFO] Download ' + reqURL + ' to ' + currentFile);
   downloadFile(reqURL, currentFile, (err, res)=>{
     if (err) {
       reject(err);
@@ -342,8 +350,31 @@ function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, resolve, re
   });
 }
 
+const progressLine = '======25%\|======50%\|======75%\|=====100%\|';
+
 function downloadFile(fromUrl, toFile, onFinish) {
-  request(fromUrl).pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
+  //request(fromUrl).pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
+  let previous = -1;
+
+  progress(request(fromUrl), {
+    throttle: 5000,
+    delay: 0,
+    lengthHeader: 'content-length'
+  })
+  .on('progress', (state) => {
+    if (previous == -1) {
+      console.log("Downloading " + fromUrl + ' to ' + toFile);
+      console.log('0%');
+      previous = 0;
+    }
+    let current = Math.round(state.percentage*100);
+    if(current!=100 && current!=0 && previous!=current) {
+      console.log(current + '%');
+    }
+    previous = current;
+  })
+  .on('end',()=>{console.log('100%');})
+  .pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
 }
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
