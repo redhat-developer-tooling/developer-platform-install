@@ -5,6 +5,8 @@ let fs = require('fs-extra');
 
 import Hash from './hash';
 
+const remote = require('electron').remote;
+
 class Downloader {
   constructor(progress, success, failure, downloadSize = 0, totalDownloads = 1) {
     this.downloadSize = downloadSize;
@@ -14,6 +16,10 @@ class Downloader {
     this.success = success;
     this.failure = failure;
     this.downloads = new Map();
+    this.userAgentString = '';
+    if(remote) {
+      this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
+    }
   }
 
   setWriteStream(stream) {
@@ -83,7 +89,7 @@ class Downloader {
   download(options,file,sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path,{options,sha,'failure': false});
-    request.get(options)
+    request.get(this.setUserAgent(options))
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
       .on('data', this.dataHandler.bind(this))
@@ -95,7 +101,7 @@ class Downloader {
   downloadAuth(options, username, password, file, sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path,{options,username,password,sha,'failure': false});
-    request.get(options)
+    request.get(this.setUserAgent(options))
       .auth(username, password)
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
@@ -117,6 +123,23 @@ class Downloader {
         }
       }
     }
+  }
+
+  setUserAgent(options) {
+    let optionsObj,
+      headersObj = {
+        'User-Agent': this.userAgentString
+      };
+    if (options instanceof Object) {
+      options['headers'] = headersObj;
+      optionsObj = options;
+    } else {
+      optionsObj = {
+        url: options,
+        headers: headersObj
+      };
+    }
+    return optionsObj;
   }
 }
 

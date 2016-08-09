@@ -121,15 +121,39 @@ describe('Downloader', function() {
   describe('download', function() {
     let options = 'http://example.com/jdk.zip';
     let options2 = 'http://example.com/jdk1.zip';
+    let options3 = {url:'http://example.com/jdk1.zip'};
 
     it('should make a request with given options', function() {
+      let requestGetSpy = sandbox.spy(request, 'get');
+      downloader = new Downloader(fakeProgress, function() {}, function() {});
+      downloader.setWriteStream(new PassThrough());
+      downloader.download(options3);
+
+      expect(requestGetSpy).to.be.calledOnce;
+      expect(requestGetSpy).to.be.calledWith(options3);
+    });
+
+    it('should make a request with given url in options', function() {
       let requestGetSpy = sandbox.spy(request, 'get');
       downloader = new Downloader(fakeProgress, function() {}, function() {});
       downloader.setWriteStream(new PassThrough());
       downloader.download(options);
 
       expect(requestGetSpy).to.be.calledOnce;
-      expect(requestGetSpy).to.be.calledWith(options);
+      expect(requestGetSpy.args[0][0].hasOwnProperty('url')).to.be.true;
+      expect(requestGetSpy.args[0][0].url).to.be.equal(options);
+    });
+
+    it('should make a request with \'User-Agent\' header set', function() {
+      let requestGetSpy = sandbox.spy(request, 'get');
+      downloader = new Downloader(fakeProgress, function() {}, function() {});
+      downloader.setWriteStream(new PassThrough());
+      downloader.download(options);
+
+      expect(requestGetSpy).to.be.calledOnce;
+      expect(requestGetSpy.args[0][0].hasOwnProperty('headers')).to.be.true;
+      expect(requestGetSpy.args[0][0].headers.hasOwnProperty('User-Agent')).to.be.true;
+
     });
 
     it('should call endHandler when end event is emitted', function() {
