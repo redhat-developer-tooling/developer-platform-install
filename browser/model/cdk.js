@@ -215,6 +215,8 @@ class CDKInstall extends InstallableItem {
         });
       },(result)=>{
         return installer.exec('vagrant box add --name cdkv2 ' + this.boxName , opts, result);
+      },(result)=>{
+        return installer.exec('vagrant plugin install landrush');
       });
       return Util.runPromiseSequence(execs);
     }
