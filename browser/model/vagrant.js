@@ -146,7 +146,7 @@ class VagrantInstall extends InstallableItem {
         '/i',
         this.downloadedFile,
         'VAGRANTAPPDIR=' + this.installerDataSvc.vagrantDir(),
-        '/qb!',
+        '/qn',
         '/norestart',
         '/Liwe',
         path.join(this.installerDataSvc.installDir(), 'vagrant.log')

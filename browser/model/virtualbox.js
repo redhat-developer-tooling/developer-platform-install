@@ -199,7 +199,7 @@ class VirtualBoxInstall extends InstallableItem {
       '/i',
       this.msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-      '/qb!',
+      '/qn',
       '/norestart',
       '/Liwe',
       path.join(this.installerDataSvc.installDir(), 'vbox.log')

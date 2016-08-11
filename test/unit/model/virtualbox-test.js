@@ -230,7 +230,7 @@ describe('Virtualbox installer', function() {
           '/i',
           msiFile,
           'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
-          '/qb!',
+          '/qn',
           '/norestart',
           '/Liwe',
           path.join(installerDataSvc.installDir(), 'vbox.log')

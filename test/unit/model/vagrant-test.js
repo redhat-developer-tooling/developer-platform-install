@@ -185,7 +185,7 @@ describe('Vagrant installer', function() {
       expect(spy).to.have.been.called;
       expect(spy).calledWith('msiexec', [
         '/i', path.join('tempDirectory','vagrant.msi'),
-        'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qb!', '/norestart', '/Liwe',
+        'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qn', '/norestart', '/Liwe',
         path.join('installationFolder','vagrant.log')]);
     });
 
