@@ -232,7 +232,7 @@ describe('Vagrant installer', function() {
     beforeEach(function() {
       stub = sandbox.stub(Util, 'executeCommand');
       stub.onCall(0).resolves('folder/subfolder/subsubfolder');
-      stub.onCall(1).resolves('Vagrant 1.7.4');
+      stub.onCall(1).resolves('Vagrant 1.8.1');
       validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
 
@@ -245,7 +245,7 @@ describe('Vagrant installer', function() {
 
     it('should check the detected version', function(done) {
       return installer.detectExistingInstall(function() {
-        expect(installer.option['detected'].version).to.equal('1.7.4');
+        expect(installer.option['detected'].version).to.equal('1.8.1');
         done();
       });
     });
@@ -268,7 +268,7 @@ describe('Vagrant installer', function() {
     })
 
     it('should mark the version as valid if it at least matches the required', function() {
-      installer.option['detected'].version = '1.7.4';
+      installer.option['detected'].version = '1.8.1';
       installer.validateVersion();
 
       expect(option.valid).to.be.true;
@@ -277,7 +277,7 @@ describe('Vagrant installer', function() {
     });
 
     it('should set a warning when the version is newer than recommended', function() {
-      installer.option['detected'].version = '1.8.0';
+      installer.option['detected'].version = '1.8.2';
       installer.validateVersion();
 
       expect(option.valid).to.be.true;
