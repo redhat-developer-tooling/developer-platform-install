@@ -26,7 +26,7 @@ class VagrantInstall extends InstallableItem {
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
     this.detected = false;
-    this.minimumVersion = "1.7.4";
+    this.minimumVersion = "1.8.1";
     this.existingVersion = "";
     this.sha256 = sha256;
   }

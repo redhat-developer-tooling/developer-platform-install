@@ -26,9 +26,9 @@ describe('Virtualbox installer', function() {
   };
 
   let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
-      version = '5.0.8',
-      revision = '103449',
-      finalUrl = 'http://download.virtualbox.org/virtualbox/5.0.8/VirtualBox-5.0.8-103449-Win.exe';
+      version = '5.0.26',
+      revision = '108824',
+      finalUrl = 'http://download.virtualbox.org/virtualbox/5.0.26/VirtualBox-5.0.26-108824-Win.exe';
 
   installerDataSvc = sinon.stub(fakeData);
   installerDataSvc.tempDir.returns('tempDirectory');
@@ -252,10 +252,10 @@ describe('Virtualbox installer', function() {
       if (process.platform === 'win32') {
         stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
         stub.onCall(1).resolves('folder/vbox');
-        stub.onCall(2).resolves('5.0.8r1234');
+        stub.onCall(2).resolves('5.0.26r1234');
       } else {
         stub.onCall(0).resolves('folder/vbox');
-        stub.onCall(1).resolves('5.0.8r1234');
+        stub.onCall(1).resolves('5.0.26r1234');
         sandbox.stub(Util, 'findText').resolves('dir=folder/vbox');
       }
       sandbox.stub(Util, 'folderContains').resolves('folder/vbox');
@@ -271,7 +271,7 @@ describe('Virtualbox installer', function() {
 
     it('should check the detected version', function(done) {
       return installer.detectExistingInstall(function() {
-        expect(installer.option['detected'].version).to.equal('5.0.8');
+        expect(installer.option['detected'].version).to.equal('5.0.26');
         done();
       });
     });
@@ -294,7 +294,7 @@ describe('Virtualbox installer', function() {
     })
 
     it('should add warning for newer version',function(){
-      installer.option['detected'].version = '5.0.16';
+      installer.option['detected'].version = '5.0.27';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
@@ -312,7 +312,7 @@ describe('Virtualbox installer', function() {
     })
 
     it('should add neither warning nor error for recomended version',function(){
-      installer.option['detected'].version = '5.0.8';
+      installer.option['detected'].version = '5.0.26';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
