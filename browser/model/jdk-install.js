@@ -137,26 +137,38 @@ class JdkInstall extends InstallableItem {
       if(fs.existsSync(this.installerDataSvc.jdkDir())) {
         rimraf.sync(this.installerDataSvc.jdkDir());
       }
-
-      installer.unzip(this.downloadedFile, this.installerDataSvc.installDir())
-          .then((result) => {
-            return this.getFolderContents(this.installerDataSvc.installDir(), result);
-          })
-          .then((files) => {
-            return this.getFileByName(this.jdkZipEntryPrefix, files)
-          })
-          .then((fileName) => {
-            return this.renameFile(this.installerDataSvc.installDir(), fileName, this.installerDataSvc.jdkDir());
-          })
-          .then((result) => {
-            return installer.succeed(result);
-          })
-          .catch((error) => {
-            return installer.fail(error);
-          });
+      installer.execFile('msiexec', this.createMsiExecParameters()).then((result) => {
+        // msiexec logs are in UCS-2
+        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'),'Dir (target): Key: INSTALLDIR	, Object:','ucs2').then((result)=>{
+          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/
+          let targetDir = regexTargetDir.exec(result)[1];
+          if(targetDir !== this.getLocation()) {
+            Logger.info(JdkInstall.key() + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
+            this.installerDataSvc.jdkRoot = targetDir;
+          }
+          installer.succeed(result);
+        }).catch((err)=>{
+          // location doesn't parsed correctly, nothing to verify just resolve and keep going
+          installer.succeed(result);
+        });
+      }).catch((error) => {
+        return installer.fail(error);
+      });
     } else {
       success();
     }
+  }
+
+  createMsiExecParameters() {
+    return [
+      '/i',
+      this.downloadedFile,
+      'INSTALLDIR=' + this.installerDataSvc.jdkDir(),
+      '/qn',
+      '/norestart',
+      '/Lviwe',
+      path.join(this.installerDataSvc.installDir(), 'openjdk.log')
+    ];
   }
 
   setup(progress, success, failure) {

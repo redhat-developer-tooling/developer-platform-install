@@ -55,7 +55,7 @@
     "bundle": "yes",
     "version": "1.8.0.101",
     "prefix": "java-1.8.0-openjdk-1.8.0",
-    "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/8u101/1/win/java-1.8.0-openjdk-1.8.0.101-1-redhat.b13.windows.x86_64.zip",
+    "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/8u101/1/win/java-1.8.0-openjdk-1.8.0.101-1-redhat.b13.windows.x86_64.msi",
     "filename": "java-1.8.0-openjdk-1.8.0.91-3-redhat.b14.windows.x86_64.zip",
     "sha256sum": "d631f4240d4e57820ff3de462a423bfdaf9320f9034122f1d9aeaf718c710853",
     "vendor": "Red Hat, Inc."
