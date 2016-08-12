@@ -165,11 +165,11 @@ describe('JDK installer', function() {
     });
 
     it('should unzip the downloaded file into install folder', function() {
-      let spy = sandbox.spy(Installer.prototype, 'unzip');
+      let spy = sandbox.spy(Installer.prototype, 'execFile');
       installer.install(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith(downloadedFile, installerDataSvc.installDir());
+      expect(spy).calledWith('msiexec', installer.createMsiExecParameters());
     });
 
     it('should catch errors during the installation', function(done) {
