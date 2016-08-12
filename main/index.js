@@ -58,8 +58,12 @@ app.on('ready', function() {
     resizable: false
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/../browser/index.html');
+  // Some processing is required to make sure local file can be opened in browser
+  // windows allows # in names and it should be replaced with ASCII encoding.
+  let baseLocation = encodeURI(__dirname.replace(/\\/g,'/')).replace(/#/g,'%23');
+
+  // Load the index.html of the app
+  mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
 
   if( process.env['PDKI_DEBUG'] !== undefined ) {
     mainWindow.openDevTools();
