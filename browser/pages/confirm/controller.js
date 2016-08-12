@@ -102,7 +102,7 @@ class ConfirmController {
 
   setIsDisabled() {
     // Uncomment the timeout to see the initial disabled view.
-//    this.timeout( () => {
+    this.timeout( () => {
       // Switch this boolean flag when the app is done looking for existing installations.
       confCtrl.isDisabled = !confCtrl.isDisabled;
 
@@ -115,14 +115,20 @@ class ConfirmController {
 
       // Set the message depending on if the view is disabled or not.
       if (confCtrl.isDisabled) {
-        confCtrl.installedSearchNote = '  The system is checking if you have any installed components.';
-      } else if (confCtrl.numberOfExistingInstallations>0) {
-        confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component.`;
+        confCtrl.installedSearchNote = '  The system is checking if you have any installed components';
+      } else {
+        if (confCtrl.numberOfExistingInstallations == 1) {
+          confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component`;
+        } else if (confCtrl.numberOfExistingInstallations > 1) {
+          confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed components`;
+        } else {
+          confCtrl.installedSearchNote = '';
+        }
       }
 
       // Call the digest cycle so that the view gets updated.
       confCtrl.sc.$apply();
-//    }, 5000);
+    }, 2000);
   }
 
   // Open up a browse dialog and select the dir that has the installed product you are looking for.

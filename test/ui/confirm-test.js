@@ -98,7 +98,7 @@ describe('Confirm page', function() {
     });
 
     it('should state the instructions', function() {
-      expect(element(By.id('instructions')).getText()).toEqual('Select the components to install.');
+      expect(element(By.id('instructions')).getText()).toEqual('Select the components to install');
     });
 
     it('should display a panel for each component', function() {

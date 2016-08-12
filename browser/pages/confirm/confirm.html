@@ -6,11 +6,11 @@
 <main class="col-sm-12 bottom-spacer" >
   <p id="detection-info" class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
     <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
-    <span class="pficon-info" ng-show="!confCtrl.isDisabled"></span>
-    {{confCtrl.installedSearchNote}}
+    <span class="pficon-info" ng-show="!confCtrl.isDisabled && confCtrl.numberOfExistingInstallations>0"></span>
+      {{confCtrl.installedSearchNote}}
     <br>
     <span id="instructions" class="installation-instruction" ng-show="!confCtrl.isDisabled">
-      Select the components to install.
+      Select the components to install
     </span>
   </p>
 
