@@ -89,7 +89,7 @@ class Downloader {
   download(options,file,sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path,{options,sha,'failure': false});
-    request.get(this.setUserAgent(options))
+    request.get(this.setAdditionalOptions(options))
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
       .on('data', this.dataHandler.bind(this))
@@ -101,7 +101,7 @@ class Downloader {
   downloadAuth(options, username, password, file, sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path,{options,username,password,sha,'failure': false});
-    request.get(this.setUserAgent(options))
+    request.get(this.setAdditionalOptions(options))
       .auth(username, password)
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
@@ -125,20 +125,19 @@ class Downloader {
     }
   }
 
-  setUserAgent(options) {
-    let optionsObj,
-      headersObj = {
-        'User-Agent': this.userAgentString
-      };
+  setAdditionalOptions(options) {
+    let optionsObj;
     if (options instanceof Object) {
-      options['headers'] = headersObj;
       optionsObj = options;
     } else {
       optionsObj = {
         url: options,
-        headers: headersObj
       };
     }
+    optionsObj['headers'] = {
+      'User-Agent': this.userAgentString
+    };
+    optionsObj['followAllRedirects'] = true;
     return optionsObj;
   }
 }
