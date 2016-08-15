@@ -48,7 +48,7 @@ describe('JDK installer', function() {
 
     mockfs({
       'tempDirectory' : {
-        'jdk.zip': 'file content here',
+        'jdk.msi': 'file content here',
         'test' : 'empty'
       },
       'installationFolder' : {
@@ -96,12 +96,12 @@ describe('JDK installer', function() {
     expect(new JdkInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
   });
 
-  it('should download jdk installer to temporary folder as jdk8.zip', function() {
+  it('should download jdk installer to temporary folder as jdk8.msi', function() {
     expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join('tempDirectory', 'jdk.zip'));
+      path.join('tempDirectory', 'jdk.msi'));
   });
 
-  describe('when downloading the jdk zip', function() {
+  describe('when downloading the jdk msi', function() {
     let downloadStub;
 
     beforeEach(function() {
@@ -117,13 +117,13 @@ describe('JDK installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/jdk.zip', function() {
+    it('should write the data into temp/jdk.msi', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk.zip'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk.msi'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
@@ -143,7 +143,7 @@ describe('JDK installer', function() {
   });
 
   describe('when installing jdk', function() {
-    let downloadedFile = path.join('tempDirectory', 'jdk.zip');
+    let downloadedFile = path.join('tempDirectory', 'jdk.msi');
 
     it('should set progress to "Installing"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
@@ -155,7 +155,6 @@ describe('JDK installer', function() {
     });
 
     it('should remove an existing folder with the same name', function() {
-      sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
       sandbox.stub(fs, 'existsSync').returns(true);
       let stub = sandbox.stub(rimraf, 'sync').returns();
 
@@ -164,7 +163,7 @@ describe('JDK installer', function() {
       expect(stub).calledOnce;
     });
 
-    it('should unzip the downloaded file into install folder', function() {
+    it('should call the installer with appropriate parameters', function() {
       let spy = sandbox.spy(Installer.prototype, 'execFile');
       installer.install(fakeProgress, function() {}, function (err) {});
 
@@ -173,7 +172,7 @@ describe('JDK installer', function() {
     });
 
     it('should catch errors during the installation', function(done) {
-      sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
+      sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
 
       try {
         installer.install(fakeProgress, function() {}, function (err) {});
@@ -214,7 +213,7 @@ describe('JDK installer', function() {
         .then((files) => {
           expect(spy).calledOnce;
           expect(spy).calledWith('tempDirectory');
-          expect(files).to.contain('jdk.zip');
+          expect(files).to.contain('jdk.msi');
         });
       });
 

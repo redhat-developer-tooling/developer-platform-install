@@ -20,7 +20,7 @@ function checkRequirements() {
   fileNames['oc.zip'] = 'origin-client-tools';
   fileNames['cygwin.exe'] = 'cygwin';
   fileNames['jbds.jar'] = 'devstudio';
-  fileNames['jdk.zip'] = 'openjdk';
+  fileNames['jdk.msi'] = 'openjdk';
   fileNames['vagrant.msi'] = 'vagrant';
   fileNames['virtualbox.exe'] = 'virtualbox';
   fileNames['7zip.zip'] = '7-Zip';
@@ -32,7 +32,7 @@ function checkRequirements() {
   minSizes['oc.zip'] = 10 * 1024 * 1024;
   minSizes['cygwin.exe'] = 500 * 1024;
   minSizes['jbds.jar'] = 400 * 1024 * 1024;
-  minSizes['jdk.zip'] = 50 * 1024 *1024;
+  minSizes['jdk.msi'] = 50 * 1024 *1024;
   minSizes['vagrant.msi'] = 120 * 1024 * 1024;
   minSizes['virtualbox.exe'] = 100 * 1024 * 1024;
   minSizes['7zip.zip'] = 200 * 1024;
