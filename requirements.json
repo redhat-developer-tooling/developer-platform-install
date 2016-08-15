@@ -49,7 +49,7 @@
     "sha256sum": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.1.0.latest-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
-  "jdk.zip": {
+  "jdk.msi": {
     "name": "OpenJDK",
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
     "bundle": "yes",
@@ -57,7 +57,7 @@
     "prefix": "java-1.8.0-openjdk-1.8.0",
     "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/8u101/1/win/java-1.8.0-openjdk-1.8.0.101-1-redhat.b13.windows.x86_64.msi",
     "filename": "java-1.8.0-openjdk-1.8.0.91-3-redhat.b14.windows.x86_64.zip",
-    "sha256sum": "d631f4240d4e57820ff3de462a423bfdaf9320f9034122f1d9aeaf718c710853",
+    "sha256sum": "bcac53c6730dad19270210c24ebff767f3036db00c476b6712ff0bcf281626ff",
     "vendor": "Red Hat, Inc."
   },
   "vagrant.msi": {

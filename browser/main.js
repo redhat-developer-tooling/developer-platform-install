@@ -124,9 +124,9 @@ let mainModule =
                 JdkInstall.key(),
                 new JdkInstall(
                     installerDataSvc,
-                    reqs['jdk.zip'].url,
+                    reqs['jdk.msi'].url,
                     null,
-                    reqs['jdk.zip'].prefix,
+                    reqs['jdk.msi'].prefix,
                     'jdk8')
             );
 

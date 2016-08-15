@@ -23,7 +23,7 @@ class JdkInstall extends InstallableItem {
           targetFolderName,
           installerDataSvc);
 
-    this.downloadedFileName = 'jdk.zip';
+    this.downloadedFileName = 'jdk.msi';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.existingVersion = '';
