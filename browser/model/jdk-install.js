@@ -46,7 +46,7 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall(cb = new function(){}) {
-    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_\d+\"/;
+    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
     let selectedFolder = '';
 
     let extension = '';
