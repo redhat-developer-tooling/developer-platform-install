@@ -10,6 +10,7 @@ import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import VirtualBoxInstall from './virtualbox';
+import Util from './helpers/util';
 
 
 class CygwinInstall extends InstallableItem {
@@ -28,11 +29,32 @@ class CygwinInstall extends InstallableItem {
     this.addOption('install',this.version,'',true);
   }
 
+  isSkipped() {
+    let t = this.selectedOption === 'detected';
+    return t;
+  }
+
   static key() {
     return 'cygwin';
   }
 
-  checkForExistingInstall() {
+  detectExistingInstall(cb = new function(){}) {
+    let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
+        opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
+        rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
+      Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
+        let cygwinVersion = cygwinPackageRegex.exec(out)[1];
+        let opensshVersion = opensshPackageReqex.exec(out)[1];
+        let rsyncVersion = rsyncPackageRegex.exec(out)[1];
+        this.addOption('detected','','',true);
+        this.option['detected'].version = cygwinVersion;
+        this.selectedOption = 'detected';
+        cb();
+      }).catch((error)=>{
+        this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'cygwin'),true);
+        this.addOption('different','','',false);
+        cb(error);
+      });
   }
 
   downloadInstaller(progress, success, failure) {

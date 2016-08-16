@@ -124,18 +124,20 @@
     </div>
 
     <!-- Cygwin -->
-    <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cygwin.hasOption('detected')}">
+    <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border': checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
       <div class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected')}">
+           ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
-           <div class="checkbox-container verticalLine" ng-show="!checkboxModel.cygwin.hasOption('detected')">
-             <input type="checkbox" ng-disabled="checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           <div class="checkbox-container verticalLine">
+             <input type="checkbox" ng-disabled="!checkboxModel.cygwin.hasOption('detected') && checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="cygwin-installed-note" class="installed-note" ng-show="checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'">
+            <i class="fa fa-check"></i> Using detected version {{checkboxModel.cygwin.option['detected'].version}}
+          </span>
           <span id="cygwin-name" class="product-name">{{checkboxModel.cygwin.productName}}</span><span id="cygwin-version" class="product-version">{{checkboxModel.cygwin.version}}</span>
           <div id="cygwin-description">{{checkboxModel.cygwin.productDesc}}</div>
         </div>

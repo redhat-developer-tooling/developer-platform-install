@@ -49,7 +49,7 @@ class ConfirmController {
       return $scope.checkboxModel.cdk.selectedOption;
     },(nVal,oVal)=>{
       if(nVal=='install') {
-        $scope.checkboxModel.cygwin.selectedOption = 'install';
+
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
           && !$scope.checkboxModel.vagrant.hasOption('detected')) {
           $scope.checkboxModel.vagrant.selectedOption = 'install';
@@ -57,6 +57,11 @@ class ConfirmController {
         if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
           && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
           $scope.checkboxModel.virtualbox.selectedOption = 'install';
+        }
+        if($scope.checkboxModel.cygwin.selectedOption == 'detected'
+          && !$scope.checkboxModel.cygwin.hasOption('detected')) {
+          // force to install included version
+          $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       }
     });
@@ -80,7 +85,9 @@ class ConfirmController {
       $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
         $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
           $scope.checkboxModel.jdk.detectExistingInstall(()=> {
-            confCtrl.setIsDisabled();
+            $scope.checkboxModel.cygwin.detectExistingInstall(()=> {
+             confCtrl.setIsDisabled();
+            });
           });
         });
       });
