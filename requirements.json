@@ -44,9 +44,9 @@
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
     "version": "10.1.0.AM3",
-    "url": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.1.0.latest-installer-standalone.jar",
+    "url": "http://www.qa.jboss.com/binaries/RHDS/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.1.0.latest-installer-standalone.jar",
     "filename": "devstudio-10.1.0.latest-installer-standalone.jar",
-    "sha256sum": "https://devstudio.jboss.com/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.1.0.latest-installer-standalone.jar.sha256",
+    "sha256sum": "http://www.qa.jboss.com/binaries/RHDS/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.1.0.latest-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
   "jdk.msi": {
