@@ -65,7 +65,7 @@
     "description": "A container provisioning tool",
     "bundle": "no",
     "version": "1.8.1",
-    "url": "https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1.msi",
+    "url": "https://developers.redhat.com/redirect/to/vagrant-1.8.1.download",
     "filename": "vagrant_1.8.1.msi",
     "sha256sum": "6468cc140f6f236c3ac4bc0bbb1cc2177114249bc344e0aba8c826eae9cc6eb2",
     "vendor": "HashiCorp"
@@ -76,7 +76,7 @@
     "bundle": "no",
     "version": "5.0.26",
     "revision": "108824",
-    "url": "http://download.virtualbox.org/virtualbox/5.0.26/VirtualBox-5.0.26-108824-Win.exe",
+    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.26.download",
     "filename": "virtualbox_5.0.26.exe",
     "sha256sum": "7195c5c71add512e8ac97ffc995f5a809d239ac550e20017c1d6d4766a0ced1c",
     "vendor": "Oracle, Inc."
