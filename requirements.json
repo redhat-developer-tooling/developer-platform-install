@@ -33,7 +33,7 @@
     "name": "Cygwin",
     "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
     "bundle": "yes",
-    "version": "2.5.1",
+    "version": "2.5.2",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "filename": "cygwin_2.5.1_0.297_5_3.exe",
     "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a",
