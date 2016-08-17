@@ -22,10 +22,6 @@ class Downloader {
     }
   }
 
-  setWriteStream(stream) {
-    this.writeStream = stream;
-  }
-
   errorHandler(stream, err) {
     stream.close();
     this.failure(err);
@@ -87,22 +83,9 @@ class Downloader {
   }
 
   download(options,file,sha) {
-    let stream = this.writeStream;
+    let stream = fs.createWriteStream(file);
     this.downloads.set(stream.path,{options,sha,'failure': false});
     request.get(this.setAdditionalOptions(options))
-      .on('error', this.errorHandler.bind(this, stream))
-      .on('response', this.responseHandler.bind(this))
-      .on('data', this.dataHandler.bind(this))
-      .on('end', this.endHandler.bind(this, stream))
-      .pipe(stream)
-      .on('close', this.closeHandler.bind(this,stream.path,sha));
-  }
-
-  downloadAuth(options, username, password, file, sha) {
-    let stream = this.writeStream;
-    this.downloads.set(stream.path,{options,username,password,sha,'failure': false});
-    request.get(this.setAdditionalOptions(options))
-      .auth(username, password)
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
       .on('data', this.dataHandler.bind(this))
@@ -115,12 +98,7 @@ class Downloader {
     this.progress.setStatus('Downloading');
     for (var [key, value] of this.downloads.entries()) {
       if (value['failure'] && value.failure) {
-        this.writeStream = fs.createWriteStream(key);
-        if(value.hasOwnProperty('username')) {
-          this.downloadAuth(value.options,value.username,value.password,key,value.sha);
-        } else {
-          this.download(value.options,key,value.sha);
-        }
+        this.download(value.options, key, value.sha);
       }
     }
   }

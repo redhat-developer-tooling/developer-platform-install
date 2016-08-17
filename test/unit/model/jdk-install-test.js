@@ -117,15 +117,6 @@ describe('JDK installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/jdk.msi', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
-
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
-
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk.msi'));
-    });
-
     it('should call downloader#download with the specified parameters once', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
@@ -201,65 +192,6 @@ describe('JDK installer', function() {
       installer.setup(fakeProgress, succ, function (err) {});
 
       expect(calls).to.equal(1);
-    });
-
-    describe('files manipulation', function() {
-      let err = new Error('critical error');
-
-      it('getFolderContents should list files in a folder', function() {
-        let spy = sandbox.spy(fs, 'readdir');
-
-        return installer.getFolderContents('tempDirectory')
-        .then((files) => {
-          expect(spy).calledOnce;
-          expect(spy).calledWith('tempDirectory');
-          expect(files).to.contain('jdk.msi');
-        });
-      });
-
-      it('getFolderContents should reject on error', function() {
-        let stub = sandbox.stub(fs, 'readdir').yields(err);
-
-        return installer.getFolderContents('tempDirectory')
-        .then((files) => {
-          expect.fail('it did not reject');
-        })
-        .catch((error) => {
-          expect(error).to.equal(err);
-        });
-      });
-
-      it('getFileByName should return a filename from an array', function() {
-        let files = ['abc', 'def', 'ghi'];
-
-        return installer.getFileByName('de', files)
-        .then((filename) => {
-          expect(filename).to.equal('def');
-        });
-      });
-
-      it('renameFile should rename a file with given path', function() {
-        let spy = sandbox.spy(fs, 'rename');
-
-        return installer.renameFile('tempDirectory', 'test', 'newName')
-        .then((result) => {
-          expect(result).to.be.true;
-          expect(spy).calledOnce;
-          expect(spy).calledWith(path.join('tempDirectory', 'test'), 'newName');
-        });
-      });
-
-      it('renameFile should reject on error', function() {
-        sandbox.stub(fs, 'rename').yields(err);
-
-        return installer.renameFile('tempDirectory', 'test', 'newName')
-        .then((result) => {
-          expect.fail('it did not reject');
-        })
-        .catch((error) => {
-          expect(error).to.equal(err);
-        });
-      });
     });
   });
 });

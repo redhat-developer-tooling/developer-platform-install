@@ -116,17 +116,6 @@ describe('devstudio installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/jbds.jar', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
-
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
-
-      expect(streamSpy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jbds.jar'));
-    });
-
     it('should call a correct downloader request with the specified parameters once', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 

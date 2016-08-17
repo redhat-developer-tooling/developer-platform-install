@@ -118,10 +118,8 @@ class JdkInstall extends InstallableItem {
     progress.setStatus('Downloading');
     if(this.selectedOption == 'install' && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
-      let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
-      this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl);
+      this.downloader.download(this.downloadUrl, this.downloadedFile);
     } else {
       this.downloadedFile = this.bundledFile;
       success();
@@ -176,46 +174,6 @@ class JdkInstall extends InstallableItem {
     progress.setStatus('Setting up');
     progress.setComplete();
     success();
-  }
-
-  getFolderContents(parentFolder, result) {
-    return new Promise(function (resolve, reject) {
-      fs.readdir(parentFolder, function(err, fileList) {
-        if (err) {
-          Logger.error(JdkInstall.key() + ' - ' + err);
-          reject(err);
-        } else {
-          resolve(fileList);
-        }
-      });
-    });
-  }
-
-  getFileByName(name, files) {
-    return new Promise(function (resolve) {
-      for (let fileName of files) {
-        if (fileName.startsWith(name)) {
-          resolve(fileName);
-          break;
-        }
-      }
-    });
-  }
-
-  renameFile(folder, oldName, newName) {
-    let filePath = path.join(folder, oldName)
-    Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName)
-    return new Promise(function (resolve, reject) {
-      fs.rename(filePath, newName, function(err) {
-        if (err) {
-          Logger.error(JdkInstall.key() + ' - ' + err);
-          reject(err);
-        } else {
-          Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS')
-          resolve(true);
-        }
-      });
-    });
   }
 }
 

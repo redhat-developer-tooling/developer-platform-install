@@ -115,15 +115,6 @@ describe('Vagrant installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/vagrant.zip', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
-
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
-
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.msi'));
-    });
-
     it('should call downloader#download with the specified parameters once', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
