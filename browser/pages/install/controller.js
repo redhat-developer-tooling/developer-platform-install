@@ -35,6 +35,7 @@ class InstallController {
 
   triggerDownload(installableKey, installableValue, progress) {
     this.installerDataSvc.startDownload(installableKey);
+    progress.installTrigger();
     installableValue.downloadInstaller(progress,
       () => {
         this.installerDataSvc.downloadDone(progress, installableKey);
@@ -66,9 +67,7 @@ class InstallController {
 
   triggerInstall(installableKey, installableValue, progress) {
     this.installerDataSvc.startInstall(installableKey);
-
     progress.installTrigger();
-
     installableValue.install(progress,
       () => {
         this.installerDataSvc.installDone(progress,installableKey);
@@ -128,7 +127,7 @@ class ProgressState {
   }
 
   setTotalDownloadSize(totalSize) {
-    this.totalDownloadSize = totalSize;
+    this.totalDownloadSize += totalSize;
   }
 
   downloaded(amt, time) {
@@ -137,21 +136,24 @@ class ProgressState {
     if (time == 0) return;
     let rate = amt / time;
     let remainingDownloadTime = (this.totalDownloadSize - this.downloadedSize) / rate;
-    this.setCurrent(Math.round((this.timeSpent / (this.timeSpent + (this.installTime * 1000) + remainingDownloadTime)) * 100));
+    this.setCurrent(this.calcCurrentValue());
   }
 
   installTrigger() {
     this.lastInstallTime = Date.now();
-    this.$timeout(this.installUpdate.bind(this), 10000);
+    this.$timeout(this.installUpdate.bind(this));
   }
 
   installUpdate() {
     let now = Date.now();
     this.timeSpentInstall += (now - this.lastInstallTime);
     this.lastInstallTime = now;
-    this.setCurrent(Math.round(((this.timeSpent + this.timeSpentInstall) / (this.timeSpent + (this.installTime * 1000))) * 100));
-
-    this.$timeout(this.installUpdate.bind(this), 5000);
+    this.$timeout(()=>{
+      this.$scope.$apply(()=>{
+        this.setCurrent(this.calcCurrentValue());
+      })
+       this.$timeout(this.installUpdate.bind(this), 1000);
+    });
   }
 
   setCurrent(newVal) {
@@ -163,6 +165,11 @@ class ProgressState {
 
   setStatus(newStatus) {
     this.status = newStatus;
+  }
+
+  calcCurrentValue() {
+    // 95% for download and rest for installation
+    return Math.round( this.downloadedSize/this.totalDownloadSize * 95)
   }
 
   setComplete() {
