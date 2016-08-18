@@ -17,7 +17,7 @@ describe('Downloader', function() {
     setLabel: function (label) {},
     setComplete: function() {},
     setTotalDownloadSize: function(size) {},
-    downloaded: function(amt, time) {}
+    downloaded: function(amt, time) {},
   };
   let sandbox;
   let succ = function() {};
@@ -39,24 +39,38 @@ describe('Downloader', function() {
   it('responseHandler should set the total download size', function() {
     downloader = new Downloader(fakeProgress, function() {}, function() {});
     let response = { headers: { 'content-length': 1024 } };
-    let spy = sandbox.spy(fakeProgress, 'setTotalDownloadSize');
 
     downloader.responseHandler(response);
 
     expect(downloader.downloadSize).to.equal(1024);
-    expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(1024);
   });
 
-  it('dataHandler should update the progress', function() {
+  it('dataHandler should update the progress once time threshold is reached', function() {
     downloader = new Downloader(fakeProgress, function() {}, function() {});
-    let data = { length: 1024 };
-    let spy = sandbox.spy(fakeProgress, 'downloaded');
+    fakeProgress.totalSize = 1024;
 
+    let data = { length: 512 };
+    let spy = sandbox.spy(fakeProgress, 'setCurrent');
+
+    downloader.received = 1;
     downloader.dataHandler(data);
 
     expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(1024);
+    expect(spy).to.have.been.calledWith(data.length);
+  });
+
+  it('dataHandler should not update the progress before time threshold is reached', function() {
+    downloader = new Downloader(fakeProgress, function() {}, function() {});
+    fakeProgress.totalSize = 1024;
+
+    let data = { length: 512 };
+    let spy = sandbox.spy(fakeProgress, 'setCurrent');
+
+    downloader.received = 1;
+    downloader.lastTime = Date.now() + 9999999999;
+    downloader.dataHandler(data);
+
+    expect(spy).not.called;
   });
 
   it('errorHandler should close the stream', function() {
@@ -213,7 +227,7 @@ describe('Downloader', function() {
       let error = new Error('something bad happened');
 
       let stream = new Writable();
-      downloader = new Downloader(fakeProgress, function() {}, function() {}, 1, 2);
+      downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
       downloader.setWriteStream(stream);
       let errorHandler = sandbox.stub(downloader, 'errorHandler');
       let successSpy = sandbox.spy(downloader, 'success');
@@ -232,7 +246,7 @@ describe('Downloader', function() {
       let error = new Error('something bad happened');
 
       let stream = new Writable();
-      downloader = new Downloader(fakeProgress, function() {}, function() {}, 1, 2);
+      downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
       downloader.setWriteStream(stream);
       let successHandler = sandbox.stub(downloader, 'success');
       downloader.download(options);

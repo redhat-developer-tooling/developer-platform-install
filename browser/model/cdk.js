@@ -52,11 +52,9 @@ class CDKInstall extends InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
 
-    let downloadSize = 869598013;
-
     let totalDownloads = 3;
 
-    this.downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
+    this.downloader = new Downloader(progress, success, failure, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
