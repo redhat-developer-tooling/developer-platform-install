@@ -11,7 +11,7 @@ class InstallController {
 
     this.data = Object.create(null);
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let itemProgress = new ProgressState(value.getProductName(), value.getProductVersion(), value.getProductDesc(), value.getInstallTime(), this.$scope, this.$timeout);
+      let itemProgress = new ProgressState(value.getProductName(), value.getProductVersion(), value.getProductDesc(), this.$scope, this.$timeout);
       Object.defineProperty(this.data, key, {
         enumerable: true,
         writable: true,
@@ -67,8 +67,6 @@ class InstallController {
   triggerInstall(installableKey, installableValue, progress) {
     this.installerDataSvc.startInstall(installableKey);
 
-    progress.installTrigger();
-
     installableValue.install(progress,
       () => {
         this.installerDataSvc.installDone(progress,installableKey);
@@ -109,66 +107,58 @@ class InstallController {
 }
 
 class ProgressState {
-  constructor(productName, productVersion, productDesc, installTime, $scope, $timeout) {
+  constructor(productName, productVersion, productDesc, $scope, $timeout) {
     this.productName = productName;
     this.productVersion = productVersion;
     this.productDesc = productDesc;
-    this.installTime = installTime;
-    this.$scope = $scope;
     this.$timeout = $timeout;
+    this.$scope = $scope;
     this.current = 0;
-    this.totalDownloadSize = 0;
-    this.downloadedSize = 0;
-    this.timeSpent = 0;
-    this.timeSpentInstall = 0;
-    this.lastInstallTime = 0;
     this.label = '';
     this.status = '';
-
+    this.currentAmount = 0;
+    this.totalSize = 0;
   }
 
-  setTotalDownloadSize(totalSize) {
-    this.totalDownloadSize = totalSize;
-  }
-
-  downloaded(amt, time) {
-    this.downloadedSize += amt;
-    this.timeSpent += time;
-    if (time == 0) return;
-    let rate = amt / time;
-    let remainingDownloadTime = (this.totalDownloadSize - this.downloadedSize) / rate;
-    this.setCurrent(Math.round((this.timeSpent / (this.timeSpent + (this.installTime * 1000) + remainingDownloadTime)) * 100));
-  }
-
-  installTrigger() {
-    this.lastInstallTime = Date.now();
-    this.$timeout(this.installUpdate.bind(this), 10000);
-  }
-
-  installUpdate() {
-    let now = Date.now();
-    this.timeSpentInstall += (now - this.lastInstallTime);
-    this.lastInstallTime = now;
-    this.setCurrent(Math.round(((this.timeSpent + this.timeSpentInstall) / (this.timeSpent + (this.installTime * 1000))) * 100));
-
-    this.$timeout(this.installUpdate.bind(this), 5000);
+  setTotalDownloadSize(size) {
+    this.totalSize = size;
   }
 
   setCurrent(newVal) {
-    if (newVal > this.current && newVal < 100) {
-    	this.current = newVal;
-    	this.label = newVal + '%';
+    if (newVal > this.currentAmount && newVal < this.totalSize) {
+    	this.currentAmount = newVal;
+      this.current = Math.round(this.currentAmount / this.totalSize * 100)
+    	this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
+
+      this.$timeout(this.setCurrent.bind(this), 0);
     }
   }
 
   setStatus(newStatus) {
+    if (newStatus !== 'Downloading') {
+      this.current = 100;
+      this.label = '';
+    } else {
+      this.current = 0;
+      this.label = 0 + '%';
+      this.currentAmount = 0;
+      this.totalSize = 0;
+    }
     this.status = newStatus;
+
+    this.$timeout(() => {
+      this.$scope.$apply();
+    });
   }
 
   setComplete() {
     this.current = 100;
     this.label = '100%';
     this.setStatus('Complete');
+  }
+
+  sizeInKB(amount) {
+    return Math.round(amount / 1024);
   }
 }
 

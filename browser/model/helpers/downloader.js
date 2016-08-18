@@ -8,15 +8,17 @@ import Hash from './hash';
 const remote = require('electron').remote;
 
 class Downloader {
-  constructor(progress, success, failure, downloadSize = 0, totalDownloads = 1) {
-    this.downloadSize = downloadSize;
+  constructor(progress, success, failure, totalDownloads = 1) {
+    this.downloadSize = 0;
     this.totalDownloads = totalDownloads;
-    this.lastTime = 0;
+    this.currentSize = 0;
     this.progress = progress;
     this.success = success;
     this.failure = failure;
     this.downloads = new Map();
     this.userAgentString = '';
+    this.received = 0;
+    this.lastTime = 0;
     if(remote) {
       this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
     }
@@ -36,20 +38,23 @@ class Downloader {
   }
 
   responseHandler(response) {
-    if (this.downloadSize == 0) {
-      let tempSize = response.headers['content-length'];
-      if (tempSize !== undefined && tempSize > 0) {
-        this.downloadSize = tempSize;
+    let tempSize = response.headers['content-length'];
+    if (tempSize !== undefined && parseInt(tempSize) > 0) {
+      this.downloadSize += parseInt(tempSize);
+
+      if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
+        this.progress.setTotalDownloadSize(this.downloadSize);
       }
     }
-    this.progress.setTotalDownloadSize(this.downloadSize);
-    this.lastTime = Date.now();
   }
 
   dataHandler(data) {
-    let current = Date.now();
-    this.progress.downloaded(data.length, current - this.lastTime);
-    this.lastTime = current;
+    this.currentSize += data.length;
+
+    if (Date.now() - this.lastTime > 500) {
+      this.progress.setCurrent(this.currentSize);
+      this.lastTime = Date.now();
+    }
   }
 
   endHandler(stream) {
@@ -112,6 +117,9 @@ class Downloader {
   }
 
   restartDownload() {
+    this.downloadSize = 0;
+    this.received = 0;
+    this.currentSize = 0;
     this.progress.setStatus('Downloading');
     for (var [key, value] of this.downloads.entries()) {
       if (value['failure'] && value.failure) {

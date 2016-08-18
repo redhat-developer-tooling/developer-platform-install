@@ -27,7 +27,8 @@ function progressBar() {
               <div>{{productDesc}}</div>
             </div>
             <div class="progress progress-label-top-right">
-              <div class="progress-bar" role="progressbar" aria-valuenow="{{current}}" aria-valuemin="{{min}}" aria-valuemax="{{max}}" style="width: {{current}}%;">
+              <div class="progress-bar" ng-class="{'progress-bar-striped active': status == 'Installing' || status == 'Setting up' || status.indexOf('Waiting') > -1}" role="progressbar" aria-valuenow="{{current}}" aria-valuemin="{{min}}" aria-valuemax="{{max}}"
+                style="width: {{current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
                 <span>{{label}}</span>
               </div>
             </div>
