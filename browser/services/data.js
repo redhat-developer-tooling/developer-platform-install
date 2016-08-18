@@ -2,10 +2,12 @@
 
 import InstallableItem from '../model/installable-item';
 import Logger from './logger';
+import Util from '../model/helpers/util';
 
 let os = require('os');
 let path = require('path');
 let fs = require('fs');
+let fsExtra = require('fs-extra');
 let electron = require('electron');
 var mkdirp = require('mkdirp');
 
@@ -46,6 +48,18 @@ class InstallerDataService {
 
     if (!fs.existsSync(this.installRoot)) {
       mkdirp.sync(path.resolve(this.installRoot));
+      let uninstallerLocation = path.resolve(this.installRoot,'unistaller');
+      Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
+      mkdirp.sync(uninstallerLocation);
+      let uninstallerPs1 = Util.resolveFileLocation('./uninstaller','uninstall.ps1');
+      // write file content to uninstaller/uninstaller.ps1
+      fsExtra.copy(uninstallerPs1, path.join(uninstallerLocation,'uninstall.ps1'), (err) => {
+        if (err) {
+          Logger.error('Data - ' + err);
+        } else {
+          Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + path.join(uninstallerLocation,'uninstall.ps1') + ' SUCCESS');
+        }
+      });
     }
     Logger.initialize(this.installRoot);
   }
@@ -203,7 +217,6 @@ class InstallerDataService {
 
     if (!this.isDownloading() && this.toInstall.size == 0) {
       Logger.info('All installs complete');
-
       this.installing = false;
       this.router.go('start');
     }

@@ -62,7 +62,7 @@ gulp.task('transpile:app', ['create-modules-link'], function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
-  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json'], {base: '.'})
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json', 'uninstaller/*.ps1'], {base: '.'})
     .pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
@@ -83,7 +83,7 @@ gulp.task('clean-all', ['clean'], function() {
 
 // clean dist/ folder in prep for fresh build
 gulp.task('clean', function() {
-  return del(['dist'], { force: true });
+  return del(['dist','transpiled'], { force: true });
 });
 
 // Create default callback for exec

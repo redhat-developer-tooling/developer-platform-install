@@ -88,15 +88,19 @@ class Util {
   }
 
   static resolveFile(relativePath, filename) {
+    return require(Util.resolveFileLocation(relativePath,filename));
+  }
+
+  static resolveFileLocation(relativePath, filename) {
     let pathForBuild = path.join('resources', 'app.asar');
     let fileForTests = path.resolve(path.join(relativePath, filename));
     let fileForRT = path.join(path.resolve('.'), pathForBuild, relativePath, filename);
 
     let reqs;
     if (fs.existsSync(fileForTests)) {
-      reqs = require(fileForTests);
+      reqs = fileForTests;
     } else if ( fs.existsSync(fileForRT) ) {
-      reqs = require(fileForRT);
+      reqs = fileForRT;
     }
 
     return reqs;

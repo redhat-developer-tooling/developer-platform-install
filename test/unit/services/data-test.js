@@ -11,6 +11,7 @@ import Logger from 'services/logger';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
+import fsExtra from 'fs-extra';
 chai.use(sinonChai);
 
 
@@ -35,7 +36,7 @@ describe('InstallerDataService', function() {
     sandbox.restore();
   });
 
-  let logStub, fsStub, infoStub, errorStub;
+  let logStub, fsStub, infoStub, errorStub, fxExtraStub;
   let fakeProgress = {
     installTrigger: function() {},
     setStatus: function(status) {}
@@ -46,6 +47,7 @@ describe('InstallerDataService', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     fsStub = sinon.stub(fs, 'mkdirSync');
+    fxExtraStub  = sinon.stub(fsExtra, 'copy');
   });
 
   after(function() {
@@ -53,6 +55,7 @@ describe('InstallerDataService', function() {
     fsStub.restore();
     infoStub.restore();
     errorStub.restore();
+    fxExtraStub.restore();
   });
 
   describe('initial state', function() {
