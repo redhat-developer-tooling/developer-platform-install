@@ -12,7 +12,7 @@ Architecture
 
 This installer is built on Windows using [Electron](http://electron.atom.io/).
 
-You will also require the [Node.js, NPM](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [jspm](http://jspm.io/).
+You will also require the [Node.js, NPM](https://nodejs.org/) and [Gulp](http://gulpjs.com/).
 
 
 Installing dependencies
@@ -30,9 +30,9 @@ In order to build the installer, you'll need to install some tools.
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
-5. Install Gulp, JSPM, and all dependencies:
+5. Install Gulp and all dependencies:
 
-        npm install -g gulp jspm
+        npm install -g gulp
         npm install
 
 If either of the above steps fail, try deleting the c:\Users\<username>\.electron folder.
@@ -72,9 +72,9 @@ Local build with clean up
 
 If your npm install gets corrupted (or out of date) and you can't build, you can try cleaning leftover modules by deleting all dependencies and generated configuration files and installing them again:
 
-    rm -rf node_modules/ browser/jspm_packages/ browser/config.js test/jspm-config.js
+    rm -rf node_modules/
     npm cache clean
-    npm install -g gulp jspm
+    npm install -g gulp
     npm install
 
 Then build as in the examples above.
