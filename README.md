@@ -104,7 +104,7 @@ or you can run installer with
 
   npm run
 
-and then push Ctrl Shift + I to show ChromDevTools in current installer window
+and then push Ctrl + Shift + I to show ChromDevTools in current installer window
 
 Releasing the installer
 -----------------------
