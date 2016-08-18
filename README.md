@@ -100,6 +100,12 @@ Enable ChromeDevtools in installer window
     export PDKI_DEBUG=1
     npm run
 
+or you can run installer with
+
+  npm run
+
+and then push Ctrl Shift + I to show ChromDevTools in current installer window
+
 Releasing the installer
 -----------------------
 
