@@ -26,14 +26,27 @@ class CDKInstall extends InstallableItem {
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
 
-    this.cdkFileName = 'cdk.zip';
-    this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
-
-    this.boxName = 'rhel-vagrant-virtualbox.box';
-    this.cdkBoxDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
-
-    this.ocFileName = 'oc.zip';
-    this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(),   this.ocFileName);
+    this.downloads = {
+      cdk: {
+        fileName: 'cdk.zip',
+        options: {
+          url: cdkUrl,
+          rejectUnauthorized: false
+        },
+        auth: true
+      },
+      box: {
+        fileName: 'rhel-vagrant-virtualbox.box',
+        options: { url: cdkBoxUrl }
+      },
+      oc: {
+        fileName: 'oc.zip',
+        options: { url: ocUrl }
+      }
+    };
+    for (var item in this.downloads) {
+      this.downloads[item].downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloads[item].fileName);
+    }
 
     this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
 
@@ -53,57 +66,26 @@ class CDKInstall extends InstallableItem {
     progress.setStatus('Downloading');
 
     let downloadSize = 869598013;
-
-    let totalDownloads = 3;
+    let totalDownloads = Object.keys(this.downloads).length;
 
     this.downloader = new Downloader(progress, success, failure, downloadSize, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
-    if(!fs.existsSync(path.join(this.downloadFolder, this.boxName))) {
-      let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
-      this.downloader.setWriteStream(cdkBoxWriteStream);
-      this.downloader.download(this.cdkBoxUrl);
-    } else {
-      this.cdkBoxDownloadedFile = path.join(this.downloadFolder, this.boxName);
-      this.downloader.closeHandler();
-    }
-
-    if(!fs.existsSync(path.join(this.downloadFolder, this.cdkFileName))) {
-      // TODO Switch back to auth download when CDK latest is in Customer Portal
-      // downloader.downloadAuth
-      //   ({
-      //     url: this.cdkBoxUrl,
-      //     rejectUnauthorized: false
-      //   }, username, password);
-      let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
-      this.downloader.setWriteStream(cdkWriteStream);
-      this.downloader.downloadAuth
-      ({
-        url: this.getDownloadUrl(),
-        rejectUnauthorized: false
-      }, username, password);
-    } else {
-      this.cdkDownloadedFile = path.join(this.downloadFolder, this.cdkFileName);
-      this.downloader.closeHandler();
-    }
-
-    if(!fs.existsSync(path.join(this.downloadFolder, this.ocFileName))) {
-      let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
-      if(!this.ocUrl.endsWith('.zip')) {
-        request(this.ocUrl,(err,rsp,body) => {
-          var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
-          this.downloader.setWriteStream(ocWriteStream);
-          this.ocUrl=this.ocUrl.concat(fname);
-          this.downloader.download(this.ocUrl);
-        });
+    for (var item in this.downloads) {
+      if(!fs.existsSync(path.join(this.downloadFolder, this.downloads[item].fileName))) {
+        let opts = this.downloads[item].options;
+        if (this.downloads[item].auth) {
+          opts.auth = {
+            user: username,
+            pass: password
+          };
+        }
+        this.downloader.download(opts, this.downloads[item].downloadedFile);
       } else {
-        this.downloader.setWriteStream(ocWriteStream);
-        this.downloader.download(this.ocUrl);
+        this.downloads[item].downloadedFile = path.join(this.downloadFolder, this.downloads[item].fileName);
+        this.downloader.closeHandler();
       }
-    } else {
-      this.ocDownloadedFile = path.join(this.downloadFolder, this.ocFileName);
-      this.downloader.closeHandler();
     }
   }
 
@@ -146,9 +128,9 @@ class CDKInstall extends InstallableItem {
       'rhel.subscription.username=' + this.installerDataSvc.getUsername()
     ].join('\r\n');
 
-    installer.unzip(this.cdkDownloadedFile, this.installerDataSvc.installDir())
-    .then((result) => { return installer.unzip(this.ocDownloadedFile, this.installerDataSvc.ocDir(), result); })
-    .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
+    installer.unzip(this.downloads.cdk.downloadedFile, this.installerDataSvc.installDir())
+    .then((result) => { return installer.unzip(this.downloads.oc.downloadedFile, this.installerDataSvc.ocDir(), result); })
+    .then((result) => { return installer.copyFile(this.downloads.box.downloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.downloads.box.fileName), result); })
     .then((result) => { return installer.writeFile(this.pscpPathScript, data, result); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
     .then((result) => { return installer.execFile('powershell', opts, result); })
@@ -214,7 +196,7 @@ class CDKInstall extends InstallableItem {
           });
         });
       },(result)=>{
-        return installer.exec('vagrant box add --name cdkv2 ' + this.boxName , opts, result);
+        return installer.exec('vagrant box add --name cdkv2 ' + this.downloads.box.fileName , opts, result);
       },(result)=>{
         return installer.exec('vagrant plugin install landrush', opts);
       });

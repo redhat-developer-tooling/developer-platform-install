@@ -128,11 +128,10 @@ describe('CDK installer', function() {
       ocUrl = reqs['oc.zip'].url;
 
   describe('files download', function() {
-    let downloadStub, authStub;
+    let downloadStub;
 
     beforeEach(function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
-      authStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
     it('should set progress to "Downloading"', function() {
@@ -144,36 +143,24 @@ describe('CDK installer', function() {
       expect(spy).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp folder', function() {
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
-      let fsSpy = sandbox.spy(fs, 'createWriteStream');
-
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
-
-      //expect 4 streams to be set and created
-      expect(streamSpy.callCount).to.equal(3);
-      expect(fsSpy.callCount).to.equal(3);
-      expect(fsSpy).calledWith(installer.cdkDownloadedFile);
-      expect(fsSpy).calledWith(installer.cdkBoxDownloadedFile);
-      expect(fsSpy).calledWith(installer.ocDownloadedFile);
-    });
-
     it('should call a correct downloader request for each file', function() {
       let headers = {
         url: cdkUrl,
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        auth: {
+          user: installerDataSvc.getUsername(),
+          pass: installerDataSvc.getPassword()
+        }
       };
       installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-      //we download 1 out of 4 files with authentication
-      expect(downloadStub.callCount).to.equal(2);
-      expect(authStub).to.have.been.calledOnce;
+      expect(downloadStub.callCount).to.equal(3);
 
-      expect(downloadStub).calledWith(cdkBoxUrl);
-      expect(downloadStub).calledWith(ocUrl);
+      expect(downloadStub).calledWith({ url: cdkBoxUrl });
+      expect(downloadStub).calledWith({ url: ocUrl });
 
-      expect(authStub).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
+      expect(downloadStub).calledWith(headers);
     });
 
     it('should skip download when the files are located in downloads folder', function() {
@@ -183,7 +170,6 @@ describe('CDK installer', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       expect(downloadStub).not.called;
-      expect(authStub).not.called;
       expect(spy.callCount).to.equal(3);
     });
   });
@@ -227,7 +213,7 @@ describe('CDK installer', function() {
       installer.postVagrantInstall(fakeProgress, function() {}, function (err) {});
 
       expect(stub).to.have.been.called;
-      expect(stub).calledWith(installer.cdkDownloadedFile, installerDataSvc.installDir());
+      expect(stub).calledWith(installer.downloads.cdk.downloadedFile, installerDataSvc.installDir());
     });
 
     describe('createEnvironment', function() {
