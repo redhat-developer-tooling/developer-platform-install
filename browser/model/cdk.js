@@ -90,17 +90,8 @@ class CDKInstall extends InstallableItem {
 
     if(!fs.existsSync(path.join(this.downloadFolder, this.ocFileName))) {
       let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
-      if(!this.ocUrl.endsWith('.zip')) {
-        request(this.ocUrl,(err,rsp,body) => {
-          var fname = body.match(/openshift-origin-client-tools-v\w(\.\w){1,2}-\w{1,3}-\w{8}-\w{7}-windows\.zip/)[0];
-          this.downloader.setWriteStream(ocWriteStream);
-          this.ocUrl=this.ocUrl.concat(fname);
-          this.downloader.download(this.ocUrl);
-        });
-      } else {
-        this.downloader.setWriteStream(ocWriteStream);
-        this.downloader.download(this.ocUrl);
-      }
+      this.downloader.setWriteStream(ocWriteStream);
+      this.downloader.download(this.ocUrl);
     } else {
       this.ocDownloadedFile = path.join(this.downloadFolder, this.ocFileName);
       this.downloader.closeHandler();
