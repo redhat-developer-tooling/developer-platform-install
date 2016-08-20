@@ -157,7 +157,7 @@ gulp.task('update-devstudio-version', function(cb) {
     if (err) {
       cb(err);
     } else {
-      let versionRegex = /(\d+\.\d+\.\d+\.\w+\d+)-.*/;
+      let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
       let finalVersion = versionRegex.exec(body)[1];
 
       if (reqs['jbds.jar'].version != finalVersion) {
