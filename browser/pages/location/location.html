@@ -9,7 +9,7 @@
       <p id="location-form-instructions" class="location-form-elements">
         This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
         <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
-          folder or use the default location.
+        folder or use the default location.
       </p>
       <p id="location-form-note" class="location-form-elements">
         Note: You can NOT choose the folder again once components start to get installed.
@@ -20,24 +20,29 @@
             Select the installation folder
           </label>
           <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
-                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator/>
+                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator autofocus/>
           <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
-          <span id="folderStatus" class="sr-only" ng-show="locationForm.folder.$invalid">(error)</span>
 
-
-          <div ng-show="!locationForm.folder.$invalid" class="has-warning">
-            <div id="existingFolderStatus" ng-show="locCtrl.folderExists" class="help-block has-warning">
+          <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
+            <strong id="existingFolderStatus" class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
-              <strong>The selected folder already exists, some files might be overwritten.</strong>
-            </div>
-            <div id="createFolderStatus" ng-show="!locCtrl.folderExists" class="help-block">
-              <span class="pficon pficon-info"></span>
-              <strong>The selected folder will be created.</strong>
-            </div>
+              The selected folder already exists, some files might be overwritten.
+            </strong>
           </div>
-          <ng-messages for="locationForm.folder.$error">
-            <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
-          </ng-messages>
+
+          <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists">
+            <strong id="createFolderStatus" class="help-block">
+              <span class="pficon pficon-info"></span>
+              The selected folder will be created.
+            </strong>
+          </div>
+
+          <div ng-show="locationForm.folder.$error" class="help-block has-error">
+            <ng-messages for="locationForm.folder.$error">
+              <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
+            </ng-messages>
+          </div>
+
           <div id="vagrantHomeStatus" ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
             <span class="pficon pficon-error-circle-o"></span>
             <strong>

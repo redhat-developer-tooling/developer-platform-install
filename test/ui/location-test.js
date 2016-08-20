@@ -148,7 +148,7 @@ describe('Location page', function() {
       locationField.sendKeys('c:\\');
 
       expect(existingFolderStatus.isDisplayed()).toBe(true);
-      expect(existingFolderStatus.getAttribute('class')).toMatch('help-block has-warning');
+      expect(existingFolderStatus.getAttribute('class')).toMatch('help-block');
       expect(nextButton.isEnabled()).toBe(true);
     });
 

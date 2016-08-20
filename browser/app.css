@@ -362,6 +362,7 @@ footer {
 
     #location-form-container {
       padding-right: 25%;
+
     }
 
       .location-form-elements {
@@ -378,6 +379,7 @@ footer {
 
         #location-form-browse {
           margin-top: 25px;
+          white-space: nowrap;
         }
 
           .location-browse-container {
@@ -394,7 +396,7 @@ footer {
 
             .location-browse-input {
               width: 60%;
-              margin-right: -4px;
+              margin-right: 0px;
             }
 
             .location-browse-btn {
