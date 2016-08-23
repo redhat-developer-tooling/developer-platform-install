@@ -14,7 +14,7 @@ import Util from './helpers/util';
 
 
 class CygwinInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
+  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super('cygwin',
           720,
           downloadUrl,
@@ -27,6 +27,7 @@ class CygwinInstall extends InstallableItem {
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install',this.version,'',true);
+    this.checksum = sha256;
   }
 
   isSkipped() {
@@ -65,7 +66,7 @@ class CygwinInstall extends InstallableItem {
       let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
       this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl);
+      this.downloader.download(this.downloadUrl,this.downloadedFile,this.checksum);
     } else {
       this.downloadedFile = this.bundledFile;
       success();

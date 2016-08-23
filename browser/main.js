@@ -95,7 +95,8 @@ let mainModule =
                     installerDataSvc,
                     reqs['cygwin.exe'].url,
                     null,
-                    'cygwin')
+                    'cygwin',
+                    reqs['cygwin.exe'].sha256sum)
             );
 
             installerDataSvc.addItemToInstall(
@@ -113,18 +114,19 @@ let mainModule =
                 new CDKInstall(
                     installerDataSvc,
                     $timeout,
-                    reqs['cdk.zip'].url,
-                    reqs['rhel-vagrant-virtualbox.box'].url,
+                    reqs['cdk.zip'].dmUrl,
+                    reqs['rhel-vagrant-virtualbox.box'].dmUrl,
                     reqs['oc.zip'].url,
                     null,
-                    'cdk')
+                    'cdk',
+                    reqs['oc.zip'].sha256sum)
             );
 
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(
                     installerDataSvc,
-                    reqs['jdk.msi'].url,
+                    reqs['jdk.msi'].dmUrl,
                     null,
                     reqs['jdk.msi'].prefix,
                     'jdk8')
@@ -134,7 +136,7 @@ let mainModule =
                 JbdsInstall.key(),
                 new JbdsInstall(
                     installerDataSvc,
-                    reqs['jbds.jar'].url,
+                    reqs['jbds.jar'].dmUrl,
                     null,
                     'developer-studio')
             );

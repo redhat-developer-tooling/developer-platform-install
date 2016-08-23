@@ -25,13 +25,17 @@ describe('JDK installer', function() {
     tempDir: function() { return 'tempDirectory'; },
     installDir: function() { return 'installationFolder' },
     jdkDir: function() { return 'install/jdk' },
-    getInstallable: function(key) { return fakeInstallable; }
+    getInstallable: function(key) { return fakeInstallable; },
+    getUsername: function() {},
+    getPassword: function() {}
   };
 
   installerDataSvc = sinon.stub(fakeData);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.jdkDir.returns('install/jdk8');
+  installerDataSvc.getUsername.returns('user');
+  installerDataSvc.getPassword.returns('passwd');
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -105,7 +109,7 @@ describe('JDK installer', function() {
     let downloadStub;
 
     beforeEach(function() {
-      downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
+      downloadStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
     it('should set progress to "Downloading"', function() {

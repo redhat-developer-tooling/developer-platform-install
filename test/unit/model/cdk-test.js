@@ -35,7 +35,9 @@ describe('CDK installer', function() {
     cdkBoxDir: function() {},
     cdkMarker: function() {},
     cdkDir: function() {},
-    getInstallable: function(key) {}
+    getInstallable: function(key) {},
+    getUsername: function() {},
+    getPassword: function() {}
   };
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -91,6 +93,12 @@ describe('CDK installer', function() {
     errorStub.restore();
   });
 
+  let reqs = require(path.resolve('./requirements.json'));
+
+  let cdkUrl = reqs['cdk.zip'].url,
+      cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,
+      ocUrl = reqs['oc.zip'].url;
+
   beforeEach(function () {
     installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
     sandbox = sinon.sandbox.create();
@@ -120,12 +128,6 @@ describe('CDK installer', function() {
   it('should download files when no installation is found', function() {
     expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', null).useDownload).to.be.true;
   });
-
-  let reqs = require(path.resolve('./requirements.json'));
-
-  let cdkUrl = reqs['cdk.zip'].url,
-      cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,
-      ocUrl = reqs['oc.zip'].url;
 
   describe('files download', function() {
     let downloadStub, authStub;
@@ -159,21 +161,17 @@ describe('CDK installer', function() {
     });
 
     it('should call a correct downloader request for each file', function() {
-      let headers = {
-        url: cdkUrl,
-        rejectUnauthorized: false
-      };
       installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
       //we download 1 out of 4 files with authentication
-      expect(downloadStub.callCount).to.equal(2);
-      expect(authStub).to.have.been.calledOnce;
+      expect(authStub.callCount).to.equal(2);
+      expect(downloadStub).to.have.been.calledOnce;
 
-      expect(downloadStub).calledWith(cdkBoxUrl);
+      expect(authStub).calledWith(cdkBoxUrl);
       expect(downloadStub).calledWith(ocUrl);
 
-      expect(authStub).calledWith(headers, installerDataSvc.getUsername(), installerDataSvc.getPassword());
+      expect(authStub).calledWith(cdkUrl, installerDataSvc.getUsername(), installerDataSvc.getPassword());
     });
 
     it('should skip download when the files are located in downloads folder', function() {

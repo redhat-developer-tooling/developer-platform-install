@@ -23,7 +23,9 @@ describe('devstudio installer', function() {
     jbdsDir: function() { return 'installationFolder/developer-studio'; },
     jdkDir: function() { return 'install/jdk8'; },
     getInstallable: function(key) {},
-    cdkVagrantfileDir: function() {}
+    cdkVagrantfileDir: function() {},
+    getUsername: function(){},
+    getPassword: function(){}
   };
   let fakeInstall = {
     isInstalled: function() { return false; }
@@ -36,6 +38,9 @@ describe('devstudio installer', function() {
   installerDataSvc.jbdsDir.returns('installationFolder/developer-studio');
   installerDataSvc.cdkVagrantfileDir.returns('installationFolder/cdk/vagrant');
   installerDataSvc.getInstallable.returns(fakeInstall);
+  installerDataSvc.getUsername.returns('user');
+  installerDataSvc.getPassword.returns('passwd');
+
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -101,10 +106,11 @@ describe('devstudio installer', function() {
   });
 
   describe('installer download', function() {
-    let downloadStub;
+    let downloadStub,downloadAuthStub;
 
     beforeEach(function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
+      downloadAuthStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
     it('should set progress to "Downloading"', function() {
@@ -130,8 +136,8 @@ describe('devstudio installer', function() {
     it('should call a correct downloader request with the specified parameters once', function() {
       installer.downloadInstaller(fakeProgress, function() {}, function() {});
 
-      expect(downloadStub).to.have.been.calledOnce;
-      expect(downloadStub).to.have.been.calledWith(downloadUrl);
+      expect(downloadAuthStub).to.have.been.calledOnce;
+      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl,"user","passwd");
     });
 
     it('should skip download when the file is found in the download folder', function() {

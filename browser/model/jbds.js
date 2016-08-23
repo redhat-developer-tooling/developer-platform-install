@@ -49,6 +49,10 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
+  detectExistingInstall(cb = new function(){}) {
+    cb();
+  }
+
   checkForExistingInstall(selection, data) {
     let pattern, directory;
     let versionRegex = /version\s(\d+)\.\d+\.\d+/;
@@ -111,13 +115,15 @@ class JbdsInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
+    let username = this.installerDataSvc.getUsername(),
+        password = this.installerDataSvc.getPassword();
     progress.setStatus('Downloading');
     if(!this.hasExistingInstall() && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
       this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl);
+      this.downloader.downloadAuth(this.downloadUrl,username,password);
     } else {
       this.downloadedFile = this.bundledFile;
       success();

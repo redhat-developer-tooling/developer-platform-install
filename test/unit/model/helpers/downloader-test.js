@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import request from 'request';
 import Downloader from 'model/helpers/downloader';
+import Logger from 'services/logger';
 import { Readable, PassThrough, Writable } from 'stream';
 import Hash from 'model/helpers/hash';
 chai.use(sinonChai);
@@ -22,6 +23,20 @@ describe('Downloader', function() {
   let sandbox;
   let succ = function() {};
   let fail = function() {};
+  let infoStub, errorStub, logStub;
+
+  before(function() {
+    infoStub = sinon.stub(Logger, 'info');
+    errorStub = sinon.stub(Logger, 'error');
+    logStub = sinon.stub(Logger, 'log');
+  });
+
+  after(function() {
+    infoStub.restore();
+    errorStub.restore();
+    logStub.restore();
+  });
+
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -102,7 +117,7 @@ describe('Downloader', function() {
     downloader = new Downloader(fakeProgress, function() {}, function() {});
     let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
 
-    downloader.closeHandler('file', 'hash');
+    downloader.closeHandler('file', 'hash', 'url');
 
     expect(stub).to.have.been.calledOnce;
     expect(stub).to.have.been.calledWith('file');

@@ -115,13 +115,15 @@ class JdkInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
+    let username = this.installerDataSvc.getUsername(),
+        password = this.installerDataSvc.getPassword();
     progress.setStatus('Downloading');
     if(this.selectedOption == 'install' && !fs.existsSync(this.bundledFile)) {
       // Need to download the file
       let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
       this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl);
+      this.downloader.downloadAuth(this.downloadUrl,username,password);
     } else {
       this.downloadedFile = this.bundledFile;
       success();

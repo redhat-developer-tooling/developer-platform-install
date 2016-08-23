@@ -14,7 +14,7 @@ import Installer from './helpers/installer';
 import Util from './helpers/util.js';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, ocSha256) {
     super('cdk',
           900,
           cdkUrl,
@@ -25,6 +25,7 @@ class CDKInstall extends InstallableItem {
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
+    this.ocSha256 = ocSha256;
 
     this.cdkFileName = 'cdk.zip';
     this.cdkDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.cdkFileName);
@@ -45,8 +46,8 @@ class CDKInstall extends InstallableItem {
     return 'cdk';
   }
 
-
-  checkForExistingInstall() {
+  detectExistingInstall(cb = new function(){}){
+    cb();
   }
 
   downloadInstaller(progress, success, failure) {
@@ -61,26 +62,16 @@ class CDKInstall extends InstallableItem {
     if(!fs.existsSync(path.join(this.downloadFolder, this.boxName))) {
       let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
       this.downloader.setWriteStream(cdkBoxWriteStream);
-      this.downloader.download(this.cdkBoxUrl);
+      this.downloader.downloadAuth(this.cdkBoxUrl,username,password);
     } else {
       this.cdkBoxDownloadedFile = path.join(this.downloadFolder, this.boxName);
       this.downloader.closeHandler();
     }
 
     if(!fs.existsSync(path.join(this.downloadFolder, this.cdkFileName))) {
-      // TODO Switch back to auth download when CDK latest is in Customer Portal
-      // downloader.downloadAuth
-      //   ({
-      //     url: this.cdkBoxUrl,
-      //     rejectUnauthorized: false
-      //   }, username, password);
       let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
       this.downloader.setWriteStream(cdkWriteStream);
-      this.downloader.downloadAuth
-      ({
-        url: this.getDownloadUrl(),
-        rejectUnauthorized: false
-      }, username, password);
+      this.downloader.downloadAuth(this.getDownloadUrl(), username, password);
     } else {
       this.cdkDownloadedFile = path.join(this.downloadFolder, this.cdkFileName);
       this.downloader.closeHandler();
@@ -89,7 +80,7 @@ class CDKInstall extends InstallableItem {
     if(!fs.existsSync(path.join(this.downloadFolder, this.ocFileName))) {
       let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
       this.downloader.setWriteStream(ocWriteStream);
-      this.downloader.download(this.ocUrl);
+      this.downloader.download(this.ocUrl,this.ocDownloadedFile,this.ocSha256);
     } else {
       this.ocDownloadedFile = path.join(this.downloadFolder, this.ocFileName);
       this.downloader.closeHandler();
