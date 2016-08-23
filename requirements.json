@@ -7,6 +7,7 @@
     "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/12-Aug-2016.rc1/cdk.zip",
     "filename": "cdk_2.2.0.RC5-20160812.zip",
     "sha256sum": "50e15628d6c9dd4761dc5ec9fdd335ced1511b5ef5a95314be4ea9923af9de06",
+    "virusTotalReport": "https://virustotal.com/en/file/50e15628d6c9dd4761dc5ec9fdd335ced1511b5ef5a95314be4ea9923af9de06/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
@@ -27,6 +28,7 @@
     "url": "https://developers.redhat.com/redirect/to/oc-origin-cli-1.2.0.download",
     "filename": "openshift-origin-client-tools-v1.2.0-2e62fab-windows.zip",
     "sha256sum": "3df3d7f31d5f50fa49f94312883107ebee1a0877b598eada32dce1b029f6c3f2",
+    "virusTotalReport": "https://virustotal.com/en/file/3df3d7f31d5f50fa49f94312883107ebee1a0877b598eada32dce1b029f6c3f2/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "cygwin.exe": {
@@ -37,6 +39,7 @@
     "url": "https://developers.redhat.com/redirect/to/cygwin-installer-2.5.2.download",
     "filename": "cygwin_2.5.2.exe",
     "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a",
+    "virusTotalReport": "https://virustotal.com/en/file/58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a/analysis/",
     "vendor": "Community Project"
   },
   "jbds.jar": {
@@ -58,6 +61,7 @@
     "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/8u101/1/win/java-1.8.0-openjdk-1.8.0.101-1-redhat.b13.windows.x86_64.msi",
     "filename": "java-1.8.0-openjdk-1.8.0.91-3-redhat.b14.windows.x86_64.zip",
     "sha256sum": "bcac53c6730dad19270210c24ebff767f3036db00c476b6712ff0bcf281626ff",
+    "virusTotalReport": "https://virustotal.com/en/file/bcac53c6730dad19270210c24ebff767f3036db00c476b6712ff0bcf281626ff/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "vagrant.msi": {
@@ -68,6 +72,7 @@
     "url": "https://developers.redhat.com/redirect/to/vagrant-1.8.1.download",
     "filename": "vagrant_1.8.1.msi",
     "sha256sum": "6468cc140f6f236c3ac4bc0bbb1cc2177114249bc344e0aba8c826eae9cc6eb2",
+    "virusTotalReport": "https://virustotal.com/en/file/6468cc140f6f236c3ac4bc0bbb1cc2177114249bc344e0aba8c826eae9cc6eb2/analysis/",
     "vendor": "HashiCorp"
   },
   "virtualbox.exe": {
@@ -79,6 +84,7 @@
     "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.26.download",
     "filename": "virtualbox_5.0.26.exe",
     "sha256sum": "7195c5c71add512e8ac97ffc995f5a809d239ac550e20017c1d6d4766a0ced1c",
+    "virusTotalReport": "https://virustotal.com/en/file/7195c5c71add512e8ac97ffc995f5a809d239ac550e20017c1d6d4766a0ced1c/analysis/",
     "vendor": "Oracle, Inc."
   },
   "7zip.zip": {
