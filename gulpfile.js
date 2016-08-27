@@ -22,7 +22,8 @@ var gulp = require('gulp'),
     rcedit = require('rcedit'),
     sourcemaps = require("gulp-sourcemaps"),
     symlink = require('gulp-symlink'),
-    progress = require('request-progress');
+    progress = require('request-progress'),
+    batch = require('gulp-batch');
 
 require('./gulp-tasks/tests')(gulp);
 
@@ -425,4 +426,8 @@ function downloadFile(fromUrl, toFile, onFinish) {
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
 gulp.task('check-requirements', function(cb) {
   exec('node test/check-requirements.js', createExecCallback(cb, false));
+})
+
+gulp.task('watch', function () {
+  gulp.watch(['test/**/*.js', 'browser/**/*.js'], ()=>runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink'));
 })
