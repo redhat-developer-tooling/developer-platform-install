@@ -304,6 +304,10 @@ gulp.task('prefetch-tools', ['create-tools-dir'], function() {
   return prefetch('tools', toolsFolder);
 });
 
+gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
+  return prefetch('no', prefetchFolder).then(()=>{return prefetch('yes', prefetchFolder);});
+});
+
 function prefetch(bundle, targetFolder) {
   let promises = new Array();
   for (let key in reqs) {

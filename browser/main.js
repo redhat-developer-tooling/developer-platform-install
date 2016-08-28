@@ -13,6 +13,7 @@ import pathValidator from './directives/pathValidator';
 import progressBar from './directives/progressBar';
 import breadcrumb from './directives/breadcrumb';
 import InstallerDataService from './services/data';
+import Request from './services/request';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
 import JbdsInstall from './model/jbds';
@@ -29,6 +30,7 @@ let mainModule =
           .controller(instCtrl.name, instCtrl)
           .controller(startCtrl.name, startCtrl)
           .factory('installerDataSvc', InstallerDataService.factory)
+          .factory('request', Request.factory)
           .directive(progressBar.name, progressBar)
           .directive(breadcrumb.name, ['$state', breadcrumb])
           .directive(pathValidator.name, pathValidator)
@@ -74,7 +76,7 @@ let mainModule =
                 }
               });
           }])
-          .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
+          .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', 'request', ($rootScope, $location, $timeout, installerDataSvc, request) => {
             let reqs = Util.resolveFile('.', 'requirements.json');
 
             let virtualbox = new VirtualBoxInstall(

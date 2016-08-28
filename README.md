@@ -92,6 +92,14 @@ of any test, e.g.:
     npm test -- -g login
     npm test -- --grep login
 
+
+Running Angular protractor UI tests
+---------------------------
+
+UI tests are located in 'test/ui'. To run all UI tests:
+
+    npm ui-test
+
 Debugging
 ---------
 
@@ -102,9 +110,42 @@ Enable ChromeDevtools in installer window
 
 or you can run installer with
 
-  npm run
+    npm run
 
 and then push Ctrl + Shift + I to show ChromDevTools in current installer window
+
+Testing online installer
+------------------------
+
+In windows System Properties Setting Dialog add
+
+    DSI_REJECT_UNAUTHORIZED=false
+
+to your user environment variables.
+Run notepad.exe as Administrator and add
+
+    127.0.0.1 developers.redhat.com
+
+to C:\Windows\system32\Drivers\etec\hosts file.
+
+Then download (VPN is Required) all requirements with
+
+    gulp prefetch-all
+
+When download is finished run http and https mock servers to mimic
+developers.redhat.com with download-manager links. In separate windows run
+
+    node gulp-tasks/http-server.js
+
+and Then
+
+    node gulp-tasks/https-server.js
+
+Now you are ready to test online installer. Start
+dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe from package explorer. Mock
+http server always returns let you pass account information page, but if you
+plan to install and test CDK in DevStudio use your real Red Hat user name from
+developers.rdhat.com.
 
 Releasing the installer
 -----------------------

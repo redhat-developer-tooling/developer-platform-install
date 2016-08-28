@@ -5,6 +5,7 @@ let fs = require('fs-extra');
 
 import Hash from './hash';
 import Logger from '../../services/logger';
+import Util from './util';
 const remote = require('electron').remote;
 
 class Downloader {
@@ -79,29 +80,6 @@ class Downloader {
             this.failure('SHA256 checksum verification failed');
           }
         });
-      } else if(url && url.includes("?workflow=direct")) {
-        let shaUrl = url.replace("?workflow=direct",".sha256");
-        Logger.log(`Downloading sha256 from ${shaUrl}`);
-        request(this.setAdditionalOptions(shaUrl), (error, response, sha) => {
-          if (!error && response.statusCode == 200) {
-            Logger.log(`Downloaded sha256='${sha}'`);
-            if(sha) {
-              var h = new Hash();
-              h.SHA256(file,(dlSha) => {
-                Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
-                if(sha === dlSha) {
-                  this.successHandler(file);
-                } else {
-                  this.downloads.get(file)['failure'] = true;
-                  this.failure(`Dowloaded file sha256 '${dlSha}' doesn't match sha256 '${sha}' from ${shaUrl}`);
-                }
-              });
-            }
-          } else {
-            this.downloads.get(file)['failure'] = true;
-            this.failure(`SHA256 checksum filr download from ${shaUrl} failed with ${error}`);
-          }
-        });
       } else {
         this.successHandler(file);
       }
@@ -125,7 +103,7 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('finish', this.closeHandler.bind(this,stream.path,sha,options));
   }
 
   downloadAuth(options, username, password, file, sha) {
@@ -138,8 +116,10 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('finish', this.closeHandler.bind(this,stream.path,sha,options));
   }
+
+
 
   restartDownload() {
     this.downloadSize = 0;
@@ -172,6 +152,7 @@ class Downloader {
     };
     optionsObj['followAllRedirects'] = true;
     optionsObj['jar'] = request.jar();
+    optionsObj['rejectUnauthorized'] = Util.getRejectUnauthorized();
     return optionsObj;
   }
 }

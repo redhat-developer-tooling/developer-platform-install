@@ -1,16 +1,18 @@
 'use strict';
 
 import Util from '../../model/helpers/util';
-
+const remote = require('electron').remote;
 const shell = require('electron').shell;
 let pjson = Util.resolveFile('.', 'package.json');
 
 class AccountController {
 
-  constructor($state, $http, $base64, installerDataSvc) {
+  constructor($state, $timeout, $scope, request, $base64, installerDataSvc) {
     this.router = $state;
-    this.http = $http;
+    this.http = request;
     this.base64 = $base64;
+    this.timeout = $timeout;
+    this.scope = $scope;
     this.installerDataSvc = installerDataSvc;
 
     this.username = "";
@@ -27,16 +29,27 @@ class AccountController {
 
     let req = {
       method: 'GET',
-      url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip',
-      headers: {
-        'Authorization': 'Basic ' + this.base64.encode(this.username + ':' + this.password)
+      url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
+      auth: {
+        user: this.username,
+        pass: this.password,
+        sendImmediately: true
       },
-      responseType: 'text'
+      headers: {
+        'Accept'    : 'application/json, text/plain, */*',
+        'User-Agent': this.getUserAgent()
+      },
+      followAllRedirects: true,
+      rejectUnauthorized: Util.getRejectUnauthorized()
     };
 
     this.http(req)
       .then(this.handleHttpSuccess.bind(this))
       .catch(this.handleHttpFailure.bind(this));
+  }
+
+  getUserAgent() {
+    return remote.getCurrentWindow().webContents.session.getUserAgent();
   }
 
   forgotPassword() {
@@ -65,14 +78,22 @@ class AccountController {
       }
     }
     this.authFailed = true;
+    this.apply();
   }
 
   handleHttpFailure() {
     this.authFailed = true;
     this.isLoginBtnClicked = false;
+    this.apply();
+  }
+
+  apply() {
+    this.timeout(()=>{
+        this.scope.$apply();
+    });
   }
 }
 
-AccountController.$inject = ['$state', '$http', '$base64', 'installerDataSvc'];
+AccountController.$inject = ['$state', '$timeout', '$scope', 'request', '$base64', 'installerDataSvc'];
 
 export default AccountController;

@@ -110,6 +110,9 @@ describe('Login page', function() {
     it('Should display an error when attempting to log in', function() {
       loginButton.click();
       browser.wait(protractor.until.elementLocated(By.id('invalidLoginError')), 2000);
+      browser.wait(function() {
+        return element(by.id('invalidLoginIcon')).isDisplayed();
+      }, 5000);
       expect(element(By.id('invalidLoginIcon')).isDisplayed()).toBe(true);
       expect(element(By.id('invalidLoginMessage')).isDisplayed()).toBe(true);
     });

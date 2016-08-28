@@ -105,6 +105,16 @@ class Util {
 
     return reqs;
   }
+
+  static getRejectUnauthorized() {
+    let value = process.env['DSI_REJECT_UNAUTHORIZED'];
+    let result = true;
+    try {
+      result = JSON.parse(value);
+    } catch (error) {
+    }
+    return result;
+  }
 }
 
 export default Util;
