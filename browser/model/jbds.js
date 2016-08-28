@@ -131,13 +131,13 @@ class JbdsInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
-    if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
+    if ( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
       this.postInstall(progress, success, failure);
     } else {
-      progress.setStatus('Waiting for JDK to finish installation');
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (arg == 'jdk') {
+        if(!this.isInstalled() && this.getInstallAfter().isInstalled()) {
           this.postInstall(progress, success, failure);
         }
       });
@@ -155,15 +155,15 @@ class JbdsInstall extends InstallableItem {
       Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content SUCCESS');
 
       installer.writeFile(this.installConfigFile, data)
-          .then((result) => {
-            return this.postJDKInstall(installer, result);
-          })
-          .then((result) => {
-            return installer.succeed(result);
-          })
-          .catch((error) => {
-            return installer.fail(error);
-          });
+        .then((result) => {
+          return this.postJDKInstall(installer, result);
+        })
+        .then((result) => {
+          return installer.succeed(result);
+        })
+        .catch((error) => {
+          return installer.fail(error);
+        });
     } else {
       success();
     }
@@ -245,7 +245,7 @@ class JbdsInstall extends InstallableItem {
     return new Promise((resolve, reject) => {
       let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
 
-      if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
+      if (jdkInstall.isInstalled()) {
         return this.headlessInstall(installer, result)
         .then((res) => { return resolve(res); })
         .catch((err) => { return reject(err); });

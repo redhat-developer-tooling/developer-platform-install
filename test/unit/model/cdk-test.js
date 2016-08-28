@@ -12,6 +12,7 @@ import VirtualboxInstall from "model/virtualbox";
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
@@ -190,7 +191,8 @@ describe('CDK installer', function() {
     it('should wait if vagrant has not finished installing', function() {
       let stub = sandbox.stub(installer, 'postVagrantInstall');
       let progressStub = sandbox.stub(fakeProgress, 'setStatus').throws('done');
-
+      let item2 = new InstallableItem('vagrant', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.thenInstall(installer);
       try {
         installer.install(fakeProgress, () => {}, (err) => {});
       } catch (err) {
@@ -204,7 +206,9 @@ describe('CDK installer', function() {
     it('should install once vagrant has finished', function() {
       let stub = sandbox.stub(installer, 'postVagrantInstall').returns();
       sandbox.stub(vagrantInstallStub, 'isInstalled').returns(true);
-
+      let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
       installer.install(fakeProgress, () => {}, (err) => {});
 
       expect(stub).calledOnce;

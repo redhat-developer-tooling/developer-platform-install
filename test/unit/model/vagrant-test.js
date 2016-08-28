@@ -11,6 +11,7 @@ import VagrantInstall from 'model/vagrant';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import Util from 'model/helpers/util';
 import child_process from 'child_process';
 chai.use(sinonChai);
@@ -146,7 +147,8 @@ describe('Vagrant installer', function() {
     it('should not start until Cygwin has finished installing', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
       let installSpy = sandbox.spy(installer, 'postCygwinInstall');
-
+      let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.thenInstall(installer);
       try {
         installer.install(fakeProgress, null, null);
       } catch (err) {
@@ -161,7 +163,10 @@ describe('Vagrant installer', function() {
     it('should install once Cygwin has finished', function() {
       let stub = sandbox.stub(installer, 'postCygwinInstall').returns();
       sandbox.stub(fakeInstallable, 'isInstalled').returns(true);
-
+      let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
+      
       installer.install(fakeProgress, () => {}, (err) => {});
 
       expect(stub).calledOnce;

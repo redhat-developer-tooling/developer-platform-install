@@ -131,7 +131,6 @@ class JdkInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    let cdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
     if(this.selectedOption === "install") {
       progress.setStatus('Installing');
       let installer = new Installer(JdkInstall.key(), progress, success, failure);

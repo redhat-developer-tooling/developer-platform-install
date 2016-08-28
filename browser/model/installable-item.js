@@ -55,6 +55,8 @@ class InstallableItem {
 
     this.downloader = null;
     this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
+
+    this.installAfter = undefined;
   }
 
   getProductName() {
@@ -178,6 +180,19 @@ class InstallableItem {
 
   restartDownload() {
     this.downloader.restartDownload();
+  }
+
+  getInstallAfter() {
+    let installable = this.installAfter;
+    while ( installable !== undefined && installable.isSkipped()) {
+      installable = installable.installAfter;
+    }
+    return installable;
+  }
+
+  thenInstall(installer) {
+    installer.installAfter = this;
+    return installer;
   }
 
 }

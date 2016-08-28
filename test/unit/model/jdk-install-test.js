@@ -11,6 +11,7 @@ import JdkInstall from 'model/jdk-install';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import rimraf from 'rimraf';
 chai.use(sinonChai);
 

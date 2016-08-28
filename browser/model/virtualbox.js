@@ -148,26 +148,40 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
+    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
+      this.postOpenJdk(progress, success, failure);
+    } else {
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
+      ipcRenderer.on('installComplete', (event, arg) => {
+        if (!this.isInstalled() && this.getInstallAfter().isInstalled()) {
+          this.postOpenJdk(progress, success, failure);
+        }
+      });
+    }
+  }
+
+  postOpenJdk(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.key(), progress, success, failure);
     if(this.selectedOption === "install") {
       installer.execFile(this.downloadedFile,
-          ['--extract',
-            '-path',
-            this.installerDataSvc.tempDir(),
-            '--silent'])
-          .then((result) => {
-            return this.configure(installer, result)
-          })
-          .then((result) => {
-            return installer.succeed(result);
-          })
-          .catch((error) => {
-            return installer.fail(error);
-          });
+        ['--extract',
+          '-path',
+          this.installerDataSvc.tempDir(),
+          '--silent'])
+        .then((result) => {
+          return this.configure(installer, result)
+        })
+        .then((result) => {
+          return installer.succeed(result);
+        })
+        .catch((error) => {
+          return installer.fail(error);
+        });
     } else {
       success();
     }
-  }
+  };
 
   setup(progress, success, failure) {
     //no need to setup anything for vbox

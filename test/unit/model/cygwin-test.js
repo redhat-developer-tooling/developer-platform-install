@@ -11,6 +11,7 @@ import CygwinInstall from 'model/cygwin';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import child_process from 'child_process';
 chai.use(sinonChai);
 
@@ -147,7 +148,8 @@ describe('Cygwin installer', function() {
     it('should not start until virtualbox has finished installing', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
       let installSpy = sandbox.spy(installer, 'postVirtualboxInstall');
-
+      let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.thenInstall(installer);
       try {
         installer.install(fakeProgress, null, null);
       } catch (err) {
@@ -155,14 +157,16 @@ describe('Cygwin installer', function() {
       } finally {
         expect(installSpy).not.called;
         expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith('Waiting for VirtualBox to finish installation');
+        expect(spy).to.have.been.calledWith('Waiting for Oracle VirtualBox to finish installation');
       }
     });
 
     it('should install once virtualbox has finished', function() {
       let stub = sandbox.stub(installer, 'postVirtualboxInstall').returns();
       sandbox.stub(fakeInstallable, 'isInstalled').returns(true);
-
+      let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
       installer.install(fakeProgress, () => {}, (err) => {});
 
       expect(stub).calledOnce;

@@ -69,6 +69,12 @@ class InstallerDataService {
     this.toInstall.add(key);
   }
 
+  addItemsToInstall(...items) {
+    for (const item of items) {
+      this.addItemToInstall(item.keyName,item);
+    }
+  }
+
   getIpcRenderer() {
     return this.ipcRenderer;
   }
@@ -204,7 +210,6 @@ class InstallerDataService {
           Logger.error(key + ' failed to install: ' + error);
         }
     );
-
   }
 
   setupDone(progress,key) {

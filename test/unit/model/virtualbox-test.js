@@ -11,6 +11,7 @@ import VirtualBoxInstall from 'model/virtualbox';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import Util from 'model/helpers/util';
 chai.use(sinonChai);
 
@@ -153,6 +154,9 @@ describe('Virtualbox installer', function() {
       ];
 
       let spy = sandbox.spy(Installer.prototype, 'execFile');
+      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
       installer.install(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.been.called;
@@ -174,6 +178,9 @@ describe('Virtualbox installer', function() {
 
     it('should catch errors during the installation', function(done) {
       let stub = sandbox.stub(child_process, 'execFile').yields(new Error('critical error'));
+      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
 
       try {
         installer.install(fakeProgress, function() {}, function (err) {});
@@ -186,7 +193,9 @@ describe('Virtualbox installer', function() {
     it('should skip installation when an existing version is used', function() {
       installer.selectedOption = 'detect';
       let spy = sandbox.spy(Installer.prototype, 'execFile');
-
+      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
       installer.install(fakeProgress, function() {}, function (err) {});
 
       expect(spy).to.have.not.been.called;

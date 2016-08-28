@@ -10,6 +10,7 @@ import JbdsInstall from 'model/jbds';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import InstallableItem from 'model/installable-item';
 import JbdsAutoInstallGenerator from 'model/jbds-autoinstall';
 chai.use(sinonChai);
 
@@ -157,7 +158,8 @@ describe('devstudio installer', function() {
     it('should not start until JDK has finished installing', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
       let installSpy = sandbox.spy(installer, 'postInstall');
-
+      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.thenInstall(installer);
       try {
         installer.install(fakeProgress, null, null);
       } catch (err) {
@@ -165,16 +167,18 @@ describe('devstudio installer', function() {
       } finally {
         expect(installSpy).not.called;
         expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith('Waiting for JDK to finish installation');
+        expect(spy).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
       }
     });
 
     it('should install once JDK has finished', function() {
       let stub = sandbox.stub(installer, 'postInstall').returns();
       sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-
+      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.setInstallComplete();
+      item2.thenInstall(installer);
       installer.install(fakeProgress, () => {}, (err) => {});
-
+      
       expect(stub).calledOnce;
     });
 

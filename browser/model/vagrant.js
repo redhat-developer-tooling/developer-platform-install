@@ -124,13 +124,13 @@ class VagrantInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    let cygwinInstall = this.installerDataSvc.getInstallable(CygwinInstall.key());
-    if( cygwinInstall !== undefined && cygwinInstall.isInstalled() ) {
+    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
       this.postCygwinInstall(progress, success, failure);
     } else {
-      progress.setStatus('Waiting for Cygwin to finish installation');
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (arg == 'cygwin') {
+        if (!this.isInstalled() && this.getInstallAfter().isInstalled()) {
           this.postCygwinInstall(progress, success, failure);
         }
       });

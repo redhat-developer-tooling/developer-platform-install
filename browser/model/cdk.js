@@ -88,13 +88,13 @@ class CDKInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
-    if( vagrantInstall !== undefined && vagrantInstall.isInstalled() ) {
+    if(!this.getInstallAfter() || this.getInstallAfter().isInstalled()) {
       this.postVagrantInstall(progress, success, failure);
     } else {
-      progress.setStatus('Waiting for Vagrant to finish installation');
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (arg == 'vagrant') {
+        if (!this.isInstalled() && this.getInstallAfter().isInstalled()) {
           this.postVagrantInstall(progress, success, failure);
         }
       });

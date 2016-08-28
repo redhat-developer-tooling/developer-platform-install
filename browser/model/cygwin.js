@@ -74,13 +74,13 @@ class CygwinInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    let vboxInstall = this.installerDataSvc.getInstallable(VirtualBoxInstall.key());
-    if( vboxInstall !== undefined && vboxInstall.isInstalled() ) {
+    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled()  ) {
       this.postVirtualboxInstall(progress, success, failure);
     } else {
-      progress.setStatus('Waiting for VirtualBox to finish installation');
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (arg == 'virtualbox') {
+        if (!this.isInstalled() && this.getInstallAfter().isInstalled() ) {
           this.postVirtualboxInstall(progress, success, failure);
         }
       });
