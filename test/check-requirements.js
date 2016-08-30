@@ -16,7 +16,7 @@ function checkRequirements() {
 
   //to check if the url looks like it points to what it is supposed to
   fileNames['cdk.zip'] = 'cdk';
-  fileNames['rhel-vagrant-virtualbox.box'] = 'rhel-cdk';
+  fileNames['rhel-vagrant-virtualbox.box'] = 'cdk-vagrant';
   fileNames['oc.zip'] = 'oc-origin-cli';
   fileNames['cygwin.exe'] = 'cygwin';
   fileNames['jbds.jar'] = 'devstudio';
