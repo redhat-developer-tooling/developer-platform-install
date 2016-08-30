@@ -8,7 +8,7 @@
     "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/30-Aug-2016/cdk.zip",
     "filename": "cdk_2.2.0.N-20160830.zip",
     "sha256sum": "1927881651ddc5693cf3a6fd1fe2ccd1e006b50b2e05590f575ec345f92d71e9",
-    "virusTotalReport": "https://virustotal.com/en/file/50e15628d6c9dd4761dc5ec9fdd335ced1511b5ef5a95314be4ea9923af9de06/analysis/",
+    "virusTotalReport": "https://virustotal.com/en/file/1927881651ddc5693cf3a6fd1fe2ccd1e006b50b2e05590f575ec345f92d71e9/analysis/1472550294/",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
