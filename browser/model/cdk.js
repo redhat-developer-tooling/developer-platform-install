@@ -94,7 +94,7 @@ class CDKInstall extends InstallableItem {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() && this.getInstallAfter().isInstalled()) {
+        if (!this.isInstalled() &&arg === this.getInstallAfter().keyName) {
           this.postVagrantInstall(progress, success, failure);
         }
       });

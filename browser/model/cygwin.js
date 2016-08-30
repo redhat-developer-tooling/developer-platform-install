@@ -80,7 +80,7 @@ class CygwinInstall extends InstallableItem {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
       ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() && this.getInstallAfter().isInstalled() ) {
+        if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           this.postVirtualboxInstall(progress, success, failure);
         }
       });
@@ -112,7 +112,6 @@ class CygwinInstall extends InstallableItem {
       '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
       '[Environment]::Exit(0)'
     ].join('\r\n');
-
     let originalExecFile = path.join(this.installerDataSvc.cygwinDir(),'setup-x86_64.exe');
     installer.execFile(
       this.downloadedFile, opts
