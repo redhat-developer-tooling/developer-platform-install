@@ -22,8 +22,7 @@ var gulp = require('gulp'),
     rcedit = require('rcedit'),
     sourcemaps = require("gulp-sourcemaps"),
     symlink = require('gulp-symlink'),
-    progress = require('request-progress'),
-    batch = require('gulp-batch');
+    progress = require('request-progress');
 
 require('./gulp-tasks/tests')(gulp);
 
