@@ -34,7 +34,7 @@ function handleRequest(req, res){
   } else if(req.method === "GET") {
     let url = req.url;
     console.log(`Url='${url}'`);
-    if (url.endsWith("/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.0.0-beta3.zip")) {
+    if (url.endsWith("/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip")) {
       res.end('true');
     } else if(url.endsWith("/favicon.ico")) {
     } else {
