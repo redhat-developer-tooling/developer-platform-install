@@ -14,7 +14,7 @@ import Installer from './helpers/installer';
 import Util from './helpers/util.js';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, ocSha256) {
+  constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, cdkSha256, boxSha256, ocSha256) {
     super('cdk',
           900,
           cdkUrl,
@@ -25,6 +25,9 @@ class CDKInstall extends InstallableItem {
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
     this.ocUrl = ocUrl;
+
+    this.cdkSha256 = cdkSha256;
+    this.boxSha256 = boxSha256;
     this.ocSha256 = ocSha256;
 
     this.cdkFileName = 'cdk.zip';
@@ -62,7 +65,7 @@ class CDKInstall extends InstallableItem {
     if(!fs.existsSync(path.join(this.downloadFolder, this.boxName))) {
       let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
       this.downloader.setWriteStream(cdkBoxWriteStream);
-      this.downloader.downloadAuth(this.cdkBoxUrl,username,password);
+      this.downloader.downloadAuth(this.cdkBoxUrl,username,password,this.cdkBoxDownloadedFile,this.boxSha256);
     } else {
       this.cdkBoxDownloadedFile = path.join(this.downloadFolder, this.boxName);
       this.downloader.closeHandler();
@@ -71,7 +74,7 @@ class CDKInstall extends InstallableItem {
     if(!fs.existsSync(path.join(this.downloadFolder, this.cdkFileName))) {
       let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
       this.downloader.setWriteStream(cdkWriteStream);
-      this.downloader.downloadAuth(this.getDownloadUrl(), username, password);
+      this.downloader.downloadAuth(this.getDownloadUrl(),username,password,this.cdkDownloadedFile, this.cdkSha256);
     } else {
       this.cdkDownloadedFile = path.join(this.downloadFolder, this.cdkFileName);
       this.downloader.closeHandler();

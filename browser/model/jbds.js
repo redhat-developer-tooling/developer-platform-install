@@ -17,7 +17,7 @@ import CDKInstall from './cdk.js';
 import Util from './helpers/util';
 
 class JbdsInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName) {
+  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, jbdsSha256) {
     super('jbds',
           1600,
           downloadUrl,
@@ -26,6 +26,7 @@ class JbdsInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jbds.jar';
+    this.jbdsSha256 = jbdsSha256;
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), 'jbds.jar');
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
@@ -123,7 +124,7 @@ class JbdsInstall extends InstallableItem {
       let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
       this.downloader.setWriteStream(writeStream);
-      this.downloader.downloadAuth(this.downloadUrl,username,password);
+      this.downloader.downloadAuth(this.downloadUrl,username,password,this.downloadedFile,this.jbdsSha256);
     } else {
       this.downloadedFile = this.bundledFile;
       success();

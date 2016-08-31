@@ -110,6 +110,8 @@ let mainModule =
                   reqs['oc.zip'].url,
                   null,
                   'cdk',
+                  reqs['cdk.zip'].sha256sum,
+                  reqs['rhel-vagrant-virtualbox.box'].sha256sum,
                   reqs['oc.zip'].sha256sum),
 
                 jdk = new JdkInstall(
@@ -117,13 +119,15 @@ let mainModule =
                   reqs['jdk.msi'].dmUrl,
                   null,
                   reqs['jdk.msi'].prefix,
-                  'jdk8'),
+                  'jdk8',
+                  reqs['jdk.msi'].sha256sum),
 
                 jbds = new JbdsInstall(
                   installerDataSvc,
                   reqs['jbds.jar'].dmUrl,
                   null,
-                  'developer-studio');
+                  'developer-studio',
+                  reqs['jbds.jar'].sha256sum);
 
               installerDataSvc.addItemsToInstall(virtualbox,cygwin,vagrant,cdk,jdk,jbds);
 

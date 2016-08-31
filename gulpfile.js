@@ -62,7 +62,7 @@ gulp.task('transpile:app', ['create-modules-link'], function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
-  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json', 'uninstaller/*.ps1'], {base: '.'})
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '!requirements.json', '*.json', 'uninstaller/*.ps1'], {base: '.'})
     .pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
@@ -151,23 +151,49 @@ gulp.task('create-7zip-archive', function(cb) {
   exec(packCmd, createExecCallback(cb, true));
 });
 
-gulp.task('update-devstudio-version', function(cb) {
-  let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf("/")) + '/content.json';
-  request(url, function(err, response, body) {
-    if (err) {
-      cb(err);
-    } else {
-      let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
-      let finalVersion = versionRegex.exec(body)[1];
+gulp.task('update-requirements',['create-modules-link'], function() {
 
-      if (reqs['jbds.jar'].version != finalVersion) {
-        reqs['jbds.jar'].version = finalVersion;
-        fs.writeFile('./requirements.json', JSON.stringify(reqs, null, 2), cb);
+  let updateDevStudioVersion = ()=>{
+    return new Promise((resolve,reject) => {
+      let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf("/")) + '/content.json';
+      request(url, (err, response, body)=>{
+        if (err) {
+          reject(err);
+        } else {
+          let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
+          let finalVersion = versionRegex.exec(body)[1];
+
+          if (reqs['jbds.jar'].version != finalVersion) {
+            reqs['jbds.jar'].version = finalVersion;
+          }
+          resolve()
+        }
+      });
+    });
+  };
+
+  let updateDevStudioSha = ()=>{
+    return new Promise((resolve,reject) => {
+      let url = reqs['jbds.jar'].sha256sum;
+      if (url.length == 64 && url.indexOf("http")<0 && url.indexOf("ftp")<0) {
+        resolve();
       } else {
-        cb();
+        request(url, (err, response, body) => {
+          reqs['jbds.jar'].sha256sum = body;
+          resolve();
+        });
       }
-    }
-  });
+    });
+  };
+
+  return Promise.resolve()
+    .then(updateDevStudioVersion)
+    .then(updateDevStudioSha)
+    .then(()=>{
+      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
+    }).catch((err)=>{
+      console.log(err);
+    });
 });
 
 gulp.task('update-metadata', function(cb) {
@@ -228,18 +254,18 @@ function createSHA256File(filename, cb) {
 
 // Create stub installer that will then download all the requirements
 gulp.task('package-simple', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
     'prepare-tools'], 'package', 'cleanup', cb);
 });
 
 gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
    'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
 });
 
 // Create both installers
 gulp.task('dist', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-devstudio-version', ['generate',
+  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
     'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
 });
 
@@ -351,8 +377,7 @@ function prefetch(bundle, targetFolder) {
 function downloadAndReadSHA256(targetFolder, fileName, reqURL, reject, processResult) {
   let currentFile = path.join(targetFolder, fileName);
   let currentSHA256 = 'NOSHA256SUM';
-  if (reqURL.length == 64 && reqURL.indexOf("http")<0 && reqURL.indexOf("ftp")<0)
-  {
+  if (reqURL.length == 64 && reqURL.indexOf("http")<0 && reqURL.indexOf("ftp")<0) {
     // return the hardcoded SHA256sum in requirements.json
     if(!fileName.endsWith('.sha256')) {
       console.log('[INFO] \'' + fileName + '\' hardcoded sha256 check');

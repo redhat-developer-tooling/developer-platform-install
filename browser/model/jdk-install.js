@@ -15,7 +15,7 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName) {
+  constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName,jdkSha256) {
     super('jdk',
           260,
           downloadUrl,
@@ -24,6 +24,7 @@ class JdkInstall extends InstallableItem {
           installerDataSvc);
 
     this.downloadedFileName = 'jdk.msi';
+    this.jdkSha256 = jdkSha256;
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.existingVersion = '';
@@ -123,7 +124,7 @@ class JdkInstall extends InstallableItem {
       let writeStream = fs.createWriteStream(this.downloadedFile);
       this.downloader = new Downloader(progress, success, failure);
       this.downloader.setWriteStream(writeStream);
-      this.downloader.downloadAuth(this.downloadUrl,username,password);
+      this.downloader.downloadAuth(this.downloadUrl,username,password,this.downloadedFile,this.jdkSha256);
     } else {
       this.downloadedFile = this.bundledFile;
       success();

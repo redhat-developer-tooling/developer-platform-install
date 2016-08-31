@@ -101,7 +101,7 @@ describe('CDK installer', function() {
       ocUrl = reqs['oc.zip'].url;
 
   beforeEach(function () {
-    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
+    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null, null, null);
     sandbox = sinon.sandbox.create();
   });
 
