@@ -22,6 +22,7 @@ class VirtualBoxInstall extends InstallableItem {
 
     this.minimumVersion = '5.0.26';
     this.version = version || '5.0.26';
+    this.maximumVersion = '5.1.0';
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
@@ -98,7 +99,7 @@ class VirtualBoxInstall extends InstallableItem {
       var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
       return Util.executeCommand(command, 1);
     }).then((output) => {
-      let version =  versionRegex.exec(output)[1];
+      let version = versionRegex.exec(output)[1];
       this.addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
       this.selectedOption = 'detected';
       this.validateVersion();
@@ -119,8 +120,12 @@ class VirtualBoxInstall extends InstallableItem {
         installOption.valid = false;
         installOption.error = 'oldVersion';
         installOption.warning = '';
-      } else if(Version.GT(installOption.version,this.minimumVersion)) {
+      } else if(Version.GT(installOption.version,this.minimumVersion) && Version.LT(installOption.version,this.maximumVersion)) {
         installOption.valid = true;
+        installOption.error = '';
+        installOption.warning = 'newerVersion';
+      } else if(Version.GE(installOption.version,this.maximumVersion)) {
+        installOption.valid = false;
         installOption.error = '';
         installOption.warning = 'newerVersion';
       }
