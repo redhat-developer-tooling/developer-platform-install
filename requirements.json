@@ -36,7 +36,7 @@
   "cygwin.exe": {
     "name": "Cygwin",
     "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
-    "bundle": "yes",
+    "bundle": "always",
     "version": "2.5.2",
     "url": "https://developers.redhat.com/redirect/to/cygwin-installer-2.5.2.download",
     "filename": "cygwin_2.5.2.exe",
