@@ -48,20 +48,25 @@ class InstallerDataService {
 
     if (!fs.existsSync(this.installRoot)) {
       mkdirp.sync(path.resolve(this.installRoot));
-      let uninstallerLocation = path.resolve(this.installRoot,'unistaller');
-      Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
-      mkdirp.sync(uninstallerLocation);
-      let uninstallerPs1 = Util.resolveFileLocation('./uninstaller','uninstall.ps1');
-      // write file content to uninstaller/uninstaller.ps1
-      fsExtra.copy(uninstallerPs1, path.join(uninstallerLocation,'uninstall.ps1'), (err) => {
-        if (err) {
-          Logger.error('Data - ' + err);
-        } else {
-          Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + path.join(uninstallerLocation,'uninstall.ps1') + ' SUCCESS');
-        }
-      });
     }
+    this.copyUninstaller();
+
     Logger.initialize(this.installRoot);
+  }
+
+  copyUninstaller() {
+    let uninstallerLocation = path.resolve(this.installRoot,'unistaller');
+    Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
+    mkdirp.sync(uninstallerLocation);
+    let uninstallerPs1 = Util.resolveFileLocation('./uninstaller','uninstall.ps1');
+    // write file content to uninstaller/uninstaller.ps1
+    fsExtra.copy(uninstallerPs1, path.join(uninstallerLocation,'uninstall.ps1'), (err) => {
+      if (err) {
+        Logger.error('Data - ' + err);
+      } else {
+        Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + path.join(uninstallerLocation,'uninstall.ps1') + ' SUCCESS');
+      }
+    });
   }
 
   addItemToInstall(key, item) {

@@ -35,7 +35,7 @@ describe('Install controller', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-
+    sandbox.stub(InstallerDataService.prototype,'copyUninstaller').returns();
     installerDataSvc = new InstallerDataService();
     installerDataSvc.setup('installRoot');
     vagrant = new VagrantInstall(installerDataSvc,
