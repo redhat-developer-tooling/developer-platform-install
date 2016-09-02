@@ -146,6 +146,8 @@ gulp.task('create-7zip-archive', function(cb) {
   // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
   if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
     packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
+  } else {
+      packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + 'cygwin.exe';
   }
   //console.log('[DEBUG]' + packCmd);
   exec(packCmd, createExecCallback(cb, true));
@@ -255,7 +257,7 @@ function createSHA256File(filename, cb) {
 // Create stub installer that will then download all the requirements
 gulp.task('package-simple', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-    'prepare-tools'], 'package', 'cleanup', cb);
+    'prepare-tools'], 'prefetch-cygwin', 'package', 'cleanup', cb);
 });
 
 gulp.task('package-bundle', function(cb) {
@@ -324,6 +326,11 @@ gulp.task('create-tools-dir',function() {
 // prefetch all the installer dependencies so we can package them up into the .exe
 gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {
   return prefetch('yes', prefetchFolder);
+});
+
+// prefetch cygwin to always include into installer
+gulp.task('prefetch-cygwin', ['create-prefetch-cache-dir'], function() {
+  return prefetch('always', prefetchFolder);
 });
 
 gulp.task('prefetch-tools', ['create-tools-dir'], function() {

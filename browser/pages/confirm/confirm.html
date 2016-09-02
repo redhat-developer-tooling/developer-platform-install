@@ -120,7 +120,7 @@
 
     <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
       <span class="pficon pficon-error-circle-o"></span>
-      <span>Red Hat Container Development Kit requires Oracle VirtualBox 5.0.8 or newer. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
+      <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.0.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
     </div>
 
     <!-- Cygwin -->
@@ -288,7 +288,7 @@
 
     <div class="message-container error-message" ng-show="!checkboxModel.vagrant.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
       <span class="pficon pficon-error-circle-o"></span>
-      <span>Red Hat Container Development Kit requires Vagrant 1.7.4 or newer. Please uninstall detected Vagrant and restart Installer to continue.</span>
+      <span>Red Hat Container Development Kit requires Vagrant {{checkboxModel.vagrant.minimumVersion}} or newer. Please uninstall detected Vagrant and restart Installer to continue.</span>
     </div>
 
     <!-- CDK -->
