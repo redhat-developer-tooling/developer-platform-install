@@ -27,9 +27,11 @@ class JdkInstall extends InstallableItem {
     this.jdkSha256 = jdkSha256;
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
+    this.msiSearchScript = path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.jdkZipEntryPrefix = prefix;
+    this.openJdkMsi = false;
     //this.addOption('install',this.version,this.installerDataSvc.jdkDir());
     //this.addOption('detected', this.minimumVersion, '', true);
   }
@@ -59,9 +61,26 @@ class JdkInstall extends InstallableItem {
     } else {
       command = 'which java';
     }
+
     this.addOption('install',this.version,'',true);
-    Util.executeCommand('java -version', 2)
-    .then((output) => {
+
+    let data = [
+      "$vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*OpenJDK*'};",
+      "echo $vbox.IdentifyingNumber"
+    ].join('\r\n');
+    let args = [
+      '-ExecutionPolicy',
+      'ByPass',
+      '-File',
+      this.msiSearchScript
+    ];
+    Util.writeFile(JdkInstall.key(),this.msiSearchScript, data)
+    .then(() => {
+      return Util.executeFile('powershell', args);
+    }).then((output)=>{
+      this.openJdkMsi = output.length>0;
+      return Util.executeCommand('java -version', 2);
+    }).then((output) => {
       return new Promise((resolve, reject) => {
         let version = versionRegex.exec(output);
         if (version && version.length > 1) {
@@ -83,7 +102,8 @@ class JdkInstall extends InstallableItem {
     }).then((result) => {
       return Util.executeCommand(command, 2);
     }).then((output) => {
-        var locationRegex = /java.home*\s=*\s(.*)[\s\S]/;
+        var locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
+        this.openJdk = output.includes("OpenJDK");
         var t = locationRegex.exec(output);
         if(t.length > 1) {
           this.option['detected'].location = t[1];

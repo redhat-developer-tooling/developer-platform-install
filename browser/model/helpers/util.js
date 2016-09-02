@@ -21,7 +21,7 @@ class Util {
     });
   }
 
-  static executeFile(file, args, outputCode) {
+  static executeFile(file, args, outputCode=1) {
     return new Promise((resolve, reject) => {
       child_process.execFile(file, args, (error, stdout, stderr) => {
         if (error) {
@@ -34,6 +34,18 @@ class Util {
           }
         }
       })
+    });
+  }
+
+  static writeFile(key, file, data) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(file, data, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
     });
   }
 
