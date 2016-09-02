@@ -39,7 +39,7 @@ describe('Hash', function() {
         expect(createHashStub).to.have.been.calledWith('sha256');
         done();
       });
-      stream.emit('end');
+      stream.emit('close');
     });
 
     it('should read the specified file', function(done) {
@@ -48,7 +48,7 @@ describe('Hash', function() {
         expect(readStreamStub).to.have.been.calledWith('file');
         done();
       });
-      stream.emit('end');
+      stream.emit('close');
     });
 
     it('should create a hex string when the file is done reading', function(done) {
@@ -58,7 +58,7 @@ describe('Hash', function() {
         expect(spy).to.have.been.calledWith('hex');
         done();
       });
-      stream.emit('end');
+      stream.emit('close');
     });
   })
 });

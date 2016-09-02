@@ -10,7 +10,7 @@ class Hash {
       while (null !== (chunk = readStream.read())) {
         hash.update(chunk);
       }
-    }).on('end', function () {
+    }).on('close', function () {
       var hashstring = hash.digest('hex');
       done(hashstring);
     });

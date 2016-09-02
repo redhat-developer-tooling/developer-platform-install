@@ -103,7 +103,7 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('finish', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
   }
 
   downloadAuth(options, username, password, file, sha) {
@@ -116,7 +116,7 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('finish', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
   }
 
 
