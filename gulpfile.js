@@ -262,13 +262,13 @@ gulp.task('package-simple', function(cb) {
 
 gulp.task('package-bundle', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-   'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
+   'prepare-tools'], 'prefetch-cygwin', 'prefetch', 'package', 'cleanup', cb);
 });
 
 // Create both installers
 gulp.task('dist', function(cb) {
   runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-    'prepare-tools'], 'package', 'prefetch', 'package', 'cleanup', cb);
+    'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'package', 'cleanup', cb);
 });
 
 gulp.task('cleanup', function(cb) {
