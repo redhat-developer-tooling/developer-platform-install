@@ -66,9 +66,11 @@ class JdkInstall extends InstallableItem {
 
     let data = [
       "$vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*OpenJDK*'};",
-      "echo $vbox.IdentifyingNumber"
+      "echo $vbox.IdentifyingNumber;",
+      "[Environment]::Exit(0);"
     ].join('\r\n');
     let args = [
+      '-NonInteractive',
       '-ExecutionPolicy',
       'ByPass',
       '-File',
