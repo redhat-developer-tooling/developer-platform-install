@@ -50,7 +50,7 @@
     "bundle": "yes",
     "version": "10.1.0.GA",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.1.0.GA-installer-standalone.jar?workflow=direct",
-    "url": "http://www.qa.jboss.com/binaries/RHDS/10.0/staging/builds/devstudio-10.1.0.GA-build-product/2016-09-02_17-56-24-B43/all/devstudio-10.1.0.GA-v20160902-1725-B43-installer-standalone.jar",
+    "url": "http://www.qa.jboss.com/binaries/RHDS/10.0/staging/builds/devstudio-10.1.0.GA-build-product/2016-09-02_17-56-24-B43/all/devstudio-10.1.0.GA-installer-standalone.jar",
     "filename": "devstudio-10.1.0.latest-installer-standalone.jar",
     "sha256sum": "c73e635a5915b0f2b3fdb3927a88e5245aa5414cde6a1c61c660352dd814d4cd",
     "vendor": "Red Hat, Inc."
