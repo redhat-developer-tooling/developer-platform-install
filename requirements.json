@@ -40,8 +40,8 @@
     "version": "2.6.0",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "filename": "cygwin_2.6.0.exe",
-    "sha256sum": "58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a",
-    "virusTotalReport": "https://virustotal.com/en/file/58f9f42f5dbd52c5e3ecd24e537603ee8897ea15176b7acdc34afcef83e5c19a/analysis/",
+    "sha256sum": "446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634",
+    "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
     "vendor": "Community Project"
   },
   "jbds.jar": {
