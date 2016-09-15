@@ -5,10 +5,10 @@
     "bundle": "yes",
     "version": "2.2.0.GA",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-2.2.0.zip?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/02-Sep-2016.rc3/cdk.zip",
-    "filename": "cdk_2.2.0.GA-20160902.zip",
-    "sha256sum": "62dfae036f769bcab447c47690107159cd975c2174f2f4df14899214c7cac255",
-    "virusTotalReport": "https://virustotal.com/en/file/62dfae036f769bcab447c47690107159cd975c2174f2f4df14899214c7cac255/analysis/",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/15-Sep-2016.rc5/cdk.zip",
+    "filename": "cdk_2.2.0.GA-20160915.zip",
+    "sha256sum": "9cfc3f161a7e801a500699ef5d7b46b33b9183aa093f87033b3ce0dcc22ed8f9",
+    "virusTotalReport": "https://virustotal.com/en/file/9cfc3f161a7e801a500699ef5d7b46b33b9183aa093f87033b3ce0dcc22ed8f9/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
@@ -16,10 +16,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "7.2-28",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-28.x86_64.vagrant-virtualbox.box?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/02-Sep-2016.rc3/rhel-cdk-kubernetes-7.2-28.x86_64.vagrant-virtualbox.box",
-    "filename": "rhel-cdk-kubernetes-7.2-28.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "2d797f6b8d408427984f07a65e7f1031d4aabcd4f67f8e1b40f1a89df1f4a7ee",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box?workflow=direct",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/15-Sep-2016.rc5/rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box",
+    "filename": "rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "25e07e2c5231745fabf79e8ebe7cdde8b1644ad0d4650bbf13594de56a60eada",
     "vendor": "Red Hat, Inc."
   },
   "oc.zip": {
