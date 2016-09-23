@@ -8,20 +8,6 @@ var angularProtractor = require('gulp-angular-protractor'),
 var yargs = require('yargs');
 
 module.exports = function(gulp) {
-
-  gulp.task('create-electron-symlink', function() {
-    return gulp.src('node_modules/electron-prebuilt')
-      .pipe(symlink('node_modules/electron', {
-        force: true
-      }));
-  });
-
-  gulp.task('delete-electron-symlink', function() {
-    return del(['node_modules/electron'], {
-      force: true
-    });
-  });
-
   gulp.task('unit-test', function() {
     return gulp.src(['test/unit/**/*.js'], {
         read: false

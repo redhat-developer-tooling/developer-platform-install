@@ -1,4 +1,4 @@
-'use strict';
+	'use strict';
 
 var gulp = require('gulp'),
     fs = require('fs-extra'),
@@ -102,7 +102,7 @@ gulp.task('create-dist-win-dir', function(cb) {
 })
 
 gulp.task('generate', ['transpile:app'], function(cb) {
-  var electronVersion = pjson.devDependencies['electron-prebuilt'];
+  var electronVersion = pjson.devDependencies['electron'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
@@ -279,7 +279,7 @@ gulp.task('cleanup', function(cb) {
 });
 
 gulp.task('test', function() {
-  return runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink');
+  return runSequence('unit-test');
 });
 
 gulp.task('ui-test', function(cb) {
@@ -464,5 +464,5 @@ gulp.task('check-requirements', function(cb) {
 })
 
 gulp.task('watch', function () {
-  gulp.watch(['test/**/*.js', 'browser/**/*.js'], ()=>runSequence('create-electron-symlink', 'unit-test', 'delete-electron-symlink'));
+  gulp.watch(['test/**/*.js', 'browser/**/*.js'], ()=>runSequence('unit-test'));
 })
