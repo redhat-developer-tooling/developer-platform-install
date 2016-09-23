@@ -52,7 +52,7 @@ class Downloader {
   dataHandler(data) {
     this.currentSize += data.length;
 
-    if (Date.now() - this.lastTime > 500) {
+    if (Date.now() - this.lastTime > 500 || this.currentSize == this.downloadSize) {
       this.progress.setCurrent(this.currentSize);
       this.lastTime = Date.now();
     }

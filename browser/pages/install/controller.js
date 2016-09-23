@@ -125,7 +125,7 @@ class ProgressState {
   }
 
   setCurrent(newVal) {
-    if (newVal > this.currentAmount && newVal < this.totalSize) {
+    if (newVal > this.currentAmount && newVal <= this.totalSize) {
     	this.currentAmount = newVal;
       this.current = Math.round(this.currentAmount / this.totalSize * 100)
     	this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
