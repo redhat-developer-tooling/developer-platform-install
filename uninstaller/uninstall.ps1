@@ -50,8 +50,10 @@ echo 'Removing path entries'
 [string[]] $pathFolders = [Environment]::GetEnvironmentVariable("Path", "User") -Split ';'
 [Collections.ArrayList] $folderList = New-Object Collections.Arraylist
 
+$targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
+
 $pathFolders | foreach {
-  If (-Not ($_ -like "$folder*")) {
+  If (-Not ($_ -like "$targetFolder*")) {
     $folderList.Add($_) | Out-Null
   }
 }
