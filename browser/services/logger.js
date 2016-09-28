@@ -1,17 +1,17 @@
 'use strict';
 
-let ipcRenderer = require('electron').ipcRenderer;
+var ipcRenderer = require('electron').ipcRenderer;
 
 class Logger {
   constructor() {
   }
 
   static initialize(installRoot) {
-    ipcRenderer.send('install-root', installRoot);
+    Logger.getIpcRenderer().send('install-root', installRoot);
   }
 
   static log(msg) {
-    ipcRenderer.send('log', msg);
+    Logger.getIpcRenderer().send('log', msg);
   }
 
   static info(msg) {
@@ -20,6 +20,10 @@ class Logger {
 
   static error(msg) {
     Logger.log('ERROR: ' + msg)
+  }
+
+  static getIpcRenderer() {
+    return ipcRenderer;
   }
 }
 
