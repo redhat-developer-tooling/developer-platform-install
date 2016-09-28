@@ -21,7 +21,9 @@ module.exports = function(gulp) {
         grep: yargs.argv.grep,
         g: yargs.argv.g,
         reporter: yargs.argv.reporter,
-        istanbul: true
+        istanbul: {
+          report: 'cobertura'
+        }
       }));
   });
 
