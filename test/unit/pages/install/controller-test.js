@@ -60,6 +60,15 @@ describe('Install controller', function() {
       expect(stub).calledWith(VagrantInstall.key(), vagrant);
       expect(stub).calledWith(VirtualBoxInstall.key(), vbox);
     });
+
+    it('should mark skipped installables as done', function() {
+      let stub = sandbox.stub(installerDataSvc,'setupDone').returns();
+      sandbox.stub(InstallController.prototype, 'processInstallable').returns();
+      sandbox.stub(vagrant,'isSkipped').returns(true);
+      sandbox.stub(vbox,'isSkipped').returns(true);
+      controller = new InstallController(null, null, installerDataSvc);
+      expect(stub).calledTwice;
+    });
   });
 
   describe('processInstallable', function() {
