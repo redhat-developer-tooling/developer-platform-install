@@ -22,7 +22,7 @@ module.exports = function(gulp) {
         g: yargs.argv.g,
         reporter: yargs.argv.reporter,
         istanbul: {
-          report: 'cobertura'
+          report: yargs.argv.report || 'lcov'
         }
       }));
   });
