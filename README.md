@@ -91,7 +91,10 @@ of any test, e.g.:
 
     npm test -- -g login
     npm test -- --grep login
-
+    
+Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. Report format can be overriden with '--report' parameter like shown below
+    
+    npm test -- --report cobertura
 
 Running Angular protractor UI tests
 ---------------------------
