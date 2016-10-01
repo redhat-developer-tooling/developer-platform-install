@@ -26,7 +26,7 @@ In order to build the installer, you'll need to install some tools.
 
 3. Download and install Python 2.7.x for Windows from <https://www.python.org/downloads/release/>
 
-4. Edit your "Path" by going to the "System" Control Panel, "Advanced system settings", "Environment Variables". Add _C:\Program Files\nodejs;C:\Users\<username>\App Data\Roaming\npm_ to the "Variable value".
+4. Edit your "Path" by going to the "System" Control Panel, "Advanced system settings", "Environment Variables". Add _C:\Program Files\nodejs;C:\Users\\&lt;username&gt;\App Data\Roaming\npm_ to the "Variable value".
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
