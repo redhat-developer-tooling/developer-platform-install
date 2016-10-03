@@ -4,11 +4,11 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "2.2.0.GA",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-2.2.0.zip?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/15-Sep-2016.rc5/cdk.zip",
-    "filename": "cdk_2.2.0.GA-20160915.zip",
-    "sha256sum": "9cfc3f161a7e801a500699ef5d7b46b33b9183aa093f87033b3ce0dcc22ed8f9",
-    "virusTotalReport": "https://virustotal.com/en/file/9cfc3f161a7e801a500699ef5d7b46b33b9183aa093f87033b3ce0dcc22ed8f9/analysis/",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Oct-2016/cdk.zip",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Oct-2016/cdk.zip",
+    "filename": "cdk_2.2.0.GA-20161003.zip",
+    "sha256sum": "db4f915a0dc42fd82011f0977fdf1c7663446e874deaf24926d76a884bb923ef",
+    "virusTotalReport": "https://virustotal.com/en/file/db4f915a0dc42fd82011f0977fdf1c7663446e874deaf24926d76a884bb923ef/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
@@ -16,10 +16,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "7.2-28",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/15-Sep-2016.rc5/rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box",
-    "filename": "rhel-cdk-kubernetes-7.2-29.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "25e07e2c5231745fabf79e8ebe7cdde8b1644ad0d4650bbf13594de56a60eada",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Oct-2016/rhel-7-cdk-vagrant-scratch-7.2.03102016-1.x86_64.vagrant-virtualbox.box",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Oct-2016/rhel-7-cdk-vagrant-scratch-7.2.03102016-1.x86_64.vagrant-virtualbox.box",
+    "filename": "rhel-7-cdk-vagrant-scratch-7.2.03102016-1.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "67e8467c90fecc8da620d2f050aa6c09cc2f0d957f740b317c81a78c94ba3d23",
     "vendor": "Red Hat, Inc."
   },
   "oc.zip": {
@@ -49,10 +49,10 @@
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
     "version": "10.2.0.AM1",
-    "dmUrl": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM1-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
-    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM1-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
+    "dmUrl": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
+    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
     "filename": "devstudio-10.2.0.latest-installer-standalone.jar",
-    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM1-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar.sha256",
+    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
   "jdk.msi": {
