@@ -55,7 +55,7 @@ class InstallerDataService {
   }
 
   copyUninstaller() {
-    let uninstallerLocation = path.resolve(this.installRoot,'unistaller');
+    let uninstallerLocation = path.resolve(this.installRoot,'uninstaller');
     Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
     mkdirp.sync(uninstallerLocation);
     let uninstallerPs1 = Util.resolveFileLocation('./uninstaller','uninstall.ps1');
