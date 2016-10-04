@@ -27,12 +27,11 @@ var gulp = require('gulp'),
 require('./gulp-tasks/tests')(gulp);
 
 var artifactName = 'devsuite',
-    artifactPlatform = 'win32',
-    artifactArch = 'x64';
+    artifactPlatform = process.platform,
+    artifactArch = process.arch;
 
-var buildFolderRoot = 'dist/win/';
-var buildFileNamePrefix = artifactName + '-' + artifactPlatform + '-' + artifactArch;
-var buildFolder = buildFolderRoot + buildFileNamePrefix;
+var buildFolderRoot = path.join('dist', artifactPlatform + '-' + artifactArch );
+var buildFileNamePrefix = artifactName;
 // use folder outside buildFolder so that a 'clean' task won't wipe out the cache
 var prefetchFolder = 'requirements-cache';
 let toolsFolder = 'tools';

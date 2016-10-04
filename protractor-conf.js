@@ -1,5 +1,6 @@
 var files;
 var report;
+var platform =  process.platform + '-' + process.arch;
 
 if (process.env.PTOR_TEST_RUN === 'system') {
   files = ['test/system/*.js'];
@@ -20,7 +21,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: './dist/win/devsuite-win32-x64/devsuite.exe'
+      binary: './dist/' + platform +'/devsuite-' + platform + '/devsuite.exe'
     }
   },
 
