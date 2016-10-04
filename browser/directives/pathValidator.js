@@ -11,7 +11,7 @@ function pathValidator() {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
 
-      function validateFormat(value) {
+      function validateFormatWindows(value) {
         let trimmedValue = value.trim();
 
         return pathWindowsRegex.test(value);
@@ -40,14 +40,14 @@ function pathValidator() {
 
       mCtrl.$validators['notSelected'] = isSelected;
       mCtrl.$validators['notAbsolute'] = isAbsolute;
-      mCtrl.$validators['invalidFormat'] = validateFormat;
       mCtrl.$validators['tooLong'] = validateLength;
       mCtrl.$validators['hasSpaces'] = hasNoSpaces;
-      mCtrl.$validators['invalidDisk'] = validateDisk;
+      if(process.platform == 'win32') {
+        mCtrl.$validators['invalidFormat'] = validateFormatWindows;
+        mCtrl.$validators['invalidDisk'] = validateDisk;
+      }
+    }
   }
 }
-}
-
-
 
 export default pathValidator;
