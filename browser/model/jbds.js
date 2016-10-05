@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 
 let request = require('request');
 let path = require('path');
@@ -215,10 +215,7 @@ class JbdsInstall extends InstallableItem {
       if (!jdk.hasExistingInstall()) {
         Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot);
         let config = path.join(this.existingInstallLocation, 'studio', 'devstudio.ini');
-        let javaExecutable = path.join(this.installerDataSvc.jdkRoot, 'bin', 'java');
-        if (process.platform === 'win32') {
-          javaExecutable += 'w.exe';
-        }
+        let javaExecutable = path.join(this.installerDataSvc.jdkRoot, 'bin', 'javaw');
 
         replace({
           files: config,
@@ -271,7 +268,7 @@ class JbdsInstall extends InstallableItem {
       this.downloadedFile,
       this.installConfigFile
     ];
-    let res = installer.execFile(path.join(this.installerDataSvc.jdkDir(), 'bin', 'java.exe'), javaOpts)
+    let res = installer.execFile(path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts)
       .then((result) => { return this.setupCdk(result);});
 
     return res;

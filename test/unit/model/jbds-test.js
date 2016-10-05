@@ -178,7 +178,7 @@ describe('devstudio installer', function() {
       item2.setInstallComplete();
       item2.thenInstall(installer);
       installer.install(fakeProgress, () => {}, (err) => {});
-      
+
       expect(stub).calledOnce;
     });
 
@@ -263,7 +263,7 @@ describe('devstudio installer', function() {
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
 
-        let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java.exe');
+        let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',
           '-jar',
