@@ -30,7 +30,7 @@ class ConfirmController {
 
     this.installables = {};
     $scope.checkboxModel = {};
-
+    $scope.platform = process.platform;
     $scope.detectionStyle = false;
 
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {

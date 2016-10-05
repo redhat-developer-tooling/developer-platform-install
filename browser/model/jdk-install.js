@@ -77,7 +77,9 @@ class JdkInstall extends InstallableItem {
     ];
     Util.writeFile(JdkInstall.key(),this.msiSearchScript, data)
     .then(() => {
-      return Util.executeFile('powershell', args);
+      return process.platform === 'win32'
+        ? Util.executeFile('powershell', args)
+          : Promise.resolve("");
     }).then((output)=>{
       this.openJdkMsi = output.length>0;
       return Util.executeCommand('java -version', 2);
@@ -111,7 +113,9 @@ class JdkInstall extends InstallableItem {
         }
         cb();
     }).catch((error) => {
-      this.selectedOption = 'install';
+      if(process.platform !== 'darwin' ) {
+        this.selectedOption = 'install';
+      }
       cb();
     });
   }
