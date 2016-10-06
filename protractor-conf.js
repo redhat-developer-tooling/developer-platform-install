@@ -1,6 +1,13 @@
 var files;
 var report;
 var platform =  process.platform + '-' + process.arch;
+var installerExecSuffix = "";
+
+if(process.platform === 'darwin') {
+  installerExecSuffix = '.app/Contents/MacOS/devsuite';
+} else if(process.platform === 'win32') {
+  installerExecSuffix = '.exe';
+}
 
 if (process.env.PTOR_TEST_RUN === 'system') {
   files = ['test/system/*.js'];
@@ -12,6 +19,7 @@ if (process.env.PTOR_TEST_RUN === 'system') {
 }
 
 
+
 exports.config = {
   directConnect: true,
 
@@ -21,7 +29,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: './dist/' + platform +'/devsuite-' + platform + '/devsuite.exe'
+      binary: './dist/' + platform +'/devsuite-' + platform + '/devsuite' + installerExecSuffix
     }
   },
 

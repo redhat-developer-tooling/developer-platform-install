@@ -99,25 +99,6 @@ class Util {
       },Promise.resolve());
   }
 
-  static resolveFile(relativePath, filename) {
-    return require(Util.resolveFileLocation(relativePath,filename));
-  }
-
-  static resolveFileLocation(relativePath, filename) {
-    let pathForBuild = path.join('resources', 'app.asar');
-    let fileForTests = path.resolve(path.join(relativePath, filename));
-    let fileForRT = path.join(path.resolve('.'), pathForBuild, relativePath, filename);
-
-    let reqs;
-    if (fs.existsSync(fileForTests)) {
-      reqs = fileForTests;
-    } else if ( fs.existsSync(fileForRT) ) {
-      reqs = fileForRT;
-    }
-
-    return reqs;
-  }
-
   static getRejectUnauthorized() {
     let value = process.env['DSI_REJECT_UNAUTHORIZED'];
     let result = true;

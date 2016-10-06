@@ -4,10 +4,10 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import request from 'request';
-import Downloader from 'model/helpers/downloader';
-import Logger from 'services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Logger from 'browser/services/logger';
 import { Readable, PassThrough, Writable } from 'stream';
-import Hash from 'model/helpers/hash';
+import Hash from 'browser/model/helpers/hash';
 chai.use(sinonChai);
 
 describe('Downloader', function() {

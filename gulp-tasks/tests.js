@@ -16,7 +16,7 @@ module.exports = function(gulp) {
         recursive: true,
         compilers: 'js:babel-core/register',
         env: {
-          NODE_PATH: './browser'
+          NODE_PATH: '.'
         },
         grep: yargs.argv.grep,
         g: yargs.argv.g,

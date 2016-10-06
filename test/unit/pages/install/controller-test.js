@@ -3,12 +3,12 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import InstallController from 'pages/install/controller.js';
-import InstallerDataService from 'services/data.js';
-import VagrantInstall from 'model/vagrant.js';
-import VirtualBoxInstall from 'model/virtualbox.js'
-import InstallableItem from 'model/installable-item.js'
-import Logger from 'services/logger';
+import InstallController from 'browser/pages/install/controller.js';
+import InstallerDataService from 'browser/services/data.js';
+import VagrantInstall from 'browser/model/vagrant.js';
+import VirtualBoxInstall from 'browser/model/virtualbox.js'
+import InstallableItem from 'browser/model/installable-item.js'
+import Logger from 'browser/services/logger';
 import fs from 'fs';
 chai.use(sinonChai);
 

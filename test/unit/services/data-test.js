@@ -3,11 +3,11 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import VagrantInstall from 'model/vagrant';
-import VirtualBoxInstall from 'model/virtualbox';
-import InstallerDataService from 'services/data';
-import InstallableItem from 'model/installable-item';
-import Logger from 'services/logger';
+import VagrantInstall from 'browser/model/vagrant';
+import VirtualBoxInstall from 'browser/model/virtualbox';
+import InstallerDataService from 'browser/services/data';
+import InstallableItem from 'browser/model/installable-item';
+import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';

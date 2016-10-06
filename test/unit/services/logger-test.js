@@ -3,8 +3,8 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import InstallerDataService from 'services/data';
-import Logger from 'services/logger';
+import InstallerDataService from 'browser/services/data';
+import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';

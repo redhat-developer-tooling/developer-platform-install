@@ -7,11 +7,11 @@ import mockfs from 'mock-fs';
 import request from 'request';
 import fs from 'fs';
 import path from 'path';
-import JdkInstall from 'model/jdk-install';
-import Logger from 'services/logger';
-import Downloader from 'model/helpers/downloader';
-import Installer from 'model/helpers/installer';
-import InstallableItem from 'model/installable-item';
+import JdkInstall from 'browser/model/jdk-install';
+import Logger from 'browser/services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Installer from 'browser/model/helpers/installer';
+import InstallableItem from 'browser/model/installable-item';
 import rimraf from 'rimraf';
 chai.use(sinonChai);
 

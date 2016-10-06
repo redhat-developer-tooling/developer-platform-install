@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import Version from 'model/helpers/version';
+import Version from 'browser/model/helpers/version';
 chai.use(sinonChai);
 
 describe('version', function() {

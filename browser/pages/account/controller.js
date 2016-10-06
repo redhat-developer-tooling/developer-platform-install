@@ -3,7 +3,7 @@
 import Util from '../../model/helpers/util';
 const remote = require('electron').remote;
 const shell = require('electron').shell;
-let pjson = Util.resolveFile('.', 'package.json');
+let pjson = require('../../../package.json');
 
 class AccountController {
 

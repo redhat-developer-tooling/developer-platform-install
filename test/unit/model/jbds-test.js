@@ -6,12 +6,12 @@ import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
 import fs from 'fs';
 import path from 'path';
-import JbdsInstall from 'model/jbds';
-import Logger from 'services/logger';
-import Downloader from 'model/helpers/downloader';
-import Installer from 'model/helpers/installer';
-import InstallableItem from 'model/installable-item';
-import JbdsAutoInstallGenerator from 'model/jbds-autoinstall';
+import JbdsInstall from 'browser/model/jbds';
+import Logger from 'browser/services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Installer from 'browser/model/helpers/installer';
+import InstallableItem from 'browser/model/installable-item';
+import JbdsAutoInstallGenerator from 'browser/model/jbds-autoinstall';
 chai.use(sinonChai);
 
 describe('devstudio installer', function() {

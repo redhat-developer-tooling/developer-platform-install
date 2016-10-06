@@ -3,10 +3,10 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import Installer from 'model/helpers/installer';
+import Installer from 'browser/model/helpers/installer';
 import mockfs from 'mock-fs';
 import path from 'path';
-import Logger from 'services/logger';
+import Logger from 'browser/services/logger';
 import fs from 'fs-extra';
 import child_process from 'child_process';
 import unzip from 'unzip';

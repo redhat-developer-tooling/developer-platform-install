@@ -3,7 +3,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import Util from 'model/helpers/util';
+import Util from 'browser/model/helpers/util';
 import child_process from 'child_process';
 import fs from 'fs';
 chai.use(sinonChai);

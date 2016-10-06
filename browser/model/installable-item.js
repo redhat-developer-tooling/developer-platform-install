@@ -3,7 +3,7 @@
 import Util from './helpers/util';
 import path from 'path';
 
-let reqs = Util.resolveFile('.', 'requirements.json');
+let reqs = require('../../requirements.json');
 
 class InstallableItem {
   constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {

@@ -61,7 +61,7 @@ gulp.task('transpile:app', ['create-modules-link'], function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
-  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '!requirements.json', '*.json', 'uninstaller/*.ps1'], {base: '.'})
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json', 'uninstaller/*.ps1'], {base: '.'})
     .pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);

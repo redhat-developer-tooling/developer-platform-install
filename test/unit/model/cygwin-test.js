@@ -7,11 +7,11 @@ import mockfs from 'mock-fs';
 import request from 'request';
 import fs from 'fs';
 import path from 'path';
-import CygwinInstall from 'model/cygwin';
-import Logger from 'services/logger';
-import Downloader from 'model/helpers/downloader';
-import Installer from 'model/helpers/installer';
-import InstallableItem from 'model/installable-item';
+import CygwinInstall from 'browser/model/cygwin';
+import Logger from 'browser/services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Installer from 'browser/model/helpers/installer';
+import InstallableItem from 'browser/model/installable-item';
 import child_process from 'child_process';
 chai.use(sinonChai);
 

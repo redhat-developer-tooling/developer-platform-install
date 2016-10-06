@@ -7,12 +7,12 @@ import mockfs from 'mock-fs';
 import request from 'request';
 import fs from 'fs';
 import path from 'path';
-import VirtualBoxInstall from 'model/virtualbox';
-import Logger from 'services/logger';
-import Downloader from 'model/helpers/downloader';
-import Installer from 'model/helpers/installer';
-import InstallableItem from 'model/installable-item';
-import Util from 'model/helpers/util';
+import VirtualBoxInstall from 'browser/model/virtualbox';
+import Logger from 'browser/services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Installer from 'browser/model/helpers/installer';
+import InstallableItem from 'browser/model/installable-item';
+import Util from 'browser/model/helpers/util';
 chai.use(sinonChai);
 
 let child_process = require('child_process');

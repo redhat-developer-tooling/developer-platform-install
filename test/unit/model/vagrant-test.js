@@ -7,12 +7,12 @@ import mockfs from 'mock-fs';
 import request from 'request';
 import fs from 'fs-extra';
 import path from 'path';
-import VagrantInstall from 'model/vagrant';
-import Logger from 'services/logger';
-import Downloader from 'model/helpers/downloader';
-import Installer from 'model/helpers/installer';
-import InstallableItem from 'model/installable-item';
-import Util from 'model/helpers/util';
+import VagrantInstall from 'browser/model/vagrant';
+import Logger from 'browser/services/logger';
+import Downloader from 'browser/model/helpers/downloader';
+import Installer from 'browser/model/helpers/installer';
+import InstallableItem from 'browser/model/installable-item';
+import Util from 'browser/model/helpers/util';
 import child_process from 'child_process';
 chai.use(sinonChai);
 
@@ -166,7 +166,7 @@ describe('Vagrant installer', function() {
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
-      
+
       installer.install(fakeProgress, () => {}, (err) => {});
 
       expect(stub).calledOnce;
