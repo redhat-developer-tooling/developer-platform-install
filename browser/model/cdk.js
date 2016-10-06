@@ -4,7 +4,6 @@ let fs = require('fs-extra');
 var filesystem = require("fs");
 let request = require('request');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -96,7 +95,7 @@ class CDKInstall extends InstallableItem {
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
-      ipcRenderer.on('installComplete', (event, arg) => {
+      this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() &&arg === this.getInstallAfter().keyName) {
           this.postVagrantInstall(progress, success, failure);
         }
@@ -164,7 +163,7 @@ class CDKInstall extends InstallableItem {
         .catch((err) => { return reject(err); });
       } else {
         Logger.info(CDKInstall.key() + ' - Vagrant has not finished installing, listener created to be called when it has.');
-        ipcRenderer.on('installComplete', (event, arg) => {
+        this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == 'vagrant') {
             return this.postVagrantSetup(installer, result)
             .then((res) => { return resolve(res); })

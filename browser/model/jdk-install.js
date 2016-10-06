@@ -2,7 +2,6 @@
 
 let fs = require('fs');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 var rimraf = require('rimraf');
 
 

@@ -3,7 +3,6 @@
 let request = require('request');
 let path = require('path');
 let fs = require('fs');
-let ipcRenderer = require('electron').ipcRenderer;
 let Glob = require("glob").Glob;
 let replace = require("replace-in-file");
 
@@ -62,7 +61,7 @@ class JbdsInstall extends InstallableItem {
     if(selection) {
       this.existingInstallLocation = selection[0];
     } else {
-      ipcRenderer.send('checkComplete', JbdsInstall.key());
+      this.ipcRenderer.send('checkComplete', JbdsInstall.key());
       return;
     }
 
@@ -89,7 +88,7 @@ class JbdsInstall extends InstallableItem {
             this.existingInstallLocation = selection ? this.existingInstallLocation : jbdsRoot;
           }
           globster.abort();
-          ipcRenderer.send('checkComplete', JbdsInstall.key());
+          this.ipcRenderer.send('checkComplete', JbdsInstall.key());
         } else {
           globster.resume();
         }
@@ -111,7 +110,7 @@ class JbdsInstall extends InstallableItem {
           data[JbdsInstall.key()] = [this, this.existingInstall];
         }
       }
-      ipcRenderer.send('checkComplete', JbdsInstall.key());
+      this.ipcRenderer.send('checkComplete', JbdsInstall.key());
     });
   }
 
@@ -137,7 +136,7 @@ class JbdsInstall extends InstallableItem {
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
-      ipcRenderer.on('installComplete', (event, arg) => {
+      this.ipcRenderer.on('installComplete', (event, arg) => {
         if(!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           this.postInstall(progress, success, failure);
         }
@@ -189,7 +188,7 @@ class JbdsInstall extends InstallableItem {
             });
       } else {
         Logger.info(JbdsInstall.key() + ' - JDK has not finished installing, listener created to be called when it has.');
-        ipcRenderer.on('installComplete', (event, arg) => {
+        this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.key()) {
             this.setupCdk()
                 .then((result) => {
@@ -249,7 +248,7 @@ class JbdsInstall extends InstallableItem {
         .catch((err) => { return reject(err); });
       } else {
         Logger.info(JbdsInstall.key() + ' - JDK has not finished installing, listener created to be called when it has.');
-        ipcRenderer.on('installComplete', (event, arg) => {
+        this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.key()) {
             return this.headlessInstall(installer, result)
             .then((res) => { return resolve(res); })

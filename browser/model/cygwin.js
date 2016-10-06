@@ -3,7 +3,6 @@
 let fs = require('fs');
 let request = require('request');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -79,7 +78,7 @@ class CygwinInstall extends InstallableItem {
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
-      ipcRenderer.on('installComplete', (event, arg) => {
+      this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           this.postVirtualboxInstall(progress, success, failure);
         }
