@@ -45,6 +45,9 @@ describe('Virtualbox installer', function() {
     downloaded: function(amt, time) {}
   };
 
+  let success = () => {},
+      failure = (err) => {};
+
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
@@ -66,6 +69,7 @@ describe('Virtualbox installer', function() {
 
   beforeEach(function () {
     installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
+    installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
   });
 
@@ -109,7 +113,7 @@ describe('Virtualbox installer', function() {
     it('should set progress to "Downloading"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Downloading');
@@ -118,14 +122,14 @@ describe('Virtualbox installer', function() {
     it('should write the data into temp/virtualbox.exe', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'virtualbox.exe'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(finalUrl);
@@ -134,7 +138,7 @@ describe('Virtualbox installer', function() {
     it('should skip download when the file is found in the download folder', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).not.called;
     });
@@ -157,7 +161,7 @@ describe('Virtualbox installer', function() {
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
-      installer.install(fakeProgress, function() {}, function (err) {});
+      installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith(downloadedFile, data);
@@ -183,7 +187,7 @@ describe('Virtualbox installer', function() {
       item2.thenInstall(installer);
 
       try {
-        installer.install(fakeProgress, function() {}, function (err) {});
+        installer.install(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('it did not catch the error');
@@ -196,7 +200,7 @@ describe('Virtualbox installer', function() {
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
-      installer.install(fakeProgress, function() {}, function (err) {});
+      installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.not.been.called;
     });
@@ -215,17 +219,19 @@ describe('Virtualbox installer', function() {
     });
 
     describe('installMsi', function() {
-      let helper;
+      let helper, resolve, reject, renderer;
 
       beforeEach(function() {
-        helper = new Installer('virtualbox', fakeProgress);
-        sandbox.stub(child_process, 'execFile').yields('done');
+        helper = new Installer('virtualbox', fakeProgress, success, failure);
+        sandbox.stub(child_process, 'execFile').yields();
+        resolve = (argument) => { Promise.resolve(argument); }
+        reject = (argument) => { Promise.reject(argument); }
       });
 
       it('should set progress to "Installing"', function() {
         let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-        installer.installMsi(helper);
+        installer.installMsi(helper, resolve, reject);
 
         expect(spy).to.have.been.calledOnce;
         expect(spy).to.have.been.calledWith('Installing');
@@ -245,7 +251,7 @@ describe('Virtualbox installer', function() {
           path.join(installerDataSvc.installDir(), 'vbox.log')
         ];
 
-        installer.installMsi(helper);
+        installer.installMsi(helper, resolve, reject);
 
         expect(spy).to.have.been.calledOnce;
         expect(spy).to.have.been.calledWith('msiexec', opts);

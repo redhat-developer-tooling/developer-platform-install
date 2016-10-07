@@ -46,6 +46,8 @@ describe('JDK installer', function() {
     setTotalDownloadSize: function(size) {},
     downloaded: function(amt, time) {}
   };
+  let success = () => {},
+      failure = (err) => {};
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
@@ -116,7 +118,7 @@ describe('JDK installer', function() {
     it('should set progress to "Downloading"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Downloading');
@@ -125,14 +127,14 @@ describe('JDK installer', function() {
     it('should write the data into temp/jdk.msi', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jdk.msi'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(downloadUrl);
@@ -141,7 +143,7 @@ describe('JDK installer', function() {
     it('should skip download when the file is found in the download folder', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).not.called;
     });
@@ -153,7 +155,7 @@ describe('JDK installer', function() {
     it('should set progress to "Installing"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.install(fakeProgress, null, null);
+      installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -163,14 +165,14 @@ describe('JDK installer', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
       let stub = sandbox.stub(rimraf, 'sync').returns();
 
-      installer.install(fakeProgress, function() {}, function (err) {})
+      installer.install(fakeProgress, success, failure)
 
       expect(stub).calledOnce;
     });
 
     it('should call the installer with appropriate parameters', function() {
       let spy = sandbox.spy(Installer.prototype, 'execFile');
-      installer.install(fakeProgress, function() {}, function (err) {});
+      installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith('msiexec', installer.createMsiExecParameters());
@@ -180,7 +182,7 @@ describe('JDK installer', function() {
       sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
 
       try {
-        installer.install(fakeProgress, function() {}, function (err) {});
+        installer.install(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('it did not catch the error');
@@ -193,7 +195,7 @@ describe('JDK installer', function() {
       let calls = 0;
       let succ = function() { return calls++; };
 
-      installer.install(fakeProgress, succ, function (err) {});
+      installer.install(fakeProgress, succ, failure);
 
       expect(spy).not.called;
       expect(calls).to.equal(1);
@@ -203,7 +205,7 @@ describe('JDK installer', function() {
       let calls = 0;
       let succ = function() { return calls++; };
 
-      installer.setup(fakeProgress, succ, function (err) {});
+      installer.setup(fakeProgress, succ, failure);
 
       expect(calls).to.equal(1);
     });

@@ -2,7 +2,6 @@
 
 let fs = require('fs');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -158,7 +157,7 @@ class VirtualBoxInstall extends InstallableItem {
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
-      ipcRenderer.on('installComplete', (event, arg) => {
+      this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           this.postOpenJdk(progress, success, failure);
         }
@@ -201,7 +200,7 @@ class VirtualBoxInstall extends InstallableItem {
       if (this.installerDataSvc.downloading) {
         Logger.info(VirtualBoxInstall.key() + ' - Waiting for all downloads to complete');
         installer.progress.setStatus('Waiting for all downloads to finish');
-        ipcRenderer.on('downloadingComplete', (event, arg) => {
+        this.ipcRenderer.on('downloadingComplete', (event, arg) => {
           // time to start virtualbox installer
           return this.installMsi(installer,resolve,reject);
         });

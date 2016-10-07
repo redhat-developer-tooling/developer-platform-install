@@ -46,6 +46,9 @@ describe('Vagrant installer', function() {
     downloaded: function(amt, time) {}
   };
 
+  let success = () => {},
+      failure = (err) => {};
+
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
@@ -67,6 +70,7 @@ describe('Vagrant installer', function() {
 
   beforeEach(function () {
     installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
+    installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
   });
 
@@ -110,7 +114,7 @@ describe('Vagrant installer', function() {
     it('should set progress to "Downloading"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Downloading');
@@ -119,14 +123,14 @@ describe('Vagrant installer', function() {
     it('should write the data into temp/vagrant.zip', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'vagrant.msi'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(downloadUrl);
@@ -135,7 +139,7 @@ describe('Vagrant installer', function() {
     it('should skip download when the file is found in the download folder', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).not.called;
     });
@@ -149,15 +153,12 @@ describe('Vagrant installer', function() {
       let installSpy = sandbox.spy(installer, 'postCygwinInstall');
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
-      try {
-        installer.install(fakeProgress, null, null);
-      } catch (err) {
-        //workaround for ipcRenderer
-      } finally {
-        expect(installSpy).not.called;
-        expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith('Waiting for Cygwin to finish installation');
-      }
+
+      installer.install(fakeProgress, success, failure);
+
+      expect(installSpy).not.called;
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('Waiting for Cygwin to finish installation');
     });
 
     it('should install once Cygwin has finished', function() {
@@ -167,7 +168,7 @@ describe('Vagrant installer', function() {
       item2.setInstallComplete();
       item2.thenInstall(installer);
 
-      installer.install(fakeProgress, () => {}, (err) => {});
+      installer.install(fakeProgress, success, failure);
 
       expect(stub).calledOnce;
     });
@@ -176,7 +177,7 @@ describe('Vagrant installer', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
-      installer.postCygwinInstall(fakeProgress, null, null);
+      installer.postCygwinInstall(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -185,7 +186,7 @@ describe('Vagrant installer', function() {
     it('should exec the downloaded file with temporary folder as target destination', function() {
       let stub = sandbox.stub(child_process, 'execFile').yields('done');
       let spy = sandbox.spy(Installer.prototype, 'execFile');
-      installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
+      installer.postCygwinInstall(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith('msiexec', [
@@ -198,7 +199,7 @@ describe('Vagrant installer', function() {
       let stub = sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
 
       try {
-        installer.postCygwinInstall(fakeProgress, function() {}, function (err) {});
+        installer.postCygwinInstall(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('it did not catch the error');
@@ -206,13 +207,13 @@ describe('Vagrant installer', function() {
     });
 
     it('should skip the installation if it is not selected', function() {
-      let helper = new Installer('vagrant', fakeProgress, () => {}, () => {});
+      let helper = new Installer('vagrant', fakeProgress, success, failure);
       installer.selectedOption = 'do nothing';
       let spy = sandbox.spy(helper, 'execFile');
       let calls = 0;
       let succ = function() { return calls++; };
 
-      installer.postCygwinInstall(fakeProgress, succ, function (err) {});
+      installer.postCygwinInstall(fakeProgress, succ, failure);
 
       expect(spy).not.called;
       expect(calls).to.equal(1);
@@ -224,7 +225,7 @@ describe('Vagrant installer', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
       sandbox.stub(Installer.prototype, 'writeFile').rejects('done');
-      installer.setup(fakeProgress, () => {}, () => {});
+      installer.setup(fakeProgress, success, failure);
 
       expect(spy).calledOnce;
       expect(spy).calledWith('Setting up');

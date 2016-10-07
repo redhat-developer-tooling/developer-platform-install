@@ -45,6 +45,9 @@ describe('Cygwin installer', function() {
     downloaded: function(amt, time) {}
   };
 
+  let success = () => {},
+      failure = (err) => {};
+
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
@@ -66,6 +69,7 @@ describe('Cygwin installer', function() {
 
   beforeEach(function () {
     installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
+    installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
   });
 
@@ -109,7 +113,7 @@ describe('Cygwin installer', function() {
     it('should set progress to "Downloading"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Downloading');
@@ -119,7 +123,7 @@ describe('Cygwin installer', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
       let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
@@ -127,7 +131,7 @@ describe('Cygwin installer', function() {
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).to.have.been.calledOnce;
       expect(downloadStub).to.have.been.calledWith(downloadUrl);
@@ -136,7 +140,7 @@ describe('Cygwin installer', function() {
     it('should skip download when the file is found in the download folder', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
 
-      installer.downloadInstaller(fakeProgress, function() {}, function() {});
+      installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).not.called;
     });
@@ -150,15 +154,12 @@ describe('Cygwin installer', function() {
       let installSpy = sandbox.spy(installer, 'postVirtualboxInstall');
       let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
-      try {
-        installer.install(fakeProgress, null, null);
-      } catch (err) {
-        //workaround for ipcRenderer
-      } finally {
-        expect(installSpy).not.called;
-        expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith('Waiting for Oracle VirtualBox to finish installation');
-      }
+
+      installer.install(fakeProgress, success, failure);
+
+      expect(installSpy).not.called;
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith('Waiting for Oracle VirtualBox to finish installation');
     });
 
     it('should install once virtualbox has finished', function() {
@@ -167,7 +168,7 @@ describe('Cygwin installer', function() {
       let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
-      installer.install(fakeProgress, () => {}, (err) => {});
+      installer.install(fakeProgress, success, failure);
 
       expect(stub).calledOnce;
     });
@@ -176,7 +177,7 @@ describe('Cygwin installer', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
-      installer.postVirtualboxInstall(fakeProgress, null, null);
+      installer.postVirtualboxInstall(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('Installing');
@@ -186,7 +187,7 @@ describe('Cygwin installer', function() {
       let stub = sandbox.stub(child_process, 'execFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'execFile');
 
-      installer.postVirtualboxInstall(fakeProgress, null, null);
+      installer.postVirtualboxInstall(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledWith(installer.downloadedFile,
         ["--no-admin", "--quiet-mode", "--only-site", '-l',
@@ -201,7 +202,7 @@ describe('Cygwin installer', function() {
       let stub = sandbox.stub(child_process, 'execFile').yields(err);
 
       try {
-        installer.postVirtualboxInstall(fakeProgress, null, null);
+        installer.postVirtualboxInstall(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('It did not catch the error');

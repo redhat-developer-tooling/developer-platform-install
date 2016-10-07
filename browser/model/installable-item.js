@@ -4,6 +4,7 @@ import Util from './helpers/util';
 import path from 'path';
 
 let reqs = require('../../requirements.json');
+let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallableItem {
   constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
@@ -57,6 +58,7 @@ class InstallableItem {
     this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
 
     this.installAfter = undefined;
+    this.ipcRenderer = ipcRenderer;
   }
 
   getProductName() {

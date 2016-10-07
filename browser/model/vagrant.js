@@ -2,7 +2,6 @@
 
 let path = require('path');
 let fs = require('fs-extra');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
@@ -129,7 +128,7 @@ class VagrantInstall extends InstallableItem {
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
-      ipcRenderer.on('installComplete', (event, arg) => {
+      this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           this.postCygwinInstall(progress, success, failure);
         }
