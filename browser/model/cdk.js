@@ -151,6 +151,7 @@ class CDKInstall extends InstallableItem {
       + path.delimiter + path.join(vgrPath,'bin')
       + path.delimiter + path.join(cygwinPath,'bin')
       + path.delimiter + vboxPath;
+    Logger.info(this.key + ' - Set PATH environment variable to \'' + env['Path'] + '\'');
     return env;
   }
 
