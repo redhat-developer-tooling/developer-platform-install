@@ -252,8 +252,8 @@ gulp.task('ui-test', function(cb) {
 
 gulp.task('system-test', function(cb) {
   process.env.PTOR_TEST_RUN = 'system';
-  return runSequence(['generate', 'protractor-install'], 'protractor-run', cb);
-})
+  return runSequence(['prepare-tools', 'protractor-install'], 'unpack-installer', 'protractor-run', cb);
+});
 
 function resolveInstallerExePath(artifactType) {
   return path.join(zaRoot, artifactName + '-' + pjson.version + artifactType + '-installer.exe');

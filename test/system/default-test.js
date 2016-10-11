@@ -5,7 +5,7 @@ let path = require('path');
 let conditions = protractor.ExpectedConditions;
 let webdriver = browser.driver;
 const user = 'devsuite.test@gmail.com';
-const pass = 'devsuite';
+const pass = 'Devsuite';
 
 describe('System tests', function() {
   let timeout = 45*60*1000;
@@ -29,18 +29,21 @@ describe('System tests', function() {
     });
 
     it('should use the default target folder', function() {
-      let locationField = element(By.id('location-browse-input-folder'));
-      let nextButton = element(By.id('location-install-btn'));
+      webdriver.wait(protractor.until.elementLocated(By.id('location-browse-input-folder')), 30000)
+      .then(function(elm) {
+        let locationField = elm;
+        let nextButton = element(By.id('location-install-btn'));
 
-      expect(locationField.getAttribute('value')).toEqual(path.join('c:', 'DevelopmentSuite'));
-      expect(nextButton.isEnabled()).toBe(true);
+        expect(locationField.getAttribute('value')).toEqual(path.join('c:', 'DevelopmentSuite'));
+        expect(nextButton.isEnabled()).toBe(true);
 
-      nextButton.click();
+        nextButton.click();
+      });
     });
 
     it('should confirm the installation', function() {
       let installButton = element(By.id('confirm-install-btn'));
-      browser.wait(conditions.elementToBeClickable(installButton), 5000);
+      browser.wait(conditions.elementToBeClickable(installButton), 60000);
       installButton.click();
     });
 
@@ -56,8 +59,8 @@ describe('System tests', function() {
       let startTime = new Date().getTime();
 
       let check = function() {
-        //Installation finished
         browser.getLocationAbsUrl().then(function(url) {
+          //Installation finished
           if (url === '/start') {
             clearInterval(check);
             let closeButton = element(By.id('exit-btn'));

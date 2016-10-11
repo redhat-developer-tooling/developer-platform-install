@@ -6,6 +6,7 @@ var angularProtractor = require('gulp-angular-protractor'),
   symlink = require('gulp-symlink');
 
 var yargs = require('yargs');
+var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
 module.exports = function(gulp) {
   gulp.task('unit-test', function() {
@@ -49,5 +50,20 @@ module.exports = function(gulp) {
       .on('error', function(e) {
         throw e;
       });
+  });
+
+  gulp.task('unpack-installer', function(cb) {
+    process.env.PTOR_BINARY = yargs.argv.binary;
+    var zip = path.join(buildFolder, '7za.exe');
+    var targetFolder = path.join(buildFolder, 'target');
+    console.log(targetFolder);
+    var cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
+    process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
+
+    exec(cmd, function(err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      cb(err);
+    });
   });
 };
