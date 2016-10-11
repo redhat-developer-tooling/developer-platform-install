@@ -13,6 +13,7 @@ import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
+import InstallerDataService from 'browser/services/data';
 import chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
@@ -24,22 +25,7 @@ require('sinon-as-promised');
 describe('CDK installer', function() {
   let sandbox, installerDataSvc;
   let infoStub, errorStub;
-  let fakeData = {
-    tempDir: function() {},
-    installDir: function() {},
-    getUsername: function() {},
-    getPassword: function() {},
-    ocDir: function() {},
-    vagrantDir: function() {},
-    virtualBoxDir: function() {},
-    cdkVagrantfileDir: function() {},
-    cdkBoxDir: function() {},
-    cdkMarker: function() {},
-    cdkDir: function() {},
-    getInstallable: function(key) {},
-    getUsername: function() {},
-    getPassword: function() {}
-  };
+
   let fakeProgress = {
     setStatus: function (desc) { return; },
     setCurrent: function (val) {},
@@ -49,7 +35,8 @@ describe('CDK installer', function() {
     downloaded: function(amt, time) {}
   };
 
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new InstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('temporaryFolder');
   installerDataSvc.installDir.returns('installFolder');
   installerDataSvc.getUsername.returns('user');

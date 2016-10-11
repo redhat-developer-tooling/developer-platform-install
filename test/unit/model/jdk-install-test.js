@@ -12,6 +12,7 @@ import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
+import IinstallerDataService from 'browser/services/data';
 import rimraf from 'rimraf';
 chai.use(sinonChai);
 
@@ -22,16 +23,9 @@ describe('JDK installer', function() {
   let fakeInstallable = {
     isInstalled: function() { return true; }
   };
-  let fakeData = {
-    tempDir: function() { return 'tempDirectory'; },
-    installDir: function() { return 'installationFolder' },
-    jdkDir: function() { return 'install/jdk' },
-    getInstallable: function(key) { return fakeInstallable; },
-    getUsername: function() {},
-    getPassword: function() {}
-  };
 
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new IinstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.jdkDir.returns('install/jdk8');

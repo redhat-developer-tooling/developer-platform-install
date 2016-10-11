@@ -12,7 +12,7 @@ let electron = require('electron');
 var mkdirp = require('mkdirp');
 
 class InstallerDataService {
-  constructor($state) {
+  constructor($state, reqs = require('../../requirements.json')) {
     this.tmpDir = os.tmpdir();
 
     if (process.platform === 'win32') {
@@ -32,6 +32,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
+    this.requirements = reqs;
   }
 
   setup( vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
@@ -90,6 +91,16 @@ class InstallerDataService {
 
   allInstallables() {
     return this.installableItems;
+  }
+
+  getRequirementByName(keyName) {
+    for (let key in this.requirements) {
+      let regex = new RegExp('^' + keyName + '\\.\\w+');
+      if (regex.test(key)) {
+        return this.requirements[key];
+      }
+    }
+    throw Error(`Cannot find requested requirement ${keyName}`);
   }
 
   getUsername() {

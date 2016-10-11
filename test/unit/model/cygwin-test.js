@@ -12,6 +12,7 @@ import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
+import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
 chai.use(sinonChai);
 
@@ -23,14 +24,9 @@ describe('Cygwin installer', function() {
     isInstalled: function() { return false; }
   };
 
-  let fakeData = {
-    tempDir: function() { return 'tempDirectory'; },
-    installDir: function() { return 'installationFolder'; },
-    cygwinDir: function() { return 'install/Cygwin'; },
-    getInstallable: function(key) { return fakeInstallable; }
-  };
-
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new InstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
+  installerDataSvc.getInstallable.returns(fakeInstallable);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.cygwinDir.returns('install/Cygwin');

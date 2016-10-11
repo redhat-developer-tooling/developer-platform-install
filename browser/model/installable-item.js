@@ -3,21 +3,13 @@
 import Util from './helpers/util';
 import path from 'path';
 
-let reqs = require('../../requirements.json');
 let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallableItem {
   constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
     this.keyName = keyName;
 
-    let requirement;
-    for (let key in reqs) {
-      let regex = new RegExp('^' + keyName + '\\.\\w+');
-      if (regex.test(key)) {
-        requirement = reqs[key];
-        break;
-      }
-    }
+    let requirement = installerDataSvc.getRequirementByName(keyName);
 
     this.productName = requirement.name;
     this.productVersion = requirement.version;
