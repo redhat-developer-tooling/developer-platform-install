@@ -218,11 +218,13 @@ class InstallerDataService {
   }
 
   setupDone(progress,key) {
-    Logger.info('Setup finished for: ' + key);
+    var item = this.getInstallable(key);
+    if(!item.isSkipped()) {
+      Logger.info('Setup finished for: ' + key);
+    }
 
     this.ipcRenderer.send('installComplete', key);
     this.toInstall.delete(key);
-    var item = this.getInstallable(key);
     item.setInstallComplete();
 
     if (!this.isDownloading() && this.toInstall.size == 0) {
