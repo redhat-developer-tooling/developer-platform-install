@@ -77,7 +77,7 @@ let mainModule =
               });
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', 'request', ($rootScope, $location, $timeout, installerDataSvc, request) => {
-            let reqs = require('../requirements.json');
+            let reqs = installerDataSvc.requirements;
 
             let virtualbox = new VirtualBoxInstall(
                   reqs['virtualbox.exe'].version,

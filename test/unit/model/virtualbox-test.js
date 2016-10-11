@@ -13,6 +13,7 @@ import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
+import InstallerDataService from 'browser/services/data'
 chai.use(sinonChai);
 
 let child_process = require('child_process');
@@ -20,18 +21,14 @@ let child_process = require('child_process');
 describe('Virtualbox installer', function() {
   let installerDataSvc, installer;
   let infoStub, errorStub, sandbox;
-  let fakeData = {
-    tempDir: function() { return 'tempDirectory'; },
-    installDir: function() { return 'installationFolder'; },
-    virtualBoxDir: function() { return 'installationFolder/virtualbox'; }
-  };
 
   let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
       version = '5.0.26',
       revision = '108824',
       finalUrl = 'http://download.virtualbox.org/virtualbox/5.0.26/VirtualBox-5.0.26-108824-Win.exe';
 
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new InstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.virtualBoxDir.returns('installationFolder/virtualbox');

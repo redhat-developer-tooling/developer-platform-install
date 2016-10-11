@@ -13,6 +13,7 @@ import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
+import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
 chai.use(sinonChai);
 
@@ -24,14 +25,9 @@ describe('Vagrant installer', function() {
   let fakeInstallable = {
     isInstalled: function() { return false; }
   };
-  let fakeData = {
-    tempDir: function() { return 'tempDirectory'; },
-    installDir: function() { return 'installationFolder'; },
-    vagrantDir: function() { return path.join('installationFolder','vagrant'); },
-    getInstallable: function(key) { return fakeInstallable; }
-  };
 
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new InstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.vagrantDir.returns(path.join('installationFolder','vagrant'));

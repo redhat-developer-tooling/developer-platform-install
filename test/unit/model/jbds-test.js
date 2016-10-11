@@ -13,29 +13,21 @@ import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import InstallableItem from 'browser/model/installable-item';
 import JbdsAutoInstallGenerator from 'browser/model/jbds-autoinstall';
+import InstallerDataService from 'browser/services/data';
 chai.use(sinonChai);
 
 describe('devstudio installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox, installer;
   let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
-  let fakeData = {
-    tempDir: function() { return 'tempDirectory'; },
-    installDir: function() { return 'installationFolder'; },
-    jbdsDir: function() { return 'installationFolder/developer-studio'; },
-    jdkDir: function() { return 'install/jdk8'; },
-    getInstallable: function(key) {},
-    cdkVagrantfileDir: function() {},
-    getUsername: function(){},
-    getPassword: function(){}
-  };
   let fakeInstall = {
     isInstalled: function() { return false; }
   };
   let success = () => {},
       failure = (err) => {};
 
-  installerDataSvc = sinon.stub(fakeData);
+  installerDataSvc = sinon.stub(new InstallerDataService());
+  installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.jdkDir.returns('install/jdk8');
@@ -44,7 +36,6 @@ describe('devstudio installer', function() {
   installerDataSvc.getInstallable.returns(fakeInstall);
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('passwd');
-
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
