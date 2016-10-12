@@ -7,7 +7,13 @@ let path = require('path');
 class Util {
   static executeCommand(command, outputCode) {
     return new Promise((resolve, reject) => {
-      child_process.exec(command, (error, stdout, stderr) => {
+      let options = {
+        env : Object.assign({},process.env)
+      };
+      if (process.platform == 'darwin') {
+          options.env.PATH = options.env.PATH + ':/usr/local/bin';
+      }
+      child_process.exec(command, options, (error, stdout, stderr) => {
         if (error && outputCode === 1) {
           reject(error);
         } else {
