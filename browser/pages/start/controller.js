@@ -6,6 +6,7 @@ let fs = require('fs-extra');
 let shell = require('electron').shell;
 
 import Logger from '../../services/logger';
+import Util from '../../model/helpers/util';
 
 class StartController {
 
@@ -14,6 +15,7 @@ class StartController {
     this.installerDataSvc = installerDataSvc;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
     remote.getCurrentWindow().removeAllListeners('close');
+    this.launchDevstudio = this['launchDevstudio_' + process.platform];
   }
 
   learnCDK() {
@@ -29,7 +31,18 @@ class StartController {
     }
   }
 
-  launchDevstudio() {
+  launchDevstudio_darwin() {
+    let devStudioAppPath = path.join(this.installerDataSvc.jbdsDir(), 'Devstudio.app');
+    Util.executeCommand(`open ${devStudioAppPath}`,1).then((result)=>{
+      Logger.info("devstudio started sucessfully");
+      this.exit();
+    }).catch((error)=>{
+      Logger.info(`devstudio start failed with error code '${error}'`);
+      this.exit();
+    });
+  }
+
+  launchDevstudio_win32() {
     Logger.info('devstudio Start - Write temp files...');
     let devstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
         :  this.jbdsInstall.existingInstallLocation, 'devstudio.bat');

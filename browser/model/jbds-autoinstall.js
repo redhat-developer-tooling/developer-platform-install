@@ -34,7 +34,7 @@ class JbdsAutoInstallGenerator {
         '<com.izforge.izpack.panels.SummaryPanel id="summary"/>',
         '<com.izforge.izpack.panels.InstallPanel id="install"/>',
         '<com.jboss.devstudio.core.installer.CreateLinkPanel id="createlink">',
-        '<jrelocation>' + path.join(jdkInstallDir, 'bin', 'javaw.exe') + '</jrelocation>',
+        '<jrelocation>' + path.join(jdkInstallDir, 'bin', 'java') + '</jrelocation>',
         '</com.jboss.devstudio.core.installer.CreateLinkPanel>',
         '<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
         '<programGroup name="Red Hat JBoss Developer Studio ' + jbdsVersion + '"/>',

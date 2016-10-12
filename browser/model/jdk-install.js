@@ -48,18 +48,10 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall(cb = new function(){}) {
-    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
-    let selectedFolder = '';
-
-    let extension = '';
-    let command;
-    if (process.platform === 'win32') {
-      // where java doesn't work good because it returns
-      // hardlink created in C:\ProgramData\Oracle\Java\javapath
+    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/,
+      selectedFolder = '',
+      extension = '',
       command = 'java -XshowSettings';
-    } else {
-      command = 'which java';
-    }
 
     this.addOption('install',this.version,'',true);
 
