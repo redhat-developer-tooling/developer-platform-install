@@ -12,7 +12,8 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir, jbdsVersion) {
-    let temp =
+    let exeSuffix = process.platform === 'win32' ? 'w.exe' : '',
+    temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
         '<AutomatedInstallation langpack="eng">',
@@ -34,7 +35,7 @@ class JbdsAutoInstallGenerator {
         '<com.izforge.izpack.panels.SummaryPanel id="summary"/>',
         '<com.izforge.izpack.panels.InstallPanel id="install"/>',
         '<com.jboss.devstudio.core.installer.CreateLinkPanel id="createlink">',
-        '<jrelocation>' + path.join(jdkInstallDir, 'bin', 'java') + '</jrelocation>',
+        '<jrelocation>' + path.join(jdkInstallDir, 'bin', 'java' + exeSuffix) + '</jrelocation>',
         '</com.jboss.devstudio.core.installer.CreateLinkPanel>',
         '<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
         '<programGroup name="Red Hat JBoss Developer Studio ' + jbdsVersion + '"/>',
@@ -46,8 +47,7 @@ class JbdsAutoInstallGenerator {
         '<com.izforge.izpack.panels.SimpleFinishPanel id="finish"/>',
         '</AutomatedInstallation>'
       ].join('\r\n');
-
-      return temp;
+    return temp;
   }
 }
 export default JbdsAutoInstallGenerator;
