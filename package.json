@@ -14,6 +14,17 @@
     "url": "https://issues.jboss.org/projects/JBDS/summary"
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
+  "build": {
+    "appId": "com.redhat.devsuite.installer",
+    "category": "public.app-category.developer-tools",
+    "mac": {
+      "icon": "resources/devsuite.icns",
+      "target": "zip"
+    }
+  },
+  "directories": {
+    "app" : "transpiled"
+  },
   "scripts": {
     "start": "gulp run",
     "generate": "gulp generate",
@@ -22,7 +33,8 @@
     "dist": "gulp dist",
     "test": "gulp test",
     "ui-test": "gulp ui-test",
-    "system-test": "gulp system-test"
+    "system-test": "gulp system-test",
+    "dist:mac": "gulp clean && gulp transpile:app && gulp update-package-meta && node_modules/.bin/build"
   },
   "dependencies": {
     "angular": "1.5.8",
@@ -45,8 +57,9 @@
     "chai-as-promised": "6.0.0",
     "crypto": "0.0.3",
     "del": "2.2.2",
-    "electron-packager": "8.1.0",
     "electron": "1.4.3",
+    "electron-builder": "7.15.2",
+    "electron-packager": "8.1.0",
     "gulp": "3.9.1",
     "gulp-angular-protractor": "0.1.4",
     "gulp-babel": "6.1.2",
