@@ -5,7 +5,8 @@ let fs = require('fs');
 let path = require('path');
 
 class Util {
-  static executeCommand(command, outputCode) {
+
+  static executeCommand(command, outputCode=1) {
     return new Promise((resolve, reject) => {
       let options = {
         env : Object.assign({},process.env)
@@ -13,33 +14,13 @@ class Util {
       if (process.platform == 'darwin') {
           options.env.PATH = options.env.PATH + ':/usr/local/bin';
       }
-      child_process.exec(command, options, (error, stdout, stderr) => {
-        if (error && outputCode === 1) {
-          reject(error);
-        } else {
-          if (outputCode === 2) {
-            resolve(stderr.toString().trim());
-          } else {
-            resolve(stdout.toString().trim());
-          }
-        }
-      })
+      child_process.exec(command, options, defaultCallback(resolve, reject, outputCode))
     });
   }
 
   static executeFile(file, args, outputCode=1) {
     return new Promise((resolve, reject) => {
-      child_process.execFile(file, args, (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-        } else {
-          if (outputCode === 2) {
-            resolve(stderr.toString().trim());
-          } else {
-            resolve(stdout.toString().trim());
-          }
-        }
-      })
+      child_process.execFile(file, args, defaultCallback(resolve, reject, outputCode))
     });
   }
 
@@ -113,6 +94,20 @@ class Util {
     } catch (error) {
     }
     return result;
+  }
+}
+
+function defaultCallback(resolve,reject,outputCode) {
+  return function(error, stdout, stderr) {
+    if (error && outputCode === 1) {
+      reject(error);
+    } else {
+      if (outputCode === 2) {
+        resolve(stderr.toString().trim());
+      } else {
+        resolve(stdout.toString().trim());
+      }
+    }
   }
 }
 
