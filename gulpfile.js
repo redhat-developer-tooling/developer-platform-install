@@ -24,28 +24,9 @@ var gulp = require('gulp'),
 		common = require('./gulp-tasks/common.js'),
 		download = require('./gulp-tasks/download.js');
 
-		require('./gulp-tasks/tests')(gulp);
-
-var artifactName = 'devsuite',
-    artifactPlatform = process.platform,
-    artifactArch = process.arch;
-
-var buildFolderRoot = path.join('dist', artifactPlatform + '-' + artifactArch );
-var buildFileNamePrefix = artifactName;
-// use folder outside buildFolder so that a 'clean' task won't wipe out the cache
-var prefetchFolder = 'requirements-cache';
-let toolsFolder = 'tools';
-let buildFolderPath = path.resolve(buildFolderRoot);
-let configIcon = path.resolve(path.join('resources', artifactName + '.ico'));
-
-let zaRoot = path.resolve(buildFolderRoot);
-let zaZip = path.join(toolsFolder, '7zip.zip');
-let zaExe = path.join(zaRoot, '7za.exe');
-let zaSfx = path.join(zaRoot, '7zS.sfx');
-let zaExtra7z = path.join(toolsFolder, '7zip-extra.zip');
-let zaElectronPackage = path.join(zaRoot, artifactName + '-win32-x64');
-let bundled7z = path.join(zaRoot, artifactName +'-win32-x64.7z');
-let installerExe = resolveInstallerExePath('');
+let config = require('./gulp-tasks/config');
+require('./gulp-tasks/tests')(gulp);
+require('./gulp-tasks/dist-' + process.platform)(gulp);
 
 process.on('uncaughtException', function(err) {
     if(err) {
@@ -54,7 +35,7 @@ process.on('uncaughtException', function(err) {
 });
 
 // transpile sources and copy resources to a separate folder
-gulp.task('transpile:app', ['create-modules-link'], function() {
+gulp.task('transpile:app', function() {
   var sources = gulp.src(['browser/**/*.js', 'main/**/*.js', '*.js'], {base: '.'})
     .pipe(sourcemaps.init())
     .pipe(babel())
@@ -86,22 +67,22 @@ gulp.task('clean', function() {
   return del(['dist','transpiled'], { force: true });
 });
 
-gulp.task('create-dist-win-dir', function(cb) {
-  return mkdirp(buildFolderPath, cb);
+gulp.task('create-dist-dir', function(cb) {
+  return mkdirp(config.buildFolderPath, cb);
 })
 
-gulp.task('generate', ['transpile:app'], function(cb) {
+gulp.task('generate', ['create-modules-link','transpile:app'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
-  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + artifactName + ' --platform=' + artifactPlatform + ' --arch=' + artifactArch;
-  cmd += ' --version=' + electronVersion + ' --out="' + buildFolderPath + '" --overwrite --asar=true';
+  var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + config.artifactName + ' --platform=' + config.artifactPlatform + ' --arch=' + config.artifactArch;
+  cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar=true';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
   cmd += ' --version-string.ProductName="' + pjson.productName + '"';
-  cmd += ' --version-string.OriginalFilename="' + artifactName + '-' + pjson.version + '-installer.exe"';
+  cmd += ' --version-string.OriginalFilename="' + config.artifactName + '-' + pjson.version + '-installer.exe"';
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
-  cmd += ' --prune --ignore="test|' + prefetchFolder + '"';
-  cmd += ' --icon="' + configIcon + '"';
+  cmd += ' --prune --ignore="test|' + config.prefetchFolder + '"';
+  cmd += ' --icon="' + config.configIcon + '"';
   //console.log(cmd);
   exec(cmd,common.createExecCallback(cb, true));
 });
@@ -111,35 +92,6 @@ gulp.task('default', ['run']);
 
 gulp.task('run', ['update-requirements'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',common.createExecCallback(cb));
-});
-
-gulp.task('unzip-7zip', function() {
-  return gulp.src(zaZip)
-      .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
-      .pipe(gulp.dest(buildFolderRoot));
-});
-
-gulp.task('unzip-7zip-extra', function(cb) {
-  let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
-  // console.log(cmd);
-		exec(cmd, common.createExecCallback(cb,true));
-	});
-
-gulp.task('prepare-tools', function(cb) {
-	runSequence('prefetch-tools', ['unzip-7zip'], 'unzip-7zip-extra', cb);
-});
-
-// wrap electron-generated app to 7zip archive
-gulp.task('create-7zip-archive', function(cb) {
-  let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
-  // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
-  if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
-    packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
-  } else {
-      packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + 'cygwin.exe';
-  }
-  //console.log('[DEBUG]' + packCmd);
-  exec(packCmd, common.createExecCallback(cb, true));
 });
 
 gulp.task('update-requirements',['transpile:app'], function() {
@@ -187,58 +139,15 @@ gulp.task('update-requirements',['transpile:app'], function() {
     });
 });
 
-gulp.task('update-metadata', function(cb) {
-  return rcedit(zaSfx, {
-    'icon': configIcon,
-    'file-version': pjson.version,
-    'product-version': pjson.version,
-    'version-string': {
-      'ProductName': pjson.productName,
-      'FileDescription': pjson.description + ' v' + pjson.version,
-      'CompanyName': 'Red Hat, Inc.',
-      'LegalCopyright': 'Copyright 2016 Red Hat, Inc.',
-      'OriginalFilename': artifactName + '-' + pjson.version + '-installer.exe'
-    }
-  }, cb);
-});
-
-gulp.task('create-final-exe', function(cb) {
-  let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
-  let packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
-
-  exec(packageCmd, common.createExecCallback(cb, true));
-});
-
-gulp.task('create-sha256sum-of-exe', function(cb) {
-  common.createSHA256File(installerExe, cb);
-});
-
-gulp.task('package', function(cb) {
-  runSequence('create-7zip-archive', 'update-metadata', 'create-final-exe', 'create-sha256sum-of-exe', cb);
-});
-
-// Create stub installer that will then download all the requirements
-gulp.task('package-simple', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-    'prepare-tools'], 'prefetch-cygwin', 'package', 'cleanup', cb);
-});
-
-gulp.task('package-bundle', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-   'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
-});
-
-// Create both installers
-gulp.task('dist', function(cb) {
-  runSequence(['check-requirements', 'clean'], 'create-dist-win-dir', 'update-requirements', ['generate',
-    'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'package', 'cleanup', cb);
-});
-
-gulp.task('cleanup', function(cb) {
-  return del([bundled7z,
-    path.resolve(path.join(buildFolderRoot, '7z*')),
-    path.resolve(zaElectronPackage)],
-    { force: false });
+gulp.task('update-package-meta', function() {
+	let appPackage = require('./transpiled/package.json');
+	delete appPackage.build;
+	return Promise.resolve()
+		.then(()=>{
+			fs.writeFile('./transpiled/package.json', JSON.stringify(appPackage, null, 2));
+		}).catch((err)=>{
+			console.log(err);
+		});
 });
 
 gulp.task('test', function() {
@@ -255,46 +164,10 @@ gulp.task('system-test', function(cb) {
   return runSequence(['prepare-tools', 'protractor-install'], 'unpack-installer', 'protractor-run', cb);
 });
 
-function resolveInstallerExePath(artifactType) {
-  return path.join(zaRoot, artifactName + '-' + pjson.version + artifactType + '-installer.exe');
-}
-
 gulp.task('create-prefetch-cache-dir',function() {
-  if (!fs.existsSync(prefetchFolder)) {
-     mkdirp(prefetchFolder);
+  if (!fs.existsSync(config.prefetchFolder)) {
+     mkdirp(config.prefetchFolder);
   }
-});
-
-gulp.task('create-tools-dir',function() {
-  if (!fs.existsSync(toolsFolder)) {
-     mkdirp(toolsFolder);
-  }
-});
-
-// prefetch all the installer dependencies so we can package them up into the .exe
-gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {
-  return download.prefetch(reqs, 'yes', prefetchFolder).then(()=>{
-			return new Promise((resolve, reject)=>{
-				installerExe = resolveInstallerExePath('-bundle');
-				resolve(true);
-			});
-		}
-	);
-});
-
-// prefetch cygwin to always include into installer
-gulp.task('prefetch-cygwin', ['create-prefetch-cache-dir'], function() {
-	return download.prefetch(reqs,'always', prefetchFolder);
-});
-
-gulp.task('prefetch-tools', ['create-tools-dir'], function() {
-  return download.prefetch(reqs, 'tools', toolsFolder);
-});
-
-gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
-	return download.prefetch(reqs, 'no', prefetchFolder).then(()=>{
-			return download.prefetch(reqs, 'yes', prefetchFolder);
-		});
 });
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
