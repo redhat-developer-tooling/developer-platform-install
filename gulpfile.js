@@ -108,7 +108,7 @@ gulp.task('generate', ['transpile:app'], function(cb) {
 // default task
 gulp.task('default', ['run']);
 
-gulp.task('run', ['transpile:app'], function(cb) {
+gulp.task('run', ['update-requirements'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',common.createExecCallback(cb));
 });
 
@@ -141,7 +141,7 @@ gulp.task('create-7zip-archive', function(cb) {
   exec(packCmd, common.createExecCallback(cb, true));
 });
 
-gulp.task('update-requirements',['create-modules-link'], function() {
+gulp.task('update-requirements',['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve,reject) => {
