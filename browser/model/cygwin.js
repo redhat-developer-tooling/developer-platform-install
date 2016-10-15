@@ -1,6 +1,6 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('fs-extra');
 let request = require('request');
 let path = require('path');
 
@@ -19,7 +19,8 @@ class CygwinInstall extends InstallableItem {
           downloadUrl,
           installFile,
           targetFolderName,
-          installerDataSvc);
+          installerDataSvc,
+          false);
 
     this.downloadedFileName = 'cygwin.exe';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
@@ -55,21 +56,6 @@ class CygwinInstall extends InstallableItem {
         this.addOption('different','','',false);
         cb(error);
       });
-  }
-
-  downloadInstaller(progress, success, failure) {
-    progress.setStatus('Downloading');
-
-    if(!fs.existsSync(this.bundledFile)) {
-      // Need to download the file
-      let writeStream = fs.createWriteStream(this.downloadedFile);
-      this.downloader = new Downloader(progress, success, failure);
-      this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl,this.downloadedFile,this.checksum);
-    } else {
-      this.downloadedFile = this.bundledFile;
-      success();
-    }
   }
 
   install(progress, success, failure) {

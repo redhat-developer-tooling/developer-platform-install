@@ -5,12 +5,13 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
 import request from 'request';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
+import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
 import InstallerDataService from 'browser/services/data'
@@ -20,7 +21,7 @@ let child_process = require('child_process');
 
 describe('Virtualbox installer', function() {
   let installerDataSvc, installer;
-  let infoStub, errorStub, sandbox;
+  let infoStub, errorStub, sandbox, sha256Stub;
 
   let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
       version = '5.0.26',
@@ -48,6 +49,7 @@ describe('Virtualbox installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
 
     mockfs({
       tempDirectory: {},
@@ -62,6 +64,7 @@ describe('Virtualbox installer', function() {
     mockfs.restore();
     infoStub.restore();
     errorStub.restore();
+    sha256Stub.restore();
   });
 
   beforeEach(function () {

@@ -1,6 +1,6 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('fs-extra');
 let path = require('path');
 
 import InstallableItem from './installable-item';
@@ -17,7 +17,8 @@ class VirtualBoxInstall extends InstallableItem {
           downloadUrl,
           installFile,
           targetFolderName,
-          installerDataSvc);
+          installerDataSvc,
+          false);
 
     this.minimumVersion = '5.0.26';
     this.version = version || '5.0.26';
@@ -138,19 +139,6 @@ class VirtualBoxInstall extends InstallableItem {
 
   isDownloadRequired() {
     return !this.hasExistingInstall() && !fs.existsSync(this.bundledFile);
-  }
-
-  downloadInstaller(progress, success, failure) {
-    progress.setStatus('Downloading');
-    if(this.isDownloadRequired() && this.selectedOption === "install") {
-      let writeStream = fs.createWriteStream(this.downloadedFile);
-      this.downloader = new Downloader(progress, success, failure);
-      this.downloader.setWriteStream(writeStream);
-      this.downloader.download(this.downloadUrl,this.downloadedFile,this.sha256);
-    } else {
-      this.downloadedFile = this.bundledFile;
-      success();
-    }
   }
 
   install(progress, success, failure) {

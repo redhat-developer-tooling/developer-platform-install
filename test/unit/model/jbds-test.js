@@ -4,13 +4,14 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import JbdsInstall from 'browser/model/jbds';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
+import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import JbdsAutoInstallGenerator from 'browser/model/jbds-autoinstall';
 import InstallerDataService from 'browser/services/data';
@@ -18,7 +19,7 @@ chai.use(sinonChai);
 
 describe('devstudio installer', function() {
   let installerDataSvc;
-  let infoStub, errorStub, sandbox, installer;
+  let infoStub, errorStub, sandbox, installer, sha256Stub;
   let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
   let fakeInstall = {
     isInstalled: function() { return false; }
@@ -49,6 +50,7 @@ describe('devstudio installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
 
     mockfs({
       tempDirectory : { 'testFile': 'file content here' },
@@ -63,6 +65,7 @@ describe('devstudio installer', function() {
     mockfs.restore();
     infoStub.restore();
     errorStub.restore();
+    sha256Stub.restore();
   });
 
   beforeEach(function () {

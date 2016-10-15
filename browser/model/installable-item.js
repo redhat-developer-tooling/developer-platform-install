@@ -1,12 +1,16 @@
 'use strict';
 
 import Util from './helpers/util';
+import Hash from './helpers/hash';
+import Logger from '../services/logger';
 import path from 'path';
+import fs from 'fs-extra';
+import Downloader from './helpers/downloader';
 
 let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallableItem {
-  constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc) {
+  constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc, authRequired) {
     this.keyName = keyName;
 
     let requirement = installerDataSvc.getRequirementByName(keyName);
@@ -51,6 +55,7 @@ class InstallableItem {
 
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
+    this.authRequired = authRequired;
   }
 
   getProductName() {
@@ -109,8 +114,48 @@ class InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    // To be overridden
-    success();
+    progress.setStatus('Downloading');
+    this.downloader = new Downloader(progress, success, failure);
+    this.downloadedFile = this.checkAndDownload(
+      this.bundledFile,
+      this.downloadedFile,
+      this.downloadUrl,
+      this.sha256,
+      this.authRequired ? this.installerDataSvc.getUsername() : undefined,
+      this.authRequired ? this.installerDataSvc.getPassword() : undefined,
+      );
+  }
+
+  checkAndDownload(bundledFile,downloadedFile,url,sha,user,pass) {
+    if(fs.existsSync(bundledFile)) {
+      this.downloader.closeHandler();
+      return bundledFile;
+    } else {
+      if(fs.existsSync(downloadedFile)) {
+        let h = new Hash();
+        h.SHA256(downloadedFile,(dlSha) => {
+          if(sha === dlSha) {
+            Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
+            this.downloader.successHandler(downloadedFile);
+          } else {
+            this.startDownload(downloadedFile,url,sha,user,pass);
+          }
+        });
+      } else {
+        this.startDownload(downloadedFile,url,sha,user,pass);
+      }
+      return downloadedFile;
+    }
+  }
+
+  startDownload(downloadedFile,url,sha,user,pass) {
+    let ws = fs.createWriteStream(downloadedFile);
+    this.downloader.setWriteStream(ws);
+    if(user === undefined && pass === undefined ) {
+      this.downloader.download(url,downloadedFile,sha);
+    } else {
+      this.downloader.downloadAuth(url,user,pass,downloadedFile,sha);
+    }
   }
 
   install(progress, success, failure) {
