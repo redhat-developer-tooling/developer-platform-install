@@ -11,6 +11,7 @@ import VagrantInstall from 'browser/model/vagrant';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
+import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
 import InstallerDataService from 'browser/services/data';
@@ -21,7 +22,7 @@ describe('Vagrant installer', function() {
   let installer;
   let downloadUrl = 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip';
   let installerDataSvc;
-  let infoStub, errorStub, sandbox;
+  let infoStub, errorStub, sandbox, sha256Stub;
   let fakeInstallable = {
     isInstalled: function() { return false; }
   };
@@ -48,6 +49,7 @@ describe('Vagrant installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
 
     mockfs({
       'tempDirectory' : {},
@@ -62,6 +64,7 @@ describe('Vagrant installer', function() {
     mockfs.restore();
     infoStub.restore();
     errorStub.restore();
+    sha256Stub.restore();
   });
 
   beforeEach(function () {

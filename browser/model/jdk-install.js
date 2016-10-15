@@ -1,6 +1,6 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('fs-extra');
 let path = require('path');
 var rimraf = require('rimraf');
 
@@ -20,7 +20,8 @@ class JdkInstall extends InstallableItem {
           downloadUrl,
           installFile,
           targetFolderName,
-          installerDataSvc);
+          installerDataSvc,
+          true);
 
     this.downloadedFileName = 'jdk.msi';
     this.jdkSha256 = jdkSha256;
@@ -130,22 +131,6 @@ class JdkInstall extends InstallableItem {
 
   static key() {
     return 'jdk';
-  }
-
-  downloadInstaller(progress, success, failure) {
-    let username = this.installerDataSvc.getUsername(),
-        password = this.installerDataSvc.getPassword();
-    progress.setStatus('Downloading');
-    if(this.selectedOption == 'install' && !fs.existsSync(this.bundledFile)) {
-      // Need to download the file
-      let writeStream = fs.createWriteStream(this.downloadedFile);
-      this.downloader = new Downloader(progress, success, failure);
-      this.downloader.setWriteStream(writeStream);
-      this.downloader.downloadAuth(this.downloadUrl,username,password,this.downloadedFile,this.jdkSha256);
-    } else {
-      this.downloadedFile = this.bundledFile;
-      success();
-    }
   }
 
   install(progress, success, failure) {

@@ -12,6 +12,7 @@ import VirtualboxInstall from "browser/model/virtualbox";
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
+import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import chaiAsPromised from 'chai-as-promised';
@@ -24,7 +25,7 @@ require('sinon-as-promised');
 
 describe('CDK installer', function() {
   let sandbox, installerDataSvc;
-  let infoStub, errorStub;
+  let infoStub, errorStub, sha256Stub;
 
   let fakeProgress = {
     setStatus: function (desc) { return; },
@@ -59,6 +60,7 @@ describe('CDK installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
 
     mockfs({
       temporaryFolder: {},
@@ -79,6 +81,7 @@ describe('CDK installer', function() {
     mockfs.restore();
     infoStub.restore();
     errorStub.restore();
+    sha256Stub.restore();
   });
 
   let reqs = require(path.resolve('./requirements.json'));

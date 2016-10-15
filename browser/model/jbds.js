@@ -2,7 +2,7 @@
 
 let request = require('request');
 let path = require('path');
-let fs = require('fs');
+let fs = require('fs-extra');
 let Glob = require("glob").Glob;
 let replace = require("replace-in-file");
 
@@ -22,7 +22,8 @@ class JbdsInstall extends InstallableItem {
           downloadUrl,
           installFile,
           targetFolderName,
-          installerDataSvc);
+          installerDataSvc,
+          true);
 
     this.downloadedFileName = 'jbds.jar';
     this.jbdsSha256 = jbdsSha256;
@@ -112,22 +113,6 @@ class JbdsInstall extends InstallableItem {
       }
       this.ipcRenderer.send('checkComplete', JbdsInstall.key());
     });
-  }
-
-  downloadInstaller(progress, success, failure) {
-    let username = this.installerDataSvc.getUsername(),
-        password = this.installerDataSvc.getPassword();
-    progress.setStatus('Downloading');
-    if(!this.hasExistingInstall() && !fs.existsSync(this.bundledFile)) {
-      // Need to download the file
-      let writeStream = fs.createWriteStream(this.downloadedFile);
-      this.downloader = new Downloader(progress, success, failure);
-      this.downloader.setWriteStream(writeStream);
-      this.downloader.downloadAuth(this.downloadUrl,username,password,this.downloadedFile,this.jbdsSha256);
-    } else {
-      this.downloadedFile = this.bundledFile;
-      success();
-    }
   }
 
   install(progress, success, failure) {

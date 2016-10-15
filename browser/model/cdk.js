@@ -11,6 +11,7 @@ import Logger from '../services/logger';
 import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
 import Util from './helpers/util.js';
+import Hash from './helpers/hash.js';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, cdkSha256, boxSha256, ocSha256) {
@@ -19,7 +20,8 @@ class CDKInstall extends InstallableItem {
           cdkUrl,
           installFile,
           targetFolderName,
-          installerDataSvc);
+          installerDataSvc,
+          true);
 
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
@@ -56,37 +58,34 @@ class CDKInstall extends InstallableItem {
     progress.setStatus('Downloading');
 
     let totalDownloads = 3;
-
     this.downloader = new Downloader(progress, success, failure, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
-    if(!fs.existsSync(path.join(this.downloadFolder, this.boxName))) {
-      let cdkBoxWriteStream = fs.createWriteStream(this.cdkBoxDownloadedFile);
-      this.downloader.setWriteStream(cdkBoxWriteStream);
-      this.downloader.downloadAuth(this.cdkBoxUrl,username,password,this.cdkBoxDownloadedFile,this.boxSha256);
-    } else {
-      this.cdkBoxDownloadedFile = path.join(this.downloadFolder, this.boxName);
-      this.downloader.closeHandler();
-    }
+    this.cdkBoxDownloadedFile = this.checkAndDownload(
+      path.join(this.downloadFolder, this.boxName),
+      this.cdkBoxDownloadedFile,
+      this.cdkBoxUrl,
+      this.boxSha256,
+      username,
+      password
+    );
 
-    if(!fs.existsSync(path.join(this.downloadFolder, this.cdkFileName))) {
-      let cdkWriteStream = fs.createWriteStream(this.cdkDownloadedFile);
-      this.downloader.setWriteStream(cdkWriteStream);
-      this.downloader.downloadAuth(this.getDownloadUrl(),username,password,this.cdkDownloadedFile, this.cdkSha256);
-    } else {
-      this.cdkDownloadedFile = path.join(this.downloadFolder, this.cdkFileName);
-      this.downloader.closeHandler();
-    }
+    this.cdkDownloadedFile = this.checkAndDownload(
+      path.join(this.downloadFolder, this.cdkFileName),
+      this.cdkDownloadedFile,
+      this.getDownloadUrl(),
+      this.cdkSha256,
+      username,
+      password
+    );
 
-    if(!fs.existsSync(path.join(this.downloadFolder, this.ocFileName))) {
-      let ocWriteStream = fs.createWriteStream(this.ocDownloadedFile);
-      this.downloader.setWriteStream(ocWriteStream);
-      this.downloader.download(this.ocUrl,this.ocDownloadedFile,this.ocSha256);
-    } else {
-      this.ocDownloadedFile = path.join(this.downloadFolder, this.ocFileName);
-      this.downloader.closeHandler();
-    }
+    this.ocDownloadedFile = this.checkAndDownload(
+      path.join(this.downloadFolder, this.ocFileName),
+      this.ocDownloadedFile,
+      this.ocUrl,
+      this.ocSha256
+    );
   }
 
   install(progress, success, failure) {
