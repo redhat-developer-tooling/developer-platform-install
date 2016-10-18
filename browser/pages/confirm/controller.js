@@ -4,29 +4,22 @@ let remote = require('electron').remote;
 let dialog = remote.dialog;
 let fs = require('fs');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import Logger from '../../services/logger';
-
-/*import {remote, ipcRenderer} from 'electron-prebuilt';*/
-
-// sadly we had to hoist this outside the controller so that it could be seen and used. Maybe a better way can be found.
-let confCtrl = null;
 
 class ConfirmController {
 
   constructor($scope, $state, $timeout, installerDataSvc) {
-    confCtrl = this;
     this.router = $state;
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
 
-    confCtrl.installedSearchNote = ' The system is checking if you have any installed components.';
-    confCtrl.isDisabled = true;
-    confCtrl.numberOfExistingInstallations = 0;
+    this.installedSearchNote = ' The system is checking if you have any installed components.';
+    this.isDisabled = true;
+    this.numberOfExistingInstallations = 0;
 
-    confCtrl.showCloseDialog = false;
+    this.showCloseDialog = false;
 
     this.installables = {};
     $scope.checkboxModel = {};
@@ -86,7 +79,7 @@ class ConfirmController {
         $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
           $scope.checkboxModel.jdk.detectExistingInstall(()=> {
             $scope.checkboxModel.cygwin.detectExistingInstall(()=> {
-             confCtrl.setIsDisabled();
+             this.setIsDisabled();
             });
           });
         });
@@ -111,30 +104,30 @@ class ConfirmController {
     // Uncomment the timeout to see the initial disabled view.
     this.timeout( () => {
       // Switch this boolean flag when the app is done looking for existing installations.
-      confCtrl.isDisabled = !confCtrl.isDisabled;
+      this.isDisabled = !this.isDisabled;
 
       // Count the number of existing installations.
-      for (var [key, value] of confCtrl.installerDataSvc.allInstallables().entries()) {
-        if (confCtrl.sc.checkboxModel[key].hasOption('detected')) {
-          ++confCtrl.numberOfExistingInstallations;
+      for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+        if (this.sc.checkboxModel[key].hasOption('detected')) {
+          ++this.numberOfExistingInstallations;
         }
       }
 
       // Set the message depending on if the view is disabled or not.
-      if (confCtrl.isDisabled) {
-        confCtrl.installedSearchNote = '  The system is checking if you have any installed components';
+      if (this.isDisabled) {
+        this.installedSearchNote = '  The system is checking if you have any installed components';
       } else {
-        if (confCtrl.numberOfExistingInstallations == 1) {
-          confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed component`;
-        } else if (confCtrl.numberOfExistingInstallations > 1) {
-          confCtrl.installedSearchNote = `  We found ${confCtrl.numberOfExistingInstallations} installed components`;
+        if (this.numberOfExistingInstallations == 1) {
+          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
+        } else if (this.numberOfExistingInstallations > 1) {
+          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
         } else {
-          confCtrl.installedSearchNote = '';
+          this.installedSearchNote = '';
         }
       }
 
       // Call the digest cycle so that the view gets updated.
-      confCtrl.sc.$apply();
+      this.sc.$apply();
     }, 2000);
   }
 
@@ -207,7 +200,7 @@ class ConfirmController {
   }
 
   setCloseDialog () {
-    confCtrl.showCloseDialog = !confCtrl.showCloseDialog;
+    this.showCloseDialog = !this.showCloseDialog;
   }
 }
 
