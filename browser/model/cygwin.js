@@ -40,9 +40,10 @@ class CygwinInstall extends InstallableItem {
   }
 
   detectExistingInstall(cb = new function(){}) {
-    let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
-        opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
-        rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
+    if (process.platform === 'win32') {
+      let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
+          opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
+          rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
       Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
         let cygwinVersion = cygwinPackageRegex.exec(out)[1];
         let opensshVersion = opensshPackageReqex.exec(out)[1];
@@ -56,6 +57,11 @@ class CygwinInstall extends InstallableItem {
         this.addOption('different','','',false);
         cb(error);
       });
+    } else {
+      this.addOption('detected','','',true);
+      this.selectedOption = 'detected';
+      cb();
+    }
   }
 
   install(progress, success, failure) {
