@@ -48,11 +48,11 @@
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
-    "version": "10.2.0.AM1",
-    "dmUrl": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
-    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
+    "version": "10.2.0.AM2",
+    "dmUrl": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM2-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
+    "url": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM2-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar",
     "filename": "devstudio-10.2.0.latest-installer-standalone.jar",
-    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/snapshots/builds/devstudio.product_master/latest/all/devstudio-10.2.0.latest-installer-standalone.jar.sha256",
+    "sha256sum": "http://www.qa.jboss.com/binaries/devstudio/10.0/staging/builds/devstudio-10.2.0.AM2-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
   "jdk.msi": {
