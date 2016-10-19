@@ -75,15 +75,19 @@ class ConfirmController {
     });
 
     $scope.$watch('$viewContentLoaded', ()=>{
-      $scope.checkboxModel.virtualbox.detectExistingInstall(()=> {
-        $scope.checkboxModel.vagrant.detectExistingInstall(()=> {
-          $scope.checkboxModel.jdk.detectExistingInstall(()=> {
-            $scope.checkboxModel.cygwin.detectExistingInstall(()=> {
-             this.setIsDisabled();
-            });
+      let detectors = [];
+      for (var installer of this.installerDataSvc.allInstallables().values()) {
+        detectors.push(new Promise(function(resolve,reject){
+          installer.detectExistingInstall(()=> {
+            resolve();
           });
-        });
-      });
+        }))
+      }
+      Promise.all(detectors).then(
+        ()=>this.setIsDisabled()
+      ).catch(
+        ()=>this.setIsDisabled()
+      );
     });
   }
 
