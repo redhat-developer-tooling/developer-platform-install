@@ -84,7 +84,7 @@ describe('CDK installer', function() {
     sha256Stub.restore();
   });
 
-  let reqs = require(path.resolve('./requirements.json'));
+  let reqs = require(path.resolve('./requirements-' + process.platform + '.json'));
 
   let cdkUrl = reqs['cdk.zip'].url,
       cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,

@@ -1,9 +1,11 @@
 'use strict';
 
+let path = require('path');
+
 let webdriver = browser.driver;
 let context = { pageName: 'Download & Install' };
 let breadcrumbBase = require('./breadcrumbs-base');
-let requirements = require(require('path').resolve('./requirements.json'));
+let requirements = require(path.resolve('./requirements-' + process.platform + '.json'));
 
 describe('Installation page', function() {
   let components = {

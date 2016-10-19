@@ -12,7 +12,7 @@ let electron = require('electron');
 var mkdirp = require('mkdirp');
 
 class InstallerDataService {
-  constructor($state, reqs = require('../../requirements.json')) {
+  constructor($state, reqs = require('../../requirements-' + process.platform + '.json')) {
     this.tmpDir = os.tmpdir();
 
     if (process.platform === 'win32') {

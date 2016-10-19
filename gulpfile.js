@@ -11,7 +11,7 @@ var gulp = require('gulp'),
     del = require('del'),
     exec = require('child_process').exec,
     pjson = require('./package.json'),
-    reqs = require('./requirements.json'),
+    reqs = require('./requirements-' + process.platform + '.json'),
     path = require('path'),
     minimatch = require('minimatch'),
     copy = require('gulp-copy'),
@@ -61,7 +61,8 @@ gulp.task('transpile:app', ['create-modules-link'], function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
-  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', '*.json', 'uninstaller/*.ps1'], {base: '.'})
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
+		'uninstaller/*.ps1', 'requirements-' + process.platform + '.json'], {base: '.'})
     .pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
