@@ -39,13 +39,6 @@ class VirtualBoxInstall extends InstallableItem {
     return 'virtualbox';
   }
 
-  isSkipped() {
-    let cdkInstall = this.installerDataSvc.getInstallable('cdk');
-    let t = this.selectedOption == 'detected' && !this.hasOption('detected')
-      || cdkInstall!==undefined && cdkInstall.isSkipped() && this.selectedOption !== 'install';
-    return t;
-  }
-
   detectExistingInstall(cb = new function(){}) {
     let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
     let command;

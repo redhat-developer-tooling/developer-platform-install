@@ -30,11 +30,6 @@ class CygwinInstall extends InstallableItem {
     this.checksum = sha256;
   }
 
-  isSkipped() {
-    let t = this.selectedOption === 'detected';
-    return t;
-  }
-
   static key() {
     return 'cygwin';
   }
