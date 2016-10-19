@@ -36,11 +36,6 @@ class JdkInstall extends InstallableItem {
     //this.addOption('detected', this.minimumVersion, '', true);
   }
 
-  isSkipped() {
-    let t = this.selectedOption === 'detected';
-    return t;
-  }
-
   getLocation() {
     if(this.hasOption(this.selectedOption)) {
       return this.option[this.selectedOption].location;

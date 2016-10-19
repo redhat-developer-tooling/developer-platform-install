@@ -204,8 +204,7 @@ class InstallableItem {
   }
 
   isSkipped() {
-    let t = this.selectedOption == 'detected' && !this.hasOption('detected');
-    return t;
+    return this.selectedOption == 'detected';
   }
 
 

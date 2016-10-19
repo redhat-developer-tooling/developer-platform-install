@@ -132,7 +132,8 @@ class CDKInstall extends InstallableItem {
     .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
     .then((result) => { return process.platform === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
-    .then((result) => { return process.platform === 'win32' ?  installer.execFile('powershell', opts, result) : Promise.resolve(true); })
+    .then((result) => { return process.platform === 'win32' ? installer.execFile('powershell', opts, result) : Promise.resolve(true); })
+    .then((result) => { return process.platform === 'win32' ? installer.exec('setx VAGRANT_DETECTED_OS "cygwin"') : Promise.resolve(true); })
     .then((result) => { return this.setupVagrant(installer, result); })
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
