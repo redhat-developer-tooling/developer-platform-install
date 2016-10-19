@@ -1,6 +1,6 @@
 'use strict';
 
-let reqs = require('../requirements.json');
+let reqs = require('../requirements-' + process.platform + '.json');
 let request = require("request");
 
 let minSizes = new Object();

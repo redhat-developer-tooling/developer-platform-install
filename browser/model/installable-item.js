@@ -36,7 +36,7 @@ class InstallableItem {
     this.detectedInstallLocation = '';
 
     if (downloadUrl == null || downloadUrl == '') {
-    	throw(new Error('No download URL set'));
+    	throw(new Error(`No download URL set for ${keyName} Installer`));
     }
 
     this.downloadUrl = downloadUrl;
