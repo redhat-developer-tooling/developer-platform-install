@@ -62,30 +62,45 @@ class CDKInstall extends InstallableItem {
     let username = this.installerDataSvc.getUsername(),
         password = this.installerDataSvc.getPassword();
 
-    this.cdkBoxDownloadedFile = this.checkAndDownload(
-      path.join(this.downloadFolder, this.boxName),
-      this.cdkBoxDownloadedFile,
-      this.cdkBoxUrl,
-      this.boxSha256,
-      username,
-      password
-    );
+    let cdkBoxBundledFile = path.join(this.downloadFolder, this.boxName);
+    if(fs.existsSync(cdkBoxBundledFile)) {
+      this.cdkBoxDownloadedFile = cdkBoxBundledFile;
+      this.downloader.closeHandler();
+    } else {
+      this.checkAndDownload(
+        this.cdkBoxDownloadedFile,
+        this.cdkBoxUrl,
+        this.boxSha256,
+        username,
+        password
+      );
+    }
 
-    this.cdkDownloadedFile = this.checkAndDownload(
-      path.join(this.downloadFolder, this.cdkFileName),
-      this.cdkDownloadedFile,
-      this.getDownloadUrl(),
-      this.cdkSha256,
-      username,
-      password
-    );
+    let cdkBundledFile = path.join(this.downloadFolder, this.cdkFileName);
+    if(fs.existsSync(cdkBundledFile)) {
+      this.cdkDownloadedFile = cdkBundledFile;
+      this.downloader.closeHandler();
+    } else {
+      this.checkAndDownload(
+        this.cdkDownloadedFile,
+        this.getDownloadUrl(),
+        this.cdkSha256,
+        username,
+        password
+      );
+    }
 
-    this.ocDownloadedFile = this.checkAndDownload(
-      path.join(this.downloadFolder, this.ocFileName),
-      this.ocDownloadedFile,
-      this.ocUrl,
-      this.ocSha256
-    );
+    let ocBundledFile = path.join(this.downloadFolder, this.ocFileName);
+    if(fs.existsSync(ocBundledFile)) {
+      this.ocDownloadedFile = ocBundledFile;
+      this.downloader.closeHandler();
+    } else {
+      this.checkAndDownload(
+        this.ocDownloadedFile,
+        this.ocUrl,
+        this.ocSha256
+      );
+    }
   }
 
   install(progress, success, failure) {
