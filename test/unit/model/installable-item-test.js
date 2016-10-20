@@ -77,50 +77,32 @@ describe('InstallableItem', function() {
       installItem.downloader = downloader;
     });
 
-
-    it('shoudld return loacation for bundled file if present',function() {
-      sandbox.stub(fs,'existsSync').returns(true);
-
-      let location = installItem.checkAndDownload('bundled.zip','does-not-matter','url','sha');
-
-      expect(location).to.be.equal('bundled.zip');
-    });
-
-    it('shoudld return temporary file location if bundled file is not present',function() {
-      sandbox.stub(fs,'existsSync').returns(false);
-      sandbox.stub(installItem,'startDownload').returns(false);
-
-      let location = installItem.checkAndDownload('bundled.zip','temp/inatall.zip','url','sha');
-
-      expect(location).to.be.equal('temp/inatall.zip');
-    });
-
-    it('should start to download file if there is no bundled and no dowloaded file',function() {
+    it('should start to download file if there is no dowloaded file',function() {
       sandbox.stub(fs,'existsSync').returns(false);
       let startDlMock = sandbox.stub(installItem,'startDownload').returns();
 
-      let location = installItem.checkAndDownload('bundled.zip','temp/inatall.zip','url','sha');
+      installItem.checkAndDownload('temp/inatall.zip','url','sha');
 
       expect(startDlMock).to.have.been.calledOnce;
     });
 
-    it('should start download file if there is no bundled and there is dowloaded file with wrong checksum',function() {
-      sandbox.stub(fs,'existsSync').onCall(0).returns(false).onCall(1).returns(true);
+    it('should start download file if there is dowloaded file with wrong checksum',function() {
+      sandbox.stub(fs,'existsSync').returns(true);
       let startDlMock = sandbox.stub(installItem,'startDownload').returns();
       sandbox.stub(Hash.prototype,'SHA256').yields('wrongsha');
 
-      let location = installItem.checkAndDownload('bundled.zip','temp/inatall.zip','url','sha');
+      installItem.checkAndDownload('temp/inatall.zip','url','sha');
 
       expect(startDlMock).to.have.been.calledOnce;
     });
 
-    it('should not start download file if there is no bundled and there is dowloaded file with correct checksum',function() {
+    it('should not start download file if there is dowloaded file with correct checksum',function() {
       let successHandStub = sandbox.stub(downloader,'successHandler').returns();
-      sandbox.stub(fs,'existsSync').onCall(0).returns(false).onCall(1).returns(true);
+      sandbox.stub(fs,'existsSync').returns(true);
       let startDlMock = sandbox.stub(installItem,'startDownload').returns();
       sandbox.stub(Hash.prototype,'SHA256').yields('sha');
 
-      let location = installItem.checkAndDownload('bundled.zip','temp/inatall.zip','url','sha');
+      installItem.checkAndDownload('temp/inatall.zip','url','sha');
 
       expect(successHandStub).to.have.been.calledOnce;
     });
@@ -140,7 +122,7 @@ describe('InstallableItem', function() {
       let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
         downloadStub = sinon.mock(installItem.downloader).expects('download').once().withArgs('url','downloadto.zip','sha');
 
-      let location = installItem.startDownload('downloadto.zip','url','sha');
+      installItem.startDownload('downloadto.zip','url','sha');
 
       setWriteStreamStub.verify();
       downloadStub.verify();
@@ -150,7 +132,7 @@ describe('InstallableItem', function() {
       let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
         downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url','user','password','downloadto.zip','sha');
 
-      let location = installItem.startDownload('downloadto.zip','url','sha','user','password');
+      installItem.startDownload('downloadto.zip','url','sha','user','password');
 
       setWriteStreamStub.verify();
       downloadStub.verify();

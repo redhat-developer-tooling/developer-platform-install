@@ -52,6 +52,7 @@ class InstallableItem {
 
     this.downloader = null;
     this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
+    this.downloadedFile = "";
 
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
@@ -116,35 +117,33 @@ class InstallableItem {
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
     this.downloader = new Downloader(progress, success, failure);
-    this.downloadedFile = this.checkAndDownload(
-      this.bundledFile,
-      this.downloadedFile,
-      this.downloadUrl,
-      this.sha256,
-      this.authRequired ? this.installerDataSvc.getUsername() : undefined,
-      this.authRequired ? this.installerDataSvc.getPassword() : undefined,
+    if(fs.existsSync(this.bundledFile)) {
+      this.downloadedFile = this.bundledFile;
+      this.downloader.closeHandler();
+    } else {
+      this.checkAndDownload(
+        this.downloadedFile,
+        this.downloadUrl,
+        this.sha256,
+        this.authRequired ? this.installerDataSvc.getUsername() : undefined,
+        this.authRequired ? this.installerDataSvc.getPassword() : undefined,
       );
+    }
   }
 
-  checkAndDownload(bundledFile,downloadedFile,url,sha,user,pass) {
-    if(fs.existsSync(bundledFile)) {
-      this.downloader.closeHandler();
-      return bundledFile;
+  checkAndDownload(downloadedFile,url,sha,user,pass) {
+    if(fs.existsSync(downloadedFile)) {
+      let h = new Hash();
+      h.SHA256(downloadedFile,(dlSha) => {
+        if(sha === dlSha) {
+          Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
+          this.downloader.successHandler(downloadedFile);
+        } else {
+          this.startDownload(downloadedFile,url,sha,user,pass);
+        }
+      });
     } else {
-      if(fs.existsSync(downloadedFile)) {
-        let h = new Hash();
-        h.SHA256(downloadedFile,(dlSha) => {
-          if(sha === dlSha) {
-            Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
-            this.downloader.successHandler(downloadedFile);
-          } else {
-            this.startDownload(downloadedFile,url,sha,user,pass);
-          }
-        });
-      } else {
-        this.startDownload(downloadedFile,url,sha,user,pass);
-      }
-      return downloadedFile;
+      this.startDownload(downloadedFile,url,sha,user,pass);
     }
   }
 

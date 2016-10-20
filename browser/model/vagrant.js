@@ -98,10 +98,6 @@ class VagrantInstall extends InstallableItem {
     // should be called after path to vagrant changed
   }
 
-  isDownloadRequired() {
-    return !this.hasExistingInstall() && !fs.existsSync(this.bundledFile);
-  }
-
   install(progress, success, failure) {
     if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
       this.postCygwinInstall(progress, success, failure);

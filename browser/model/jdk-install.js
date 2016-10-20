@@ -32,8 +32,6 @@ class JdkInstall extends InstallableItem {
     this.minimumVersion = '1.8.0';
     this.jdkZipEntryPrefix = prefix;
     this.openJdkMsi = false;
-    //this.addOption('install',this.version,this.installerDataSvc.jdkDir());
-    //this.addOption('detected', this.minimumVersion, '', true);
   }
 
   getLocation() {
