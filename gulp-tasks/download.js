@@ -111,7 +111,8 @@ function prefetch(reqs, bundle, targetFolder) {
       });
     }
   }
-  return promises.reduce( function(pacc, fn) { return pacc.then(fn); }, Promise.resolve() );
+  return Promise.resolve();
+  //return promises.reduce( function(pacc, fn) { return pacc.then(fn); }, Promise.resolve() );
 };
 
 module.exports = {
