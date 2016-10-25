@@ -17,7 +17,7 @@ function checkRequirements() {
   //to check if the url looks like it points to what it is supposed to
   fileNames['cdk.zip'] = 'cdk';
   fileNames['rhel-vagrant-virtualbox.box'] = 'vagrant-virtualbox.box';
-  fileNames['oc.zip'] = 'oc-origin-cli';
+  fileNames['oc.zip'] = 'openshift-origin-client-tools';
   fileNames['cygwin.exe'] = 'cygwin';
   fileNames['jbds.jar'] = 'devstudio';
   fileNames['jdk.msi'] = 'openjdk';
