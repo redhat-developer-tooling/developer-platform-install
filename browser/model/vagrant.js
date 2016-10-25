@@ -156,8 +156,6 @@ class VagrantInstall extends InstallableItem {
     .then((result) => {
       return installer.execFile('powershell', args, result);
     }).then((result) => {
-      return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"');
-    }).then((result) => {
       return installer.succeed(true);
     }).catch((result) => {
       return installer.fail(result);
