@@ -162,11 +162,11 @@ class CDKInstall extends InstallableItem {
     let vgrPath = vagrantInstall.getLocation();
     let vboxPath = vboxInstall.getLocation();
     let cygwinPath = cygwinInstall.getLocation();
-    env['Path'] = env['Path']
+    env['PATH'] = env['PATH']
       + path.delimiter + path.join(vgrPath,'bin')
       + path.delimiter + path.join(cygwinPath,'bin')
       + path.delimiter + vboxPath;
-    Logger.info(CDKInstall.key() + ' - Set PATH environment variable to \'' + env['Path'] + '\'');
+    Logger.info(CDKInstall.key() + ' - Set PATH environment variable to \'' + env['PATH'] + '\'');
     return env;
   }
 
