@@ -232,6 +232,13 @@ class InstallableItem {
     return installer;
   }
 
+  setup(progress, success, failure) {
+    //no need to setup anything for JDK
+    progress.setStatus('Setting up');
+    progress.setComplete();
+    success();
+  }
+
 }
 
 export default InstallableItem;

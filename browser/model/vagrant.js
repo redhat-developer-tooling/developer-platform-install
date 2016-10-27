@@ -13,13 +13,7 @@ import Version from './helpers/version';
 
 class VagrantInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
-    super('vagrant',
-          900,
-          downloadUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          false);
+    super(VagrantInstall.KEY, 900, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
 
     this.downloadedFileName = 'vagrant.msi';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
@@ -31,7 +25,7 @@ class VagrantInstall extends InstallableItem {
     this.sha256 = sha256;
   }
 
-  static key() {
+  static get KEY() {
     return 'vagrant';
   }
 
@@ -115,7 +109,7 @@ class VagrantInstall extends InstallableItem {
   postCygwinInstall(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === "install") {
-      let installer = new Installer(VagrantInstall.key(), progress, success, failure);
+      let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
       installer.execFile('msiexec', [
         '/i',
         this.downloadedFile,
@@ -139,7 +133,7 @@ class VagrantInstall extends InstallableItem {
 
   setup(progress, success, failure) {
     progress.setStatus('Setting up');
-    let installer = new Installer(VagrantInstall.key(), progress, success, failure);
+    let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
     let data = [
       '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
       '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',

@@ -17,13 +17,7 @@ import Util from './helpers/util';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, jbdsSha256) {
-    super('jbds',
-          1600,
-          downloadUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          true);
+    super(JbdsInstall.KEY, 1600, downloadUrl, installFile, targetFolderName, installerDataSvc, true);
 
     this.downloadedFileName = 'jbds.jar';
     this.jbdsSha256 = jbdsSha256;
@@ -33,7 +27,7 @@ class JbdsInstall extends InstallableItem {
     this.addOption('install', this.version, '', true);
   }
 
-  static key() {
+  static get KEY() {
     return 'jbds';
   }
 
@@ -62,7 +56,7 @@ class JbdsInstall extends InstallableItem {
     if(selection) {
       this.existingInstallLocation = selection[0];
     } else {
-      this.ipcRenderer.send('checkComplete', JbdsInstall.key());
+      this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
       return;
     }
 
@@ -84,12 +78,12 @@ class JbdsInstall extends InstallableItem {
           matched = true;
           this.existingInstall = true;
           if (selection && data) {
-            data[JbdsInstall.key()][1] = true;
+            data[JbdsInstall.KEY][1] = true;
           } else {
             this.existingInstallLocation = selection ? this.existingInstallLocation : jbdsRoot;
           }
           globster.abort();
-          this.ipcRenderer.send('checkComplete', JbdsInstall.key());
+          this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
         } else {
           globster.resume();
         }
@@ -105,13 +99,13 @@ class JbdsInstall extends InstallableItem {
         }
       }
       if(data && selection) {
-        if (data[JbdsInstall.key()]) {
-          data[JbdsInstall.key()][1] = this.existingInstall;
+        if (data[JbdsInstall.KEY]) {
+          data[JbdsInstall.KEY][1] = this.existingInstall;
         } else {
-          data[JbdsInstall.key()] = [this, this.existingInstall];
+          data[JbdsInstall.KEY] = [this, this.existingInstall];
         }
       }
-      this.ipcRenderer.send('checkComplete', JbdsInstall.key());
+      this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
     });
   }
 
@@ -133,11 +127,11 @@ class JbdsInstall extends InstallableItem {
     progress.setStatus('Installing');
     if(this.selectedOption === "install") {
       this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
-      let installer = new Installer(JbdsInstall.key(), progress, success, failure);
+      let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
 
-      Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content');
+      Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content');
       let data = this.installGenerator.fileContent();
-      Logger.info(JbdsInstall.key() + ' - Generate devstudio auto install file content SUCCESS');
+      Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content SUCCESS');
 
       installer.writeFile(this.installConfigFile, data)
         .then((result) => {
@@ -157,8 +151,8 @@ class JbdsInstall extends InstallableItem {
   setup(progress, success, failure) {
     if (this.hasExistingInstall()) {
       progress.setStatus('Setting up');
-      let installer = new Installer(JbdsInstall.key(), progress, success, failure);
-      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
+      let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
+      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
 
       if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
         this.setupCdk()
@@ -172,9 +166,9 @@ class JbdsInstall extends InstallableItem {
               return installer.fail(error);
             });
       } else {
-        Logger.info(JbdsInstall.key() + ' - JDK has not finished installing, listener created to be called when it has.');
+        Logger.info(JbdsInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
-          if (arg == JdkInstall.key()) {
+          if (arg == JdkInstall.KEY) {
             this.setupCdk()
                 .then((result) => {
                   return this.setupJDK(jdkInstall, installer, result)
@@ -197,7 +191,7 @@ class JbdsInstall extends InstallableItem {
     //for when the user has devstudio but wants to install JDK anyway
     return new Promise((resolve, reject) => {
       if (!jdk.hasExistingInstall()) {
-        Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot);
+        Logger.info(JbdsInstall.KEY + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot);
         let config = path.join(this.existingInstallLocation, 'studio', 'devstudio.ini');
         let javaExecutable = path.join(this.installerDataSvc.jdkRoot, 'bin', 'javaw');
 
@@ -212,7 +206,7 @@ class JbdsInstall extends InstallableItem {
             if (changedFiles.length !== 1) {
               reject('devstudio.ini was not changed properly');
             } else {
-              Logger.info(JbdsInstall.key() + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot + ' SUCCESS');
+              Logger.info(JbdsInstall.KEY + ' - Configure -vm parameter to ' + this.installerDataSvc.jdkRoot + ' SUCCESS');
               resolve(true);
             }
           }
@@ -225,16 +219,16 @@ class JbdsInstall extends InstallableItem {
 
   postJDKInstall(installer, result) {
     return new Promise((resolve, reject) => {
-      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.key());
+      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
 
       if (jdkInstall.isInstalled()) {
         return this.headlessInstall(installer, result)
         .then((res) => { return resolve(res); })
         .catch((err) => { return reject(err); });
       } else {
-        Logger.info(JbdsInstall.key() + ' - JDK has not finished installing, listener created to be called when it has.');
+        Logger.info(JbdsInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
-          if (arg == JdkInstall.key()) {
+          if (arg == JdkInstall.KEY) {
             return this.headlessInstall(installer, result)
             .then((res) => { return resolve(res); })
             .catch((err) => { return reject(err); });
@@ -245,7 +239,7 @@ class JbdsInstall extends InstallableItem {
   }
 
   headlessInstall(installer, promise) {
-    Logger.info(JbdsInstall.key() + ' - headlessInstall() called');
+    Logger.info(JbdsInstall.KEY + ' - headlessInstall() called');
     let javaOpts = [
       '-DTRACE=true',
       '-jar',
@@ -259,9 +253,9 @@ class JbdsInstall extends InstallableItem {
   }
 
   setupCdk(result) {
-    let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.key());
+    let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.KEY);
     let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
-    Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to devstudio runtime location');
+    Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location');
     return new Promise((resolve, reject) => {
       if(cdkInstall.isSkipped) {
         resolve(true);
@@ -271,10 +265,10 @@ class JbdsInstall extends InstallableItem {
           'CDKServer=' + escapedPath + ',true\r\n',
           (err) => {
             if (err) {
-              Logger.error(JbdsInstall.key() + ' - ' + err);
+              Logger.error(JbdsInstall.KEY + ' - ' + err);
               reject(err);
             } else {
-              Logger.info(JbdsInstall.key() + ' - Append CDKServer runtime information to devstudio runtime location SUCCESS');
+              Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location SUCCESS');
               resolve(true);
             }
           });

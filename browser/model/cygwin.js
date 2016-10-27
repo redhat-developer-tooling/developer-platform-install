@@ -14,13 +14,7 @@ import Util from './helpers/util';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
-    super('cygwin',
-          720,
-          downloadUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          false);
+    super(CygwinInstall.KEY, 720, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
 
     this.downloadedFileName = 'cygwin.exe';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
@@ -30,7 +24,7 @@ class CygwinInstall extends InstallableItem {
     this.checksum = sha256;
   }
 
-  static key() {
+  static get KEY() {
     return 'cygwin';
   }
 
@@ -75,7 +69,7 @@ class CygwinInstall extends InstallableItem {
 
   postVirtualboxInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    let installer = new Installer(CygwinInstall.key(), progress, success, failure);
+    let installer = new Installer(CygwinInstall.KEY, progress, success, failure);
 
     let opts = [
       '--no-admin',

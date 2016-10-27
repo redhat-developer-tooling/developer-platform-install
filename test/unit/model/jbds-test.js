@@ -224,7 +224,7 @@ describe('devstudio installer', function() {
       beforeEach(function() {
         helper = new Installer('jbds', fakeProgress, success, failure);
         installer.ipcRenderer.on = function(message, cb) {
-          return cb({}, JdkInstall.key());
+          return cb({}, JdkInstall.KEY);
         };
         stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
         eventSpy = sandbox.spy(installer.ipcRenderer, 'on');
