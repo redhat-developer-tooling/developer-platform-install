@@ -15,13 +15,7 @@ import Hash from './helpers/hash.js';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, cdkSha256, boxSha256, ocSha256) {
-    super('cdk',
-          900,
-          cdkUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          true);
+    super(CDKInstall.KEY, 900, cdkUrl, installFile, targetFolderName, installerDataSvc, true);
 
     this.$timeout = $timeout;
     this.cdkBoxUrl = cdkBoxUrl;
@@ -46,7 +40,7 @@ class CDKInstall extends InstallableItem {
     this.selected = false;
   }
 
-  static key() {
+  static get KEY() {
     return 'cdk';
   }
 
@@ -119,7 +113,7 @@ class CDKInstall extends InstallableItem {
 
   postVagrantInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    let installer = new Installer(CDKInstall.key(), progress, success, failure);
+    let installer = new Installer(CDKInstall.KEY, progress, success, failure);
 
     let opts = [
       '-ExecutionPolicy',
@@ -166,19 +160,19 @@ class CDKInstall extends InstallableItem {
       + path.delimiter + path.join(vgrPath,'bin')
       + path.delimiter + path.join(cygwinPath,'bin')
       + path.delimiter + vboxPath;
-    Logger.info(CDKInstall.key() + ' - Set PATH environment variable to \'' + env['PATH'] + '\'');
+    Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env['PATH'] + '\'');
     return env;
   }
 
   setupVagrant(installer, result) {
     return new Promise((resolve, reject) => {
-      let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
+      let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.KEY);
       if (vagrantInstall !== undefined && vagrantInstall.isInstalled()) {
         return this.postVagrantSetup(installer, result)
         .then((res) => { return resolve(res); })
         .catch((err) => { return reject(err); });
       } else {
-        Logger.info(CDKInstall.key() + ' - Vagrant has not finished installing, listener created to be called when it has.');
+        Logger.info(CDKInstall.KEY + ' - Vagrant has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == 'vagrant') {
             return this.postVagrantSetup(installer, result)
@@ -191,8 +185,8 @@ class CDKInstall extends InstallableItem {
   }
 
   postVagrantSetup(installer, promise) {
-    Logger.info(CDKInstall.key() + ' - postVagrantSetup called');
-    let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.key());
+    Logger.info(CDKInstall.KEY + ' - postVagrantSetup called');
+    let vagrantInstall = this.installerDataSvc.getInstallable(VagrantInstall.KEY);
     if (vagrantInstall.isInstalled()) {
       // Vagrant is installed, add CDK bits
       let opts = {

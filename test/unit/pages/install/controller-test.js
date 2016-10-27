@@ -43,8 +43,8 @@ describe('Install controller', function() {
     vbox = new VirtualBoxInstall('5.0.8', '103449', installerDataSvc,
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
 
-    installerDataSvc.addItemToInstall(VagrantInstall.key(), vagrant);
-    installerDataSvc.addItemToInstall(VirtualBoxInstall.key(), vbox);
+    installerDataSvc.addItemToInstall(VagrantInstall.KEY, vagrant);
+    installerDataSvc.addItemToInstall(VirtualBoxInstall.KEY, vbox);
   });
 
   afterEach(function() {
@@ -57,8 +57,8 @@ describe('Install controller', function() {
       controller = new InstallController(null, null, installerDataSvc);
 
       expect(stub).calledTwice;
-      expect(stub).calledWith(VagrantInstall.key(), vagrant);
-      expect(stub).calledWith(VirtualBoxInstall.key(), vbox);
+      expect(stub).calledWith(VagrantInstall.KEY, vagrant);
+      expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
     });
 
     it('should mark skipped installables as done', function() {

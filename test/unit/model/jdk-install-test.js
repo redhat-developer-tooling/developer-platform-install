@@ -79,30 +79,32 @@ describe('JDK installer', function() {
     sandbox.restore();
   });
 
-  it('should not download jdk when an installation exists', function() {
-    let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
-    expect(jdk.useDownload).to.be.false;
-  });
+  describe("when instantiated", function(){
+    it('should not download jdk when an installation exists', function() {
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      expect(jdk.useDownload).to.be.false;
+    });
 
-  it('should fail when no url is set and installed file not defined', function() {
-    expect(function() {
-      new JdkInstall(installerDataSvc, null, null);
-    }).to.throw('No download URL set');
-  });
+    it('should fail when no url is set and installed file not defined', function() {
+      expect(function() {
+        new JdkInstall(installerDataSvc, null, null);
+      }).to.throw('No download URL set');
+    });
 
-  it('should fail when no url is set and installed file is empty', function() {
-    expect(function() {
-      new JdkInstall(installerDataSvc, null, '');
-    }).to.throw('No download URL set');
-  });
+    it('should fail when no url is set and installed file is empty', function() {
+      expect(function() {
+        new JdkInstall(installerDataSvc, null, '');
+      }).to.throw('No download URL set');
+    });
 
-  it('should download jdk when no installation is found', function() {
-    expect(new JdkInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
-  });
+    it('should download jdk when no installation is found', function() {
+      expect(new JdkInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
+    });
 
-  it('should download jdk installer to temporary folder as jdk8.msi', function() {
-    expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
-      path.join('tempDirectory', 'jdk.msi'));
+    it('should download jdk installer to temporary folder as jdk8.msi', function() {
+      expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
+        path.join('tempDirectory', 'jdk.msi'));
+    });
   });
 
   describe('when downloading the jdk msi', function() {

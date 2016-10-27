@@ -12,13 +12,7 @@ import Version from './helpers/version';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
-    super('virtualbox',
-          700,
-          downloadUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          false);
+    super(VirtualBoxInstall.KEY, 700, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = '5.0.26';
     this.version = version || '5.0.26';
@@ -35,7 +29,7 @@ class VirtualBoxInstall extends InstallableItem {
     this.sha256 = sha256;
   }
 
-  static key() {
+  static get KEY() {
     return 'virtualbox';
   }
 
@@ -145,7 +139,7 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   postOpenJdk(progress, success, failure) {
-    let installer = new Installer(VirtualBoxInstall.key(), progress, success, failure);
+    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
     if(this.selectedOption === "install") {
       installer.execFile(this.downloadedFile,
         ['--extract',
@@ -177,7 +171,7 @@ class VirtualBoxInstall extends InstallableItem {
     return new Promise((resolve, reject) => {
       // If downloading is not finished wait for event
       if (this.installerDataSvc.downloading) {
-        Logger.info(VirtualBoxInstall.key() + ' - Waiting for all downloads to complete');
+        Logger.info(VirtualBoxInstall.KEY + ' - Waiting for all downloads to complete');
         installer.progress.setStatus('Waiting for all downloads to finish');
         this.ipcRenderer.on('downloadingComplete', (event, arg) => {
           // time to start virtualbox installer
@@ -206,7 +200,7 @@ class VirtualBoxInstall extends InstallableItem {
         let regexTargetDir = /CopyDir: DestDir=(.*)\,.*/
         let targetDir = regexTargetDir.exec(result)[1];
         if(targetDir !== this.getLocation()) {
-          Logger.info(VirtualBoxInstall.key() + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
+          Logger.info(VirtualBoxInstall.KEY + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
           this.setOptionLocation('install', targetDir);
         }
         resolve(res);

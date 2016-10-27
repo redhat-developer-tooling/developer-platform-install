@@ -15,13 +15,7 @@ import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName,jdkSha256) {
-    super('jdk',
-          260,
-          downloadUrl,
-          installFile,
-          targetFolderName,
-          installerDataSvc,
-          true);
+    super(JdkInstall.KEY, 260, downloadUrl, installFile, targetFolderName, installerDataSvc, true);
 
     this.downloadedFileName = 'jdk.msi';
     this.jdkSha256 = jdkSha256;
@@ -61,7 +55,7 @@ class JdkInstall extends InstallableItem {
       '-File',
       this.msiSearchScript
     ];
-    Util.writeFile(JdkInstall.key(),this.msiSearchScript, data)
+    Util.writeFile(JdkInstall.KEY,this.msiSearchScript, data)
     .then(() => {
       return process.platform === 'win32'
         ? Util.executeFile('powershell', args)
@@ -122,14 +116,14 @@ class JdkInstall extends InstallableItem {
       }
   }
 
-  static key() {
+  static get KEY() {
     return 'jdk';
   }
 
   install(progress, success, failure) {
     if(this.selectedOption === "install") {
       progress.setStatus('Installing');
-      let installer = new Installer(JdkInstall.key(), progress, success, failure);
+      let installer = new Installer(JdkInstall.KEY, progress, success, failure);
 
       if(fs.existsSync(this.installerDataSvc.jdkDir())) {
         rimraf.sync(this.installerDataSvc.jdkDir());
@@ -140,7 +134,7 @@ class JdkInstall extends InstallableItem {
           let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/
           let targetDir = regexTargetDir.exec(result)[1];
           if(targetDir !== this.getLocation()) {
-            Logger.info(JdkInstall.key() + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
+            Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
             this.installerDataSvc.jdkRoot = targetDir;
           }
           installer.succeed(result);
@@ -168,18 +162,11 @@ class JdkInstall extends InstallableItem {
     ];
   }
 
-  setup(progress, success, failure) {
-    //no need to setup anything for JDK
-    progress.setStatus('Setting up');
-    progress.setComplete();
-    success();
-  }
-
   getFolderContents(parentFolder, result) {
     return new Promise(function (resolve, reject) {
       fs.readdir(parentFolder, function(err, fileList) {
         if (err) {
-          Logger.error(JdkInstall.key() + ' - ' + err);
+          Logger.error(JdkInstall.KEY + ' - ' + err);
           reject(err);
         } else {
           resolve(fileList);
@@ -201,14 +188,14 @@ class JdkInstall extends InstallableItem {
 
   renameFile(folder, oldName, newName) {
     let filePath = path.join(folder, oldName)
-    Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName)
+    Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName)
     return new Promise(function (resolve, reject) {
       fs.rename(filePath, newName, function(err) {
         if (err) {
-          Logger.error(JdkInstall.key() + ' - ' + err);
+          Logger.error(JdkInstall.KEY + ' - ' + err);
           reject(err);
         } else {
-          Logger.info(JdkInstall.key() + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS')
+          Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS')
           resolve(true);
         }
       });
