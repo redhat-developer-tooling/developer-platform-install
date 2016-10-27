@@ -101,7 +101,25 @@ Running Angular protractor UI tests
 
 UI tests are located in 'test/ui'. To run all UI tests:
 
-    npm ui-test
+    npm run ui-test
+
+Running System (e2e) tests
+--------------------------
+
+System tests are located in the 'test/system' folder. These tests have requirements depending on the platform they are run on.
+
+#### Windows
+In order to run the tests successfully on Windows, you need to have 'Oracle Corporation' added to the list of trusted publishers (otherwise a modal dialog will interrupt the tests when installing VirtualBox). The tests need to be run by a user with administrative privileges.
+
+When running the tests locally, use the following command:
+
+    npm run system-test -- --binary="path to a devsuite installer executable archive"
+
+For CI environment a powershell script is available in 'test/system/windows/runTests.ps1':
+
+    powershell -file $devsuiteFolder/test/system/windows/runTests.ps1 -binary "path to sfx archive"
+
+This script is designed to launch the tests with elevated privileges and copy the installation logs into the $devsuiteFolder for archivation in CI environment.
 
 Debugging
 ---------
@@ -109,11 +127,11 @@ Debugging
 Enable ChromeDevtools in installer window
 
     export PDKI_DEBUG=1
-    npm run
+    npm start
 
 or you can run installer with
 
-    npm run
+    npm start
 
 and then push Ctrl + Shift + I to show ChromDevTools in current installer window
 
