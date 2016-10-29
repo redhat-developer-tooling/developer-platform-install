@@ -21,7 +21,6 @@ class JdkInstall extends InstallableItem {
     this.jdkSha256 = jdkSha256;
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
-    this.msiSearchScript = path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.jdkZipEntryPrefix = prefix;
@@ -43,23 +42,8 @@ class JdkInstall extends InstallableItem {
 
     this.addOption('install',this.version,'',true);
 
-    let data = [
-      "$vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*OpenJDK*'};",
-      "echo $vbox.IdentifyingNumber;",
-      "[Environment]::Exit(0);"
-    ].join('\r\n');
-    let args = [
-      '-NonInteractive',
-      '-ExecutionPolicy',
-      'ByPass',
-      '-File',
-      this.msiSearchScript
-    ];
-    Util.writeFile(JdkInstall.KEY,this.msiSearchScript, data)
-    .then(() => {
-      return process.platform === 'win32'
-        ? Util.executeFile('powershell', args)
-          : Promise.resolve("");
+    Promise.resolve().then(()=>{
+      return this.findMsiInstalledJava();
     }).then((output)=>{
       this.openJdkMsi = output.length>0;
       return Util.executeCommand('java -version', 2);
@@ -98,6 +82,29 @@ class JdkInstall extends InstallableItem {
       }
       cb();
     });
+  }
+
+  findMsiInstalledJava() {
+    let msiSearchScript = path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
+    let data = [
+      "$vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*OpenJDK*'};",
+      "echo $vbox.IdentifyingNumber;",
+      "[Environment]::Exit(0);"
+    ].join('\r\n'),
+      args = [
+      '-NonInteractive',
+      '-ExecutionPolicy',
+      'ByPass',
+      '-File',
+      msiSearchScript
+    ];
+    let result = Promise().resolve("");
+    if (process.platform === 'win32') {
+      result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
+        return Util.executeFile('powershell', args);
+      });
+    }
+    return result;
   }
 
   validateVersion() {
@@ -162,7 +169,7 @@ class JdkInstall extends InstallableItem {
     ];
   }
 
-  getFolderContents(parentFolder, result) {
+  getFolderContents(parentFolder) {
     return new Promise(function (resolve, reject) {
       fs.readdir(parentFolder, function(err, fileList) {
         if (err) {

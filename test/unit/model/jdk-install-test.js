@@ -10,6 +10,7 @@ import path from 'path';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
+import Util from 'browser/model/helpers/util';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
@@ -79,7 +80,7 @@ describe('JDK installer', function() {
     sandbox.restore();
   });
 
-  describe("when instantiated", function(){
+  describe('when instantiated', function(){
     it('should not download jdk when an installation exists', function() {
       let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
       expect(jdk.useDownload).to.be.false;
@@ -105,6 +106,63 @@ describe('JDK installer', function() {
       expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
         path.join('tempDirectory', 'jdk.msi'));
     });
+  });
+
+  describe('when detecting existing installation',function() {
+
+    function mockDetectedJvm(version) {
+      sandbox.stub(Util,'executeCommand')
+        .onFirstCall().returns(Promise.resolve(`version "${version}"`))
+        .onSecondCall().returns(Promise.resolve('java.home = /java/home\n'));
+    }
+
+    it('should detect java location if installed', function(done) {
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      sandbox.stub(jdk, 'findMsiInstalledJava').returns(Promise.resolve(''));
+      mockDetectedJvm('1.8.0_111');
+      return jdk.detectExistingInstall(function() {
+
+        expect(jdk.selectedOption).to.be.equal('detected');
+        expect(jdk.hasOption('detected')).to.be.equal(true);
+        expect(jdk.getLocation()).to.be.equal('/java/home');
+        done();
+      });
+    });
+
+    it('should select openjdk for installation if older than supported version detected', function(done) {
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      sandbox.stub(jdk, 'findMsiInstalledJava').returns(Promise.resolve(''));
+      mockDetectedJvm('1.7.0_111');
+      return jdk.detectExistingInstall(function() {
+        expect(jdk.selectedOption).to.be.equal('install');
+        expect(jdk.getLocation()).to.be.equal('');
+        done();
+      });
+    });
+
+    it('should select openjdk for installation if not java detected', function(done) {
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      sandbox.stub(jdk, 'findMsiInstalledJava').returns(Promise.resolve(''));
+      mockDetectedJvm('');
+      return jdk.detectExistingInstall(function() {
+        expect(jdk.selectedOption).to.be.equal('install');
+        expect(jdk.getLocation()).to.be.equal('');
+        done();
+      });
+    });
+
+    it('should select openjdk for installation if newer than supported version detected', function(done) {
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      sandbox.stub(jdk, 'findMsiInstalledJava').returns(Promise.resolve(''));
+      mockDetectedJvm('1.9.0_1');
+      return jdk.detectExistingInstall(function() {
+        expect(jdk.selectedOption).to.be.equal('install');
+        expect(jdk.getLocation()).to.be.equal('');
+        done();
+      });
+    });
+
+
   });
 
   describe('when downloading the jdk msi', function() {
