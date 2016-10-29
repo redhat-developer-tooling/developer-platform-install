@@ -30,13 +30,13 @@ describe('Installation page', function() {
     });
   });
 
+  breadcrumbBase.describeBreadcrumbs(context);
+
   it('should display progress panel for each component', function() {
     for (var key in components) {
       expect(components[key].panel.isDisplayed()).toBe(true);
     }
   });
-
-  breadcrumbBase.describeBreadcrumbs(context);
 
   describe('ProgressBar directive', function() {
 
