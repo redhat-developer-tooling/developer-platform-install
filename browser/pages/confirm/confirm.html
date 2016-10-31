@@ -18,11 +18,11 @@
 
     <!-- VirtualBox -->
     <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
-      <div class="panel-heading panel-normal"
+      <div id="virtualbox-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+             <input id="virtualbox-checkbox" type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
@@ -125,11 +125,11 @@
 
     <!-- Cygwin -->
     <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-show="platform==='win32'" ng-class="{'zero-border': checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
-      <div class="panel-heading panel-normal"
+      <div id="cygwin-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input type="checkbox" ng-disabled="!checkboxModel.cygwin.hasOption('detected') && checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+             <input id="cygwin-checkbox" type="checkbox" ng-disabled="!checkboxModel.cygwin.hasOption('detected') && checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
@@ -194,11 +194,11 @@
 
     <!-- Vagrant-->
     <div id="vagrant-panel" class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
-      <div class="panel-heading panel-normal"
+      <div id="vagrant-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
            <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+          <input id="vagrant-checkbox" type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
@@ -293,15 +293,15 @@
 
     <!-- CDK -->
     <div id="cdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
-      <div class="panel-heading panel-normal"
+      <div id="cdk-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
            <!--ng-click="checkboxModel.cdk.changeIsCollapsed()">-->
           <div class="checkbox-container verticalLine" ng-show="!checkboxModel.cdk.hasOption('detected')">
-            <input type="checkbox" ng-model="checkboxModel.cdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+            <input id="cdk-checkbox" type="checkbox" ng-model="checkboxModel.cdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
           </div>
           <div id="arrow-cdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.cdk.isCollapsed}" aria-label="Toggle ngHide" ng-show="false"></div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="cdk-installed-note" class="installed-note" ng-show="checkboxModel.cdk.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span id="cdk-name" class="product-name">{{checkboxModel.cdk.productName}}</span><span span id="cdk-version" class="product-version">{{checkboxModel.cdk.version}}</span>
           <div id="cdk-description">{{checkboxModel.cdk.productDesc}}</div>
         </div>
@@ -358,28 +358,28 @@
 
     <!-- JDK -->
     <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
-      <div class="panel-heading panel-normal"
+      <div id="jdk-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input type="checkbox" ng-disabled="!checkboxModel.jdk.hasOption('detected') && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && !checkboxModel.jdk.option.detected.valid && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.option.detected.valid && checkboxModel.jdk.openJdkMsi || platform==='darwin'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+             <input id="jdk-checkbox" type="checkbox" ng-disabled="!checkboxModel.jdk.hasOption('detected') && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && !checkboxModel.jdk.option.detected.valid && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.option.detected.valid && checkboxModel.jdk.openJdkMsi || platform==='darwin'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
-            <span class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.selectedOption === 'detected'">
+            <span id="jdk-installed-note" class="installed-note" ng-show="checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.selectedOption === 'detected'">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.jdk.option.detected.version}}
             </span>
             <div ng-show="checkboxModel.jdk.hasOption('detected')">
-              <div ng-show="checkboxModel.jdk.option.detected.warning!=='' && checkboxModel.jdk.selectedOption === 'detected'" class="has-warning">
+              <div id="jdk-newer-warning" ng-show="checkboxModel.jdk.option.detected.warning!=='' && checkboxModel.jdk.selectedOption === 'detected'" class="has-warning">
                 <div class="help-block">
                   <span class="pficon pficon-warning-triangle-o"></span>
                   <span>Newer than required!</span>
                 </div>
               </div>
-              <div ng-show="checkboxModel.jdk.option.detected.error!=='' && checkboxModel.jdk.selectedOption === 'detected'" class="has-warning">
+              <div id="jdk-older-warning" ng-show="checkboxModel.jdk.option.detected.error!=='' && checkboxModel.jdk.selectedOption === 'detected'" class="has-warning">
                 <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
                   <span>Older than required!</span>
@@ -458,17 +458,17 @@
 
     <!-- devstudio -->
     <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jbds.hasOption('detected')}">
-      <div class="panel-heading panel-normal"
+      <div id="devstudio-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jbds.hasOption('detected')}">
            <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine"> <!--ng-show="!checkboxModel.jbds.hasOption('detected')"-->
-             <input type="checkbox" ng-model="checkboxModel.jbds.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+             <input id="devstudio-checkbox" type="checkbox" ng-model="checkboxModel.jbds.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-jbds" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbds.isCollapsed}" aria-label="Toggle ngHide"></div>
         </div>
         <div class="product-container">
-          <span class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="devstudio-installed-note" class="installed-note" ng-show="checkboxModel.jbds.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
           <span id="devstudio-name" class="product-name">{{checkboxModel.jbds.productName}}</span><span id="devstudio-version" class="product-version">{{checkboxModel.jbds.version}}</span>
           <div id="devstudio-description">{{checkboxModel.jbds.productDesc}}</div>
         </div>
