@@ -11,7 +11,7 @@ if(process.platform === 'darwin') {
 var executable = './dist/' + platform +'/devsuite-' + platform + '/devsuite' + installerExecSuffix;
 
 if (process.env.PTOR_TEST_RUN === 'system') {
-  files = ['test/system/*.js'];
+  files = ['test/system/system-test.js'];
   report = 'system-tests';
   executable = process.env.PTOR_BINARY;
 } else {

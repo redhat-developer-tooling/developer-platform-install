@@ -38,6 +38,13 @@ module.exports = function(gulp) {
   });
 
   gulp.task('protractor-run', function() {
+    yargs.string(['virtualbox', 'vagrant', 'cygwin', 'jdk', 'targetFolder']);
+    assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VBOX');
+    assignArgument('vagrant', 'PDKI_TEST_INSTALLED_VAGRANT');
+    assignArgument('cygwin', 'PDKI_TEST_INSTALLED_CYGWIN');
+    assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
+    assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');
+
     return gulp.src(['../test/ui/**/*.js'])
       .pipe(angularProtractor({
         'configFile': 'protractor-conf.js',
@@ -53,7 +60,6 @@ module.exports = function(gulp) {
     process.env.PTOR_BINARY = yargs.argv.binary;
     var zip = path.join(buildFolder, '7za.exe');
     var targetFolder = path.join(buildFolder, 'target');
-    console.log(targetFolder);
     var cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
     process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
 
@@ -64,3 +70,9 @@ module.exports = function(gulp) {
     });
   });
 };
+
+function assignArgument(argument, target) {
+  if (yargs.argv[argument] && yargs.argv[argument].length > 0) {
+    process.env[target] =  yargs.argv[argument];
+  }
+}
