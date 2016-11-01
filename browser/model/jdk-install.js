@@ -34,7 +34,7 @@ class JdkInstall extends InstallableItem {
     return this.installerDataSvc.jdkDir();
   }
 
-  detectExistingInstall(cb = new function(){}) {
+  detectExistingInstall(done = function(){}) {
     let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/,
       selectedFolder = '',
       extension = '',
@@ -75,12 +75,12 @@ class JdkInstall extends InstallableItem {
         if(t.length > 1) {
           this.option['detected'].location = t[1];
         }
-        cb();
+        done();
     }).catch((error) => {
       if(process.platform !== 'darwin' ) {
         this.selectedOption = 'install';
       }
-      cb();
+      done();
     });
   }
 
