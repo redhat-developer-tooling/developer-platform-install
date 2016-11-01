@@ -14,7 +14,7 @@ import Util from 'browser/model/helpers/util';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
-import IinstallerDataService from 'browser/services/data';
+import InstallerDataService from 'browser/services/data';
 import rimraf from 'rimraf';
 chai.use(sinonChai);
 
@@ -26,7 +26,7 @@ describe('JDK installer', function() {
     isInstalled: function() { return true; }
   };
 
-  installerDataSvc = sinon.stub(new IinstallerDataService());
+  installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
