@@ -172,7 +172,7 @@ describe('JDK installer', function() {
       }
     });
 
-    if (process.platform === 'win32') {
+    if (process.platform !== 'darwin') {
       it('should check for available msi installtion on windows platform', function(done) {
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');

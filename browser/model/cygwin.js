@@ -48,6 +48,7 @@ class CygwinInstall extends InstallableItem {
       });
     } else {
       this.selectedOption = 'detected';
+      this.addOption('detected','','',true);
       done();
     }
   }

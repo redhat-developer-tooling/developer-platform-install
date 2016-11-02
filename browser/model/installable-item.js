@@ -3,6 +3,7 @@
 import Util from './helpers/util';
 import Hash from './helpers/hash';
 import Logger from '../services/logger';
+import Platform from '../services/platform';
 import path from 'path';
 import fs from 'fs-extra';
 import Downloader from './helpers/downloader';
@@ -200,12 +201,20 @@ class InstallableItem {
     let t =
       this.selectedOption == 'install'
         || this.selectedOption == 'detected' && this.hasOption('detected') && this.option['detected'].valid
-        || this.selectedOption == 'detected' && !this.hasOption('detected');
+        || this.selectedOption == 'detected' && !this.hasOption('detected') && Platform.OS === 'win32';
     return t;
   }
 
   isDetected() {
     return this.selectedOption == 'detected' && this.hasOption('detected');
+  }
+
+  isInvalidVersionDetected() {
+    return this.hasOption('detected') && !this.option['detected'].valid;
+  }
+
+  isNotDetected() {
+    return !this.hasOption('detected');
   }
 
   isSkipped() {

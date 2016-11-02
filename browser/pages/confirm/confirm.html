@@ -17,12 +17,12 @@
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- VirtualBox -->
-    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected') || platform === 'darwin'}">
       <div class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
+           ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected') || platform === 'darwin'}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+             <input type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install' || platform === 'darwin'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
@@ -118,9 +118,19 @@
       </div>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
+    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.cdk.selectedOption == 'install' && platform == 'win32'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.0.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.virtualbox.isInvalidVersionDetected() && checkboxModel.cdk.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.0.x release.
+        Please uninstall detected Oracle VirtualBox and install version {{checkboxModel.virtualbox.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.virtualbox.downloadUrl)">this location</a> and retart Installer to continue.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.virtualbox.isNotDetected() && checkboxModel.cdk.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.0.x release.
+        Please install Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.virtualbox.downloadUrl)">this location</a> and retart Installer to continue.</span>
     </div>
 
     <!-- Cygwin -->
@@ -193,12 +203,12 @@
     </div>
 
     <!-- Vagrant-->
-    <div id="vagrant-panel" class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
+    <div id="vagrant-panel" class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected') || platform === 'darwin'}">
       <div class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
+           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected') || platform === 'darwin'}">
            <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
         <div class="checkbox-container verticalLine">
-          <input type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+          <input type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install' || platform === 'darwin'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
@@ -286,9 +296,19 @@
       </div>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.vagrant.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
+    <div class="message-container error-message" ng-show="!checkboxModel.vagrant.isConfigured() && checkboxModel.cdk.selectedOption == 'install' && platform == 'win32'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>Red Hat Container Development Kit requires Vagrant {{checkboxModel.vagrant.minimumVersion}} or newer. Please uninstall detected Vagrant and restart Installer to continue.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.vagrant.isInvalidVersionDetected() && checkboxModel.cdk.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Vagrant {{checkboxModel.vagrant.minimumVersion}} or newer.
+        Please uninstall detected Vagrant and install version {{checkboxModel.vagrant.minimumVersion}} downloaded from <a type="button" class="pointer" ßng-click="confCtrl.download(checkboxModel.vagrand.downloadUrl)">this location</a> and retart Installer to continue.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.vagrant.isNotDetected() && checkboxModel.cdk.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Red Hat Container Development Kit requires Vagrant {{checkboxModel.vagrant.minimumVersion}} or newer.
+        Please install Vagrant {{checkboxModel.vagrant.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.vagrant.downloadUrl)">this location</a> and retart Installer to continue.</span>
     </div>
 
     <!-- CDK -->
@@ -357,9 +377,9 @@
     </div>
 
     <!-- JDK -->
-    <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
+    <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
       <div class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected'}">
+           ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
              <input type="checkbox" ng-disabled="!checkboxModel.jdk.hasOption('detected') && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && !checkboxModel.jdk.option.detected.valid && checkboxModel.jbds.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.option.detected.valid && checkboxModel.jdk.openJdkMsi || platform==='darwin'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
@@ -441,9 +461,19 @@
       </div>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.jdk.isConfigured() && checkboxModel.jbds.selectedOption == 'install'">
+    <div class="message-container error-message" ng-show="!checkboxModel.jdk.isConfigured() && checkboxModel.jbds.selectedOption == 'install' && platform === 'win32'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>You are required to install OpenJDK because you've selected Red Hat JBoss Developer Studio and that requires Java VM version 1.8.0 or higher to run installation.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.jdk.isInvalidVersionDetected() && checkboxModel.jbds.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>You've selected Red Hat JBoss Developer Studio and that requires Java SE version 1.8.0 or higher to run installation.
+        Please uninstall detected Java SE, install version {{checkboxModel.jdk.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and retart Installer to continue.</span>
+    </div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.jdk.isNotDetected() && checkboxModel.jbds.selectedOption == 'install' && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>You've selected Red Hat JBoss Developer Studio and that requires Java SE version 1.8.0 or higher to run installation.
+        Please install  Java SE {{checkboxModel.jdk.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and retart Installer to continue.</span>
     </div>
 
     <!-- devstudio -->

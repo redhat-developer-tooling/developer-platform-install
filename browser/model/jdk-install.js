@@ -57,8 +57,10 @@ class JdkInstall extends InstallableItem {
           this.validateVersion();
           if(this.option['detected'].valid) {
             this.selectedOption = 'detected';
-          } else {
+          } else if(process.platform !== 'darwin') {
             this.selectedOption = 'install';
+          } else {
+            this.selectedOption = 'detected';
           }
           resolve(true);
         } else {
@@ -78,6 +80,8 @@ class JdkInstall extends InstallableItem {
     }).catch((error) => {
       if(Platform.OS !== 'darwin' ) {
         this.selectedOption = 'install';
+      } else {
+        this.selectedOption = 'detected';
       }
       done();
     });
@@ -98,7 +102,7 @@ class JdkInstall extends InstallableItem {
       msiSearchScript
     ];
     let result = Promise.resolve("");
-    if (Platform.OS === 'win32') {
+    if (Platform.OS !== 'darwin') {
       result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
       });

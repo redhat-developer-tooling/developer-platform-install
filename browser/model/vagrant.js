@@ -64,7 +64,11 @@ class VagrantInstall extends InstallableItem {
       this.validateVersion();
       cb();
     }).catch((error) => {
-      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
+      if(Platform.OS === 'win32') {
+        this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
+      } else {
+        this.selectedOption = 'detected';
+      }
       cb(error);
     });
   }
