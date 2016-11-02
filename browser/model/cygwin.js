@@ -28,7 +28,7 @@ class CygwinInstall extends InstallableItem {
     return 'cygwin';
   }
 
-  detectExistingInstall(cb = new function(){}) {
+  detectExistingInstall(cb = function(){}) {
     if (process.platform === 'win32') {
       let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
           opensshPackageReqex = /openssh\s*(\d+\.\d+)/,

@@ -33,7 +33,7 @@ class VirtualBoxInstall extends InstallableItem {
     return 'virtualbox';
   }
 
-  detectExistingInstall(cb = new function(){}) {
+  detectExistingInstall(cb = function(){}) {
     let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
     let command;
     let extension = '';

@@ -44,7 +44,7 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  detectExistingInstall(cb = new function(){}) {
+  detectExistingInstall(cb = function(){}) {
     cb();
   }
 
