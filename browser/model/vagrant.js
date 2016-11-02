@@ -29,7 +29,7 @@ class VagrantInstall extends InstallableItem {
     return 'vagrant';
   }
 
-  detectExistingInstall(cb = new function(){}) {
+  detectExistingInstall(cb = function(){}) {
     let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/,
         command,
         directory,

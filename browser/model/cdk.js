@@ -44,7 +44,7 @@ class CDKInstall extends InstallableItem {
     return 'cdk';
   }
 
-  detectExistingInstall(cb = new function(){}){
+  detectExistingInstall(cb = function(){}){
     cb();
   }
 
