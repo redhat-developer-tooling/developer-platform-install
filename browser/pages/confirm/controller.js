@@ -1,7 +1,8 @@
 'use strict';
 
-let remote = require('electron').remote;
-let dialog = remote.dialog;
+const remote = require('electron').remote;
+const dialog = remote.dialog;
+const shell = require('electron').shell;
 
 import Logger from '../../services/logger';
 import Platform from '../../services/platform';
@@ -27,9 +28,9 @@ class ConfirmController {
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
-      $scope.$watch(()=>{
+      $scope.$watch(function(){
         return $scope.checkboxModel[key].selectedOption;
-      },(newVal,oldVal)=>{
+      },function(newVal,oldVal){
         $scope.checkboxModel[key].validateVersion();
       });
     }
@@ -43,16 +44,18 @@ class ConfirmController {
       if(nVal=='install') {
 
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
-          && !$scope.checkboxModel.vagrant.hasOption('detected')) {
+          && !$scope.checkboxModel.vagrant.hasOption('detected')
+          && $scope.platform === 'win32') {
           $scope.checkboxModel.vagrant.selectedOption = 'install';
         }
         if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
-          && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
+          && !$scope.checkboxModel.virtualbox.hasOption('detected')
+          && $scope.platform === 'win32') {
           $scope.checkboxModel.virtualbox.selectedOption = 'install';
         }
         if($scope.checkboxModel.cygwin.selectedOption == 'detected'
-          && !$scope.checkboxModel.cygwin.hasOption('detected')) {
-          // force to install included version
+          && !$scope.checkboxModel.cygwin.hasOption('detected')
+          && $scope.platform === 'win32') {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       }
@@ -64,9 +67,9 @@ class ConfirmController {
       if(nVal=='install') {
         let jdk = $scope.checkboxModel.jdk;
         // if jdk is not selected for install and there is no detected version
-        if(jdk.selectedOption == 'detected' && !jdk.hasOption('detected')
+        if(jdk.selectedOption == 'detected' && !jdk.hasOption('detected') && $scope.platform === 'win32'
           // or java detected but not valid
-          || jdk.hasOption('detected') && !jdk.option.detected.valid) {
+          || jdk.hasOption('detected') && !jdk.option.detected.valid && $scope.platform === 'win32' ) {
           // force to install included version
           jdk.selectedOption = 'install';
         }
@@ -88,6 +91,10 @@ class ConfirmController {
         ()=>this.setIsDisabled()
       );
     });
+  }
+
+  download(url) {
+    shell.openExternal(url);
   }
 
   // Prep the install location path for each product, then go to the next page.

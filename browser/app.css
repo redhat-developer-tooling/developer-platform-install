@@ -292,6 +292,10 @@ footer {
     touch-action: manipulation;
   }
 
+  .pointer {
+    cursor: pointer;
+  }
+
   #loginButton {
     margin-bottom: 3px;
   }
