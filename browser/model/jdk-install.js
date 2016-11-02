@@ -98,7 +98,7 @@ class JdkInstall extends InstallableItem {
       '-File',
       msiSearchScript
     ];
-    let result = Promise().resolve("");
+    let result = Promise.resolve("");
     if (process.platform === 'win32') {
       result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
@@ -137,14 +137,14 @@ class JdkInstall extends InstallableItem {
       }
       installer.execFile('msiexec', this.createMsiExecParameters()).then((result) => {
         // msiexec logs are in UCS-2
-        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'),'Dir (target): Key: INSTALLDIR	, Object:','ucs2').then((result)=>{
+        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'),'Dir (target): Key: INSTALLDIR	, Object:','ucs2').then((line)=>{
           let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/
-          let targetDir = regexTargetDir.exec(result)[1];
+          let targetDir = regexTargetDir.exec(line)[1];
           if(targetDir !== this.getLocation()) {
             Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
             this.installerDataSvc.jdkRoot = targetDir;
           }
-          installer.succeed(result);
+          installer.succeed(true);
         }).catch((err)=>{
           // location doesn't parsed correctly, nothing to verify just resolve and keep going
           installer.succeed(result);
