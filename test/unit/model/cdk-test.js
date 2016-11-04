@@ -224,10 +224,19 @@ describe('CDK installer', function() {
     });
 
     describe('createEnvironment', function() {
+
       it('should return path with vagrant/bin', function() {
         let env = installer.createEnvironment();
         expect(env[Platform.PATH]).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
       });
+
+      it('should return environmnet with VAGRANT_HOME defined', function() {
+        let processEnv = Object.assign({},process.env);
+        processEnv['VAGRANT_HOME'] = 'path/w/o/spaces';
+        sandbox.stub(Platform,'getEnv').returns(processEnv);
+        let env = installer.createEnvironment();
+        expect(env['VAGRANT_HOME']).to.be.not.equal(undefined);
+      })
     });
 
     describe('setupVagrant', function() {

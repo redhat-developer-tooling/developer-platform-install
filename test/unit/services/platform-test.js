@@ -42,4 +42,12 @@ describe('Platform', function(){
 
   })
 
+  describe('PATH', function(){
+
+    describe("PATH does not return undefined value form process.env", function(){
+      expect(process.env[Platform.PATH]).to.be.not.equal(undefined);
+    })
+
+  })
+
 });

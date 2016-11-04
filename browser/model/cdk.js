@@ -156,9 +156,9 @@ class CDKInstall extends InstallableItem {
       vgrPath = vagrantInstall.getLocation(),
       vboxPath = vboxInstall.getLocation(),
       cygwinPath = cygwinInstall.getLocation(),
-      env = {};
+      env = Object.assign({},Platform.ENV);
 
-    env[Platform.PATH] = process.env[Platform.PATH]
+    env[Platform.PATH] = Platform.ENV[Platform.PATH]
       + path.delimiter + path.join(vgrPath,'bin')
       + (process.platform === 'win32' ? path.delimiter + path.join(cygwinPath,'bin') : '')
       + path.delimiter + vboxPath;

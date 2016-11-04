@@ -16,6 +16,14 @@ class Platform {
   static getOS() {
     return process.platform;
   }
+
+  static get ENV() {
+    return Platform.getEnv();
+  }
+
+  static getEnv() {
+    return process.env;
+  }
 }
 
 Platform.PATH = Platform.identify({
