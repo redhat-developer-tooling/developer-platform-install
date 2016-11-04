@@ -153,8 +153,8 @@ class VagrantInstall extends InstallableItem {
     }).catch((result) => {
       return installer.fail(result);
     });
-
   }
+
 }
 
 export default VagrantInstall;
