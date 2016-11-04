@@ -8,6 +8,7 @@ let path = require('path');
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Platform from '../services/platform';
 import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
 import Util from './helpers/util.js';
@@ -149,18 +150,20 @@ class CDKInstall extends InstallableItem {
   }
 
   createEnvironment() {
-    let env = Object.assign({},process.env);
-    let vagrantInstall = this.installerDataSvc.getInstallable('vagrant');
-    let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
-    let cygwinInstall = this.installerDataSvc.getInstallable('cygwin');
-    let vgrPath = vagrantInstall.getLocation();
-    let vboxPath = vboxInstall.getLocation();
-    let cygwinPath = cygwinInstall.getLocation();
-    env['PATH'] = env['PATH']
+    let vagrantInstall = this.installerDataSvc.getInstallable('vagrant'),
+      vboxInstall = this.installerDataSvc.getInstallable('virtualbox'),
+      cygwinInstall = this.installerDataSvc.getInstallable('cygwin'),
+      vgrPath = vagrantInstall.getLocation(),
+      vboxPath = vboxInstall.getLocation(),
+      cygwinPath = cygwinInstall.getLocation(),
+      env = {};
+
+    env[Platform.PATH] = process.env[Platform.PATH]
       + path.delimiter + path.join(vgrPath,'bin')
-      + path.delimiter + path.join(cygwinPath,'bin')
+      + (process.platform === 'win32' ? path.delimiter + path.join(cygwinPath,'bin') : '')
       + path.delimiter + vboxPath;
-    Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env['PATH'] + '\'');
+    Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
+
     return env;
   }
 

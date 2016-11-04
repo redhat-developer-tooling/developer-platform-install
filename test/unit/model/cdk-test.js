@@ -16,6 +16,7 @@ import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import chaiAsPromised from 'chai-as-promised';
+import Platform from 'browser/services/platform';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -225,7 +226,7 @@ describe('CDK installer', function() {
     describe('createEnvironment', function() {
       it('should return path with vagrant/bin', function() {
         let env = installer.createEnvironment();
-        expect(env['PATH']).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
+        expect(env[Platform.PATH]).includes(path.join(installerDataSvc.vagrantDir(), 'bin') + path.delimiter + installerDataSvc.vagrantDir());
       });
     });
 

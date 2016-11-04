@@ -28,7 +28,7 @@ class CygwinInstall extends InstallableItem {
     return 'cygwin';
   }
 
-  detectExistingInstall(cb = function(){}) {
+  detectExistingInstall(done = function(){}) {
     if (process.platform === 'win32') {
       let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
           opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
@@ -39,17 +39,21 @@ class CygwinInstall extends InstallableItem {
         let rsyncVersion = rsyncPackageRegex.exec(out)[1];
         this.addOption('detected','','',true);
         this.option['detected'].version = cygwinVersion;
+        this.option['detected'].version = cygwinVersion;
         this.selectedOption = 'detected';
-        cb();
+      }).then(()=>{
+        return Util.executeCommand('where cygcheck', 1);
+      }).then((output)=>{
+        this.option['detected'].location = path.parse(output).dir;
+        done();
       }).catch((error)=>{
         this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'cygwin'),true);
         this.addOption('different','','',false);
-        cb(error);
+        done(error);
       });
     } else {
-      this.addOption('detected','','',true);
       this.selectedOption = 'detected';
-      cb();
+      done();
     }
   }
 

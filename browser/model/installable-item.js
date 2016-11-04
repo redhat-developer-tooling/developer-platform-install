@@ -195,11 +195,13 @@ class InstallableItem {
   isConfigured() {
     let t =
       this.selectedOption == 'install'
-        ||
-      this.selectedOption == 'detected' && this.hasOption('detected') && this.option['detected'].valid
-        ||
-      this.selectedOption == 'detected' && !this.hasOption('detected');
+        || this.selectedOption == 'detected' && this.hasOption('detected') && this.option['detected'].valid
+        || this.selectedOption == 'detected' && !this.hasOption('detected');
     return t;
+  }
+
+  isDetected() {
+    return this.selectedOption == 'detected' && this.hasOption('detected');
   }
 
   isSkipped() {
@@ -208,11 +210,9 @@ class InstallableItem {
 
 
   getLocation() {
-    return this.isSkipped() ? "" : this.option[this.selectedOption].location;
-  }
-
-  validateVersion() {
-
+    return this.isDetected()
+      ? this.option.detected.location
+      : this.option.install.location;
   }
 
   restartDownload() {

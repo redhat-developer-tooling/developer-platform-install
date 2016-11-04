@@ -67,7 +67,6 @@ class VagrantInstall extends InstallableItem {
       cb();
     }).catch((error) => {
       this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
-      this.addOption('different','','',false);
       cb(error);
     });
   }
