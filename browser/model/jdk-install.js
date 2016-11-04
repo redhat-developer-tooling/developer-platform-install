@@ -14,7 +14,7 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName,jdkSha256) {
+  constructor(installerDataSvc, downloadUrl, installFile, prefix, targetFolderName, jdkSha256) {
     super(JdkInstall.KEY, 260, downloadUrl, installFile, targetFolderName, installerDataSvc, true);
 
     this.downloadedFileName = 'jdk.msi';
