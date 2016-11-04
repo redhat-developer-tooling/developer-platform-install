@@ -2,8 +2,6 @@
 
 let remote = require('electron').remote;
 let dialog = remote.dialog;
-let fs = require('fs');
-let path = require('path');
 
 import Logger from '../../services/logger';
 import Platform from '../../services/platform';

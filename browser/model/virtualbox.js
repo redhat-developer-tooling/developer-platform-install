@@ -1,6 +1,5 @@
 'use strict';
 
-let fs = require('fs-extra');
 let path = require('path');
 
 import InstallableItem from './installable-item';

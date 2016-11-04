@@ -4,7 +4,6 @@ let remote = require('electron').remote;
 let dialog = remote.dialog;
 let fs = require('fs');
 let path = require('path');
-let ipcRenderer = require('electron').ipcRenderer;
 
 import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';

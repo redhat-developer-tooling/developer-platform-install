@@ -1,8 +1,6 @@
 'use strict';
 
-import InstallableItem from '../model/installable-item';
 import Logger from './logger';
-import Util from '../model/helpers/util';
 import Platform from '../services/platform';
 
 let os = require('os');
@@ -20,7 +18,7 @@ class InstallerDataService {
       this.installRoot = 'c:\\DevelopmentSuite';
     } else {
       this.installRoot = Platform.ENV.HOME + '/DevelopmentSuite';
-  	}
+    }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 

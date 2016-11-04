@@ -1,14 +1,9 @@
 'use strict';
 
-let fs = require('fs-extra');
-let request = require('request');
 let path = require('path');
 
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
-import Logger from '../services/logger';
 import Installer from './helpers/installer';
-import VirtualBoxInstall from './virtualbox';
 import Util from './helpers/util';
 import Platform from '../services/platform';
 

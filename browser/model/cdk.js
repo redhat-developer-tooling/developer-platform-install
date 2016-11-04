@@ -2,7 +2,6 @@
 
 let fs = require('fs-extra');
 var filesystem = require("fs");
-let request = require('request');
 let path = require('path');
 
 import InstallableItem from './installable-item';
@@ -12,7 +11,6 @@ import Platform from '../services/platform';
 import VagrantInstall from './vagrant';
 import Installer from './helpers/installer';
 import Util from './helpers/util.js';
-import Hash from './helpers/hash.js';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, $timeout, cdkUrl, cdkBoxUrl, ocUrl, installFile, targetFolderName, cdkSha256, boxSha256, ocSha256) {

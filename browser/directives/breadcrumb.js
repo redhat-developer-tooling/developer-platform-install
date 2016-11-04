@@ -1,6 +1,4 @@
-'use strict'
-
-import angular from 'angular';
+'use strict';
 
 function breadcrumb($state) {
   return {

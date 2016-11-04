@@ -6,11 +6,9 @@ var rimraf = require('rimraf');
 
 
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Platform from '../services/platform';
 import Installer from './helpers/installer';
-import CDKInstall from './cdk';
 import Util from './helpers/util';
 import Version from './helpers/version';
 

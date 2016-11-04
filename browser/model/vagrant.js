@@ -4,11 +4,8 @@ let path = require('path');
 let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
-import Logger from '../services/logger';
 import Platform from '../services/platform';
 import Installer from './helpers/installer';
-import CygwinInstall from './cygwin';
 import Util from './helpers/util';
 import Version from './helpers/version';
 

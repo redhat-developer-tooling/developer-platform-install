@@ -6,20 +6,20 @@ class Request {
   constructor(){
   }
 
- get(req) {
-   return new Promise((resolve,reject)=>{
-     request(req, (error, response, data) => {
-       if (!error && response.statusCode == 200) {
-         resolve({
-           status: response.statusCode,
-           data: JSON.parse(data)
-         });
-       } else {
-         reject();
-       }
-     });
-   });
- }
+  get(req) {
+    return new Promise((resolve,reject)=>{
+      request(req, (error, response, data) => {
+        if (!error && response.statusCode == 200) {
+          resolve({
+            status: response.statusCode,
+            data: JSON.parse(data)
+          });
+        } else {
+          reject();
+        }
+      });
+    });
+  }
 
   static factory() {
     return function(req) {

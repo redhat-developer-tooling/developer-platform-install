@@ -1,6 +1,5 @@
-'use strict'
+'use strict';
 
-import angular from 'angular';
 import fs from 'fs';
 import path from 'path';
 import Platform from '../services/platform';

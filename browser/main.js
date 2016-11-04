@@ -20,7 +20,6 @@ import JbdsInstall from './model/jbds';
 import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
-import Util from './model/helpers/util';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
