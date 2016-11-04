@@ -7,6 +7,7 @@ let shell = require('electron').shell;
 
 import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';
+import Platform from '../../services/platform';
 
 class StartController {
 
@@ -15,7 +16,7 @@ class StartController {
     this.installerDataSvc = installerDataSvc;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
     remote.getCurrentWindow().removeAllListeners('close');
-    this.launchDevstudio = this['launchDevstudio_' + process.platform];
+    this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
 
   learnCDK() {
@@ -88,7 +89,7 @@ class StartController {
 
     Logger.info('devstudio Start - Run runJbdsFile: ' + runJbdsFile);
 
-    let env = process.env;
+    let env = Platform.ENV;
     env['rhel.subscription.password'] = this.installerDataSvc.password;
     let runJbdsBat = require('child_process')
         .spawn(

@@ -4,7 +4,7 @@ let fs = require('fs-extra');
 let path = require('path');
 
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
+import Platform from '../services/platform';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
@@ -39,7 +39,7 @@ class VirtualBoxInstall extends InstallableItem {
     let extension = '';
     let directory;
 
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       command = 'echo %VBOX_INSTALL_PATH%';
       extension = '.exe';
     } else {
@@ -50,7 +50,7 @@ class VirtualBoxInstall extends InstallableItem {
 
     Util.executeCommand(command, 1).then((output) => {
       return new Promise((resolve, reject) => {
-        if (process.platform === 'win32') {
+        if (Platform.OS === 'win32') {
           if (output === '%VBOX_INSTALL_PATH%') {
             return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
                 resolve(output);

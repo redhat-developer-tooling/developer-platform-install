@@ -6,6 +6,7 @@ let fs = require('fs');
 let path = require('path');
 
 import Logger from '../../services/logger';
+import Platform from '../../services/platform';
 
 class ConfirmController {
 
@@ -23,7 +24,7 @@ class ConfirmController {
 
     this.installables = {};
     $scope.checkboxModel = {};
-    $scope.platform = process.platform;
+    $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
 
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {

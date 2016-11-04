@@ -1,6 +1,5 @@
-  'use strict';
+'use strict';
 
-let request = require('request');
 let path = require('path');
 let fs = require('fs-extra');
 let Glob = require("glob").Glob;
@@ -8,12 +7,12 @@ let replace = require("replace-in-file");
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
 import CDKInstall from './cdk.js';
 import Util from './helpers/util';
+import Platform from '../services/platform';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, jbdsSha256) {
@@ -60,11 +59,11 @@ class JbdsInstall extends InstallableItem {
       return;
     }
 
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       directory = selection ? selection[0] : 'c:';
       pattern = selection ? 'studio/devstudio.exe' : '**/studio/devstudio.exe';
     } else {
-      directory = selection ? selection[0] : process.env.HOME;
+      directory = selection ? selection[0] : Platform.ENV[Platform.HOME];
       pattern = selection ? 'studio/devstudio' : '{*,*/*,*/*/*,*/*/*/*}/studio/devstudio';
     }
 

@@ -3,6 +3,7 @@
 import InstallableItem from '../model/installable-item';
 import Logger from './logger';
 import Util from '../model/helpers/util';
+import Platform from '../services/platform';
 
 let os = require('os');
 let path = require('path');
@@ -12,13 +13,13 @@ let electron = require('electron');
 var mkdirp = require('mkdirp');
 
 class InstallerDataService {
-  constructor($state, reqs = require('../../requirements-' + process.platform + '.json')) {
+  constructor($state, reqs = require('../../requirements-' + Platform.OS + '.json')) {
     this.tmpDir = os.tmpdir();
 
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       this.installRoot = 'c:\\DevelopmentSuite';
     } else {
-      this.installRoot = process.env.HOME + '/DevelopmentSuite';
+      this.installRoot = Platform.ENV.HOME + '/DevelopmentSuite';
   	}
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;

@@ -6,6 +6,7 @@ let fs = require('fs-extra');
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Platform from '../services/platform';
 import Installer from './helpers/installer';
 import CygwinInstall from './cygwin';
 import Util from './helpers/util';
@@ -35,7 +36,7 @@ class VagrantInstall extends InstallableItem {
         directory,
         extension = '',
         subfolder = path.sep + 'bin';
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       command = 'where vagrant';
       extension = '.exe';
     } else {

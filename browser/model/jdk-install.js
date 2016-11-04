@@ -8,6 +8,7 @@ var rimraf = require('rimraf');
 import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
+import Platform from '../services/platform';
 import Installer from './helpers/installer';
 import CDKInstall from './cdk';
 import Util from './helpers/util';
@@ -77,7 +78,7 @@ class JdkInstall extends InstallableItem {
         }
         done();
     }).catch((error) => {
-      if(process.platform !== 'darwin' ) {
+      if(Platform.OS !== 'darwin' ) {
         this.selectedOption = 'install';
       }
       done();
@@ -99,7 +100,7 @@ class JdkInstall extends InstallableItem {
       msiSearchScript
     ];
     let result = Promise.resolve("");
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
       });

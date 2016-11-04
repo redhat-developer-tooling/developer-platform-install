@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import VirtualBoxInstall from './virtualbox';
 import Util from './helpers/util';
-
+import Platform from '../services/platform';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
@@ -29,7 +29,7 @@ class CygwinInstall extends InstallableItem {
   }
 
   detectExistingInstall(done = function(){}) {
-    if (process.platform === 'win32') {
+    if (Platform.OS === 'win32') {
       let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
           opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
           rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;

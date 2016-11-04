@@ -140,10 +140,10 @@ class CDKInstall extends InstallableItem {
     installer.unzip(this.cdkDownloadedFile, this.installerDataSvc.installDir())
     .then((result) => { return installer.unzip(this.ocDownloadedFile, this.installerDataSvc.ocDir(), result); })
     .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
-    .then((result) => { return process.platform === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
+    .then((result) => { return Platform.OS === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
-    .then((result) => { return process.platform === 'win32' ? installer.execFile('powershell', opts, result) : Promise.resolve(true); })
-    .then((result) => { return process.platform === 'win32' ? installer.exec('setx VAGRANT_DETECTED_OS "cygwin"') : Promise.resolve(true); })
+    .then((result) => { return Platform.OS === 'win32' ? installer.execFile('powershell', opts, result) : Promise.resolve(true); })
+    .then((result) => { return Platform.OS === 'win32' ? installer.exec('setx VAGRANT_DETECTED_OS "cygwin"') : Promise.resolve(true); })
     .then((result) => { return this.setupVagrant(installer, result); })
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
@@ -160,7 +160,7 @@ class CDKInstall extends InstallableItem {
 
     env[Platform.PATH] = Platform.ENV[Platform.PATH]
       + path.delimiter + path.join(vgrPath,'bin')
-      + (process.platform === 'win32' ? path.delimiter + path.join(cygwinPath,'bin') : '')
+      + (Platform.OS === 'win32' ? path.delimiter + path.join(cygwinPath,'bin') : '')
       + path.delimiter + vboxPath;
     Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
 

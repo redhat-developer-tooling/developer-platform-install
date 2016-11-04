@@ -2,6 +2,8 @@
 
 let path = require('path');
 
+import Platform from '../services/platform';
+
 class JbdsAutoInstallGenerator {
   constructor(jbdsInstallDir, jdkInstallDir, version) {
     this.autoInstall = this.generate(jbdsInstallDir, jdkInstallDir, version);
@@ -12,7 +14,7 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir, jbdsVersion) {
-    let exeSuffix = process.platform === 'win32' ? 'w.exe' : '',
+    let exeSuffix = Platform.OS === 'win32' ? 'w.exe' : '',
     temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',

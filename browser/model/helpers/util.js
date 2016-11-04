@@ -2,25 +2,26 @@
 
 let child_process = require('child_process');
 let fs = require('fs');
-let path = require('path');
+
+import Platform from '../../services/platform';
 
 class Util {
 
   static executeCommand(command, outputCode=1) {
     return new Promise((resolve, reject) => {
       let options = {
-        env : Object.assign({},process.env)
+        env : Object.assign({},Platform.ENV)
       };
-      if (process.platform == 'darwin') {
-          options.env.PATH = options.env.PATH + ':/usr/local/bin';
+      if (Platform.OS == 'darwin') {
+        options.env.PATH = options.env.PATH + ':/usr/local/bin';
       }
-      child_process.exec(command, options, defaultCallback(resolve, reject, outputCode))
+      child_process.exec(command, options, defaultCallback(resolve, reject, outputCode));
     });
   }
 
   static executeFile(file, args, outputCode=1) {
     return new Promise((resolve, reject) => {
-      child_process.execFile(file, args, defaultCallback(resolve, reject, outputCode))
+      child_process.execFile(file, args, defaultCallback(resolve, reject, outputCode));
     });
   }
 
@@ -58,7 +59,7 @@ class Util {
     return new Promise((resolve, reject) => {
       fs.readFile(file, encoding, (err, data) => {
         if(err) {
-          reject(err)
+          reject(err);
         } else {
           let lines = data.toString().split('\n');
           let result;
@@ -87,11 +88,12 @@ class Util {
   }
 
   static getRejectUnauthorized() {
-    let value = process.env['DSI_REJECT_UNAUTHORIZED'];
+    let value = Platform.ENV['DSI_REJECT_UNAUTHORIZED'];
     let result = true;
     try {
       result = JSON.parse(value);
     } catch (error) {
+      /* continue regardless of error */
     }
     return result;
   }
@@ -108,7 +110,7 @@ function defaultCallback(resolve,reject,outputCode) {
         resolve(stdout.toString().trim());
       }
     }
-  }
+  };
 }
 
 export default Util;

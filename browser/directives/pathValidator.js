@@ -3,6 +3,7 @@
 import angular from 'angular';
 import fs from 'fs';
 import path from 'path';
+import Platform from '../services/platform';
 
 let pathWindowsRegex = /^[a-zA-Z]:\\(?:[^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*$/;
 
@@ -42,7 +43,7 @@ function pathValidator() {
       mCtrl.$validators['notAbsolute'] = isAbsolute;
       mCtrl.$validators['tooLong'] = validateLength;
       mCtrl.$validators['hasSpaces'] = hasNoSpaces;
-      if(process.platform == 'win32') {
+      if(Platform.OS == 'win32') {
         mCtrl.$validators['invalidFormat'] = validateFormatWindows;
         mCtrl.$validators['invalidDisk'] = validateDisk;
       }
