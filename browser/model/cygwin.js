@@ -39,7 +39,7 @@ class CygwinInstall extends InstallableItem {
       }).then(()=>{
         return Util.executeCommand('where cygcheck', 1);
       }).then((output)=>{
-        this.option['detected'].location = path.parse(output).dir;
+        this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
         done();
       }).catch((error)=>{
         this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'cygwin'),true);
