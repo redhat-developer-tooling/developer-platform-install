@@ -25,7 +25,7 @@ class ConfirmController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
 
-    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
       $scope.$watch(()=>{
         return $scope.checkboxModel[key].selectedOption;

@@ -114,6 +114,10 @@ class InstallableItem {
     // To be overridden
   }
 
+  validateVersion() {
+    //to be overriden
+  }
+
   downloadInstaller(progress, success, failure) {
     progress.setStatus('Downloading');
     this.downloader = new Downloader(progress, success, failure);

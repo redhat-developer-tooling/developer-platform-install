@@ -100,23 +100,25 @@ class VirtualBoxInstall extends InstallableItem {
   }
 
   validateVersion() {
-    let installOption = this.option[this.selectedOption];
-    installOption.valid = true;
-    installOption.error = '';
-    installOption.warning = '';
-      if(Version.LT(installOption.version,this.minimumVersion)) {
-        installOption.valid = false;
-        installOption.error = 'oldVersion';
-        installOption.warning = '';
-      } else if(Version.GT(installOption.version,this.minimumVersion) && Version.LT(installOption.version,this.maximumVersion)) {
-        installOption.valid = true;
-        installOption.error = '';
-        installOption.warning = 'newerVersion';
-      } else if(Version.GE(installOption.version,this.maximumVersion)) {
-        installOption.valid = false;
-        installOption.error = '';
-        installOption.warning = 'newerVersion';
+    let option = this.option[this.selectedOption];
+    if(option) {
+      option.valid = true;
+      option.error = '';
+      option.warning = '';
+      if(Version.LT(option.version,this.minimumVersion)) {
+        option.valid = false;
+        option.error = 'oldVersion';
+        option.warning = '';
+      } else if(Version.GT(option.version,this.minimumVersion) && Version.LT(option.version,this.maximumVersion)) {
+        option.valid = true;
+        option.error = '';
+        option.warning = 'newerVersion';
+      } else if(Version.GE(option.version,this.maximumVersion)) {
+        option.valid = false;
+        option.error = '';
+        option.warning = 'newerVersion';
       }
+    }
   }
 
   validateSelectedFolder(selection) {
