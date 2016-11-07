@@ -57,7 +57,7 @@ class AccountController {
   }
 
   createAccount() {
-    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
+    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/protocol/openid-connect/registrations?client_id=web&response_mode=fragment&response_type=code&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2F%2Fconfirmation');
   }
 
   gotoDRH() {
