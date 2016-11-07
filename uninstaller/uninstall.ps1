@@ -65,6 +65,16 @@ if ($devstudioInstalled) {
 
 echo 'Removing installation folder'
 Cmd /C "rmdir /S /Q $folder\.." | Out-Null
+
+$subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+
+if ($subfolders.Length -gt 0) {
+  New-Item "$folder\..\temp" -type Directory -Force | Out-Null
+  foreach ($item in $subfolders) {
+    robocopy $folder\..\temp $item /purge | Out-Null
+  }
+  Remove-Item "$folder\.." -Recurse -Force
+}
 echo 'DONE'
 
 echo 'Removing path entries'
