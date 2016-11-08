@@ -61,7 +61,7 @@
     "electron-builder": "7.24.1",
     "electron-packager": "8.2.0",
     "gulp": "3.9.1",
-    "gulp-angular-protractor": "0.2.0",
+    "gulp-angular-protractor": "0.1.4",
     "gulp-babel": "6.1.2",
     "gulp-concat": "2.6.0",
     "gulp-copy": "0.0.2",
