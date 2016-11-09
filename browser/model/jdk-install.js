@@ -34,12 +34,13 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall(done = function(){}) {
-    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/,
-      selectedFolder = '',
-      extension = '',
-      command = 'java -XshowSettings';
+    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
+    let versionRegex1 = /(\d+\.\d+\.\d+)_.*/;
+    let selectedFolder = '';
+    let extension = '';
+    let command = 'java -XshowSettings';
 
-    this.addOption('install',this.version,'',true);
+    this.addOption('install',versionRegex1.exec(this.version)[1],'',true);
 
     Promise.resolve().then(()=>{
       return this.findMsiInstalledJava();
