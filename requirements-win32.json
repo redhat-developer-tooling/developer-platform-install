@@ -1,14 +1,14 @@
-  {
+{
   "cdk.zip": {
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "2.3.0.GA-20161103",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Nov-2016/cdk.zip",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Nov-2016/cdk.zip",
-    "filename": "cdk_2.3.GA-20161103.zip",
-    "sha256sum": "83a0cc49a42cee22cf28f7ea75b166b6012d39f65770766d29ad81961a59360b",
-    "virusTotalReport": "https://virustotal.com/en/file/83a0cc49a42cee22cf28f7ea75b166b6012d39f65770766d29ad81961a59360b/analysis/",
+    "version": "2.3.0.CR1",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-Nov-2016.rc1/cdk.zip",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-Nov-2016.rc1/cdk.zip",
+    "filename": "cdk_2.3.CR1-20161109.zip",
+    "sha256sum": "60d6e3561c2d8515d00c12c237f5299d2287ae1283f7b607d179d181ac6ba499",
+    "virusTotalReport": "https://virustotal.com/en/file/60d6e3561c2d8515d00c12c237f5299d2287ae1283f7b607d179d181ac6ba499/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "rhel-vagrant-virtualbox.box": {
@@ -16,10 +16,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "7.2.03112016-1",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Nov-2016/rhel-7-cdk-vagrant-scratch-7.2.03112016-1.x86_64.vagrant-virtualbox.box",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/03-Nov-2016/rhel-7-cdk-vagrant-scratch-7.2.03112016-1.x86_64.vagrant-virtualbox.box",
-    "filename": "rhel-7-cdk-vagrant-scratch-7.2.03112016-1.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "13e34e84950593ba3bda867810e26d7bdd4f8ff3916a5329fc1331aa9dcccef7",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-Nov-2016.rc1/rhel-cdk-kubernetes-7.2-31.x86_64.vagrant-virtualbox.box",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-Nov-2016.rc1/rhel-cdk-kubernetes-7.2-31.x86_64.vagrant-virtualbox.box",
+    "filename": "rhel-7-cdk-vagrant-scratch-7.2.20161109-31.x86_64.vagrant-virtualbox.box",
+    "sha256sum": "098776df40913b4569118ea077c6c9467f21cb5f45283cf930b5f4c594aefcae",
     "vendor": "Red Hat, Inc."
   },
   "oc.zip": {
