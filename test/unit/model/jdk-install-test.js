@@ -4,27 +4,23 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
-import request from 'request';
 import fs from 'fs-extra';
 import path from 'path';
+import rimraf from 'rimraf';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Util from 'browser/model/helpers/util';
 import JdkInstall from 'browser/model/jdk-install';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
-import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
-import rimraf from 'rimraf';
+import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
   let installerDataSvc, sandbox, installer;
   let infoStub, errorStub, sha256Stub;
   let downloadUrl = 'http://www.azulsystems.com/products/zulu/downloads';
-  let fakeInstallable = {
-    isInstalled: function() { return true; }
-  };
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
@@ -34,21 +30,15 @@ describe('JDK installer', function() {
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('passwd');
 
-  let fakeProgress = {
-    setStatus: function (desc) { return; },
-    setCurrent: function (val) {},
-    setLabel: function (label) {},
-    setComplete: function() {},
-    setTotalDownloadSize: function(size) {},
-    downloaded: function(amt, time) {}
-  };
-  let success = () => {},
-      failure = (err) => {};
+  let fakeProgress;
+
+  let success = () => {};
+  let failure = () => {};
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
 
     mockfs({
       'tempDirectory' : {
@@ -74,6 +64,7 @@ describe('JDK installer', function() {
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
     installer = new JdkInstall(installerDataSvc, downloadUrl, null);
+    fakeProgress = sandbox.stub(new ProgressState());
   });
 
   afterEach(function () {
@@ -205,12 +196,10 @@ describe('JDK installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Downloading');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
     it('should write the data into temp/jdk.msi', function() {
@@ -239,22 +228,19 @@ describe('JDK installer', function() {
   });
 
   describe('when installing jdk', function() {
-    let downloadedFile = path.join('tempDirectory', 'jdk.msi');
 
     it('should set progress to "Installing"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.install(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Installing');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
     it('should remove an existing folder with the same name', function() {
       sandbox.stub(fs, 'existsSync').returns(true);
       let stub = sandbox.stub(rimraf, 'sync').returns();
 
-      installer.install(fakeProgress, success, failure)
+      installer.install(fakeProgress, success, failure);
 
       expect(stub).calledOnce;
     });
@@ -280,37 +266,36 @@ describe('JDK installer', function() {
 
     it('should call success callback if install was sucessful but redirected to different location', function(done) {
       sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
-      let execFileStub = sandbox.stub(Installer.prototype,'execFile').returns(Promise.resolve(true));
-      let findTextStub = sandbox.stub(Util,'findText').returns(Promise.resolve("Dir (target): Key: INSTALLDIR	, Object: target/install"));
+      sandbox.stub(Installer.prototype,'execFile').returns(Promise.resolve(true));
+      sandbox.stub(Util,'findText').returns(Promise.resolve('Dir (target): Key: INSTALLDIR	, Object: target/install'));
       installer = new JdkInstall(installerDataSvc, downloadUrl, null);
       return installer.install(fakeProgress, function(){
         done();
       }, function(){
-        expect.fail('it should not fail')
+        expect.fail('it should not fail');
       });
     });
 
     it('should call success callback if install was sucessful but search for actual location failed', function(done) {
       sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
-      let execFileStub = sandbox.stub(Installer.prototype,'execFile').returns(Promise.resolve(true));
-      let findTextStub = sandbox.stub(Util,'findText').returns(Promise.reject("failure"));
+      sandbox.stub(Installer.prototype,'execFile').returns(Promise.resolve(true));
+      sandbox.stub(Util,'findText').returns(Promise.reject('failure'));
       installer = new JdkInstall(installerDataSvc, downloadUrl, null);
       return installer.install(fakeProgress, function(){
         done();
       }, function(){
-        expect.fail('it should not fail')
+        expect.fail('it should not fail');
       });
     });
 
     it('should skip the installation if it is not selected', function() {
       installer.selectedOption = 'do nothing';
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       let calls = 0;
       let succ = function() { return calls++; };
 
       installer.install(fakeProgress, succ, failure);
 
-      expect(spy).not.called;
+      expect(fakeProgress.setStatus).not.called;
       expect(calls).to.equal(1);
     });
 
@@ -338,10 +323,10 @@ describe('JDK installer', function() {
       });
 
       it('getFolderContents should reject on error', function() {
-        let stub = sandbox.stub(fs, 'readdir').yields(err);
+        sandbox.stub(fs, 'readdir').yields(err);
 
         return installer.getFolderContents('tempDirectory')
-        .then((files) => {
+        .then(() => {
           expect.fail('it did not reject');
         })
         .catch((error) => {
@@ -373,7 +358,7 @@ describe('JDK installer', function() {
         sandbox.stub(fs, 'rename').yields(err);
 
         return installer.renameFile('tempDirectory', 'test', 'newName')
-        .then((result) => {
+        .then(() => {
           expect.fail('it did not reject');
         })
         .catch((error) => {

@@ -131,7 +131,7 @@ class InstallableItem {
         this.downloadUrl,
         this.sha256,
         this.authRequired ? this.installerDataSvc.getUsername() : undefined,
-        this.authRequired ? this.installerDataSvc.getPassword() : undefined,
+        this.authRequired ? this.installerDataSvc.getPassword() : undefined
       );
     }
   }

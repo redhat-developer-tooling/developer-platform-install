@@ -2,8 +2,8 @@
 
 let path = require('path');
 let fs = require('fs-extra');
-let Glob = require("glob").Glob;
-let replace = require("replace-in-file");
+let Glob = require('glob').Glob;
+let replace = require('replace-in-file');
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
 import InstallableItem from './installable-item';
@@ -124,7 +124,7 @@ class JbdsInstall extends InstallableItem {
 
   postInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    if(this.selectedOption === "install") {
+    if(this.selectedOption === 'install') {
       this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
       let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
 
@@ -156,7 +156,7 @@ class JbdsInstall extends InstallableItem {
       if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
         this.setupCdk()
             .then((result) => {
-              return this.setupJDK(jdkInstall, installer, result)
+              return this.setupJDK(jdkInstall, installer, result);
             })
             .then((result) => {
               return installer.succeed(result);
@@ -170,7 +170,7 @@ class JbdsInstall extends InstallableItem {
           if (arg == JdkInstall.KEY) {
             this.setupCdk()
                 .then((result) => {
-                  return this.setupJDK(jdkInstall, installer, result)
+                  return this.setupJDK(jdkInstall, installer, result);
                 })
                 .then((result) => {
                   return installer.succeed(result);
@@ -200,7 +200,7 @@ class JbdsInstall extends InstallableItem {
           with: '-vm \n' + javaExecutable
         }, (error, changedFiles) => {
           if (error) {
-            reject(error)
+            reject(error);
           } else {
             if (changedFiles.length !== 1) {
               reject('devstudio.ini was not changed properly');
@@ -253,7 +253,7 @@ class JbdsInstall extends InstallableItem {
 
   setupCdk(result) {
     let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.KEY);
-    let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+    let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
     Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location');
     return new Promise((resolve, reject) => {
       if(cdkInstall.isSkipped) {

@@ -3,15 +3,10 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
-import request from 'request';
 import fs from 'fs-extra';
-import path from 'path';
 import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
-import Installer from 'browser/model/helpers/installer';
-import child_process from 'child_process';
 import InstallerDataService from 'browser/services/data';
 import Hash from 'browser/model/helpers/hash';
 
@@ -99,7 +94,7 @@ describe('InstallableItem', function() {
     it('should not start download file if there is dowloaded file with correct checksum',function() {
       let successHandStub = sandbox.stub(downloader,'successHandler').returns();
       sandbox.stub(fs,'existsSync').returns(true);
-      let startDlMock = sandbox.stub(installItem,'startDownload').returns();
+      sandbox.stub(installItem,'startDownload').returns();
       sandbox.stub(Hash.prototype,'SHA256').yields('sha');
 
       installItem.checkAndDownload('temp/inatall.zip','url','sha');

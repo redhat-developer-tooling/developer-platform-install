@@ -15,8 +15,8 @@ class AccountController {
     this.scope = $scope;
     this.installerDataSvc = installerDataSvc;
 
-    this.username = "";
-    this.password = "";
+    this.username = '';
+    this.password = '';
     this.authFailed = false;
     this.tandcNotSigned = false;
     this.pdkVersion = pjson.version;
@@ -89,7 +89,7 @@ class AccountController {
 
   apply() {
     this.timeout(()=>{
-        this.scope.$apply();
+      this.scope.$apply();
     });
   }
 }

@@ -1,9 +1,7 @@
 'use strict';
 
-let webdriver = browser.driver;
-
 function describeBreadcrumbs(context) {
-  describe("Breadcrumbs", function() {
+  describe('Breadcrumbs', function() {
     let presence = context.pageName.toLowerCase() !== 'login';
     let names = ['Target Folder', 'Confirmation', 'Download & Install', 'Get Started'];
     let breadcrumbs;

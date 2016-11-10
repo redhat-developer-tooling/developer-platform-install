@@ -4,7 +4,6 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
-import request from 'request';
 import fs from 'fs-extra';
 import path from 'path';
 import VagrantInstall from 'browser/model/vagrant';
@@ -16,6 +15,7 @@ import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
 import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
+import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
 
 describe('Vagrant installer', function() {
@@ -34,22 +34,15 @@ describe('Vagrant installer', function() {
   installerDataSvc.vagrantDir.returns(path.join('installationFolder','vagrant'));
   installerDataSvc.getInstallable.returns(fakeInstallable);
 
-  let fakeProgress = {
-    setStatus: function (desc) { return; },
-    setCurrent: function (val) {},
-    setLabel: function (label) {},
-    setComplete: function() {},
-    setTotalDownloadSize: function(size) {},
-    downloaded: function(amt, time) {}
-  };
+  let fakeProgress;
 
-  let success = () => {},
-      failure = (err) => {};
+  let success = () => {};
+  let failure = () => {};
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
 
     mockfs({
       'tempDirectory' : {},
@@ -71,6 +64,7 @@ describe('Vagrant installer', function() {
     installer = new VagrantInstall(installerDataSvc, downloadUrl, null);
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
+    fakeProgress = sandbox.stub(new ProgressState());
   });
 
   afterEach(function () {
@@ -111,12 +105,10 @@ describe('Vagrant installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Downloading');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
     it('should write the data into temp/vagrant.zip', function() {
@@ -145,10 +137,8 @@ describe('Vagrant installer', function() {
   });
 
   describe('installation', function() {
-    let downloadedFile = path.join('tempDirectory', 'vagrant.zip');
 
     it('should not start until Cygwin has finished installing', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       let installSpy = sandbox.spy(installer, 'postCygwinInstall');
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
@@ -156,8 +146,8 @@ describe('Vagrant installer', function() {
       installer.install(fakeProgress, success, failure);
 
       expect(installSpy).not.called;
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Waiting for Cygwin to finish installation');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for Cygwin to finish installation');
     });
 
     it('should install once Cygwin has finished', function() {
@@ -173,17 +163,16 @@ describe('Vagrant installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
       installer.postCygwinInstall(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Installing');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
     it('should exec the downloaded file with temporary folder as target destination', function() {
-      let stub = sandbox.stub(child_process, 'execFile').yields('done');
+      sandbox.stub(child_process, 'execFile').yields('done');
       let spy = sandbox.spy(Installer.prototype, 'execFile');
       installer.postCygwinInstall(fakeProgress, success, failure);
 
@@ -195,7 +184,7 @@ describe('Vagrant installer', function() {
     });
 
     it('should catch errors during the installation', function(done) {
-      let stub = sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
+      sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
 
       try {
         installer.postCygwinInstall(fakeProgress, success, failure);
@@ -221,13 +210,11 @@ describe('Vagrant installer', function() {
 
   describe('setup', function() {
     it('should set progress to "setting up"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       sandbox.stub(Installer.prototype, 'writeFile').rejects('done');
       installer.setup(fakeProgress, success, failure);
 
-      expect(spy).calledOnce;
-      expect(spy).calledWith('Setting up');
+      expect(fakeProgress.setStatus).calledOnce;
+      expect(fakeProgress.setStatus).calledWith('Setting up');
     });
   });
 
@@ -242,7 +229,7 @@ describe('Vagrant installer', function() {
     });
 
     it('should set vagrant as detected in the appropriate folder when found', function(done) {
-      return installer.detectExistingInstall(function(err) {
+      return installer.detectExistingInstall(function() {
         expect(installer.option['detected'].location).to.equal('folder');
         done();
       });
@@ -270,7 +257,7 @@ describe('Vagrant installer', function() {
       installer.addOption('detected','', 'folder',false);
       installer.selectedOption = 'detected';
       option = installer.option[installer.selectedOption];
-    })
+    });
 
     it('should mark the version as valid if it at least matches the required', function() {
       installer.option['detected'].version = '1.8.1';

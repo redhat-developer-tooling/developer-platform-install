@@ -1,7 +1,7 @@
 'use strict';
 
 let fs = require('fs-extra');
-var filesystem = require("fs");
+var filesystem = require('fs');
 let path = require('path');
 
 import InstallableItem from './installable-item';
@@ -53,7 +53,7 @@ class CDKInstall extends InstallableItem {
     let totalDownloads = 3;
     this.downloader = new Downloader(progress, success, failure, totalDownloads);
     let username = this.installerDataSvc.getUsername(),
-        password = this.installerDataSvc.getPassword();
+    password = this.installerDataSvc.getPassword();
 
     let cdkBoxBundledFile = path.join(this.downloadFolder, this.boxName);
     if(fs.existsSync(cdkBoxBundledFile)) {

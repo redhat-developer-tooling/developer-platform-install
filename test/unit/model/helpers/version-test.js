@@ -1,11 +1,10 @@
 import chai, { expect } from 'chai';
-import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Version from 'browser/model/helpers/version';
 chai.use(sinonChai);
 
 describe('version', function() {
-  it("should save value passed in constructor",function() {
+  it('should save value passed in constructor',function() {
     let v = new Version('1.2.3');
     expect(v.value).equals('1.2.3');
     let d = new Version('1.2.3');
@@ -68,4 +67,4 @@ describe('version', function() {
       expect(new Version('1.2.3').ge('1.2.2')).equals(true);
     });
   });
-})
+});

@@ -1,8 +1,7 @@
-'use strict'
+'use strict';
 
-import chai, { expect } from 'chai';
+import { expect } from 'chai';
 import sinon from 'sinon';
-import { default as sinonChai } from 'sinon-chai';
 import Platform from 'browser/services/platform';
 
 describe('Platform', function(){
@@ -11,11 +10,11 @@ describe('Platform', function(){
 
   beforeEach(function(){
     sandbox = sinon.sandbox.create();
-  })
+  });
 
   afterEach(function(){
     sandbox.restore();
-  })
+  });
 
   describe('identify method',function(){
 
@@ -33,21 +32,21 @@ describe('Platform', function(){
       expect(Platform.identify(data)).to.be.equal('darwin');
       Platform.getOS.returns('linux');
       expect(Platform.identify(data)).to.be.equal('linux');
-    })
+    });
 
     it('returns default property value if there no propyrty with current platform name', function(){
       sandbox.stub(Platform,'getOS').returns('ps/2');
       expect(Platform.identify(data)).to.be.equal('bummer');
-    })
+    });
 
-  })
+  });
 
   describe('PATH', function(){
 
-    describe("PATH does not return undefined value form process.env", function(){
+    describe('PATH does not return undefined value form process.env', function(){
       expect(process.env[Platform.PATH]).to.be.not.equal(undefined);
-    })
+    });
 
-  })
+  });
 
 });

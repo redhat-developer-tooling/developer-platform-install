@@ -15,6 +15,7 @@ import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import JbdsAutoInstallGenerator from 'browser/model/jbds-autoinstall';
 import InstallerDataService from 'browser/services/data';
+import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
 
 describe('devstudio installer', function() {
@@ -24,8 +25,8 @@ describe('devstudio installer', function() {
   let fakeInstall = {
     isInstalled: function() { return false; }
   };
-  let success = () => {},
-      failure = (err) => {};
+  let success = () => {};
+  let failure = () => {};
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
@@ -38,19 +39,12 @@ describe('devstudio installer', function() {
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('passwd');
 
-  let fakeProgress = {
-    setStatus: function (desc) { return; },
-    setCurrent: function (val) {},
-    setLabel: function (label) {},
-    setComplete: function() {},
-    setTotalDownloadSize: function(size) {},
-    downloaded: function(amt, time) {}
-  };
+  let fakeProgress;
 
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
 
     mockfs({
       tempDirectory : { 'testFile': 'file content here' },
@@ -72,6 +66,7 @@ describe('devstudio installer', function() {
     installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
+    fakeProgress = sandbox.stub(new ProgressState());
   });
 
   afterEach(function () {
@@ -113,12 +108,10 @@ describe('devstudio installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Downloading');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
     it('should write the data into temp/jbds.jar', function() {
@@ -136,7 +129,7 @@ describe('devstudio installer', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadAuthStub).to.have.been.calledOnce;
-      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl,"user","passwd");
+      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl,'user','passwd');
     });
 
     it('should skip download when the file is found in the download folder', function() {
@@ -149,12 +142,10 @@ describe('devstudio installer', function() {
   });
 
   describe('installation', function() {
-    let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
     let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbds.jar');
     let fsextra = require('fs-extra');
 
     it('should not start until JDK has finished installing', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       let installSpy = sandbox.spy(installer, 'postInstall');
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
@@ -162,8 +153,8 @@ describe('devstudio installer', function() {
       installer.install(fakeProgress, success, failure);
 
       expect(installSpy).not.called;
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
     });
 
     it('should install once JDK has finished', function() {
@@ -178,12 +169,10 @@ describe('devstudio installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.postInstall(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Installing');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
     it('should load the install config contents', function() {
@@ -195,7 +184,7 @@ describe('devstudio installer', function() {
     });
 
     it('should write the install configuration into temp/jbds-autoinstall.xml', function() {
-      let stub = sandbox.stub(fsextra, 'writeFile').yields();
+      sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
 
       let data = new JbdsAutoInstallGenerator(installerDataSvc.jbdsDir(), installerDataSvc.jdkDir(), installer.version).fileContent();
@@ -208,7 +197,7 @@ describe('devstudio installer', function() {
 
     it('should catch errors thrown during the installation', function(done) {
       let err = new Error('critical error');
-      let stub = sandbox.stub(fsextra, 'writeFile').yields(err);
+      sandbox.stub(fsextra, 'writeFile').yields(err);
 
       try {
         installer.postInstall(fakeProgress, success, failure);
@@ -232,7 +221,7 @@ describe('devstudio installer', function() {
 
       it('should wait for JDK install to complete', function() {
         return installer.postJDKInstall(helper, true)
-        .then((result) => {
+        .then(() => {
           expect(eventSpy).calledOnce;
         });
       });
@@ -241,7 +230,7 @@ describe('devstudio installer', function() {
         sandbox.stub(fakeInstall, 'isInstalled').returns(true);
 
         return installer.postJDKInstall(helper)
-        .then((result) => {
+        .then(() => {
           expect(eventSpy).not.called;
           expect(stubInstall).calledOnce;
         });
@@ -249,13 +238,13 @@ describe('devstudio installer', function() {
     });
 
     describe('headlessInstall', function() {
-      let helper, stub, fsStub;
+      let helper;
       let child_process = require('child_process');
 
       beforeEach(function() {
         helper = new Installer('jbds', fakeProgress, success, failure);
-        stub = sandbox.stub(child_process, 'execFile').yields();
-        fsStub = sandbox.stub(fs, 'appendFile').yields();
+        sandbox.stub(child_process, 'execFile').yields();
+        sandbox.stub(fs, 'appendFile').yields();
       });
 
       it('should perform headless install into the installation folder', function() {
@@ -270,33 +259,25 @@ describe('devstudio installer', function() {
         ];
 
         return installer.headlessInstall(helper)
-        .then((result) => {
+        .then(() => {
           expect(spy).calledOnce;
           expect(spy).calledWith(javaPath, javaOpts);
         });
       });
 
       it('should trigger CDK setup when done', function() {
-        let spy = sandbox.spy(installer, 'setupCdk');
-
-        let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java.exe');
-        let javaOpts = [
-          '-jar',
-          downloadedFile,
-          path.join(installerDataSvc.tempDir(), 'jbds-autoinstall.xml')
-        ];
+        sandbox.spy(installer, 'setupCdk');
 
         return installer.headlessInstall(helper)
         .then((result) => {
-          expect(spy).calledOnce;
-          expect(spy).calledWith(result);
+          expect(installer.setupCdk).calledOnce;
+          expect(installer.setupCdk).calledWith(result);
         });
       });
     });
 
     describe('setupCdk', function() {
       let helper;
-      let child_process = require('child_process');
 
       beforeEach(function() {
         helper = new Installer('jbds', fakeProgress, success, failure);
@@ -306,7 +287,7 @@ describe('devstudio installer', function() {
         let fsStub = sandbox.stub(fs, 'appendFile').yields();
 
         let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties');
-        let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+        let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
         let data = 'CDKServer=' + escapedPath + ',true\r\n';
 
         return installer.setupCdk(helper)
@@ -318,7 +299,7 @@ describe('devstudio installer', function() {
       });
 
       it('should resolve as true if no error occurs', function() {
-        let fsStub = sandbox.stub(fs, 'appendFile').yields();
+        sandbox.stub(fs, 'appendFile').yields();
 
         return installer.setupCdk(helper)
         .then((result) => {
@@ -327,10 +308,10 @@ describe('devstudio installer', function() {
       });
 
       it('should reject if an error occurs', function() {
-        let fsStub = sandbox.stub(fs, 'appendFile').yields('error');
+        sandbox.stub(fs, 'appendFile').yields('error');
 
         return installer.setupCdk(helper)
-        .then((result) => {
+        .then(() => {
           expect.fail('it did not reject');
         })
         .catch((err) => {

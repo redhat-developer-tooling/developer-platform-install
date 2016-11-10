@@ -15,7 +15,7 @@ function progressBar() {
       status: '='
     },
     templateUrl: 'directives/progressBar.html'
-  }
+  };
 }
 
 export default progressBar;

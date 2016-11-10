@@ -63,26 +63,26 @@ class Downloader {
   }
 
   closeHandler(file,sha,url) {
-      if(this.downloads.get(file) && this.downloads.get(file)['failure']) {
-        return;
-      }
-      if(sha) {
-        Logger.log(`Configured file='${file}' sha256='${sha}'`);
-        var h = new Hash();
-        h.SHA256(file,(dlSha) => {
-          if(sha === dlSha) {
-            Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
-            this.successHandler(file);
-          } else {
-            if(this.downloads.get(file)) {
-              this.downloads.get(file)['failure'] = true;
-            }
-            this.failure('SHA256 checksum verification failed');
+    if(this.downloads.get(file) && this.downloads.get(file)['failure']) {
+      return;
+    }
+    if(sha) {
+      Logger.log(`Configured file='${file}' sha256='${sha}'`);
+      var h = new Hash();
+      h.SHA256(file,(dlSha) => {
+        if(sha === dlSha) {
+          Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
+          this.successHandler(file);
+        } else {
+          if(this.downloads.get(file)) {
+            this.downloads.get(file)['failure'] = true;
           }
-        });
-      } else {
-        this.successHandler(file);
-      }
+          this.failure('SHA256 checksum verification failed');
+        }
+      });
+    } else {
+      this.successHandler(file);
+    }
   }
 
   successHandler(file) {
@@ -118,8 +118,6 @@ class Downloader {
       .pipe(stream)
       .on('close', this.closeHandler.bind(this,stream.path,sha,options));
   }
-
-
 
   restartDownload() {
     this.downloadSize = 0;

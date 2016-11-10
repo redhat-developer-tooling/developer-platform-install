@@ -1,19 +1,19 @@
 'use strict';
 
-function breadcrumb($state) {
+function breadcrumb() {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: 'directives/breadcrumbs.html',
-    compile: (tElement, tAttrs) => {
-      return ($scope, $elem, $attr) => {
+    compile: () => {
+      return ($scope) => {
         $scope.show = (state) => {
           if (!angular.isDefined(state.data)) {
             return false;
           }
           return true;
         };
-      }
+      };
     },
     controller: ['$scope', '$state', ($scope, $state) => {
       $scope.$navItems = $state.get();
@@ -22,7 +22,7 @@ function breadcrumb($state) {
         return $state.$current.name == state.name;
       };
     }]
-  }
+  };
 }
 
 export default breadcrumb;

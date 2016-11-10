@@ -14,8 +14,8 @@ class JbdsAutoInstallGenerator {
   }
 
   generate(jbdsInstallDir, jdkInstallDir, jbdsVersion) {
-    let exeSuffix = Platform.OS === 'win32' ? 'w.exe' : '',
-    temp =
+    let exeSuffix = Platform.OS === 'win32' ? 'w.exe' : '';
+    let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
         '<AutomatedInstallation langpack="eng">',
