@@ -31,9 +31,9 @@ let mainModule =
           .factory('installerDataSvc', InstallerDataService.factory)
           .factory('request', Request.factory)
           .directive(progressBar.name, progressBar)
-          .directive(breadcrumb.name, ['$state', breadcrumb])
+          .directive(breadcrumb.name, breadcrumb)
           .directive(pathValidator.name, pathValidator)
-          .config( ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) => {
+          .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
             $urlRouterProvider.otherwise('/account');
 
             $stateProvider
@@ -75,63 +75,63 @@ let mainModule =
                 }
               });
           }])
-          .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', 'request', ($rootScope, $location, $timeout, installerDataSvc, request) => {
+          .run( ['$timeout', 'installerDataSvc', ($timeout, installerDataSvc) => {
             let reqs = installerDataSvc.requirements;
 
             let virtualbox = new VirtualBoxInstall(
-                  reqs['virtualbox.exe'].version,
-                  reqs['virtualbox.exe'].revision,
-                  installerDataSvc,
-                  reqs['virtualbox.exe'].url,
-                  null,
-                  'virtualbox',
-                  reqs['virtualbox.exe'].sha256sum),
+              reqs['virtualbox.exe'].version,
+              reqs['virtualbox.exe'].revision,
+              installerDataSvc,
+              reqs['virtualbox.exe'].url,
+              null,
+              'virtualbox',
+              reqs['virtualbox.exe'].sha256sum);
 
-                cygwin = new CygwinInstall(
-                  installerDataSvc,
-                  reqs['cygwin.exe'].url,
-                  null,
-                  'cygwin',
-                  reqs['cygwin.exe'].sha256sum),
+            let cygwin = new CygwinInstall(
+              installerDataSvc,
+              reqs['cygwin.exe'].url,
+              null,
+              'cygwin',
+              reqs['cygwin.exe'].sha256sum);
 
-                vagrant = new VagrantInstall(
-                  installerDataSvc,
-                  reqs['vagrant.msi'].url,
-                  null,
-                  'vagrant',
-                  reqs['vagrant.msi'].sha256sum),
+            let vagrant = new VagrantInstall(
+              installerDataSvc,
+              reqs['vagrant.msi'].url,
+              null,
+              'vagrant',
+              reqs['vagrant.msi'].sha256sum);
 
-                cdk = new CDKInstall(
-                  installerDataSvc,
-                  $timeout,
-                  reqs['cdk.zip'].dmUrl,
-                  reqs['rhel-vagrant-virtualbox.box'].dmUrl,
-                  reqs['oc.zip'].url,
-                  null,
-                  'cdk',
-                  reqs['cdk.zip'].sha256sum,
-                  reqs['rhel-vagrant-virtualbox.box'].sha256sum,
-                  reqs['oc.zip'].sha256sum),
+            let cdk = new CDKInstall(
+              installerDataSvc,
+              $timeout,
+              reqs['cdk.zip'].dmUrl,
+              reqs['rhel-vagrant-virtualbox.box'].dmUrl,
+              reqs['oc.zip'].url,
+              null,
+              'cdk',
+              reqs['cdk.zip'].sha256sum,
+              reqs['rhel-vagrant-virtualbox.box'].sha256sum,
+              reqs['oc.zip'].sha256sum);
 
-                jdk = new JdkInstall(
-                  installerDataSvc,
-                  reqs['jdk.msi'].dmUrl,
-                  null,
-                  reqs['jdk.msi'].prefix,
-                  'jdk8',
-                  reqs['jdk.msi'].sha256sum),
+            let jdk = new JdkInstall(
+              installerDataSvc,
+              reqs['jdk.msi'].dmUrl,
+              null,
+              reqs['jdk.msi'].prefix,
+              'jdk8',
+              reqs['jdk.msi'].sha256sum);
 
-                jbds = new JbdsInstall(
-                  installerDataSvc,
-                  reqs['jbds.jar'].dmUrl,
-                  null,
-                  'developer-studio',
-                  reqs['jbds.jar'].sha256sum);
+            let jbds = new JbdsInstall(
+              installerDataSvc,
+              reqs['jbds.jar'].dmUrl,
+              null,
+              'developer-studio',
+              reqs['jbds.jar'].sha256sum);
 
-              installerDataSvc.addItemsToInstall(virtualbox,cygwin,vagrant,cdk,jdk,jbds);
+            installerDataSvc.addItemsToInstall(virtualbox,cygwin,vagrant,cdk,jdk,jbds);
 
-              jdk.thenInstall(jbds);
-              jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(vagrant).thenInstall(cdk);
+            jdk.thenInstall(jbds);
+            jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(vagrant).thenInstall(cdk);
 
           }]);
 

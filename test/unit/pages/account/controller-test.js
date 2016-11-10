@@ -12,7 +12,7 @@ describe('Login controller', function(){
   let controller,timeout,scope;
 
   beforeEach(function() {
-    timeout = function(cb) { cb(); }
+    timeout = function(cb) { cb(); };
     scope = { '$apply': function() { } };
   });
 
@@ -46,10 +46,10 @@ describe('Login controller', function(){
 
   describe('login', function() {
 
-    let http, base64, getUseaAgent;
+    let http, base64;
 
     before(function(){
-      getUseaAgent = sinon.stub(AccountController.prototype, 'getUserAgent');
+      sinon.stub(AccountController.prototype, 'getUserAgent');
     });
 
     beforeEach(function() {
@@ -73,14 +73,14 @@ describe('Login controller', function(){
       });
 
       let req = {
-        auth: { pass: "password", sendImmediately: true, user: "username" },
+        auth: { pass: 'password', sendImmediately: true, user: 'username' },
         followAllRedirects: true,
         headers: {
-          Accept: "application/json, text/plain, */*",
+          Accept: 'application/json, text/plain, */*',
           'User-Agent': undefined },
-        method: "GET",
+        method: 'GET',
         rejectUnauthorized: true,
-        url: "https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip"
+        url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip'
       };
 
       controller = new AccountController({}, timeout, scope, http, base64);
@@ -93,7 +93,7 @@ describe('Login controller', function(){
     });
 
     it('should call handleHttpFailure on HTTP failure', function(){
-      http = function() { return Promise.reject('serious error')};
+      http = ()=> Promise.reject('serious error');
       controller = new AccountController({}, timeout, scope, http, base64);
       let spy = sinon.spy(controller, 'handleHttpFailure');
 
@@ -108,7 +108,7 @@ describe('Login controller', function(){
     });
 
     it('should call handleHttpSuccess on successful HTTP request', function(){
-      http = function() { return Promise.resolve({ status: 404 })};
+      http = ()=> Promise.resolve({ status: 404 });
       controller = new AccountController({}, timeout, scope, http, base64);
       let spy = sinon.spy(controller, 'handleHttpSuccess');
 
@@ -180,4 +180,4 @@ describe('Login controller', function(){
       expect(controller.authFailed).to.be.false;
     });
   });
-})
+});

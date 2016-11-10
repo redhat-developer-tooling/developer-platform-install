@@ -65,19 +65,19 @@ class JdkInstall extends InstallableItem {
           }
           resolve(true);
         } else {
-          reject("No java detected");
+          reject('No java detected');
         }
       });
     }).then((result) => {
       return Util.executeCommand(command, 2);
     }).then((output) => {
-        var locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
-        this.openJdk = output.includes("OpenJDK");
-        var t = locationRegex.exec(output);
-        if(t.length > 1) {
-          this.option['detected'].location = t[1];
-        }
-        done();
+      let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
+      this.openJdk = output.includes('OpenJDK');
+      var t = locationRegex.exec(output);
+      if(t.length > 1) {
+        this.option['detected'].location = t[1];
+      }
+      done();
     }).catch((error) => {
       if(Platform.OS !== 'darwin' ) {
         this.selectedOption = 'install';
@@ -91,18 +91,18 @@ class JdkInstall extends InstallableItem {
   findMsiInstalledJava() {
     let msiSearchScript = path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
     let data = [
-      "$vbox = Get-WmiObject Win32_Product | where {$_.Name -like '*OpenJDK*'};",
-      "echo $vbox.IdentifyingNumber;",
-      "[Environment]::Exit(0);"
-    ].join('\r\n'),
-      args = [
+      '$vbox = Get-WmiObject Win32_Product | where {$_.Name -like \'*OpenJDK*\'};',
+      'echo $vbox.IdentifyingNumber;',
+      '[Environment]::Exit(0);'
+    ].join('\r\n');
+    let args = [
       '-NonInteractive',
       '-ExecutionPolicy',
       'ByPass',
       '-File',
       msiSearchScript
     ];
-    let result = Promise.resolve("");
+    let result = Promise.resolve('');
     if (Platform.OS !== 'darwin') {
       result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
@@ -134,7 +134,7 @@ class JdkInstall extends InstallableItem {
   }
 
   install(progress, success, failure) {
-    if(this.selectedOption === "install") {
+    if(this.selectedOption === 'install') {
       progress.setStatus('Installing');
       let installer = new Installer(JdkInstall.KEY, progress, success, failure);
 
@@ -144,7 +144,7 @@ class JdkInstall extends InstallableItem {
       installer.execFile('msiexec', this.createMsiExecParameters()).then((result) => {
         // msiexec logs are in UCS-2
         Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'),'Dir (target): Key: INSTALLDIR	, Object:','ucs2').then((line)=>{
-          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/
+          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/;
           let targetDir = regexTargetDir.exec(line)[1];
           if(targetDir !== this.getLocation()) {
             Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');

@@ -15,15 +15,15 @@ describe('Hash', function() {
 
   describe('SHA256', function() {
     let fakeHash = {
-      update: function(chunk) {},
-      digest: function(type) {}
-    }
+      update: function() {},
+      digest: function() {}
+    };
     let sandbox, createHashStub, readStreamStub;
     let stream;
 
     beforeEach(function() {
       stream = new Readable();
-      stream._read = function(size) {};
+      stream._read = function() {};
       sandbox = sinon.sandbox.create();
       createHashStub = sandbox.stub(crypto, 'createHash').returns(fakeHash);
       readStreamStub = sandbox.stub(fs, 'createReadStream').returns(stream);
@@ -60,5 +60,5 @@ describe('Hash', function() {
       });
       stream.emit('close');
     });
-  })
+  });
 });

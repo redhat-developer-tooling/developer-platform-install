@@ -6,15 +6,14 @@ import { default as sinonChai } from 'sinon-chai';
 import InstallController from 'browser/pages/install/controller.js';
 import InstallerDataService from 'browser/services/data.js';
 import VagrantInstall from 'browser/model/vagrant.js';
-import VirtualBoxInstall from 'browser/model/virtualbox.js'
-import InstallableItem from 'browser/model/installable-item.js'
+import VirtualBoxInstall from 'browser/model/virtualbox.js';
 import Logger from 'browser/services/logger';
 import fs from 'fs';
 chai.use(sinonChai);
 
 describe('Install controller', function() {
 
-  let controller, installerDataSvc, sandbox;
+  let installerDataSvc, sandbox;
   let vagrant, vbox;
   let logStub, fsStub, infoStub, errorStub;
   let timeoutStub = sinon.stub();
@@ -49,12 +48,12 @@ describe('Install controller', function() {
 
   afterEach(function() {
     sandbox.restore();
-  })
+  });
 
   describe('constrution', function() {
     it('should process all installables', function() {
       let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      controller = new InstallController(null, null, installerDataSvc);
+      new InstallController(null, null, installerDataSvc);
 
       expect(stub).calledTwice;
       expect(stub).calledWith(VagrantInstall.KEY, vagrant);
@@ -66,7 +65,7 @@ describe('Install controller', function() {
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
       sandbox.stub(vagrant,'isSkipped').returns(true);
       sandbox.stub(vbox,'isSkipped').returns(true);
-      controller = new InstallController(null, null, installerDataSvc);
+      new InstallController(null, null, installerDataSvc);
       expect(stub).calledTwice;
     });
   });
@@ -87,10 +86,10 @@ describe('Install controller', function() {
     afterEach(function() {
       dlStub.reset();
       inStub.reset();
-    })
+    });
 
     it('should trigger download on not downloaded installables', function() {
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(dlStub).calledTwice;
       expect(dlStub).calledWith('vagrant', vagrant);
@@ -100,7 +99,7 @@ describe('Install controller', function() {
     it('should not trigger download on already downloaded items', function() {
       sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(dlStub).not.called;
     });
@@ -108,7 +107,7 @@ describe('Install controller', function() {
     it('should trigger install on already downloaded items', function() {
       sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(inStub).calledTwice;
       expect(inStub).calledWith('vagrant', vagrant);
@@ -127,7 +126,7 @@ describe('Install controller', function() {
 
     it('data service should register the new downloads', function() {
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(spy).calledTwice;
       expect(spy).calledWith('vagrant');
@@ -140,7 +139,7 @@ describe('Install controller', function() {
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
       expect(vagrantStub).calledOnce;
       expect(vboxStub).calledOnce;
     });
@@ -148,7 +147,7 @@ describe('Install controller', function() {
     it('should call data services downloadDone when download finishes', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(doneStub).calledTwice;
       expect(doneStub).calledWith(sinon.match.any, 'vagrant');
@@ -169,7 +168,7 @@ describe('Install controller', function() {
 
     it('data service should register the new install', function() {
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(spy).calledTwice;
       expect(spy).calledWith('vagrant');
@@ -182,7 +181,7 @@ describe('Install controller', function() {
     it('should call the installables install method', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
       expect(vagrantStub).calledOnce;
       expect(vboxStub).calledOnce;
     });
@@ -190,7 +189,7 @@ describe('Install controller', function() {
     it('should call data services installDone when install finishes', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      controller = new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController(null, timeoutStub, installerDataSvc);
 
       expect(doneStub).calledTwice;
       expect(doneStub).calledWith(sinon.match.any, 'vagrant');

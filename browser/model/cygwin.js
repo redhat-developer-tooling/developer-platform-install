@@ -25,9 +25,9 @@ class CygwinInstall extends InstallableItem {
 
   detectExistingInstall(done = function(){}) {
     if (Platform.OS === 'win32') {
-      let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/,
-          opensshPackageReqex = /openssh\s*(\d+\.\d+)/,
-          rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
+      let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
+      let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
+      let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
       Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
         let cygwinVersion = cygwinPackageRegex.exec(out)[1];
         let opensshVersion = opensshPackageReqex.exec(out)[1];
@@ -95,7 +95,7 @@ class CygwinInstall extends InstallableItem {
     let originalExecFile = path.join(this.installerDataSvc.cygwinDir(),'setup-x86_64.exe');
     installer.execFile(
       this.downloadedFile, opts
-    ).then((result) => {
+    ).then(() => {
       return installer.copyFile(
         this.downloadedFile, originalExecFile, true);
     }).then((result) => {

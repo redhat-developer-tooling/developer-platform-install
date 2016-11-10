@@ -19,7 +19,7 @@ class Logger {
   }
 
   static error(msg) {
-    Logger.log('ERROR: ' + msg)
+    Logger.log('ERROR: ' + msg);
   }
 
   static getIpcRenderer() {

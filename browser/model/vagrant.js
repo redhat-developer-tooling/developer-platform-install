@@ -1,7 +1,6 @@
 'use strict';
 
 let path = require('path');
-let fs = require('fs-extra');
 
 import InstallableItem from './installable-item';
 import Platform from '../services/platform';
@@ -18,8 +17,8 @@ class VagrantInstall extends InstallableItem {
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
     this.detected = false;
-    this.minimumVersion = "1.8.1";
-    this.existingVersion = "";
+    this.minimumVersion = '1.8.1';
+    this.existingVersion = '';
     this.sha256 = sha256;
   }
 
@@ -28,34 +27,30 @@ class VagrantInstall extends InstallableItem {
   }
 
   detectExistingInstall(cb = function(){}) {
-    let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/,
-        command,
-        directory,
-        extension = '',
-        subfolder = path.sep + 'bin';
+    let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/;
+    let command;
+
     if (Platform.OS === 'win32') {
       command = 'where vagrant';
-      extension = '.exe';
     } else {
       command = 'which vagrant';
     }
 
     let detectedPath = '';
 
-    Util.executeCommand(command, 1)
-    .then((output) => {
+    Util.executeCommand(command, 1).then((output) => {
       let lines = output.split('\n');
-      if (lines.length = 1) {
+      if (lines.length == 1) {
         detectedPath = lines[0];
       } else {
-        for( let line of lines) {
+        for(let line of lines) {
           if(line.endsWith('.exe')) {
             detectedPath = line;
             break;
           }
         }
       }
-      return Util.executeCommand('"' + detectedPath + '"' + ' -v', 1)
+      return Util.executeCommand('"' + detectedPath + '"' + ' -v', 1);
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
       this.addOption('detected','',path.dirname(path.dirname(detectedPath)),false);
@@ -111,7 +106,7 @@ class VagrantInstall extends InstallableItem {
 
   postCygwinInstall(progress, success, failure) {
     progress.setStatus('Installing');
-    if(this.selectedOption === "install") {
+    if(this.selectedOption === 'install') {
       let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
       installer.execFile('msiexec', [
         '/i',

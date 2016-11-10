@@ -1,7 +1,7 @@
 'use strict';
 
 let reqs = require('../requirements-' + process.platform + '.json');
-let request = require("request");
+let request = require('request');
 
 let minSizes = new Object();
 let data = new Object();
@@ -57,7 +57,7 @@ function checkUrl(key) {
   .on('response', function(response) {
     let size = response.headers['content-length'];
     if (response.statusCode !== 200) {
-      req.abort()
+      req.abort();
       throw new Error(key + ' url returned code ' + response.statusCode);
     }
     console.log(key + ' - url: ' + data[key]);
@@ -65,10 +65,10 @@ function checkUrl(key) {
     console.log();
 
     if (size < minSizes[key]) {
-      req.abort()
+      req.abort();
       throw new Error(key + ' is unexpectedly small with just ' + size + ' bytes in size');
     } else {
-      req.abort()
+      req.abort();
     }
   })
   .on('end', function() {
@@ -78,7 +78,7 @@ function checkUrl(key) {
     }
   })
   .on('error', function(err) {
-    req.abort()
+    req.abort();
     throw err;
   });
 }

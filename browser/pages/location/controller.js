@@ -34,9 +34,9 @@ class LocationController {
   selectFolder() {
     let selection = dialog.showOpenDialog(
       remote.getCurrentWindow(),{
-      properties: [ 'openDirectory' ],
-      defaultPath: this.folder
-    });
+        properties: [ 'openDirectory' ],
+        defaultPath: this.folder
+      });
     this.installerDataSvc.installRoot = this.folder;
 
     if (selection) {
@@ -56,7 +56,7 @@ class LocationController {
   }
 
   folderChanged() {
-    this.checkFolder()
+    this.checkFolder();
   }
 
   exit() {
@@ -85,12 +85,12 @@ class LocationController {
             this.vagrantHomeHasSpace = false;
           }
           this.sc.$apply();
-        })
+        });
       } else {
         this.vagrantHomeHasSpace = false;
         this.sc.$apply();
       }
-    })
+    });
   }
 }
 

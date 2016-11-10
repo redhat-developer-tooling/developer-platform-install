@@ -14,7 +14,7 @@ function pathValidator() {
       function validateFormatWindows(value) {
         let trimmedValue = value.trim();
 
-        return pathWindowsRegex.test(value);
+        return pathWindowsRegex.test(trimmedValue);
       }
 
       function validateLength(value) {
@@ -47,7 +47,7 @@ function pathValidator() {
         mCtrl.$validators['invalidDisk'] = validateDisk;
       }
     }
-  }
+  };
 }
 
 export default pathValidator;

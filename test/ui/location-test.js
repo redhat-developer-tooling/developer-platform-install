@@ -1,6 +1,5 @@
 'use strict';
 
-let webdriver = browser.driver;
 let context = { pageName: 'Target Folder' };
 let path = require('path');
 let breadcrumbBase = require('./breadcrumbs-base');

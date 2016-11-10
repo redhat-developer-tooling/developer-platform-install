@@ -41,14 +41,14 @@ class InstallController {
       },
       (error) => {
         Logger.error(installableKey + ' failed to download: ' + error);
-        progress.setStatus("Download failed");
+        progress.setStatus('Download failed');
         this.$timeout(()=>{
           this.$scope.$apply(()=>{
             this.failedDownloads.add(installableValue);
-          })
+          });
         });
       }
-    )
+    );
   }
 
   downloadAgain() {
@@ -74,7 +74,7 @@ class InstallController {
       (error) => {
         Logger.error(installableKey + ' failed to install: ' + error);
       }
-    )
+    );
   }
 
   productName(key) {
@@ -126,9 +126,9 @@ class ProgressState {
 
   setCurrent(newVal) {
     if (newVal > this.currentAmount && newVal <= this.totalSize) {
-    	this.currentAmount = newVal;
-      this.current = Math.round(this.currentAmount / this.totalSize * 100)
-    	this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
+      this.currentAmount = newVal;
+      this.current = Math.round(this.currentAmount / this.totalSize * 100);
+      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
 
       this.$timeout(this.setCurrent.bind(this), 0);
     }
@@ -165,3 +165,4 @@ class ProgressState {
 InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc'];
 
 export default InstallController;
+export { ProgressState };

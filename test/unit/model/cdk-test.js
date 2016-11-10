@@ -3,12 +3,10 @@
 import chai, { expect } from 'chai';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
-import request from 'request';
 import fs from 'fs-extra';
 import path from 'path';
 import CDKInstall from 'browser/model/cdk';
-import VagrantInstall from "browser/model/vagrant";
-import VirtualboxInstall from "browser/model/virtualbox";
+import VagrantInstall from 'browser/model/vagrant';
 import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
@@ -17,6 +15,7 @@ import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import chaiAsPromised from 'chai-as-promised';
 import Platform from 'browser/services/platform';
+import {ProgressState} from 'browser/pages/install/controller';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -28,14 +27,7 @@ describe('CDK installer', function() {
   let sandbox, installerDataSvc;
   let infoStub, errorStub, sha256Stub;
 
-  let fakeProgress = {
-    setStatus: function (desc) { return; },
-    setCurrent: function (val) {},
-    setLabel: function (label) {},
-    setComplete: function() {},
-    setTotalDownloadSize: function(size) {},
-    downloaded: function(amt, time) {}
-  };
+  let fakeProgress;
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
@@ -61,7 +53,7 @@ describe('CDK installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb("hash");});
+    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
 
     mockfs({
       temporaryFolder: {},
@@ -87,17 +79,18 @@ describe('CDK installer', function() {
 
   let reqs = require(path.resolve('./requirements-' + process.platform + '.json'));
 
-  let cdkUrl = reqs['cdk.zip'].url,
-      cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url,
-      ocUrl = reqs['oc.zip'].url;
+  let cdkUrl = reqs['cdk.zip'].url;
+  let cdkBoxUrl = reqs['rhel-vagrant-virtualbox.box'].url;
+  let ocUrl = reqs['oc.zip'].url;
 
-  let success = () => {},
-      failure = (err) => {};
+  let success = () => {};
+  let failure = () => {};
 
   beforeEach(function () {
     installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null, null, null);
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
+    fakeProgress = sandbox.stub(new ProgressState());
   });
 
   afterEach(function () {
@@ -134,12 +127,10 @@ describe('CDK installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
-
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Downloading');
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
     it('should write the data into temp folder', function() {
@@ -185,13 +176,12 @@ describe('CDK installer', function() {
   describe('installation', function() {
     it('should wait if vagrant has not finished installing', function() {
       let stub = sandbox.stub(installer, 'postVagrantInstall');
-      let progressSpy = sandbox.spy(fakeProgress, 'setStatus');
       let item2 = new InstallableItem('vagrant', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
 
       installer.install(fakeProgress, success, failure);
       expect(stub).not.called;
-      expect(progressSpy).calledWith('Waiting for Vagrant to finish installation');
+      expect(fakeProgress.setStatus).calledWith('Waiting for Vagrant to finish installation');
     });
 
     it('should install once vagrant has finished', function() {
@@ -206,13 +196,12 @@ describe('CDK installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       sandbox.stub(Installer.prototype, 'unzip').rejects('done');
 
       installer.postVagrantInstall(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Installing');
+      expect(fakeProgress.setStatus).calledOnce;
+      expect(fakeProgress.setStatus).calledWith('Installing');
     });
 
     it('should extract cdk archive to install folder', function() {
@@ -236,7 +225,7 @@ describe('CDK installer', function() {
         sandbox.stub(Platform,'getEnv').returns(processEnv);
         let env = installer.createEnvironment();
         expect(env['VAGRANT_HOME']).to.be.not.equal(undefined);
-      })
+      });
     });
 
     describe('setupVagrant', function() {

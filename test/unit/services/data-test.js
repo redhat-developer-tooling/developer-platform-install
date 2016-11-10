@@ -6,7 +6,6 @@ import { default as sinonChai } from 'sinon-chai';
 import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallerDataService from 'browser/services/data';
-import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
@@ -21,10 +20,10 @@ describe('InstallerDataService', function() {
   beforeEach(function() {
     svc = new InstallerDataService();
     svc.ipcRenderer = {
-      send: function(event, key) {}
+      send: function() {}
     };
     svc.router = {
-      go: function(route) {}
+      go: function() {}
     };
     sandbox = sinon.sandbox.create();
     vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
@@ -39,7 +38,7 @@ describe('InstallerDataService', function() {
   let logStub, fsStub, infoStub, errorStub, fxExtraStub;
   let fakeProgress = {
     installTrigger: function() {},
-    setStatus: function(status) {}
+    setStatus: function() {}
   };
 
   before(function() {
@@ -64,7 +63,7 @@ describe('InstallerDataService', function() {
         expect(svc.installRoot).to.equal('c:\\DevelopmentSuite');
       } else {
         expect(svc.installRoot).to.equal(process.env.HOME + '/DevelopmentSuite');
-    	}
+      }
     });
 
     it('should set default values correctly', function() {
@@ -94,7 +93,7 @@ describe('InstallerDataService', function() {
       expect(svc.ocBinRoot).to.equal(path.join(svc.cdkRoot, 'bin'));
       expect(svc.cdkVagrantRoot).to.equal(path.join(svc.cdkRoot, 'components', 'rhel', 'rhel-ose'));
       expect(svc.cdkMarkerFile).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
-    })
+    });
   });
 
   describe('installables', function() {
@@ -114,7 +113,7 @@ describe('InstallerDataService', function() {
 
       sandbox.stub(vagrant, 'downloadInstaller').returns();
       sandbox.stub(vbox, 'downloadInstaller').returns();
-    })
+    });
 
     it('startDownload should queue the installable for download', function() {
       svc.startDownload('vagrant');

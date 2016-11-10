@@ -30,7 +30,7 @@ class ConfirmController {
       $scope.checkboxModel[key] = value;
       $scope.$watch(function(){
         return $scope.checkboxModel[key].selectedOption;
-      },function(newVal,oldVal){
+      },function(){
         $scope.checkboxModel[key].validateVersion();
       });
     }
@@ -40,7 +40,7 @@ class ConfirmController {
     // IF the JDK is not Configured then you can't install devstudio
     $scope.$watch(()=>{
       return $scope.checkboxModel.cdk.selectedOption;
-    },(nVal,oVal)=>{
+    },(nVal)=>{
       if(nVal=='install') {
 
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
@@ -63,7 +63,7 @@ class ConfirmController {
 
     $scope.$watch(()=>{
       return $scope.checkboxModel.jbds.selectedOption;
-    },(nVal,oVal)=>{
+    },(nVal)=>{
       if(nVal=='install') {
         let jdk = $scope.checkboxModel.jdk;
         // if jdk is not selected for install and there is no detected version
@@ -79,11 +79,11 @@ class ConfirmController {
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(new Promise(function(resolve,reject){
+        detectors.push(new Promise(function(resolve){
           installer.detectExistingInstall(()=> {
             resolve();
           });
-        }))
+        }));
       }
       Promise.all(detectors).then(
         ()=>this.setIsDisabled()
@@ -117,8 +117,8 @@ class ConfirmController {
       this.isDisabled = !this.isDisabled;
 
       // Count the number of existing installations.
-      for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-        if (this.sc.checkboxModel[key].hasOption('detected')) {
+      for (var [key,value] of this.installerDataSvc.allInstallables()) {
+        if (value.hasOption('detected')) {
           ++this.numberOfExistingInstallations;
         }
       }
@@ -158,7 +158,7 @@ class ConfirmController {
       this.timeout(()=>{
         this.sc.$apply(()=>{
           item.detectExistingInstall();
-        })
+        });
       });
     }
   }
@@ -191,7 +191,7 @@ class ConfirmController {
   }
 
   isAtLeastOneSelected() {
-    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
+    for (var [key, value] of this.installerDataSvc.allInstallables()) {
       if(!value.isSkipped()) {
         return true;
       }
