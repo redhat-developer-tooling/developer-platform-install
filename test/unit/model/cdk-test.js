@@ -175,7 +175,7 @@ describe('CDK installer', function() {
 
   describe('installation', function() {
     it('should wait if vagrant has not finished installing', function() {
-      let stub = sandbox.stub(installer, 'postVagrantInstall');
+      let stub = sandbox.stub(installer, 'installAfterRequirements');
       let item2 = new InstallableItem('vagrant', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
 
@@ -185,7 +185,7 @@ describe('CDK installer', function() {
     });
 
     it('should install once vagrant has finished', function() {
-      let stub = sandbox.stub(installer, 'postVagrantInstall').returns();
+      let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(vagrantInstallStub, 'isInstalled').returns(true);
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
@@ -198,7 +198,7 @@ describe('CDK installer', function() {
     it('should set progress to "Installing"', function() {
       sandbox.stub(Installer.prototype, 'unzip').rejects('done');
 
-      installer.postVagrantInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).calledOnce;
       expect(fakeProgress.setStatus).calledWith('Installing');
@@ -206,7 +206,7 @@ describe('CDK installer', function() {
 
     it('should extract cdk archive to install folder', function() {
       let stub = sandbox.stub(Installer.prototype, 'unzip').rejects('done');
-      installer.postVagrantInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(stub).to.have.been.called;
       expect(stub).calledWith(installer.cdkDownloadedFile, installerDataSvc.installDir());

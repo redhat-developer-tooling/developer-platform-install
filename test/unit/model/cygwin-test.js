@@ -142,7 +142,7 @@ describe('Cygwin installer', function() {
   describe('installation', function() {
 
     it('should not start until virtualbox has finished installing', function() {
-      let installSpy = sandbox.spy(installer, 'postVirtualboxInstall');
+      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
       let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
 
@@ -154,7 +154,7 @@ describe('Cygwin installer', function() {
     });
 
     it('should install once virtualbox has finished', function() {
-      let stub = sandbox.stub(installer, 'postVirtualboxInstall').returns();
+      let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstallable, 'isInstalled').returns(true);
       let item2 = new InstallableItem('virtualbox', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
@@ -167,7 +167,7 @@ describe('Cygwin installer', function() {
     it('should set progress to "Installing"', function() {
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
-      installer.postVirtualboxInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
@@ -177,7 +177,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(child_process, 'execFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'execFile');
 
-      installer.postVirtualboxInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledWith(installer.downloadedFile,
         ['--no-admin', '--quiet-mode', '--only-site', '-l',
@@ -192,7 +192,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(child_process, 'execFile').yields(err);
 
       try {
-        installer.postVirtualboxInstall(fakeProgress, success, failure);
+        installer.installAfterRequirements(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('It did not catch the error');

@@ -42,20 +42,16 @@ class ConfirmController {
       return $scope.checkboxModel.cdk.selectedOption;
     },(nVal)=>{
       if(nVal=='install') {
-
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
-          && !$scope.checkboxModel.vagrant.hasOption('detected')
-          && $scope.platform === 'win32') {
+          && !$scope.checkboxModel.vagrant.hasOption('detected')) {
           $scope.checkboxModel.vagrant.selectedOption = 'install';
         }
         if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
-          && !$scope.checkboxModel.virtualbox.hasOption('detected')
-          && $scope.platform === 'win32') {
+          && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
           $scope.checkboxModel.virtualbox.selectedOption = 'install';
         }
         if($scope.checkboxModel.cygwin.selectedOption == 'detected'
-          && !$scope.checkboxModel.cygwin.hasOption('detected')
-          && $scope.platform === 'win32') {
+          && !$scope.checkboxModel.cygwin.hasOption('detected')) {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       }

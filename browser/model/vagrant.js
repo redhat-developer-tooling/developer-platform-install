@@ -26,7 +26,7 @@ class VagrantInstall extends InstallableItem {
     return 'vagrant';
   }
 
-  detectExistingInstall(cb = function(){}) {
+  detectExistingInstall(done = function(){}) {
     let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/;
     let command;
 
@@ -57,14 +57,10 @@ class VagrantInstall extends InstallableItem {
       this.option['detected'].version = version;
       this.selectedOption = 'detected';
       this.validateVersion();
-      cb();
+      done();
     }).catch((error) => {
-      if(Platform.OS === 'win32') {
-        this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
-      } else {
-        this.selectedOption = 'detected';
-      }
-      cb(error);
+      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
+      done(error);
     });
   }
 
@@ -85,26 +81,15 @@ class VagrantInstall extends InstallableItem {
       }
     }
   }
+}
+
+class VagrantInstallWindows extends VagrantInstall {
 
   validateSelectedFolder(selection) {
     // should be called after path to vagrant changed
   }
 
-  install(progress, success, failure) {
-    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
-      this.postCygwinInstall(progress, success, failure);
-    } else {
-      let name = this.getInstallAfter().productName;
-      progress.setStatus(`Waiting for ${name} to finish installation`);
-      this.ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
-          this.postCygwinInstall(progress, success, failure);
-        }
-      });
-    }
-  }
-
-  postCygwinInstall(progress, success, failure) {
+  installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === 'install') {
       let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
@@ -147,13 +132,48 @@ class VagrantInstall extends InstallableItem {
     installer.writeFile(this.vagrantPathScript, data)
     .then((result) => {
       return installer.execFile('powershell', args, result);
-    }).then((result) => {
+    }).then(() => {
       return installer.succeed(true);
     }).catch((result) => {
       return installer.fail(result);
     });
   }
+}
+
+class VagrantInstallDarwin extends VagrantInstall {
+
+  installAfterRequirements(progress, success, failure) {
+    progress.setStatus('Installing');
+    if(this.selectedOption === 'install') {
+      let dmgFile = this.downloadedFile;
+      let timestamp = new Date().toJSON().replace(/:/g,'')
+      let volumeName = `vagrant-1.8.1`;
+      let shellScript = [
+        `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
+        `installer -pkg /Volumes/${volumeName}/Vagrant.pkg -target /`
+      ].join(';');
+      let osaScript = [
+        'osascript',
+        '-e',
+        `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
+      ].join(' ');
+
+      let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
+      installer.exec(osaScript).then((result) => {
+        return installer.succeed(result);
+      }).catch((error) => {
+        return installer.fail(error);
+      });
+    } else {
+      success();
+    }
+  }
 
 }
 
-export default VagrantInstall;
+export default Platform.identify({
+  darwin: ()=>VagrantInstallDarwin,
+  default: ()=>VagrantInstallWindows
+});
+
+export { VagrantInstall, VagrantInstallWindows, VagrantInstallDarwin };
