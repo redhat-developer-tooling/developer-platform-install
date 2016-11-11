@@ -146,7 +146,7 @@ describe('devstudio installer', function() {
     let fsextra = require('fs-extra');
 
     it('should not start until JDK has finished installing', function() {
-      let installSpy = sandbox.spy(installer, 'postInstall');
+      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
 
@@ -158,7 +158,7 @@ describe('devstudio installer', function() {
     });
 
     it('should install once JDK has finished', function() {
-      let stub = sandbox.stub(installer, 'postInstall').returns();
+      let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstall, 'isInstalled').returns(true);
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
@@ -169,7 +169,7 @@ describe('devstudio installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      installer.postInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
@@ -178,7 +178,7 @@ describe('devstudio installer', function() {
     it('should load the install config contents', function() {
       let spy = sandbox.spy(JbdsAutoInstallGenerator.prototype, 'fileContent');
 
-      installer.postInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
     });
@@ -189,7 +189,7 @@ describe('devstudio installer', function() {
 
       let data = new JbdsAutoInstallGenerator(installerDataSvc.jbdsDir(), installerDataSvc.jdkDir(), installer.version).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
-      installer.postInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(installConfigFile, data);
@@ -200,7 +200,7 @@ describe('devstudio installer', function() {
       sandbox.stub(fsextra, 'writeFile').yields(err);
 
       try {
-        installer.postInstall(fakeProgress, success, failure);
+        installer.installAfterRequirements(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('It did not catch the error');

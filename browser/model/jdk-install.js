@@ -133,7 +133,7 @@ class JdkInstall extends InstallableItem {
     return 'jdk';
   }
 
-  install(progress, success, failure) {
+  installAfterRequirements(progress, success, failure) {
     if(this.selectedOption === 'install') {
       progress.setStatus('Installing');
       let installer = new Installer(JdkInstall.KEY, progress, success, failure);
@@ -200,8 +200,8 @@ class JdkInstall extends InstallableItem {
   }
 
   renameFile(folder, oldName, newName) {
-    let filePath = path.join(folder, oldName)
-    Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName)
+    let filePath = path.join(folder, oldName);
+    Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName);
     return new Promise(function (resolve, reject) {
       fs.rename(filePath, newName, function(err) {
         if (err) {

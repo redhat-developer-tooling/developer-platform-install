@@ -108,21 +108,7 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  install(progress, success, failure) {
-    if ( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
-      this.postInstall(progress, success, failure);
-    } else {
-      let name = this.getInstallAfter().productName;
-      progress.setStatus(`Waiting for ${name} to finish installation`);
-      this.ipcRenderer.on('installComplete', (event, arg) => {
-        if(!this.isInstalled() && arg === this.getInstallAfter().keyName) {
-          this.postInstall(progress, success, failure);
-        }
-      });
-    }
-  }
-
-  postInstall(progress, success, failure) {
+  installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === 'install') {
       this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);

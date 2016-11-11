@@ -96,21 +96,7 @@ class CDKInstall extends InstallableItem {
     }
   }
 
-  install(progress, success, failure) {
-    if(!this.getInstallAfter() || this.getInstallAfter().isInstalled()) {
-      this.postVagrantInstall(progress, success, failure);
-    } else {
-      let name = this.getInstallAfter().productName;
-      progress.setStatus(`Waiting for ${name} to finish installation`);
-      this.ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() &&arg === this.getInstallAfter().keyName) {
-          this.postVagrantInstall(progress, success, failure);
-        }
-      });
-    }
-  }
-
-  postVagrantInstall(progress, success, failure) {
+  installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
 

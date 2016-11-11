@@ -139,7 +139,7 @@ describe('Vagrant installer', function() {
   describe('installation', function() {
 
     it('should not start until Cygwin has finished installing', function() {
-      let installSpy = sandbox.spy(installer, 'postCygwinInstall');
+      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.thenInstall(installer);
 
@@ -151,7 +151,7 @@ describe('Vagrant installer', function() {
     });
 
     it('should install once Cygwin has finished', function() {
-      let stub = sandbox.stub(installer, 'postCygwinInstall').returns();
+      let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstallable, 'isInstalled').returns(true);
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
@@ -165,7 +165,7 @@ describe('Vagrant installer', function() {
     it('should set progress to "Installing"', function() {
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
 
-      installer.postCygwinInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
@@ -174,7 +174,7 @@ describe('Vagrant installer', function() {
     it('should exec the downloaded file with temporary folder as target destination', function() {
       sandbox.stub(child_process, 'execFile').yields('done');
       let spy = sandbox.spy(Installer.prototype, 'execFile');
-      installer.postCygwinInstall(fakeProgress, success, failure);
+      installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith('msiexec', [
@@ -187,7 +187,7 @@ describe('Vagrant installer', function() {
       sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
 
       try {
-        installer.postCygwinInstall(fakeProgress, success, failure);
+        installer.installAfterRequirements(fakeProgress, success, failure);
         done();
       } catch (error) {
         expect.fail('it did not catch the error');
@@ -201,7 +201,7 @@ describe('Vagrant installer', function() {
       let calls = 0;
       let succ = function() { return calls++; };
 
-      installer.postCygwinInstall(fakeProgress, succ, failure);
+      installer.installAfterRequirements(fakeProgress, succ, failure);
 
       expect(spy).not.called;
       expect(calls).to.equal(1);

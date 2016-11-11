@@ -163,8 +163,17 @@ class InstallableItem {
   }
 
   install(progress, success, failure) {
-    // To be overridden
-    success();
+    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
+      this.installAfterRequirements(progress, success, failure);
+    } else {
+      let name = this.getInstallAfter().productName;
+      progress.setStatus(`Waiting for ${name} to finish installation`);
+      this.ipcRenderer.on('installComplete', (event, arg) => {
+        if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
+          this.installAfterRequirements(progress, success, failure);
+        }
+      });
+    }
   }
 
   setup(progress, success, failure) {

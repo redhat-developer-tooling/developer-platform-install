@@ -59,7 +59,7 @@
     "name": "Java Platform, Standard Edition",
     "description": "An implementation of the Java Platform, Standard Edition (Java SE) by Oracle",
     "bundle": "no",
-    "version": "1.8.0",
+    "version": "1.8.0_111",
     "prefix": "java-1.8.0-openjdk-1.8.0",
     "dmUrl": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",
     "url": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",

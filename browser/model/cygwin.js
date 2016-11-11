@@ -53,21 +53,7 @@ class CygwinInstall extends InstallableItem {
     }
   }
 
-  install(progress, success, failure) {
-    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled()  ) {
-      this.postVirtualboxInstall(progress, success, failure);
-    } else {
-      let name = this.getInstallAfter().productName;
-      progress.setStatus(`Waiting for ${name} to finish installation`);
-      this.ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
-          this.postVirtualboxInstall(progress, success, failure);
-        }
-      });
-    }
-  }
-
-  postVirtualboxInstall(progress, success, failure) {
+  installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(CygwinInstall.KEY, progress, success, failure);
 
