@@ -34,7 +34,7 @@ class StartController {
 
   launchDevstudio_darwin() {
     let devStudioAppPath = path.join(this.installerDataSvc.jbdsDir(), 'Devstudio.app');
-    Util.executeCommand(`open ${devStudioAppPath}`,1).then((result)=>{
+    Util.executeCommand(`open ${devStudioAppPath}`,1).then(()=>{
       Logger.info('devstudio started sucessfully');
       this.exit();
     }).catch((error)=>{
