@@ -1,19 +1,26 @@
 'use strict';
 
 let child_process = require('child_process');
-let fs = require('fs');
+let fs = require('fs-extra');
 
 import Platform from '../../services/platform';
 
 class Util {
 
-  static executeCommand(command, outputCode=1) {
+  static executeCommand(command, outputCode=1,options) {
     return new Promise((resolve, reject) => {
-      let options = {
-        env : Object.assign({},Platform.ENV)
-      };
       if (Platform.OS == 'darwin') {
-        options.env.PATH = options.env.PATH + ':/usr/local/bin';
+        if(options === undefined) {
+          options = {};
+        }
+        if(options['env'] === undefined) {
+          options.env = Object.assign({},Platform.ENV);
+        }
+        if(options.env['PATH']) {
+          options.env.PATH = options.env.PATH + ':/usr/local/bin';
+        } else {
+          options.env.PATH = '/usr/local/bin';
+        }
       }
       child_process.exec(command, options, defaultCallback(resolve, reject, outputCode));
     });
@@ -25,7 +32,7 @@ class Util {
     });
   }
 
-  static writeFile(key, file, data) {
+  static writeFile(file, data) {
     return new Promise((resolve, reject) => {
       fs.writeFile(file, data, (err) => {
         if (err) {
