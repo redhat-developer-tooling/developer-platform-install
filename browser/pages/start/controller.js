@@ -34,7 +34,11 @@ class StartController {
 
   launchDevstudio_darwin() {
     let devStudioAppPath = path.join(this.installerDataSvc.jbdsDir(), 'Devstudio.app');
-    Util.executeCommand(`open ${devStudioAppPath}`,1).then(()=>{
+    let options = {
+      env : Object.assign({},Platform.ENV)
+    };
+    options.env['rhel.subscription.password'] = this.installerDataSvc.password;
+    Util.executeCommand(`open ${devStudioAppPath}`, 1, options).then(()=>{
       Logger.info('devstudio started sucessfully');
       this.exit();
     }).catch((error)=>{
