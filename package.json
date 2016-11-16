@@ -1,7 +1,7 @@
 {
   "name": "devstudio-platform-installer",
   "productName": "Red Hat Development Suite Installer",
-  "version": "1.2.0-GA",
+  "version": "1.2.0-AM3",
   "description": "Red Hat Development Suite Installer",
   "main": "main/index.js",
   "repository": {
