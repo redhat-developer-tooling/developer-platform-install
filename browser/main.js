@@ -78,6 +78,18 @@ let mainModule =
           .run( ['$timeout', 'installerDataSvc', ($timeout, installerDataSvc) => {
             let reqs = installerDataSvc.requirements;
 
+            // filter download-manager urls and replace host name with stage
+            // host name provided in environment variable
+            let stageHost = process.env['DM_STAGE_HOST'];
+            if(stageHost) {
+              for (let variable in reqs) {
+                let dmUrl = reqs[variable]['dmUrl'];
+                if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
+                    reqs[variable].dmUrl = dmUrl.replace('developers.redhat.com',stageHost);
+                }
+              }
+            }
+
             let virtualbox = new VirtualBoxInstall(
               reqs['virtualbox.exe'].version,
               reqs['virtualbox.exe'].revision,
