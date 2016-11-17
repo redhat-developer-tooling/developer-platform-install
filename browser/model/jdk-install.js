@@ -60,8 +60,6 @@ class JdkInstall extends InstallableItem {
             this.selectedOption = 'detected';
           } else if(process.platform !== 'darwin') {
             this.selectedOption = 'install';
-          } else {
-            this.selectedOption = 'detected';
           }
           resolve(true);
         } else {
@@ -76,6 +74,8 @@ class JdkInstall extends InstallableItem {
       var t = locationRegex.exec(output);
       if(t.length > 1) {
         this.option['detected'].location = t[1];
+      } else {
+        this.selectedOption = 'install';
       }
       done();
     }).catch((error) => {

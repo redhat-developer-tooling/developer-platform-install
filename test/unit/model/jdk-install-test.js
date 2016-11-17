@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import rimraf from 'rimraf';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Util from 'browser/model/helpers/util';
 import JdkInstall from 'browser/model/jdk-install';
@@ -133,26 +134,6 @@ describe('JDK installer', function() {
       });
     });
 
-    it('should select openjdk for installation if not java detected', function(done) {
-      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
-      mockDetectedJvm('');
-      return jdk.detectExistingInstall(function() {
-        expect(jdk.selectedOption).to.be.equal('install');
-        expect(jdk.getLocation()).to.be.equal('');
-        done();
-      });
-    });
-
-    it('should select openjdk for installation if newer than supported version detected', function(done) {
-      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
-      mockDetectedJvm('1.9.0_1');
-      return jdk.detectExistingInstall(function() {
-        expect(jdk.selectedOption).to.be.equal('install');
-        expect(jdk.getLocation()).to.be.equal('');
-        done();
-      });
-    });
-
     it('should create deafult empty callback if not provided', function() {
       let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
       mockDetectedJvm('1.8.0_1');
@@ -163,8 +144,31 @@ describe('JDK installer', function() {
       }
     });
 
-    if (process.platform !== 'darwin') {
-      it('should check for available msi installtion on windows platform', function(done) {
+    describe('on windows', function(){
+      it('should select openjdk for installation if not java detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('install');
+          expect(jdk.getLocation()).to.be.equal('');
+          done();
+        });
+      });
+
+      it('should select openjdk for installation if newer than supported version detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('1.9.0_1');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('install');
+          expect(jdk.getLocation()).to.be.equal('');
+          done();
+        });
+      });
+
+      it('should check for available msi installtion', function(done) {
+        sandbox.stub(Platform,'getOS').returns('win32');
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         jdk.findMsiInstalledJava.restore();
@@ -174,8 +178,31 @@ describe('JDK installer', function() {
           done();
         });
       });
-    } else {
-      it('should not check for available msi installtion on none windows platforms', function(done) {
+    });
+
+    describe('on macos', function() {
+      it('should not select jdk for installation if not java detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('darwin');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('detected');
+          done();
+        });
+      });
+
+      it('should not select openjdk for installation if newer than supported version detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('darwin');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('1.9.0_1');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('detected');
+          done();
+        });
+      });
+
+      it('should not check for available msi installtion', function(done) {
+        sandbox.stub(Platform,'getOS').returns('darwin');
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         jdk.findMsiInstalledJava.restore();
@@ -185,7 +212,7 @@ describe('JDK installer', function() {
           done();
         });
       });
-    }
+    });
   });
 
   describe('when downloading the jdk msi', function() {
