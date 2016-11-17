@@ -58,7 +58,7 @@ class JdkInstall extends InstallableItem {
           this.validateVersion();
           if(this.option['detected'].valid) {
             this.selectedOption = 'detected';
-          } else if(process.platform !== 'darwin') {
+          } else if(Platform.OS !== 'darwin') {
             this.selectedOption = 'install';
           }
           resolve(true);
@@ -66,13 +66,13 @@ class JdkInstall extends InstallableItem {
           reject('No java detected');
         }
       });
-    }).then((result) => {
+    }).then(() => {
       return Util.executeCommand(command, 2);
     }).then((output) => {
       let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
       this.openJdk = output.includes('OpenJDK');
       var t = locationRegex.exec(output);
-      if(t.length > 1) {
+      if(t && t.length > 1) {
         this.option['detected'].location = t[1];
       } else {
         this.selectedOption = 'install';
@@ -151,7 +151,7 @@ class JdkInstall extends InstallableItem {
             this.installerDataSvc.jdkRoot = targetDir;
           }
           installer.succeed(true);
-        }).catch((err)=>{
+        }).catch(()=>{
           // location doesn't parsed correctly, nothing to verify just resolve and keep going
           installer.succeed(result);
         });
