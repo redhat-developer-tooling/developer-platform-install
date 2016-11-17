@@ -37,7 +37,7 @@ class InstallableItem {
     this.detectedInstallLocation = '';
 
     if (downloadUrl == null || downloadUrl == '') {
-    	throw(new Error(`No download URL set for ${keyName} Installer`));
+      throw(new Error(`No download URL set for ${keyName} Installer`));
     }
 
     this.downloadUrl = downloadUrl;
@@ -49,11 +49,11 @@ class InstallableItem {
 
     this.isCollapsed = true;
     this.option = new Set();
-    this.selectedOption = "install";
+    this.selectedOption = 'install';
 
     this.downloader = null;
-    this.downloadFolder = path.normalize(path.join(__dirname,"../../../.."));
-    this.downloadedFile = "";
+    this.downloadFolder = path.normalize(path.join(__dirname,'../../../..'));
+    this.downloadedFile = '';
 
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
@@ -176,13 +176,8 @@ class InstallableItem {
     }
   }
 
-  setup(progress, success, failure) {
-    // To be overridden
-    success();
-  }
-
   changeIsCollapsed() {
-      this.isCollapsed = !this.isCollapsed;
+    this.isCollapsed = !this.isCollapsed;
   }
 
   hasOption(name) {

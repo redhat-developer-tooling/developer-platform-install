@@ -72,6 +72,15 @@ describe('JDK installer', function() {
     sandbox.restore();
   });
 
+  function mockDetectedJvm(version, location = 'java.home = /java/home\n') {
+    sandbox.stub(JdkInstall.prototype, 'findMsiInstalledJava').returns(Promise.resolve(''));
+    sandbox.stub(Util,'executeCommand')
+      .onFirstCall().returns(Promise.resolve(`version "${version}"`))
+      .onSecondCall().returns(Promise.resolve(location));
+    sandbox.stub(Util,'writeFile').returns(Promise.resolve(true));
+    sandbox.stub(Util,'executeFile').returns(Promise.resolve(true));
+  }
+
   describe('when instantiated', function() {
 
     it('should not download jdk when an installation exists', function() {
@@ -99,19 +108,12 @@ describe('JDK installer', function() {
       expect(new JdkInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
         path.join('tempDirectory', 'jdk.msi'));
     });
-
   });
 
+  // FIXME expect calls in done callback does not report errors
+  // because if expect fails it gets cought in catch() and then
+  // function callback done called again
   describe('when detecting existing installation',function() {
-    let writeFileStub, executeFileStub;
-    function mockDetectedJvm(version) {
-      sandbox.stub(JdkInstall.prototype, 'findMsiInstalledJava').returns(Promise.resolve(''));
-      sandbox.stub(Util,'executeCommand')
-        .onFirstCall().returns(Promise.resolve(`version "${version}"`))
-        .onSecondCall().returns(Promise.resolve('java.home = /java/home\n'));
-      writeFileStub = sandbox.stub(Util,'writeFile').returns(Promise.resolve(true));
-      executeFileStub = sandbox.stub(Util,'executeFile').returns(Promise.resolve(true));
-    }
 
     it('should detect java location if installed', function(done) {
       let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
@@ -120,16 +122,6 @@ describe('JDK installer', function() {
         expect(jdk.selectedOption).to.be.equal('detected');
         expect(jdk.hasOption('detected')).to.be.equal(true);
         expect(jdk.getLocation()).to.be.equal('/java/home');
-        done();
-      });
-    });
-
-    it('should select openjdk for installation if older than supported version detected', function(done) {
-      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
-      mockDetectedJvm('1.7.0_111');
-      return jdk.detectExistingInstall(function() {
-        expect(jdk.selectedOption).to.be.equal('install');
-        expect(jdk.getLocation()).to.be.equal('');
         done();
       });
     });
@@ -144,8 +136,16 @@ describe('JDK installer', function() {
       }
     });
 
+    it('should not fail if selected option is not present in available options', function(){
+      let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+      jdk.selectedOption = 'detected';
+      jdk.validateVersion();
+    });
+
+
+
     describe('on windows', function(){
-      it('should select openjdk for installation if not java detected', function(done) {
+      it('should select openjdk for installation if no java detected', function(done) {
         sandbox.stub(Platform,'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         mockDetectedJvm('');
@@ -156,13 +156,34 @@ describe('JDK installer', function() {
         });
       });
 
-      it('should select openjdk for installation if newer than supported version detected', function(done) {
+
+      // FIXME is not the case for JDK 9, because version has different format
+      it('should select openjdk for installation if newer than supported java version detected', function(done) {
         sandbox.stub(Platform,'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         mockDetectedJvm('1.9.0_1');
         return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('detected');
+          done();
+        });
+      });
+
+      it('should select openjdk for installation if older than supported java version detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('1.7.0_1');
+        return jdk.detectExistingInstall(function() {
           expect(jdk.selectedOption).to.be.equal('install');
-          expect(jdk.getLocation()).to.be.equal('');
+          done();
+        });
+      });
+
+      it('should select openjdk for installation if location for java is not found', function(done) {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('1.8.0_1','');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('install');
           done();
         });
       });
@@ -173,15 +194,15 @@ describe('JDK installer', function() {
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         jdk.findMsiInstalledJava.restore();
         return jdk.detectExistingInstall(function() {
-          expect(executeFileStub).to.have.been.calledOnce;
-          expect(writeFileStub).to.have.been.calledOnce;
+          expect(Util.executeFile).to.have.been.calledOnce;
+          expect(Util.writeFile).to.have.been.calledOnce;
           done();
         });
       });
     });
 
     describe('on macos', function() {
-      it('should not select jdk for installation if not java detected', function(done) {
+      it('should not select jdk for installation if no java detected', function(done) {
         sandbox.stub(Platform,'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         mockDetectedJvm('');
@@ -191,10 +212,20 @@ describe('JDK installer', function() {
         });
       });
 
-      it('should not select openjdk for installation if newer than supported version detected', function(done) {
+      it('should not select openjdk for installation if newer than supported supported version detected', function(done) {
         sandbox.stub(Platform,'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         mockDetectedJvm('1.9.0_1');
+        return jdk.detectExistingInstall(function() {
+          expect(jdk.selectedOption).to.be.equal('detected');
+          done();
+        });
+      });
+
+      it('should not select openjdk for installation if older than supported supported java version detected', function(done) {
+        sandbox.stub(Platform,'getOS').returns('darwin');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
+        mockDetectedJvm('1.7.0_1');
         return jdk.detectExistingInstall(function() {
           expect(jdk.selectedOption).to.be.equal('detected');
           done();
@@ -207,8 +238,8 @@ describe('JDK installer', function() {
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         jdk.findMsiInstalledJava.restore();
         return jdk.detectExistingInstall(function() {
-          expect(executeFileStub).to.have.not.been.called;
-          expect(writeFileStub).to.have.not.been.called;
+          expect(Util.executeFile).to.have.not.been.called;
+          expect(Util.writeFile).to.have.not.been.called;
           done();
         });
       });
@@ -333,6 +364,21 @@ describe('JDK installer', function() {
       installer.setup(fakeProgress, succ, failure);
 
       expect(calls).to.equal(1);
+    });
+
+    it('should not change installerDataSvc.jdkRoot if the same location found in install log', function(done) {
+      sandbox.stub(require('child_process'), 'execFile').yields();
+      sandbox.stub(Installer.prototype,'execFile').returns(Promise.resolve(true));
+      sandbox.stub(Util,'findText').returns(Promise.resolve('Dir \(target\): Key: INSTALLDIR	, Object: target/install'));
+      installer = new JdkInstall(installerDataSvc, downloadUrl, null);
+      sandbox.stub(installer,'getLocation').returns('target/install');
+      installerDataSvc.jdkRoot = 'install/jdk8';
+      return installer.install(fakeProgress, function() {
+        expect(installerDataSvc.jdkRoot).to.be.equal('install/jdk8');
+        done();
+      }, function(){
+        expect.fail('it should not fail');
+      });
     });
 
     describe('files manipulation', function() {
