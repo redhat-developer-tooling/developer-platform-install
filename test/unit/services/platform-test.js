@@ -24,6 +24,11 @@ describe('Platform', function(){
       linux: ()=>'linux',
       default: ()=>'bummer'
     };
+    let noDefaultData = {
+      darwin: ()=>'darwin',
+      win32: ()=>'win32',
+      linux: ()=>'linux'
+    };
 
     it('returns value of opject\'s property named the same as current platform', function(){
       sandbox.stub(Platform,'getOS').returns('win32');
@@ -37,6 +42,11 @@ describe('Platform', function(){
     it('returns default property value if there no propyrty with current platform name', function(){
       sandbox.stub(Platform,'getOS').returns('ps/2');
       expect(Platform.identify(data)).to.be.equal('bummer');
+    });
+
+    it('returns undefined if there no propyrty with current platform name and no default provided', function(){
+      sandbox.stub(Platform,'getOS').returns('ps/2');
+      expect(Platform.identify(noDefaultData)).to.be.equal(undefined);
     });
 
   });

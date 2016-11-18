@@ -5,7 +5,8 @@ class Platform {
     try {
       return map[Platform.OS]();
     } catch (error) {
-      return map['default']();
+      let defaultCallback = map['default'];
+      return defaultCallback ? defaultCallback() : undefined;
     }
   }
 
