@@ -223,7 +223,11 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
       this.validateVersion();
       done();
     }).catch(() => {
-      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
+      let installLocation = Platform.identify({
+        win32: ()=>path.join(this.installerDataSvc.installRoot,'vagrant'),
+        default: ()=>'/usr/local/bin'
+      });
+      this.addOption('install',this.version,installLocation,true);
       done();
     });
   }

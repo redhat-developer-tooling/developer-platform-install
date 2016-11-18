@@ -59,7 +59,11 @@ class VagrantInstall extends InstallableItem {
       this.validateVersion();
       done();
     }).catch((error) => {
-      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'vagrant'),true);
+      let installLocation = Platform.identify({
+        win32: ()=>path.join(this.installerDataSvc.installRoot,'vagrant'),
+        default: ()=>'/usr/local'
+      });
+      this.addOption('install',this.version,installLocation,true);
       done(error);
     });
   }
