@@ -120,9 +120,10 @@ class CDKInstall extends InstallableItem {
       'oc.binary.path=' + this.installerDataSvc.ocDir(),
       'rhel.subscription.username=' + this.installerDataSvc.getUsername()
     ].join('\r\n');
-
+    let ocDir = this.installerDataSvc.ocDir();
     installer.unzip(this.cdkDownloadedFile, this.installerDataSvc.installDir())
-    .then((result) => { return installer.unzip(this.ocDownloadedFile, this.installerDataSvc.ocDir(), result); })
+    .then((result) => { return installer.unzip(this.ocDownloadedFile, ocDir, result); })
+    .then((result) => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`)})
     .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
     .then((result) => { return Platform.OS === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
