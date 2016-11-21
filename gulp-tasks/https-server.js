@@ -6,7 +6,7 @@ var qs = require('querystring');
 var pem = require('pem');
 var url = require('url');
 var path = require('path');
-var requirements = require('..\\requirements' + process.platform + '.json')
+var requirements = require('..\\requirements-' + process.platform + '.json')
 
 var PORT = 443;
 
