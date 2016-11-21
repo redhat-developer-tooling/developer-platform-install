@@ -142,8 +142,6 @@ describe('JDK installer', function() {
       jdk.validateVersion();
     });
 
-
-
     describe('on windows', function(){
       it('should select openjdk for installation if no java detected', function(done) {
         sandbox.stub(Platform,'getOS').returns('win32');
@@ -194,8 +192,10 @@ describe('JDK installer', function() {
         let jdk = new JdkInstall(installerDataSvc, 'url', 'file');
         jdk.findMsiInstalledJava.restore();
         return jdk.detectExistingInstall(function() {
-          expect(Util.executeFile).to.have.been.calledOnce;
-          expect(Util.writeFile).to.have.been.calledOnce;
+          expect(Util.writeFile).to.have.been.calledWith(
+            jdk.getMsiSearchScriptLocation(),jdk.getMsiSearchScriptData());
+          expect(Util.executeFile).to.have.been.calledWith(
+            'powershell', jdk.getMsiSearchScriptPowershellArgs(jdk.getMsiSearchScriptLocation()));
           done();
         });
       });
