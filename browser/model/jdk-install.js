@@ -79,6 +79,8 @@ class JdkInstall extends InstallableItem {
       }
       done();
     }).catch((error) => {
+      Logger.info(JdkInstall.KEY + ' - Detection failed with error');
+      Logger.info(JdkInstall.KEY + ' - ' + error);
       if(Platform.OS !== 'darwin' ) {
         this.selectedOption = 'install';
       } else {
@@ -88,23 +90,35 @@ class JdkInstall extends InstallableItem {
     });
   }
 
-  findMsiInstalledJava() {
-    let msiSearchScript = path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
-    let data = [
+  getMsiSearchScriptLocation() {
+    return path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
+  }
+
+  getMsiSearchScriptData() {
+    return [
       '$vbox = Get-WmiObject Win32_Product | where {$_.Name -like \'*OpenJDK*\'};',
       'echo $vbox.IdentifyingNumber;',
       '[Environment]::Exit(0);'
     ].join('\r\n');
-    let args = [
+  }
+
+  getMsiSearchScriptPowershellArgs(msiSearchScript) {
+    return [
       '-NonInteractive',
       '-ExecutionPolicy',
       'ByPass',
       '-File',
       msiSearchScript
     ];
+  }
+
+  findMsiInstalledJava() {
+    let msiSearchScript = this.getMsiSearchScriptLocation();
+    let data = this.getMsiSearchScriptData();
+    let args = this.getMsiSearchScriptPowershellArgs(msiSearchScript);
     let result = Promise.resolve('');
     if (Platform.OS !== 'darwin') {
-      result = Util.writeFile(JdkInstall.KEY, msiSearchScript, data).then(()=>{
+      result = Util.writeFile(msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
       });
     }
