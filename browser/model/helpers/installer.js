@@ -37,7 +37,7 @@ class Installer {
   execFile(file, args, result) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute ' + file + ' ' + args);
-      child_process.execFile(file, args, {'maxBuffer': 1024*1024} , (error, stdout, stderr) => {
+      child_process.execFile(file, args, {'maxBuffer': 1024*1024*2} , (error, stdout, stderr) => {
         // vagrant exits with code 3010
         if (error && error.code !== 3010) {
           Logger.error(this.key + ' - ' + error);
