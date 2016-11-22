@@ -10,8 +10,54 @@ const rename = require('gulp-rename');
 const runSequence = require('run-sequence');
 const pjson = require('../package.json');
 const fs = require('fs-extra');
+const common = require('./common.js');
+const del = require('del');
 
-module.exports = function(gulp) {
+pjson.version = pjson.version.replace('GA','Alpha1');
+let productName = pjson.productName;
+let productVersion = pjson.version;
+
+function buildInstaller(gulp, origin, destination, extraFiles) {
+  const builder = require("electron-builder")
+  const Platform = builder.Platform
+
+  // Promise is returned
+  return builder.build({
+    targets: Platform.MAC.createTarget(),
+    devMetadata: {
+      build: {
+        appId: "com.redhat.devsuite.installer",
+        category: "public.app-category.developer-tools",
+        mac: {
+          icon: "resources/devsuite.icns",
+          target: "zip"
+        },
+        extraFiles
+      },
+      directories: {
+        app : "transpiled"
+      }
+    }
+  }).then(() => {
+    return new Promise((resolve, reject)=>{
+      gulp.src(origin)
+        .pipe(rename(destination))
+        .pipe(gulp.dest(`./`)).on('end', resolve).on('error', reject);
+    });
+  }).then(()=>{
+    return new Promise((resolve, reject)=>{
+      common.createSHA256File(destination, function(error) {
+        if(error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  });
+}
+
+function darwinDist(gulp) {
 
   // prefetch all the installer dependencies so we can package them up into the .exe
   gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {
@@ -19,86 +65,44 @@ module.exports = function(gulp) {
   });
 
   gulp.task('dist', function(){
-      return runSequence('clean','dist-simple','dist-bundle');
+      return runSequence('clean','dist-simple','dist-bundle','cleanup');
   });
 
   gulp.task('update-package',['update-requirements'], function() {
-    return Promise.resolve().then(()=> {
-        pjson.version = pjson.version.replace('GA','Alpha1');
-      }).then(()=>{
-        fs.writeFile('./transpiled/package.json', JSON.stringify(pjson, null, 2));
-      }).catch((err)=>{
-        console.log(err);
+    return new Promise((resolve,reject)=>{
+        fs.writeFile('./transpiled/package.json', JSON.stringify(pjson, null, 2), function(error) {
+            if(error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+        });
       });
   });
 
   gulp.task('dist-bundle', ['prefetch','update-package'], function() {
-    const builder = require("electron-builder")
-    const Platform = builder.Platform
-
-    // Promise is returned
-    return builder.build({
-      targets: Platform.MAC.createTarget(),
-      devMetadata: {
-        build: {
-          appId: "com.redhat.devsuite.installer",
-          category: "public.app-category.developer-tools",
-          mac: {
-            icon: "resources/devsuite.icns",
-            target: "zip"
-          },
-          extraFiles: [{
-            "from": "requirements-cache",
-            "to": ".",
-            "filter": ["*"]
-          }]
-        },
-        directories: {
-          app : "transpiled"
-        },
-
-      }
-    }).then(() => {
-      let pn =pjson.productName;
-      let pv =pjson.version;
-      return gulp.src(`dist/mac/${pn}-${pv}-mac.zip`)
-        .pipe(rename(`devsuite-${pv}-bundle-installer-mac.zip`))
-        .pipe(gulp.dest(`dist/`));
-    }).catch((error) => {
-        // handle error
-    });
+    return buildInstaller(gulp,
+      `dist/mac/${productName}-${productVersion}-mac.zip`,
+      `dist/devsuite-${productVersion}-bundle-installer-mac.zip`,
+       [{
+          "from": "requirements-cache",
+          "to": ".",
+          "filter": ["*"]
+        }]);
   });
 
   gulp.task('dist-simple', ['update-package'], function() {
-    const builder = require("electron-builder")
-    const Platform = builder.Platform
+    return buildInstaller(gulp,
+      `dist/mac/${productName}-${productVersion}-mac.zip`,
+      `dist/devsuite-${productVersion}-installer-mac.zip`
+    );
+  });
 
-    // Promise is returned
-    return builder.build({
-      targets: Platform.MAC.createTarget(),
-      devMetadata: {
-        build: {
-          appId: "com.redhat.devsuite.installer",
-          category: "public.app-category.developer-tools",
-          mac: {
-            icon: "resources/devsuite.icns",
-            target: "zip"
-          }
-        },
-        directories: {
-          app : "transpiled"
-        },
-
-      }
-    }).then(() => {
-      let pn =pjson.productName;
-      let pv =pjson.version;
-      return gulp.src(`dist/mac/${pn}-${pv}-mac.zip`)
-        .pipe(rename(`devsuite-${pv}-installer-mac.zip`))
-        .pipe(gulp.dest(`dist/`));
-    }).catch((error) => {
-
-    });
+  gulp.task('cleanup', function(cb) {
+    return del(['dist/mac'],
+      { force: false });
   });
 
 }
+
+module.exports = darwinDist;
