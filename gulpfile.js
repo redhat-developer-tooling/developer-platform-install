@@ -71,7 +71,7 @@ gulp.task('create-dist-dir', function(cb) {
   return mkdirp(config.buildFolderPath, cb);
 })
 
-gulp.task('generate', ['create-modules-link','transpile:app'], function(cb) {
+gulp.task('generate', ['create-modules-link','update-requirements'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + config.artifactName + ' --platform=' + config.artifactPlatform + ' --arch=' + config.artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar=true';
@@ -133,21 +133,10 @@ gulp.task('update-requirements',['transpile:app'], function() {
     .then(updateDevStudioVersion)
     .then(updateDevStudioSha)
     .then(()=>{
-      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
+      fs.writeFile('./transpiled/requirements-'  + process.platform + '.json', JSON.stringify(reqs, null, 2));
     }).catch((err)=>{
       console.log(err);
     });
-});
-
-gulp.task('update-package-meta', function() {
-	let appPackage = require('./transpiled/package.json');
-	delete appPackage.build;
-	return Promise.resolve()
-		.then(()=>{
-			fs.writeFile('./transpiled/package.json', JSON.stringify(appPackage, null, 2));
-		}).catch((err)=>{
-			console.log(err);
-		});
 });
 
 gulp.task('test', function() {

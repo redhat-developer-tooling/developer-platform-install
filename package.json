@@ -14,14 +14,6 @@
     "url": "https://issues.jboss.org/projects/JBDS/summary"
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
-  "build": {
-    "appId": "com.redhat.devsuite.installer",
-    "category": "public.app-category.developer-tools",
-    "mac": {
-      "icon": "resources/devsuite.icns",
-      "target": "zip"
-    }
-  },
   "directories": {
     "app" : "transpiled"
   },
@@ -34,7 +26,7 @@
     "test": "gulp test",
     "ui-test": "gulp ui-test",
     "system-test": "gulp system-test",
-    "dist:mac": "gulp clean && gulp transpile:app && gulp update-package-meta && node_modules/.bin/build"
+    "dist:mac": "gulp dist"
   },
   "dependencies": {
     "angular": "1.5.8",
