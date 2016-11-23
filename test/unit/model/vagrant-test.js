@@ -7,7 +7,9 @@ import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import path from 'path';
 import VagrantInstall from 'browser/model/vagrant';
+import {VagrantInstallWindows} from 'browser/model/vagrant';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
@@ -27,12 +29,17 @@ describe('Vagrant installer', function() {
     isInstalled: function() { return false; }
   };
 
-  installerDataSvc = sinon.stub(new InstallerDataService());
-  installerDataSvc.getRequirementByName.restore();
-  installerDataSvc.tempDir.returns('tempDirectory');
-  installerDataSvc.installDir.returns('installationFolder');
-  installerDataSvc.vagrantDir.returns(path.join('installationFolder','vagrant'));
-  installerDataSvc.getInstallable.returns(fakeInstallable);
+  function stubDataService() {
+    let ds = sinon.stub(new InstallerDataService());
+    ds.getRequirementByName.restore();
+    ds.tempDir.returns('tempDirectory');
+    ds.installDir.returns('installationFolder');
+    ds.vagrantDir.returns(path.join('installationFolder','vagrant'));
+    ds.getInstallable.returns(fakeInstallable);
+    return ds;
+  }
+
+  installerDataSvc = stubDataService();
 
   let fakeProgress;
 
@@ -164,6 +171,7 @@ describe('Vagrant installer', function() {
 
     it('should set progress to "Installing"', function() {
       sandbox.stub(Installer.prototype, 'execFile').rejects('done');
+      sandbox.stub(Installer.prototype, 'exec').rejects('done');
 
       installer.installAfterRequirements(fakeProgress, success, failure);
 
@@ -171,20 +179,28 @@ describe('Vagrant installer', function() {
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
-    it('should exec the downloaded file with temporary folder as target destination', function() {
-      sandbox.stub(child_process, 'execFile').yields('done');
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
-      installer.installAfterRequirements(fakeProgress, success, failure);
+    describe('on windows',function() {
+      it('should exec the downloaded file with temporary folder as target destination', function() {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        let installer = new VagrantInstallWindows(stubDataService(), downloadUrl, null);
+        installer.ipcRenderer = { on: function() {} };
 
-      expect(spy).to.have.been.called;
-      expect(spy).calledWith('msiexec', [
-        '/i', path.join('tempDirectory','vagrant.msi'),
-        'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qn', '/norestart', '/Liwe',
-        path.join('installationFolder','vagrant.log')]);
-    });
+        sandbox.stub(child_process, 'execFile').yields('done');
+        let spy = sandbox.spy(Installer.prototype, 'execFile');
+        installer.installAfterRequirements(fakeProgress, success, failure);
+
+        expect(spy).to.have.been.called;
+        expect(spy).calledWith('msiexec', [
+          '/i', path.join('tempDirectory','vagrant.msi'),
+          'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qn', '/norestart', '/Liwe',
+          path.join('installationFolder','vagrant.log')]);
+      });
+    })
 
     it('should catch errors during the installation', function(done) {
       sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
+      sandbox.stub(child_process, 'exec').yields('done');
+      sandbox.stub(child_process, 'execFile').yields('done');
 
       try {
         installer.installAfterRequirements(fakeProgress, success, failure);
