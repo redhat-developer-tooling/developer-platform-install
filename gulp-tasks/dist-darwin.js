@@ -65,7 +65,7 @@ function darwinDist(gulp) {
   });
 
   gulp.task('dist', function(){
-      return runSequence('clean','update-package','dist-simple','dist-bundle','cleanup');
+      return runSequence('clean','check-requirements','update-package','dist-simple','dist-bundle','cleanup');
   });
 
   gulp.task('update-package',['update-requirements'], function() {
