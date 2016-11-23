@@ -10,14 +10,17 @@ let count = 0;
 
 function checkRequirements() {
   for (var attribute in reqs) {
-    data[attribute] = reqs[attribute].url;
-    count++;
+    // sha256 is not set for macOS Java SE
+    if(reqs[attribute].sha256sum !== '') {
+      data[attribute] = reqs[attribute].url;
+      count++;
+    }
   }
 
   //to check if the url looks like it points to what it is supposed to
   fileNames['cdk.zip'] = 'cdk';
   fileNames['rhel-vagrant-virtualbox.box'] = 'vagrant-virtualbox.box';
-  fileNames['oc.zip'] = 'openshift-origin-client-tools';
+  fileNames['oc.zip'] = 'oc-origin-cli';
   fileNames['cygwin.exe'] = 'cygwin';
   fileNames['jbds.jar'] = 'devstudio';
   fileNames['jdk.msi'] = 'openjdk';
@@ -26,15 +29,15 @@ function checkRequirements() {
   fileNames['7zip.zip'] = '7-Zip';
   fileNames['7zip-extra.zip'] = '7-Zip';
 
-  //to check if the files are rougly the size the should be
+  //to check if the files are rougly the size they should be
   minSizes['cdk.zip'] = 50 * 1024;
   minSizes['rhel-vagrant-virtualbox.box'] = 750 * 1024 * 1024;
   minSizes['oc.zip'] = 10 * 1024 * 1024;
   minSizes['cygwin.exe'] = 500 * 1024;
   minSizes['jbds.jar'] = 400 * 1024 * 1024;
   minSizes['jdk.msi'] = 50 * 1024 *1024;
-  minSizes['vagrant.msi'] = 120 * 1024 * 1024;
-  minSizes['virtualbox.exe'] = 100 * 1024 * 1024;
+  minSizes['vagrant.msi'] = 80 * 1024 * 1024;
+  minSizes['virtualbox.exe'] = 85 * 1024 * 1024;
   minSizes['7zip.zip'] = 200 * 1024;
   minSizes['7zip-extra.zip'] = 400 * 1024;
 
