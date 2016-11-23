@@ -49,7 +49,7 @@
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
     "version": "10.2.0.AM3",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.2.0.AM3-installer-standalone.jar?workflow=direc",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.2.0.AM3-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.AM3-build-product/2016-11-04_17-13-49-B6372/all/devstudio-10.2.0.AM3-v20161104-1659-B6372-installer-standalone.jar",
     "filename": "devstudio-10.2.0.AM3-latest-installer-standalone.jar",
     "sha256sum": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.AM3-build-product/2016-11-04_17-13-49-B6372/all/devstudio-10.2.0.AM3-v20161104-1659-B6372-installer-standalone.jar.sha256",
