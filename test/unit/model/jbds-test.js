@@ -9,6 +9,7 @@ import path from 'path';
 import JbdsInstall from 'browser/model/jbds';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
@@ -28,16 +29,21 @@ describe('devstudio installer', function() {
   let success = () => {};
   let failure = () => {};
 
-  installerDataSvc = sinon.stub(new InstallerDataService());
-  installerDataSvc.getRequirementByName.restore();
-  installerDataSvc.tempDir.returns('tempDirectory');
-  installerDataSvc.installDir.returns('installationFolder');
-  installerDataSvc.jdkDir.returns('install/jdk8');
-  installerDataSvc.jbdsDir.returns('installationFolder/developer-studio');
-  installerDataSvc.cdkVagrantfileDir.returns('installationFolder/cdk/vagrant');
-  installerDataSvc.getInstallable.returns(fakeInstall);
-  installerDataSvc.getUsername.returns('user');
-  installerDataSvc.getPassword.returns('passwd');
+  function stubDataService() {
+    let ds = sinon.stub(new InstallerDataService());
+    ds.getRequirementByName.restore();
+    ds.tempDir.returns('tempDirectory');
+    ds.installDir.returns('installationFolder');
+    ds.jdkDir.returns('install/jdk8');
+    ds.jbdsDir.returns('installationFolder/developer-studio');
+    ds.cdkVagrantfileDir.returns('installationFolder/cdk/vagrant');
+    ds.getInstallable.returns(fakeInstall);
+    ds.getUsername.returns('user');
+    ds.getPassword.returns('passwd');
+    return ds;
+  }
+
+  installerDataSvc = stubDataService();
 
   let fakeProgress;
 
@@ -145,16 +151,25 @@ describe('devstudio installer', function() {
     let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbds.jar');
     let fsextra = require('fs-extra');
 
-    it('should not start until JDK has finished installing', function() {
-      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
-      item2.thenInstall(installer);
+    describe('on windows', function() {
+      beforeEach(function() {
+          sandbox.stub(Platform, 'getOS').returns('win32');
+      })
 
-      installer.install(fakeProgress, success, failure);
+      it('should not start until JDK has finished installing', function() {
+        let installerDataSvc = stubDataService();
+        let installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
+        installer.ipcRenderer = { on: function() {} };
+        let installSpy = sandbox.spy(installer, 'installAfterRequirements');
+        let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+        item2.thenInstall(installer);
 
-      expect(installSpy).not.called;
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
+        installer.install(fakeProgress, success, failure);
+
+        expect(installSpy).not.called;
+        expect(fakeProgress.setStatus).to.have.been.calledOnce;
+        expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
+      });
     });
 
     it('should install once JDK has finished', function() {

@@ -7,7 +7,9 @@ import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import path from 'path';
 import VirtualBoxInstall from 'browser/model/virtualbox';
+import {VirtualBoxInstallWindows} from 'browser/model/virtualbox';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
@@ -139,40 +141,101 @@ describe('Virtualbox installer', function() {
   describe('installation', function() {
     let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
 
-    it('should execute the silent extract', function() {
-      sandbox.stub(child_process, 'execFile').yields('done');
+    describe('on windows', function() {
+      let installer;
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, null);
+        installer.ipcRenderer = { on: function() {} };
+      })
 
-      let data = [
-        '--extract',
-        '-path',
-        installerDataSvc.tempDir(),
-        '--silent'
-      ];
+      it('should execute the silent extract', function() {
+        sandbox.stub(child_process, 'execFile').yields('done');
 
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
-      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
-      item2.setInstallComplete();
-      item2.thenInstall(installer);
-      installer.install(fakeProgress, success, failure);
+        let data = [
+          '--extract',
+          '-path',
+          installerDataSvc.tempDir(),
+          '--silent'
+        ];
 
-      expect(spy).to.have.been.called;
-      expect(spy).calledWith(downloadedFile, data);
-    });
+        let spy = sandbox.spy(Installer.prototype, 'execFile');
+        let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+        item2.setInstallComplete();
+        item2.thenInstall(installer);
+        installer.install(fakeProgress, success, failure);
 
-    it('setup should wait for all downloads to complete', function() {
-      let helper = new Installer('virtualbox', fakeProgress);
-      let spy = sandbox.spy(installer, 'installMsi');
+        expect(spy).to.have.been.called;
+        expect(spy).calledWith(downloadedFile, data);
+      });
 
-      installerDataSvc.downloading = true;
+      it('setup should wait for all downloads to complete', function() {
+        let helper = new Installer('virtualbox', fakeProgress);
+        let spy = sandbox.spy(installer, 'installMsi');
 
-      installer.configure(helper);
+        installerDataSvc.downloading = true;
 
-      expect(fakeProgress.setStatus).calledWith('Waiting for all downloads to finish');
-      expect(spy).not.called;
-    });
+        installer.configure(helper);
+
+        expect(fakeProgress.setStatus).calledWith('Waiting for all downloads to finish');
+        expect(spy).not.called;
+      });
+
+      describe('configure', function() {
+        it('should call installMsi if all downloads have finished', function() {
+          let helper = new Installer('virtualbox', fakeProgress);
+          let spy = sandbox.spy(installer, 'installMsi');
+          sandbox.stub(child_process, 'execFile').yields();
+
+          installerDataSvc.downloading = false;
+
+          installer.configure(helper);
+          expect(spy).calledOnce;
+        });
+      });
+
+      describe('installMsi', function() {
+        let helper, resolve, reject;
+
+        beforeEach(function() {
+          helper = new Installer('virtualbox', fakeProgress, success, failure);
+          sandbox.stub(child_process, 'execFile').yields();
+          resolve = (argument) => { Promise.resolve(argument); };
+          reject = (argument) => { Promise.reject(argument); };
+        });
+
+        it('should set progress to "Installing"', function() {
+          installer.installMsi(helper, resolve, reject);
+
+          expect(fakeProgress.setStatus).to.have.been.calledOnce;
+          expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
+        });
+
+        it('should execute the msi installer', function() {
+          let spy = sandbox.spy(Installer.prototype, 'execFile');
+
+          let msiFile = path.join(installerDataSvc.tempDir(), 'VirtualBox-' + version + '-r' + revision + '-MultiArch_amd64.msi');
+          let opts = [
+            '/i',
+            msiFile,
+            'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
+            '/qn',
+            '/norestart',
+            '/Liwe',
+            path.join(installerDataSvc.installDir(), 'vbox.log')
+          ];
+
+          installer.installMsi(helper, resolve, reject);
+
+          expect(spy).to.have.been.calledOnce;
+          expect(spy).to.have.been.calledWith('msiexec', opts);
+        });
+      });
+    })
 
     it('should catch errors during the installation', function(done) {
       sandbox.stub(child_process, 'execFile').yields(new Error('critical error'));
+      sandbox.stub(child_process, 'exec').yields(new Error('critical error'));
       let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
@@ -194,57 +257,6 @@ describe('Virtualbox installer', function() {
       installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.not.been.called;
-    });
-
-    describe('configure', function() {
-      it('should call installMsi if all downloads have finished', function() {
-        let helper = new Installer('virtualbox', fakeProgress);
-        let spy = sandbox.spy(installer, 'installMsi');
-        sandbox.stub(child_process, 'execFile').yields();
-
-        installerDataSvc.downloading = false;
-
-        installer.configure(helper);
-        expect(spy).calledOnce;
-      });
-    });
-
-    describe('installMsi', function() {
-      let helper, resolve, reject;
-
-      beforeEach(function() {
-        helper = new Installer('virtualbox', fakeProgress, success, failure);
-        sandbox.stub(child_process, 'execFile').yields();
-        resolve = (argument) => { Promise.resolve(argument); };
-        reject = (argument) => { Promise.reject(argument); };
-      });
-
-      it('should set progress to "Installing"', function() {
-        installer.installMsi(helper, resolve, reject);
-
-        expect(fakeProgress.setStatus).to.have.been.calledOnce;
-        expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
-      });
-
-      it('should execute the msi installer', function() {
-        let spy = sandbox.spy(Installer.prototype, 'execFile');
-
-        let msiFile = path.join(installerDataSvc.tempDir(), 'VirtualBox-' + version + '-r' + revision + '-MultiArch_amd64.msi');
-        let opts = [
-          '/i',
-          msiFile,
-          'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
-          '/qn',
-          '/norestart',
-          '/Liwe',
-          path.join(installerDataSvc.installDir(), 'vbox.log')
-        ];
-
-        installer.installMsi(helper, resolve, reject);
-
-        expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith('msiexec', opts);
-      });
     });
   });
 
