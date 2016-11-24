@@ -10,13 +10,12 @@ Build output is two installers. The main difference between them is a file size.
 Architecture
 ------------
 
-This installer is built on Windows using [Electron](http://electron.atom.io/).
+This installer is desktop application for Windows and macOS built with [Electron](http://electron.atom.io/docs/tutorial/about/). 
 
-You will also require the [Node.js, NPM](https://nodejs.org/) and [Gulp](http://gulpjs.com/).
+Configuring development environment
+-----------------------------------
 
-
-Installing dependencies
------------------------
+#### Windows
 
 In order to build the installer, you'll need to install some tools.
 
