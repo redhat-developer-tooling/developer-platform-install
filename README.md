@@ -137,6 +137,8 @@ and then push Ctrl + Shift + I to show ChromDevTools in current installer window
 Testing online installer
 ------------------------
 
+#### With mock server for all downloaded resourses
+
 In windows System Properties Setting Dialog add
 
     DSI_REJECT_UNAUTHORIZED=false
@@ -157,7 +159,7 @@ developers.redhat.com with download-manager links. In separate windows run
 
     node gulp-tasks/http-server.js
 
-and Then
+and then
 
     node gulp-tasks/https-server.js
 
@@ -166,6 +168,29 @@ dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe from package explorer. Mock
 http server always returns let you pass account information page, but if you
 plan to install and test CDK in DevStudio use your real Red Hat user name from
 developers.rdhat.com.
+
+#### With mock server for download-manager resources only
+
+In Windows System Properties Setting Dialog add
+
+    DSI_REJECT_UNAUTHORIZED=false
+    DM_STAGE_HOST=localhost
+
+to your user environment variables.
+
+Then download (VPN is Required) requirements with
+
+    gulp prefetch
+
+When download is finished run https mock servers to mimic
+developers.redhat.com with download-manager links. In separate windows execute
+
+    node gulp-tasks/https-server.js
+
+Now you are ready to test online installer without actual bits published to 
+download-manager. Start dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
+from package explorer and use it as you would normally do after release.
+
 
 Releasing the installer
 -----------------------
