@@ -65,7 +65,7 @@ function darwinDist(gulp) {
   });
 
   gulp.task('dist', function(){
-      return runSequence('clean','dist-simple','dist-bundle','cleanup');
+      return runSequence('clean','update-package','dist-simple','dist-bundle','cleanup');
   });
 
   gulp.task('update-package',['update-requirements'], function() {
@@ -80,7 +80,7 @@ function darwinDist(gulp) {
       });
   });
 
-  gulp.task('dist-bundle', ['prefetch','update-package'], function() {
+  gulp.task('dist-bundle', ['prefetch'], function() {
     return buildInstaller(gulp,
       `dist/mac/${productName}-${productVersion}-mac.zip`,
       `dist/devsuite-${productVersion}-bundle-installer-mac.zip`,
@@ -91,7 +91,7 @@ function darwinDist(gulp) {
         }]);
   });
 
-  gulp.task('dist-simple', ['update-package'], function() {
+  gulp.task('dist-simple', function() {
     return buildInstaller(gulp,
       `dist/mac/${productName}-${productVersion}-mac.zip`,
       `dist/devsuite-${productVersion}-installer-mac.zip`
