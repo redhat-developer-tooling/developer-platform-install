@@ -1,4 +1,4 @@
-	'use strict';
+'use strict';
 
 var gulp = require('gulp'),
     fs = require('fs-extra'),
@@ -21,17 +21,17 @@ var gulp = require('gulp'),
     rcedit = require('rcedit'),
     sourcemaps = require("gulp-sourcemaps"),
     symlink = require('gulp-symlink'),
-		common = require('./gulp-tasks/common.js'),
-		download = require('./gulp-tasks/download.js');
+		common = require('./gulp-tasks/common'),
+		download = require('./gulp-tasks/download'),
+    config = require('./gulp-tasks/config');
 
-let config = require('./gulp-tasks/config');
 require('./gulp-tasks/tests')(gulp);
 require('./gulp-tasks/dist-' + process.platform)(gulp);
 
 process.on('uncaughtException', function(err) {
-    if(err) {
-      throw err;
-    }
+  if(err) {
+    throw err;
+  }
 });
 
 // transpile sources and copy resources to a separate folder
@@ -43,8 +43,8 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('transpiled'));
 
   var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
-		'uninstaller/*.ps1', 'requirements-' + process.platform + '.json'], {base: '.'})
-    .pipe(gulp.dest('transpiled'));
+    'uninstaller/*.ps1', 'requirements-' + process.platform + '.json'], {base: '.'}
+	).pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
 });
@@ -59,7 +59,7 @@ gulp.task('create-modules-link', function() {
 
 // clean dist/ AND prefetch-dependencies/ folder
 gulp.task('clean-all', ['clean'], function() {
-  return del([prefetchFolder], { force: true });
+  return del([config.prefetchFolder], { force: true });
 });
 
 // clean dist/ folder in prep for fresh build
@@ -69,7 +69,7 @@ gulp.task('clean', function() {
 
 gulp.task('create-dist-dir', function(cb) {
   return mkdirp(config.buildFolderPath, cb);
-})
+});
 
 gulp.task('generate', ['create-modules-link','update-requirements'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
@@ -98,7 +98,7 @@ gulp.task('update-requirements',['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve,reject) => {
-      let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf("/")) + '/content.json';
+      let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf('/')) + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
@@ -109,16 +109,16 @@ gulp.task('update-requirements',['transpile:app'], function() {
           if (reqs['jbds.jar'].version != finalVersion) {
             reqs['jbds.jar'].version = finalVersion;
           }
-          resolve()
+          resolve();
         }
       });
     });
   };
 
   let updateDevStudioSha = ()=>{
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve) => {
       let url = reqs['jbds.jar'].sha256sum;
-      if (url.length == 64 && url.indexOf("http")<0 && url.indexOf("ftp")<0) {
+      if (url.length == 64 && url.indexOf('http')<0 && url.indexOf('ftp')<0) {
         resolve();
       } else {
         request(url, (err, response, body) => {
@@ -155,15 +155,15 @@ gulp.task('system-test', function(cb) {
 
 gulp.task('create-prefetch-cache-dir',function() {
   if (!fs.existsSync(config.prefetchFolder)) {
-     mkdirp(config.prefetchFolder);
+    mkdirp(config.prefetchFolder);
   }
 });
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
 gulp.task('check-requirements', function(cb) {
   exec('node test/check-requirements.js', common.createExecCallback(cb, false));
-})
+});
 
 gulp.task('watch', function () {
   gulp.watch(['test/**/*.js', 'browser/**/*.js'], ()=>runSequence('unit-test'));
-})
+});
