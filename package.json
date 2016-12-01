@@ -15,13 +15,14 @@
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
   "directories": {
-    "app" : "transpiled"
+    "app": "transpiled"
   },
   "scripts": {
     "start": "gulp run",
     "generate": "gulp generate",
     "package-bundle": "gulp package-bundle",
     "package-simple": "gulp package-simple",
+    "coverage:publish": "codecov",
     "dist": "gulp dist",
     "test": "gulp test",
     "ui-test": "gulp ui-test",
@@ -47,6 +48,7 @@
     "babel-preset-node5": "11.1.0",
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
+    "codecov": "1.0.1",
     "crypto": "0.0.3",
     "del": "2.2.2",
     "electron": "1.4.5",
