@@ -10,7 +10,7 @@ Build output is two installers. The main difference between them is a file size.
 Architecture
 ------------
 
-This installer is desktop application for Windows and macOS built with [Electron](http://electron.atom.io/docs/tutorial/about/). 
+This installer is desktop application for Windows and macOS built with [Electron](http://electron.atom.io/docs/tutorial/about/).
 
 Configuring development environment
 -----------------------------------
@@ -29,9 +29,8 @@ In order to build the installer, you'll need to install some tools.
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
-5. Install Gulp and all dependencies:
+5. Install all dependencies:
 
-        npm install -g gulp
         npm install
 
 If either of the above steps fail, try deleting the c:\Users\<username>\.electron folder.
@@ -90,9 +89,9 @@ of any test, e.g.:
 
     npm test -- -g login
     npm test -- --grep login
-    
+
 Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. Report format can be overriden with '--report' parameter like shown below
-    
+
     npm test -- --report cobertura
 
 Running Angular protractor UI tests
@@ -187,7 +186,7 @@ developers.redhat.com with download-manager links. In separate windows execute
 
     node gulp-tasks/https-server.js
 
-Now you are ready to test online installer without actual bits published to 
+Now you are ready to test online installer without actual bits published to
 download-manager. Start dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
 from package explorer and use it as you would normally do after release.
 
