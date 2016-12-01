@@ -18,16 +18,16 @@
     "app": "transpiled"
   },
   "scripts": {
-    "start": "gulp run",
-    "generate": "gulp generate",
-    "package-bundle": "gulp package-bundle",
-    "package-simple": "gulp package-simple",
+    "start": "./node_modules/.bin/gulp run",
+    "generate": "./node_modules/.bin/gulp generate",
+    "package-bundle": "./node_modules/.bin/gulp package-bundle",
+    "package-simple": "./node_modules/.bin/gulp package-simple",
     "coverage:publish": "codecov",
-    "dist": "gulp dist",
-    "test": "gulp test",
-    "ui-test": "gulp ui-test",
-    "system-test": "gulp system-test",
-    "dist:mac": "gulp dist"
+    "dist": "./node_modules/.bin/gulp dist",
+    "test": "./node_modules/.bin/gulp test",
+    "ui-test": "./node_modules/.bin/gulp ui-test",
+    "system-test": "./node_modules/.bin/gulp system-test",
+    "dist:mac": "./node_modules/.bin/gulp dist"
   },
   "dependencies": {
     "angular": "1.5.8",
