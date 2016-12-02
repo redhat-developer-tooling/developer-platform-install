@@ -27,7 +27,7 @@ To build installer follow steps below for specific platform.
 
 4. Edit your "Path" by going to the "System" Control Panel, "Advanced system settings", "Environment Variables". Add _C:\Program Files\nodejs;C:\Users\\&lt;username&gt;\App Data\Roaming\npm_ to the "Variable value".
 
-Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
+   Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use    the correct path for your system.
 
 5. Download and install git for windows from <https://github.com/git-for-windows/git/releases/tag/v2.11.0.windows.1>
 
