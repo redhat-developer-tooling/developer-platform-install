@@ -10,14 +10,14 @@ Build output is two installers. The main difference between them is a file size.
 Architecture
 ------------
 
-This installer is desktop application for Windows and macOS built with [Electron](http://electron.atom.io/docs/tutorial/about/). 
+This installer is desktop application for Windows and macOS built with [Electron](http://electron.atom.io/docs/tutorial/about/).
 
-Configuring development environment
------------------------------------
+Building Installer
+------------------
+
+To build installer follow steps below for specific platform.
 
 #### Windows
-
-In order to build the installer, you'll need to install some tools.
 
 1. Download and install Node for Windows from <https://nodejs.org/en/download/>. Pick the MSI installer.
 
@@ -29,12 +29,66 @@ In order to build the installer, you'll need to install some tools.
 
 Note that your system might have an "AppData" (no space) instead of "App Data" (with space) folder, so make sure you use the correct path for your system.
 
-5. Install Gulp and all dependencies:
+5. Download and install git for windows from <https://github.com/git-for-windows/git/releases/tag/v2.11.0.windows.1>
 
-        npm install -g gulp
-        npm install
+6. Run gitbash from Windows Start Menu
 
-If either of the above steps fail, try deleting the c:\Users\<username>\.electron folder.
+7. In gitbash windows clone installer repository by running
+
+       git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
+       
+8. Then change current directory to repository root
+
+       cd ~/Projects/developer-platform-install
+       
+9. Install required dependencies with
+
+       npm install
+       
+10. Build installer executables with
+
+       npm run dist
+       
+After build is finished ./dist folder should contain Windows executable files for On-line and Bundle Installers.
+
+#### macOS
+
+1. Install git by running 
+
+         git 
+   
+   from bash terminal and then follow the requests to install Xcode Development IDE
+   
+2. Run git again to accept the license
+
+3. Install nvm (Nodejs Version Management) by running following shell script in bash terminal
+
+        touch ~/.bash_profile
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+        
+   then restart bash to pick up changes in your environment
+        
+4. Install nodejs using nvm command
+
+        nvm install 3.6.1
+   
+5. Clone installer repository
+
+        git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
+        
+6. Then change current directory to repository root
+
+       cd ~/Projects/developer-platform-install
+       
+7. Install required dependencies with
+
+       npm install
+       
+8. Build installer executables with
+
+       npm run dist:mac
+       
+After build is finished ./dist folder should contain zipped macOS application package files for On-line and Bundle Installers.
 
 Running the application
 -----------------------
@@ -90,9 +144,9 @@ of any test, e.g.:
 
     npm test -- -g login
     npm test -- --grep login
-    
+
 Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. Report format can be overriden with '--report' parameter like shown below
-    
+
     npm test -- --report cobertura
 
 Running Angular protractor UI tests
@@ -187,7 +241,7 @@ developers.redhat.com with download-manager links. In separate windows execute
 
     node gulp-tasks/https-server.js
 
-Now you are ready to test online installer without actual bits published to 
+Now you are ready to test online installer without actual bits published to
 download-manager. Start dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
 from package explorer and use it as you would normally do after release.
 
