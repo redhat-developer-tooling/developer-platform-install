@@ -35,19 +35,19 @@ To build installer follow steps below for specific platform.
 
 7. In gitbash windows clone installer repository by running
 
-       git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
+        git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
        
 8. Then change current directory to repository root
 
-       cd ~/Projects/developer-platform-install
+        cd ~/Projects/developer-platform-install
        
 9. Install required dependencies with
 
-       npm install
+        npm install
        
 10. Build installer executables with
 
-       npm run dist
+        npm run dist
        
 After build is finished ./dist folder should contain Windows executable files for On-line and Bundle Installers.
 
@@ -55,7 +55,7 @@ After build is finished ./dist folder should contain Windows executable files fo
 
 1. Install git by running 
 
-         git 
+        git 
    
    from bash terminal and then follow the requests to install Xcode Development IDE
    
@@ -78,15 +78,15 @@ After build is finished ./dist folder should contain Windows executable files fo
         
 6. Then change current directory to repository root
 
-       cd ~/Projects/developer-platform-install
+        cd ~/Projects/developer-platform-install
        
 7. Install required dependencies with
 
-       npm install
+        npm install
        
 8. Build installer executables with
 
-       npm run dist:mac
+        npm run dist:mac
        
 After build is finished ./dist folder should contain zipped macOS application package files for On-line and Bundle Installers.
 
