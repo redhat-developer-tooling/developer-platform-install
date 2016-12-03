@@ -1,11 +1,19 @@
 Red Hat Development Suite Installer
 ====================================
 
-This installer aims to produce ready to use development environment for Red Hat Container Development Kit v2.0.
+This installer aims to produce ready to use development environment for [Red Hat Container Development Kit](http://developers.redhat.com/products/cdk/overview/) on Windows and macOS platforms.
 
 Deliverables
 ------------
-Build output is two installers. The main difference between them is a file size. One installer is lightweight and download everything during installation. Second one bundles most of binary dependencies and downloads during installation only binaries that cannot be included. Both are self extracting executable files made with 7-zip file archiver with a high compression ratio (7-Zip is licensed under the GNU LGPL license, more details on <https://www.7zip.org>).
+Build output is two platform specific executables: Online and Bundle installer. Online Installer is lightweight (aproximately 50Mb) and it downloads everything during installation. Bundle Installer includes most of binary dependencies and downloads binaries that cannot be included during installation.
+
+#### Windows
+
+Both Installers are self extracting executable files made with 7-zip file archiver with a high compression ratio (7-Zip is licensed under the GNU LGPL license, more details on <https://www.7zip.org>).
+
+#### macOS
+
+Both Installers are zipped macOS Application Bundles.
 
 Architecture
 ------------
