@@ -51,10 +51,25 @@ describe('Platform', function(){
 
   });
 
-  describe('PATH', function(){
+  describe('Platform.PATH', function(){
 
-    describe('PATH does not return undefined value form process.env', function(){
+    it('does not return undefined value form process.env', function(){
       expect(process.env[Platform.PATH]).to.be.not.equal(undefined);
+    });
+
+    it('equals "Path" on Windows', function(){
+      sandbox.stub(Platform,'getOS').returns('win32');
+      expect(Platform.PATH).to.be.equal('Path');
+    });
+
+    it('equals "PATH" on Linux', function(){
+      sandbox.stub(Platform,'getOS').returns('linux');
+      expect(Platform.PATH).to.be.equal('PATH');
+    });
+
+    it('equals "PATH" on Darwin', function(){
+      sandbox.stub(Platform,'getOS').returns('darwin');
+      expect(Platform.PATH).to.be.equal('PATH');
     });
 
   });

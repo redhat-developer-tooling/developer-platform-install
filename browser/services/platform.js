@@ -25,11 +25,14 @@ class Platform {
   static getEnv() {
     return process.env;
   }
+
+  static get PATH() {
+    return Platform.identify({
+      win32: ()=>'Path',
+      default: ()=>'PATH'
+    });
+  }
 }
 
-Platform.PATH = Platform.identify({
-  win32: ()=>'Path',
-  default: ()=>'PATH'
-});
 
 export default Platform;
