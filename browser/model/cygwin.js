@@ -34,7 +34,6 @@ class CygwinInstall extends InstallableItem {
         let rsyncVersion = rsyncPackageRegex.exec(out)[1];
         this.addOption('detected','','',true);
         this.option['detected'].version = cygwinVersion;
-        this.option['detected'].version = cygwinVersion;
         this.selectedOption = 'detected';
       }).then(()=>{
         return Util.executeCommand('where cygcheck', 1);

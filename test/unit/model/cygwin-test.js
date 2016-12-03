@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CygwinInstall from 'browser/model/cygwin';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
@@ -199,4 +200,13 @@ describe('Cygwin installer', function() {
       }
     });
   });
+
+  describe('detectExistingInstall', function(){
+    it('should mark cygwin as detected on macOS', function() {
+      sandbox.stub(Platform,'getOS').returns('darwin');
+      installer.detectExistingInstall();
+      expect(installer.selectedOption).to.be.equal('detected');
+      expect(installer.hasOption('detected')).to.be.equal(true);
+    });
+  })
 });
