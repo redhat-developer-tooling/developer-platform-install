@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CygwinInstall from 'browser/model/cygwin';
 import Logger from 'browser/services/logger';
+import Util from 'browser/model/helpers/util';
 import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
@@ -174,7 +175,7 @@ describe('Cygwin installer', function() {
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
-    it('should run the installer with correct parameters', function() {
+    it('should run the cygwin.exe installer with correct parameters', function() {
       sandbox.stub(child_process, 'execFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'execFile');
 
@@ -202,11 +203,39 @@ describe('Cygwin installer', function() {
   });
 
   describe('detectExistingInstall', function(){
-    it('should mark cygwin as detected on macOS', function() {
-      sandbox.stub(Platform,'getOS').returns('darwin');
-      installer.detectExistingInstall();
-      expect(installer.selectedOption).to.be.equal('detected');
-      expect(installer.hasOption('detected')).to.be.equal(true);
+    describe('on macOS', function(){
+      it('should mark cygwin as detected', function() {
+        sandbox.stub(Platform,'getOS').returns('darwin');
+        installer.detectExistingInstall();
+        expect(installer.selectedOption).to.be.equal('detected');
+        expect(installer.hasOption('detected')).to.be.equal(true);
+      });
     });
-  })
+    describe('on Linux', function(){
+      it('should mark cygwin as detected', function() {
+        sandbox.stub(Platform,'getOS').returns('linux');
+        installer.detectExistingInstall();
+        expect(installer.selectedOption).to.be.equal('detected');
+        expect(installer.hasOption('detected')).to.be.equal(true);
+      });
+    });
+    describe('on Windows', function(done){
+      it('should mark cygwin as detected when cygwin, openssh and rsync pacakes are installed', function() {
+        sandbox.stub(Platform,'getOS').returns('win32');
+        sandbox.stub(Util,'executeCommand').onFirstCall().returns(Promise.resolve(
+          [ 'Cygwin Package Information',
+            'Package              Version        Status',
+            'cygwin               2.6.0-1        OK',
+            'openssh              7.3p1-2        OK',
+            'rsync                3.1.2-1        OK'
+          ].join('\n')));
+        Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
+        installer.detectExistingInstall(function(){
+          expect(installer.selectedOption).to.be.equal('detected');
+          expect(installer.hasOption('detected')).to.be.equal(true);
+          done();
+        });
+      });
+    });
+  });
 });
