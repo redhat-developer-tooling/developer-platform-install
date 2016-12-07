@@ -44,59 +44,90 @@ To build installer follow steps below for specific platform.
 7. In gitbash windows clone installer repository by running
 
         git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
-       
+
 8. Then change current directory to repository root
 
         cd ~/Projects/developer-platform-install
-       
+
 9. Install required dependencies with
 
         npm install
-       
+
 10. Build installer executables with
 
         npm run dist
-       
+
 After build is finished ./dist folder should contain Windows executable files for On-line and Bundle Installers.
 
 #### macOS
 
-1. Install git by running 
+1. Install git by running
 
-        git 
-   
+        git
+
    from bash terminal and then follow the requests to install Xcode Development IDE
-   
+
 2. Run git again to accept the license
 
 3. Install nvm (Nodejs Version Management) by running following shell script in bash terminal
 
         touch ~/.bash_profile
         curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-        
+
    then restart bash to pick up changes in your environment
-        
+
 4. Install nodejs using nvm command
 
         nvm install 3.6.1
-   
+
 5. Clone installer repository
 
         git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
-        
+
 6. Then change current directory to repository root
 
         cd ~/Projects/developer-platform-install
-       
+
 7. Install required dependencies with
 
         npm install
-       
+
 8. Build installer executables with
 
         npm run dist:mac
-       
+
 After build is finished ./dist folder should contain zipped macOS application package files for On-line and Bundle Installers.
+
+#### Linux
+
+1. Install git by running
+
+        sudo yum install git
+
+  from terminal
+
+2. Install nvm (Nodejs Version Management) by running following shell script in terminal
+
+        touch ~/.bash_profile
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+
+  then restart bash to pick up changes in your environment
+
+3. Install nodejs using nvm command
+
+        nvm install 6.9.1
+
+4. Clone installer repository
+
+        git clone https://github.com/redhat-developer-tooling/developer-platform-install.git ~/Projects/developer-platform-install
+
+5. Then change current directory to repository root
+
+        cd ~/Projects/developer-platform-install
+
+6. Install required dependencies with
+
+        npm install
 
 Running the application
 -----------------------
