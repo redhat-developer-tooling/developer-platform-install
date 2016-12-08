@@ -27,9 +27,13 @@ To build installer follow steps below for specific platform.
 
 #### Windows
 
-1. Download and install Node for Windows from <https://nodejs.org/en/download/>. Pick the MSI installer.
+1. Download and install nvm for Windows from <https://github.com/coreybutler/nvm-windows/>. Pick the MSI installer.
 
-2. Download and install MS Visual Studio Express 2015 from <https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx> (pick the Express for Desktop installer) or Microsoft Visual C++ 2010 SP1 Redistributable Package from <http://www.microsoft.com/en-us/download/details.aspx?id=8328>
+2. Install nodejs using 
+
+        nvm install 6.9.1
+
+3. Download and install MS Visual Studio Express 2015 from <https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx> (pick the Express for Desktop installer) or Microsoft Visual C++ 2010 SP1 Redistributable Package from <http://www.microsoft.com/en-us/download/details.aspx?id=8328>
 
 3. Download and install Python 2.7.x for Windows from <https://www.python.org/downloads/release/>
 
