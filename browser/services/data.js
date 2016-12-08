@@ -50,7 +50,9 @@ class InstallerDataService {
       mkdirp.sync(path.resolve(this.installRoot));
     }
     Logger.initialize(this.installRoot);
-    this.copyUninstaller();
+    if(Platform.OS === 'win32') {
+      this.copyUninstaller();
+    }
   }
 
   copyUninstaller() {
