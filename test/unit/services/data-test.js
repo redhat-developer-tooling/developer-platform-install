@@ -6,6 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallerDataService from 'browser/services/data';
+import Platform from 'browser/services/platform';
 import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
@@ -103,6 +104,15 @@ describe('InstallerDataService', function() {
       expect(svc.installableItems.size).to.equal(1);
       expect(svc.getInstallable('key')).to.equal(vagrant);
       expect(svc.allInstallables()).to.equal(svc.installableItems);
+    });
+  });
+
+  describe('copyUninstaller', function(){
+    it('should be able to handle copyUninstaller', function(){
+      sandbox.stub(Platform,'getOS').returns('darwin');
+      sandbox.spy(svc, 'copyUninstaller');
+      svc.setup();
+      expect(svc.copyUninstaller).not.called;
     });
   });
 
