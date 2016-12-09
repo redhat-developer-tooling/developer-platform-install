@@ -200,6 +200,18 @@ describe('Cygwin installer', function() {
         expect.fail('It did not catch the error');
       }
     });
+
+    it('should copy cygwin.exe installer in target directory', function(done){
+      sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
+      sandbox.stub(Installer.prototype, 'copyFile').returns(Promise.resolve(true));
+      sandbox.stub(Installer.prototype, 'writeFile').returns(Promise.resolve(true));
+      installer.installAfterRequirements(fakeProgress, function(){
+        expect(Installer.prototype.copyFile).to.be.calledWith(
+          installer.downloadedFile,
+          path.join(installer.installerDataSvc.cygwinDir(),'setup-x86_64.exe'));
+        done();
+      }, failure);
+    });
   });
 
   describe('detectExistingInstall', function(){
