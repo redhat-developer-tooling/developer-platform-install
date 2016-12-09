@@ -7,9 +7,9 @@ import 'sinon-as-promised';
 import AccountController from 'browser/pages/account/controller.js';
 chai.use(sinonChai);
 
-describe('Login controller', function(){
+describe('Login controller', function() {
 
-  let controller,timeout,scope;
+  let controller, timeout, scope;
 
   beforeEach(function() {
     timeout = function(cb) { cb(); };
@@ -48,7 +48,7 @@ describe('Login controller', function(){
 
     let http, base64;
 
-    before(function(){
+    before(function() {
       sinon.stub(AccountController.prototype, 'getUserAgent');
     });
 
@@ -57,7 +57,7 @@ describe('Login controller', function(){
     });
 
 
-    it('should make an HTTP request', function(){
+    it('should make an HTTP request', function() {
       http = sinon.stub().resolves('success');
 
       controller = new AccountController({}, timeout, scope, http, base64);
@@ -66,7 +66,7 @@ describe('Login controller', function(){
       expect(http).to.have.been.calledOnce;
     });
 
-    it('should make a GET request with correct username and password', function(){
+    it('should make a GET request with correct username and password', function() {
       http = sinon.stub().resolves({
         status: 200,
         data: true
@@ -92,7 +92,7 @@ describe('Login controller', function(){
       expect(http).to.have.been.calledOnce;
     });
 
-    it('should call handleHttpFailure on HTTP failure', function(){
+    it('should call handleHttpFailure on HTTP failure', function() {
       http = ()=> Promise.reject('serious error');
       controller = new AccountController({}, timeout, scope, http, base64);
       let spy = sinon.spy(controller, 'handleHttpFailure');
@@ -107,7 +107,7 @@ describe('Login controller', function(){
       });
     });
 
-    it('should call handleHttpSuccess on successful HTTP request', function(){
+    it('should call handleHttpSuccess on successful HTTP request', function() {
       http = ()=> Promise.resolve({ status: 404 });
       controller = new AccountController({}, timeout, scope, http, base64);
       let spy = sinon.spy(controller, 'handleHttpSuccess');
@@ -124,7 +124,7 @@ describe('Login controller', function(){
   });
 
   describe('handleHttpFailure', function() {
-    it('should set authFailed after failure', function(){
+    it('should set authFailed after failure', function() {
       controller = new AccountController({}, timeout, scope);
       controller.handleHttpFailure('some error');
 
@@ -134,7 +134,7 @@ describe('Login controller', function(){
   });
 
   describe('handleHttpSuccess', function() {
-    it('should set authFailed when return code of HTTP request is not 200', function(){
+    it('should set authFailed when return code of HTTP request is not 200', function() {
       controller = new AccountController({}, timeout, scope);
       controller.handleHttpSuccess({ status: 404 });
 
@@ -142,7 +142,7 @@ describe('Login controller', function(){
       expect(controller.tandcNotSigned).to.be.false;
     });
 
-    it('should set tandcNotSigned when no data returned', function(){
+    it('should set tandcNotSigned when no data returned', function() {
       controller = new AccountController({});
       controller.handleHttpSuccess({ status: 200, data: false });
 
@@ -150,7 +150,7 @@ describe('Login controller', function(){
       expect(controller.tandcNotSigned).to.be.true;
     });
 
-    it('should go to the page "confirm" when everything is OK', function(){
+    it('should go to the page "confirm" when everything is OK', function() {
       let router = { go: function() {} };
       let spy = sinon.spy(router, 'go');
       let installerDataSvc = { setCredentials: function() {} };
@@ -164,7 +164,7 @@ describe('Login controller', function(){
       expect(controller.authFailed).to.be.false;
     });
 
-    it('should save credentials for later use when everything is OK', function(){
+    it('should save credentials for later use when everything is OK', function() {
       let router = { go: function() {} };
       let installerDataSvc = { setCredentials: function() {} };
       let spy = sinon.spy(installerDataSvc, 'setCredentials');

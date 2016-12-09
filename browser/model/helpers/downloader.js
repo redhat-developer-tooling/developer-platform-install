@@ -33,7 +33,7 @@ class Downloader {
     stream.close();
     this.failure(err);
     if (!this.downloads.get(stream.path)) {
-      this.downloads.set(stream.path,{failure:true});
+      this.downloads.set(stream.path, {failure:true});
     }
     this.downloads.get(stream.path)['failure'] = true;
   }
@@ -62,14 +62,14 @@ class Downloader {
     stream.end();
   }
 
-  closeHandler(file,sha,url) {
+  closeHandler(file, sha) {
     if(this.downloads.get(file) && this.downloads.get(file)['failure']) {
       return;
     }
     if(sha) {
       Logger.log(`Configured file='${file}' sha256='${sha}'`);
       var h = new Hash();
-      h.SHA256(file,(dlSha) => {
+      h.SHA256(file, (dlSha) => {
         if(sha === dlSha) {
           Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
           this.successHandler(file);
@@ -94,21 +94,21 @@ class Downloader {
     }
   }
 
-  download(options,file,sha) {
+  download(options, file, sha) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path,{options,sha,'failure': false});
+    this.downloads.set(stream.path, {options, sha, 'failure': false});
     request.get(this.setAdditionalOptions(options))
       .on('error', this.errorHandler.bind(this, stream))
       .on('response', this.responseHandler.bind(this))
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
   }
 
   downloadAuth(options, username, password, file, sha) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path,{options,username,password,sha,'failure': false});
+    this.downloads.set(stream.path, {options, username, password, sha, 'failure': false});
     request.get(this.setAdditionalOptions(options))
       .auth(username, password)
       .on('error', this.errorHandler.bind(this, stream))
@@ -116,7 +116,7 @@ class Downloader {
       .on('data', this.dataHandler.bind(this))
       .on('end', this.endHandler.bind(this, stream))
       .pipe(stream)
-      .on('close', this.closeHandler.bind(this,stream.path,sha,options));
+      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
   }
 
   restartDownload() {
@@ -128,9 +128,9 @@ class Downloader {
       if (value['failure'] && value.failure) {
         this.writeStream = fs.createWriteStream(key);
         if(value.hasOwnProperty('username')) {
-          this.downloadAuth(value.options,value.username,value.password,key,value.sha);
+          this.downloadAuth(value.options, value.username, value.password, key, value.sha);
         } else {
-          this.download(value.options,key,value.sha);
+          this.download(value.options, key, value.sha);
         }
       }
     }

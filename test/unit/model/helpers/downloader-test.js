@@ -217,7 +217,7 @@ describe('Downloader', function() {
       expect(errorHandler).to.be.calledWith(stream, error);
     });
 
-    it('should save downloads in map', function(){
+    it('should save downloads in map', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
 
@@ -228,15 +228,15 @@ describe('Downloader', function() {
       sandbox.spy(downloader, 'success');
 
       stream['path'] = 'file1';
-      downloader.download(options,'file1');
+      downloader.download(options, 'file1');
       expect(downloader.downloads.size).to.be.equal(1);
 
       stream['path'] = 'file2';
-      downloader.download(options2,'file2');
+      downloader.download(options2, 'file2');
       expect(downloader.downloads.size).to.be.equal(2);
     });
 
-    it('should not call sucessHandler after error event is emitted',function(){
+    it('should not call sucessHandler after error event is emitted', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
       let error = new Error('something bad happened');
@@ -248,14 +248,14 @@ describe('Downloader', function() {
       let successSpy = sandbox.spy(downloader, 'success');
       downloader.download(options);
       response.emit('error', error);
-      downloader.download(options2,'file1');
+      downloader.download(options2, 'file1');
       downloader.closeHandler('file1');
 
       expect(errorHandler).to.be.calledOnce;
       expect(successSpy).to.have.not.been.called;
     });
 
-    it('should call sucessHandler ony after all downloads are finished',function(){
+    it('should call sucessHandler ony after all downloads are finished', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
 

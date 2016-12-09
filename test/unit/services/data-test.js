@@ -216,7 +216,7 @@ describe('InstallerDataService', function() {
     });
   });
 
-  it('setCredentials saves userName and passwords', function(){
+  it('setCredentials saves userName and passwords', function() {
     svc.setCredentials('username', 'password');
     expect(svc.getUsername()).to.be.equal('username');
     expect(svc.getPassword()).to.be.equal('password');

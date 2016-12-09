@@ -25,16 +25,16 @@ class LocationController {
 
   confirm() {
     this.installerDataSvc.installRoot = this.folder;
-    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      value.setOptionLocation('install',path.join(this.folder,value.targetFolderName));
+    for (var [, value] of this.installerDataSvc.allInstallables().entries()) {
+      value.setOptionLocation('install', path.join(this.folder, value.targetFolderName));
     }
     this.router.go('confirm');
   }
 
   selectFolder() {
     let selection = dialog.showOpenDialog(
-      remote.getCurrentWindow(),{
-        properties: [ 'openDirectory' ],
+      remote.getCurrentWindow(), {
+        properties: ['openDirectory'],
         defaultPath: this.folder
       });
     this.installerDataSvc.installRoot = this.folder;
@@ -76,7 +76,7 @@ class LocationController {
 
   checkUserProfileLocation() {
 
-    Util.executeCommand('echo %USERPROFILE%',1).then((profile)=>{
+    Util.executeCommand('echo %USERPROFILE%', 1).then((profile)=>{
       if(profile.includes(' ') ) {
         Util.executeCommand('echo %VAGRANT_HOME%').then((vagrantHome)=>{
           if(vagrantHome==='%VAGRANT_HOME%') {

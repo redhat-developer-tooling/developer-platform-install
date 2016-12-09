@@ -44,7 +44,7 @@ describe('Virtualbox installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
 
     mockfs({
       tempDirectory: {},
@@ -147,7 +147,7 @@ describe('Virtualbox installer', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, null);
         installer.ipcRenderer = { on: function() {} };
-      })
+      });
 
       it('should execute the silent extract', function() {
         sandbox.stub(child_process, 'execFile').yields('done');
@@ -231,7 +231,7 @@ describe('Virtualbox installer', function() {
           expect(spy).to.have.been.calledWith('msiexec', opts);
         });
       });
-    })
+    });
 
     it('should catch errors during the installation', function(done) {
       sandbox.stub(child_process, 'execFile').yields(new Error('critical error'));
@@ -304,12 +304,12 @@ describe('Virtualbox installer', function() {
     let option;
 
     beforeEach(function() {
-      installer.addOption('detected','','',false);
+      installer.addOption('detected', '', '', false);
       installer.selectedOption = 'detected';
       option = installer.option[installer.selectedOption];
     });
 
-    it('should add warning for newer version',function(){
+    it('should add warning for newer version', function() {
       installer.option['detected'].version = '5.0.27';
       installer.validateVersion();
 
@@ -318,7 +318,7 @@ describe('Virtualbox installer', function() {
       expect(option.valid).to.equal(true);
     });
 
-    it('should add error for older version',function(){
+    it('should add error for older version', function() {
       installer.option['detected'].version = '5.0.1';
       installer.validateVersion();
 
@@ -327,7 +327,7 @@ describe('Virtualbox installer', function() {
       expect(option.valid).to.equal(false);
     });
 
-    it('should add neither warning nor error for recomended version',function(){
+    it('should add neither warning nor error for recomended version', function() {
       installer.option['detected'].version = '5.0.26';
       installer.validateVersion();
 

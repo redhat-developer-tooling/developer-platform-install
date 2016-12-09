@@ -1,7 +1,5 @@
 'use strict';
 import { app, ipcMain, BrowserWindow, dialog } from 'electron';
-import fs from 'fs';
-import os from 'os';
 import * as logger from './logging';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -34,7 +32,7 @@ ipcMain.on('install-root', (event, installRoot) => {
 
 ipcMain.on('log', (event, arg) => {
   logger.log(arg);
-})
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -60,7 +58,7 @@ app.on('ready', function() {
 
   // Some processing is required to make sure local file can be opened in browser
   // windows allows # in names and it should be replaced with ASCII encoding.
-  let baseLocation = encodeURI(__dirname.replace(/\\/g,'/')).replace(/#/g,'%23');
+  let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
 
   // Load the index.html of the app
   mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
@@ -84,7 +82,7 @@ app.on('ready', function() {
       defaultId: 1,
       cancelId: 1,
       message: 'Are you sure you want to close the installer?'
-    }
+    };
     if (dialog.showMessageBox(mainWindow, opt)) {
       e.preventDefault();
     }

@@ -38,30 +38,26 @@ class VirtualBoxInstall extends InstallableItem {
       option.valid = true;
       option.error = '';
       option.warning = '';
-      if(Version.LT(option.version,this.minimumVersion)) {
+      if(Version.LT(option.version, this.minimumVersion)) {
         option.valid = false;
         option.error = 'oldVersion';
         option.warning = '';
-      } else if(Version.GT(option.version,this.minimumVersion) && Version.LT(option.version,this.maximumVersion)) {
+      } else if(Version.GT(option.version, this.minimumVersion) && Version.LT(option.version, this.maximumVersion)) {
         option.valid = true;
         option.error = '';
         option.warning = 'newerVersion';
-      } else if(Version.GE(option.version,this.maximumVersion)) {
+      } else if(Version.GE(option.version, this.maximumVersion)) {
         option.valid = false;
         option.error = '';
         option.warning = 'newerVersion';
       }
     }
   }
-
-  validateSelectedFolder(selection) {
-  }
-
 }
 
 class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
-  detectExistingInstall(cb = function(){}) {
+  detectExistingInstall(cb = function() {}) {
     let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
     let command;
     let extension = '';
@@ -116,13 +112,13 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       return Util.executeCommand(command, 1);
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
-      this.addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
+      this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
       this.selectedOption = 'detected';
       this.validateVersion();
       cb();
     }).catch(() => {
-      this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'virtualbox'),true);
-      this.addOption('different','','',false);
+      this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'virtualbox'), true);
+      this.addOption('different', '', '', false);
       cb();
     });
   }
@@ -135,8 +131,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
           '-path',
           this.installerDataSvc.tempDir(),
           '--silent'])
-        .then((result) => {
-          return this.configure(installer, result);
+        .then(() => {
+          return this.configure(installer);
         })
         .then((result) => {
           return installer.succeed(result);
@@ -149,7 +145,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     }
   }
 
-  configure(installer, result) {
+  configure(installer) {
     return new Promise((resolve, reject) => {
       // If downloading is not finished wait for event
       if (this.installerDataSvc.downloading) {
@@ -157,16 +153,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         installer.progress.setStatus('Waiting for all downloads to finish');
         this.ipcRenderer.on('downloadingComplete', () => {
           // time to start virtualbox installer
-          return this.installMsi(installer,resolve,reject);
+          return this.installMsi(installer, resolve, reject);
         });
       } else { // it is safe to call virtualbox installer
         //downloading is already over vbox install is safe to start
-        return this.installMsi(installer,resolve,reject);
+        return this.installMsi(installer, resolve, reject);
       }
     });
   }
 
-  installMsi(installer,resolve,reject) {
+  installMsi(installer, resolve, reject) {
     installer.progress.setStatus('Installing');
     return installer.execFile('msiexec', [
       '/i',
@@ -178,7 +174,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       path.join(this.installerDataSvc.installDir(), 'vbox.log')
     ]).then((res) => {
       // msiexec logs are in UCS-2
-      Util.findText(path.join(this.installerDataSvc.installDir(), 'vbox.log'),'CopyDir: DestDir=','ucs2').then((result)=>{
+      Util.findText(path.join(this.installerDataSvc.installDir(), 'vbox.log'), 'CopyDir: DestDir=', 'ucs2').then((result)=>{
         let regexTargetDir = /CopyDir: DestDir=(.*)\,.*/;
         let targetDir = regexTargetDir.exec(result)[1];
         if(targetDir !== this.getLocation()) {
@@ -198,7 +194,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
-  detectExistingInstall(done = function(){}) {
+  detectExistingInstall(done = function() {}) {
     let tempDetectedLocation = '';
 
     Util.executeCommand('which virtualbox', 1).then((output) => {
@@ -218,16 +214,16 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     }).then((output) => {
       let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
       let version = versionRegex.exec(output)[1];
-      this.addOption('detected',version,tempDetectedLocation,Version.GE(version,this.minimumVersion));
+      this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
       this.selectedOption = 'detected';
       this.validateVersion();
       done();
     }).catch(() => {
       let installLocation = Platform.identify({
-        win32: ()=>path.join(this.installerDataSvc.installRoot,'vagrant'),
+        win32: ()=>path.join(this.installerDataSvc.installRoot, 'vagrant'),
         default: ()=>'/usr/local/bin'
       });
-      this.addOption('install',this.version,installLocation,true);
+      this.addOption('install', this.version, installLocation, true);
       done();
     });
   }
@@ -236,8 +232,8 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     progress.setStatus('Installing');
     if(this.selectedOption === 'install') {
       let dmgFile = this.downloadedFile;
-      let timestamp = new Date().toJSON().replace(/:/g,'')
-      let volumeName = `virtualbox-5.0.26`;
+      //let timestamp = new Date().toJSON().replace(/:/g,'')
+      let volumeName = 'virtualbox-5.0.26';
       let shellScript = [
         `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
         `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`
