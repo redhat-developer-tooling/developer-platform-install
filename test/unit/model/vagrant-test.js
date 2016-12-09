@@ -34,7 +34,7 @@ describe('Vagrant installer', function() {
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
     ds.installDir.returns('installationFolder');
-    ds.vagrantDir.returns(path.join('installationFolder','vagrant'));
+    ds.vagrantDir.returns(path.join('installationFolder', 'vagrant'));
     ds.getInstallable.returns(fakeInstallable);
     return ds;
   }
@@ -49,7 +49,7 @@ describe('Vagrant installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
 
     mockfs({
       'tempDirectory' : {},
@@ -179,9 +179,9 @@ describe('Vagrant installer', function() {
       expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
     });
 
-    describe('on windows',function() {
+    describe('on windows', function() {
       it('should exec the downloaded file with temporary folder as target destination', function() {
-        sandbox.stub(Platform,'getOS').returns('win32');
+        sandbox.stub(Platform, 'getOS').returns('win32');
         let installer = new VagrantInstallWindows(stubDataService(), downloadUrl, null);
         installer.ipcRenderer = { on: function() {} };
 
@@ -191,11 +191,11 @@ describe('Vagrant installer', function() {
 
         expect(spy).to.have.been.called;
         expect(spy).calledWith('msiexec', [
-          '/i', path.join('tempDirectory','vagrant.msi'),
-          'VAGRANTAPPDIR=' + path.join('installationFolder','vagrant'), '/qn', '/norestart', '/Liwe',
-          path.join('installationFolder','vagrant.log')]);
+          '/i', path.join('tempDirectory', 'vagrant.msi'),
+          'VAGRANTAPPDIR=' + path.join('installationFolder', 'vagrant'), '/qn', '/norestart', '/Liwe',
+          path.join('installationFolder', 'vagrant.log')]);
       });
-    })
+    });
 
     it('should catch errors during the installation', function(done) {
       sandbox.stub(require('unzip'), 'Extract').throws(new Error('critical error'));
@@ -270,7 +270,7 @@ describe('Vagrant installer', function() {
     let option;
 
     beforeEach(function() {
-      installer.addOption('detected','', 'folder',false);
+      installer.addOption('detected', '', 'folder', false);
       installer.selectedOption = 'detected';
       option = installer.option[installer.selectedOption];
     });

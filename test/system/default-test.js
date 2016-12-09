@@ -85,7 +85,7 @@ describe('System tests', function() {
             }
           }
         });
-      }
+      };
 
       setInterval(check, 2000);
     }, 50*60*1000);

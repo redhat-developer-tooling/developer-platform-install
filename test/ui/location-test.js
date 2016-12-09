@@ -46,7 +46,7 @@ describe('Location page', function() {
       existingFolderStatus = element(By.id('existingFolderStatus'));
       createFolderStatus = element(By.id('createFolderStatus'));
       pathWithSpacesStatus = element(By.id('pathWithSpacesStatus'));
-    })
+    });
 
     beforeEach(function() {
       locationField.clear();

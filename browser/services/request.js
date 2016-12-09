@@ -3,11 +3,11 @@
 let request = require('request');
 
 class Request {
-  constructor(){
+  constructor() {
   }
 
   get(req) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject)=>{
       request(req, (error, response, data) => {
         if (!error && response.statusCode == 200) {
           resolve({

@@ -28,9 +28,9 @@ class ConfirmController {
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
-      $scope.$watch(function(){
+      $scope.$watch(function() {
         return $scope.checkboxModel[key].selectedOption;
-      },function(){
+      }, function() {
         $scope.checkboxModel[key].validateVersion();
       });
     }
@@ -40,7 +40,7 @@ class ConfirmController {
     // IF the JDK is not Configured then you can't install devstudio
     $scope.$watch(()=>{
       return $scope.checkboxModel.cdk.selectedOption;
-    },(nVal)=>{
+    }, (nVal)=>{
       if(nVal=='install') {
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
           && !$scope.checkboxModel.vagrant.hasOption('detected')) {
@@ -59,7 +59,7 @@ class ConfirmController {
 
     $scope.$watch(()=>{
       return $scope.checkboxModel.jbds.selectedOption;
-    },(nVal)=>{
+    }, (nVal)=>{
       if(nVal=='install') {
         let jdk = $scope.checkboxModel.jdk;
         // if jdk is not selected for install and there is no detected version
@@ -75,7 +75,7 @@ class ConfirmController {
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(new Promise(function(resolve){
+        detectors.push(new Promise(function(resolve) {
           installer.detectExistingInstall(()=> {
             resolve();
           });
@@ -113,7 +113,7 @@ class ConfirmController {
       this.isDisabled = !this.isDisabled;
 
       // Count the number of existing installations.
-      for (var [key,value] of this.installerDataSvc.allInstallables()) {
+      for (var [, value] of this.installerDataSvc.allInstallables()) {
         if (value.hasOption('detected')) {
           ++this.numberOfExistingInstallations;
         }
@@ -140,7 +140,7 @@ class ConfirmController {
   // Open up a browse dialog and select the dir that has the installed product you are looking for.
   selectItem(key) {
     let selection = dialog.showOpenDialog({
-      properties: [ 'openDirectory' ],
+      properties: ['openDirectory'],
       defaultPath: this.installables[key] && this.installables[key][0].existingInstallLocation ? this.installables[key][0].existingInstallLocation : this.installerDataSvc.installRoot
     });
 
@@ -187,7 +187,7 @@ class ConfirmController {
   }
 
   isAtLeastOneSelected() {
-    for (var [key, value] of this.installerDataSvc.allInstallables()) {
+    for (var [, value] of this.installerDataSvc.allInstallables()) {
       if(!value.isSkipped()) {
         return true;
       }

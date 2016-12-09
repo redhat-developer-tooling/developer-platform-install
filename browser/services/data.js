@@ -56,16 +56,16 @@ class InstallerDataService {
   }
 
   copyUninstaller() {
-    let uninstallerLocation = path.resolve(this.installRoot,'uninstaller');
+    let uninstallerLocation = path.resolve(this.installRoot, 'uninstaller');
     Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
     mkdirp.sync(uninstallerLocation);
-    let uninstallerPs1 = path.resolve(path.join(__dirname,'..','..','uninstaller','uninstall.ps1'));
+    let uninstallerPs1 = path.resolve(path.join(__dirname, '..', '..', 'uninstaller', 'uninstall.ps1'));
     // write file content to uninstaller/uninstaller.ps1
-    fsExtra.copy(uninstallerPs1, path.join(uninstallerLocation,'uninstall.ps1'), (err) => {
+    fsExtra.copy(uninstallerPs1, path.join(uninstallerLocation, 'uninstall.ps1'), (err) => {
       if (err) {
         Logger.error('Data - ' + err);
       } else {
-        Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + path.join(uninstallerLocation,'uninstall.ps1') + ' SUCCESS');
+        Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + path.join(uninstallerLocation, 'uninstall.ps1') + ' SUCCESS');
       }
     });
   }
@@ -77,7 +77,7 @@ class InstallerDataService {
 
   addItemsToInstall(...items) {
     for (const item of items) {
-      this.addItemToInstall(item.keyName,item);
+      this.addItemToInstall(item.keyName, item);
     }
   }
 
@@ -197,7 +197,7 @@ class InstallerDataService {
 
     return item.install(progress,
       () => {
-        this.installDone(progress,key);
+        this.installDone(progress, key);
       },
       (error) => {
         Logger.error(key + ' failed to install: ' + error);
@@ -214,13 +214,13 @@ class InstallerDataService {
     this.toInstall.add(key);
   }
 
-  installDone(progress,key) {
+  installDone(progress, key) {
     Logger.info('Install finished for: ' + key);
 
     let item = this.getInstallable(key);
     return item.setup(progress,
         () => {
-          this.setupDone(progress,key);
+          this.setupDone(progress, key);
         },
         (error) => {
           Logger.error(key + ' failed to install: ' + error);
@@ -228,7 +228,7 @@ class InstallerDataService {
     );
   }
 
-  setupDone(progress,key) {
+  setupDone(progress, key) {
     var item = this.getInstallable(key);
     if(!item.isSkipped()) {
       Logger.info('Setup finished for: ' + key);

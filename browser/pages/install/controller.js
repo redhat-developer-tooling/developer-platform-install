@@ -18,14 +18,14 @@ class InstallController {
         value: itemProgress
       });
       if(value.isSkipped()) {
-        this.installerDataSvc.setupDone(itemProgress,key);
+        this.installerDataSvc.setupDone(itemProgress, key);
       } else {
-        this.processInstallable(key, value,itemProgress);
+        this.processInstallable(key, value, itemProgress);
       }
     }
   }
 
-  processInstallable(key, value,itemProgress) {
+  processInstallable(key, value, itemProgress) {
     if(value.isDownloadRequired()) {
       this.triggerDownload(key, value, itemProgress);
     } else {
@@ -69,7 +69,7 @@ class InstallController {
 
     installableValue.install(progress,
       () => {
-        this.installerDataSvc.installDone(progress,installableKey);
+        this.installerDataSvc.installDone(progress, installableKey);
       },
       (error) => {
         Logger.error(installableKey + ' failed to install: ' + error);

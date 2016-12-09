@@ -43,7 +43,7 @@ describe('Cygwin installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) {
       cb('hash');
     });
 
@@ -183,7 +183,7 @@ describe('Cygwin installer', function() {
 
       expect(spy).to.have.been.calledWith(installer.downloadedFile,
         ['--no-admin', '--quiet-mode', '--only-site', '-l',
-          path.join(installerDataSvc.cygwinDir(),'packages'),
+          path.join(installerDataSvc.cygwinDir(), 'packages'),
           '--site', 'http://mirrors.xmission.com/cygwin',
           '--root', 'install/Cygwin', '--categories', 'Base',
           '--packages', 'openssh,rsync']);
@@ -201,48 +201,48 @@ describe('Cygwin installer', function() {
       }
     });
 
-    it('should copy cygwin.exe installer in target directory', function(done){
+    it('should copy cygwin.exe installer in target directory', function(done) {
       sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
       sandbox.stub(Installer.prototype, 'copyFile').returns(Promise.resolve(true));
       sandbox.stub(Installer.prototype, 'writeFile').returns(Promise.resolve(true));
-      installer.installAfterRequirements(fakeProgress, function(){
+      installer.installAfterRequirements(fakeProgress, function() {
         expect(Installer.prototype.copyFile).to.be.calledWith(
           installer.downloadedFile,
-          path.join(installer.installerDataSvc.cygwinDir(),'setup-x86_64.exe'));
+          path.join(installer.installerDataSvc.cygwinDir(), 'setup-x86_64.exe'));
         done();
       }, failure);
     });
   });
 
-  describe('detectExistingInstall', function(){
-    describe('on macOS', function(){
+  describe('detectExistingInstall', function() {
+    describe('on macOS', function() {
       it('should mark cygwin as detected', function() {
-        sandbox.stub(Platform,'getOS').returns('darwin');
+        sandbox.stub(Platform, 'getOS').returns('darwin');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
       });
     });
-    describe('on Linux', function(){
+    describe('on Linux', function() {
       it('should mark cygwin as detected', function() {
-        sandbox.stub(Platform,'getOS').returns('linux');
+        sandbox.stub(Platform, 'getOS').returns('linux');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
       });
     });
-    describe('on Windows', function(done){
+    describe('on Windows', function(done) {
       it('should mark cygwin as detected when cygwin, openssh and rsync pacakes are installed', function() {
-        sandbox.stub(Platform,'getOS').returns('win32');
-        sandbox.stub(Util,'executeCommand').onFirstCall().returns(Promise.resolve(
-          [ 'Cygwin Package Information',
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
+          ['Cygwin Package Information',
             'Package              Version        Status',
             'cygwin               2.6.0-1        OK',
             'openssh              7.3p1-2        OK',
             'rsync                3.1.2-1        OK'
           ].join('\n')));
         Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
-        installer.detectExistingInstall(function(){
+        installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('detected');
           expect(installer.hasOption('detected')).to.be.equal(true);
           done();

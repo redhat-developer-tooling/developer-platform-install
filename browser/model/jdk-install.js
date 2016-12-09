@@ -33,14 +33,12 @@ class JdkInstall extends InstallableItem {
     return this.installerDataSvc.jdkDir();
   }
 
-  detectExistingInstall(done = function(){}) {
+  detectExistingInstall(done = function() {}) {
     let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
     let versionRegex1 = /(\d+\.\d+\.\d+)_.*/;
-    let selectedFolder = '';
-    let extension = '';
     let command = 'java -XshowSettings';
 
-    this.addOption('install',versionRegex1.exec(this.version)[1],'',true);
+    this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
 
     Promise.resolve().then(()=>{
       return this.findMsiInstalledJava();
@@ -131,11 +129,11 @@ class JdkInstall extends InstallableItem {
       option.valid = true;
       option.error = '';
       option.warning = '';
-      if(Version.LT(option.version,this.minimumVersion)) {
+      if(Version.LT(option.version, this.minimumVersion)) {
         option.valid = false;
         option.error = 'oldVersion';
         option.warning = '';
-      } else if(Version.GT(option.version,this.minimumVersion)) {
+      } else if(Version.GT(option.version, this.minimumVersion)) {
         option.valid = true;
         option.error = '';
         option.warning = 'newerVersion';
@@ -157,8 +155,8 @@ class JdkInstall extends InstallableItem {
       }
       installer.execFile('msiexec', this.createMsiExecParameters()).then((result) => {
         // msiexec logs are in UCS-2
-        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'),'Dir (target): Key: INSTALLDIR	, Object:','ucs2').then((line)=>{
-          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR	\, Object\:\s(.*)/;
+        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
+          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
           let targetDir = regexTargetDir.exec(line)[1];
           if(targetDir !== this.getLocation()) {
             Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
@@ -222,7 +220,7 @@ class JdkInstall extends InstallableItem {
           Logger.error(JdkInstall.KEY + ' - ' + err);
           reject(err);
         } else {
-          Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS')
+          Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS');
           resolve(true);
         }
       });

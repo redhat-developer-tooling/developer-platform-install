@@ -70,7 +70,7 @@ describe('Installer', function() {
       });
     });
 
-    it('should resolve as true if no error occurs' , function() {
+    it('should resolve as true if no error occurs', function() {
       sandbox.stub(child_process, 'exec').yields();
 
       return installer.exec(command, args)
@@ -107,7 +107,7 @@ describe('Installer', function() {
       });
     });
 
-    it('should resolve as true if no error occurs' , function() {
+    it('should resolve as true if no error occurs', function() {
       sandbox.stub(child_process, 'execFile').yields();
 
       return installer.execFile(file, args)
@@ -170,7 +170,7 @@ describe('Installer', function() {
   });
 
   describe('moveFile', function() {
-    let source = path.join('.','someTempFolder', 'somefile');
+    let source = path.join('.', 'someTempFolder', 'somefile');
     let target = path.join('anInstallFolder', 'target');
 
     it('should call fs#move with correct arguments', function() {
@@ -207,7 +207,7 @@ describe('Installer', function() {
   });
 
   describe('copyFile', function() {
-    let source = path.join('.','someTempFolder', 'somefile');
+    let source = path.join('.', 'someTempFolder', 'somefile');
     let target = path.join('anInstallFolder', 'target');
 
     it('should call fs#copy with correct arguments', function() {

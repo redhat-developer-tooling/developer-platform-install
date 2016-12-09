@@ -43,7 +43,7 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  detectExistingInstall(cb = function(){}) {
+  detectExistingInstall(cb = function() {}) {
     cb();
   }
 
@@ -67,7 +67,7 @@ class JbdsInstall extends InstallableItem {
       pattern = selection ? 'studio/devstudio' : '{*,*/*,*/*/*,*/*/*/*}/studio/devstudio';
     }
 
-    let globster = new Glob(pattern, { cwd: directory, silent: true, nodir: true , strict : false});
+    let globster = new Glob(pattern, { cwd: directory, silent: true, nodir: true, strict : false});
     globster.on('match', (match) => {
       globster.pause();
       let jbdsRoot = path.join(directory, path.dirname(path.dirname(match)));
@@ -155,8 +155,8 @@ class JbdsInstall extends InstallableItem {
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
             this.setupCdk()
-                .then((result) => {
-                  return this.setupJDK(jdkInstall, installer, result);
+                .then(() => {
+                  return this.setupJDK(jdkInstall);
                 })
                 .then((result) => {
                   return installer.succeed(result);
@@ -172,7 +172,7 @@ class JbdsInstall extends InstallableItem {
     }
   }
 
-  setupJDK(jdk, installer, result) {
+  setupJDK(jdk) {
     //for when the user has devstudio but wants to install JDK anyway
     return new Promise((resolve, reject) => {
       if (!jdk.hasExistingInstall()) {
@@ -223,7 +223,7 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  headlessInstall(installer, promise) {
+  headlessInstall(installer) {
     Logger.info(JbdsInstall.KEY + ' - headlessInstall() called');
     let javaOpts = [
       '-DTRACE=true',
@@ -232,12 +232,12 @@ class JbdsInstall extends InstallableItem {
       this.installConfigFile
     ];
     let res = installer.execFile(path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts)
-      .then((result) => { return this.setupCdk(result);});
+      .then(()=> this.setupCdk());
 
     return res;
   }
 
-  setupCdk(result) {
+  setupCdk() {
     let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.KEY);
     let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
     Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location');
