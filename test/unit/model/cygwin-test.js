@@ -231,8 +231,8 @@ describe('Cygwin installer', function() {
         expect(installer.hasOption('detected')).to.be.equal(true);
       });
     });
-    describe('on Windows', function(done) {
-      it('should mark cygwin as detected when cygwin, openssh and rsync pacakes are installed', function() {
+    describe('on Windows', function() {
+      it('should mark cygwin as detected when cygwin, openssh and rsync pacakes are installed', function(done) {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
           ['Cygwin Package Information',
