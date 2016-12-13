@@ -107,13 +107,32 @@ describe('InstallerDataService', function() {
     });
   });
 
-  describe('copyUninstaller', function(){
-    it('should be able to handle copyUninstaller', function(){
-      sandbox.stub(Platform,'getOS').returns('darwin');
+  describe('copyUninstaller', function() {
+    beforeEach(function() {
       sandbox.spy(svc, 'copyUninstaller');
-      svc.setup();
-      expect(svc.copyUninstaller).not.called;
     });
+    describe('on windows', function() {
+      it('should copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        svc.setup();
+        expect(svc.copyUninstaller).calledOnce;
+      });
+    });
+    describe('on macos', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+    describe('on linux', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+
   });
 
   describe('downloading', function() {
