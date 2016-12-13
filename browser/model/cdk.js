@@ -106,12 +106,6 @@ class CDKInstall extends InstallableItem {
       '-File',
       this.pscpPathScript
     ];
-    let data = [
-      '$newPath = "' + this.installerDataSvc.ocDir() + '";',
-      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-      '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
-      '[Environment]::Exit(0)'
-    ].join('\r\n');
     let markerContent = [
       'openshift.auth.scheme=Basic',
       'openshift.auth.username=openshift-dev',
@@ -125,7 +119,7 @@ class CDKInstall extends InstallableItem {
     .then((result) => { return installer.unzip(this.ocDownloadedFile, ocDir, result); })
     .then((result) => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`)})
     .then((result) => { return installer.copyFile(this.cdkBoxDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
-    .then((result) => { return Platform.OS === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
+    .then((result) => { return Platform.OS === 'win32' ? installer.writeFile(this.pscpPathScript, Platform.addToPath(this.installerDataSvc.ocDir()), result) : Promise.resolve(true); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
     .then((result) => { return Platform.OS === 'win32' ? installer.execFile('powershell', opts, result) : Promise.resolve(true); })
     .then((result) => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`rm -f /usr/local/bin/oc; ln -s ${ocDir}/oc /usr/local/bin/oc;`)})

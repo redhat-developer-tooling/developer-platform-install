@@ -121,19 +121,13 @@ class VagrantInstallWindows extends VagrantInstall {
   setup(progress, success, failure) {
     progress.setStatus('Setting up');
     let installer = new Installer(VagrantInstall.KEY, progress, success, failure);
-    let data = [
-      '$vagrantPath = "' + path.join(this.installerDataSvc.vagrantDir(), 'bin') + '"',
-      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-      '[Environment]::SetEnvironmentVariable("Path", "$vagrantPath;$oldPath", "User");',
-      '[Environment]::Exit(0)'
-    ].join('\r\n');
     let args = [
       '-ExecutionPolicy',
       'ByPass',
       '-File',
       this.vagrantPathScript
     ];
-    installer.writeFile(this.vagrantPathScript, data)
+    installer.writeFile(this.vagrantPathScript, Platform.addToPath(path.join(this.installerDataSvc.vagrantDir(), 'bin')))
     .then((result) => {
       return installer.execFile('powershell', args, result);
     }).then(() => {

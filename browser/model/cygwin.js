@@ -71,12 +71,6 @@ class CygwinInstall extends InstallableItem {
       '--packages',
       'openssh,rsync'
     ];
-    let data = [
-      '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
-      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-      '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
-      '[Environment]::Exit(0)'
-    ].join('\r\n');
     let originalExecFile = path.join(this.installerDataSvc.cygwinDir(),'setup-x86_64.exe');
     installer.execFile(
       this.downloadedFile, opts
@@ -84,7 +78,7 @@ class CygwinInstall extends InstallableItem {
       return installer.copyFile(
         this.downloadedFile, originalExecFile, true);
     }).then((result) => {
-      return installer.writeFile(this.cygwinPathScript, data, result);
+      return installer.writeFile(this.cygwinPathScript, Platform.addToPath(path.join(this.installerDataSvc.cygwinDir(), 'bin')), result);
     }).then((result) => { return installer.execFile('powershell',
       ['-ExecutionPolicy','ByPass','-File',this.cygwinPathScript], result);
     }).then((result) => {

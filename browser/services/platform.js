@@ -1,6 +1,16 @@
 'use strict';
 
 class Platform {
+
+  static addToPath(location){
+    return [
+      '$newPath = "' + location + '";',
+      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
+      '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
+      '[Environment]::Exit(0)'
+    ].join('\r\n');
+  }
+
   static identify(map) {
     try {
       return map[Platform.OS]();
