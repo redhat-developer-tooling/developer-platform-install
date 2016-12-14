@@ -15,7 +15,7 @@ class CygwinInstall extends InstallableItem {
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
-    this.addOption('install',this.version,'',true);
+    this.addOption('install', this.version, '', true);
     this.checksum = sha256;
   }
 
@@ -23,16 +23,16 @@ class CygwinInstall extends InstallableItem {
     return 'cygwin';
   }
 
-  detectExistingInstall(done = function(){}) {
+  detectExistingInstall(done = function() {}) {
     if (Platform.OS === 'win32') {
       let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
       let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
       let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
       Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
         let cygwinVersion = cygwinPackageRegex.exec(out)[1];
-        let opensshVersion = opensshPackageReqex.exec(out)[1];
-        let rsyncVersion = rsyncPackageRegex.exec(out)[1];
-        this.addOption('detected','','',true);
+        opensshPackageReqex.exec(out)[1];
+        rsyncPackageRegex.exec(out)[1];
+        this.addOption('detected', '', '', true);
         this.option['detected'].version = cygwinVersion;
         this.selectedOption = 'detected';
       }).then(()=>{
@@ -41,13 +41,13 @@ class CygwinInstall extends InstallableItem {
         this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
         done();
       }).catch((error)=>{
-        this.addOption('install',this.version,path.join(this.installerDataSvc.installRoot,'cygwin'),true);
-        this.addOption('different','','',false);
+        this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'cygwin'), true);
+        this.addOption('different', '', '', false);
         done(error);
       });
     } else {
       this.selectedOption = 'detected';
-      this.addOption('detected','','',true);
+      this.addOption('detected', '', '', true);
       done();
     }
   }
@@ -61,7 +61,7 @@ class CygwinInstall extends InstallableItem {
       '--quiet-mode',
       '--only-site',
       '-l',
-      path.join(this.installerDataSvc.cygwinDir(),'packages'),
+      path.join(this.installerDataSvc.cygwinDir(), 'packages'),
       '--site',
       'http://mirrors.xmission.com/cygwin',
       '--root',
@@ -79,8 +79,9 @@ class CygwinInstall extends InstallableItem {
         this.downloadedFile, originalExecFile, true);
     }).then((result) => {
       return installer.writeFile(this.cygwinPathScript, Platform.addToPath(path.join(this.installerDataSvc.cygwinDir(), 'bin')), result);
-    }).then((result) => { return installer.execFile('powershell',
-      ['-ExecutionPolicy','ByPass','-File',this.cygwinPathScript], result);
+    }).then((result) => {
+      return installer.execFile('powershell',
+        ['-ExecutionPolicy', 'ByPass', '-File', this.cygwinPathScript], result);
     }).then((result) => {
       return installer.succeed(result);
     }).catch((error) => {

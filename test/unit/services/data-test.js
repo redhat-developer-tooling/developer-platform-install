@@ -6,6 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallerDataService from 'browser/services/data';
+import Platform from 'browser/services/platform';
 import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
@@ -104,6 +105,34 @@ describe('InstallerDataService', function() {
       expect(svc.getInstallable('key')).to.equal(vagrant);
       expect(svc.allInstallables()).to.equal(svc.installableItems);
     });
+  });
+
+  describe('copyUninstaller', function() {
+    beforeEach(function() {
+      sandbox.spy(svc, 'copyUninstaller');
+    });
+    describe('on windows', function() {
+      it('should copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        svc.setup();
+        expect(svc.copyUninstaller).calledOnce;
+      });
+    });
+    describe('on macos', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+    describe('on linux', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+
   });
 
   describe('downloading', function() {
@@ -216,7 +245,7 @@ describe('InstallerDataService', function() {
     });
   });
 
-  it('setCredentials saves userName and passwords', function(){
+  it('setCredentials saves userName and passwords', function() {
     svc.setCredentials('username', 'password');
     expect(svc.getUsername()).to.be.equal('username');
     expect(svc.getPassword()).to.be.equal('password');

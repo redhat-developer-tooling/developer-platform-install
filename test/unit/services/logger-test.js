@@ -9,7 +9,7 @@ chai.use(sinonChai);
 describe('Logger', function() {
   let sandbox, ipcRenderer;
 
-  before(function(){
+  before(function() {
     ipcRenderer = {
       send: function() {}
     };

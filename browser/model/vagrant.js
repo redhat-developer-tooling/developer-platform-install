@@ -26,7 +26,7 @@ class VagrantInstall extends InstallableItem {
     return 'vagrant';
   }
 
-  detectExistingInstall(done = function(){}) {
+  detectExistingInstall(done = function() {}) {
     let versionRegex = /Vagrant*\s(\d+\.\d+\.\d+)/;
     let command;
 
@@ -53,17 +53,17 @@ class VagrantInstall extends InstallableItem {
       return Util.executeCommand('"' + detectedPath + '"' + ' -v', 1);
     }).then((output) => {
       let version = versionRegex.exec(output)[1];
-      this.addOption('detected','',path.dirname(path.dirname(detectedPath)),false);
+      this.addOption('detected', '', path.dirname(path.dirname(detectedPath)), false);
       this.option['detected'].version = version;
       this.selectedOption = 'detected';
       this.validateVersion();
       done();
     }).catch((error) => {
       let installLocation = Platform.identify({
-        win32: ()=>path.join(this.installerDataSvc.installRoot,'vagrant'),
+        win32: ()=>path.join(this.installerDataSvc.installRoot, 'vagrant'),
         default: ()=>'/usr/local'
       });
-      this.addOption('install',this.version,installLocation,true);
+      this.addOption('install', this.version, installLocation, true);
       done(error);
     });
   }
@@ -74,11 +74,11 @@ class VagrantInstall extends InstallableItem {
       option.valid = true;
       option.error = '';
       option.warning = '';
-      if(Version.LT(option.version,this.minimumVersion)) {
+      if(Version.LT(option.version, this.minimumVersion)) {
         option.valid = false;
         option.error = 'oldVersion';
         option.warning = '';
-      } else if(Version.GT(option.version,this.minimumVersion)) {
+      } else if(Version.GT(option.version, this.minimumVersion)) {
         option.valid = true;
         option.error = '';
         option.warning = 'newerVersion';
@@ -88,10 +88,6 @@ class VagrantInstall extends InstallableItem {
 }
 
 class VagrantInstallWindows extends VagrantInstall {
-
-  validateSelectedFolder(selection) {
-    // should be called after path to vagrant changed
-  }
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
@@ -144,8 +140,8 @@ class VagrantInstallDarwin extends VagrantInstall {
     progress.setStatus('Installing');
     if(this.selectedOption === 'install') {
       let dmgFile = this.downloadedFile;
-      let timestamp = new Date().toJSON().replace(/:/g,'')
-      let volumeName = `vagrant-1.8.1`;
+      //let timestamp = new Date().toJSON().replace(/:/g,'')
+      let volumeName = 'vagrant-1.8.1';
       let shellScript = [
         `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
         `installer -pkg /Volumes/${volumeName}/Vagrant.pkg -target /`

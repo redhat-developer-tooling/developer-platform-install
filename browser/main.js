@@ -1,9 +1,9 @@
 'use strict';
 
 import angular from 'angular';
-import uiRouter from 'angular-ui-router';
-import base64 from 'angular-base64';
-import messages from 'angular-messages';
+import 'angular-ui-router';
+import 'angular-base64';
+import 'angular-messages';
 import acctCtrl from './pages/account/controller';
 import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
@@ -85,7 +85,7 @@ let mainModule =
               for (let variable in reqs) {
                 let dmUrl = reqs[variable]['dmUrl'];
                 if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
-                    reqs[variable].dmUrl = dmUrl.replace('developers.redhat.com',stageHost);
+                  reqs[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
                 }
               }
             }
@@ -140,7 +140,7 @@ let mainModule =
               'developer-studio',
               reqs['jbds.jar'].sha256sum);
 
-            installerDataSvc.addItemsToInstall(virtualbox,cygwin,vagrant,cdk,jdk,jbds);
+            installerDataSvc.addItemsToInstall(virtualbox, cygwin, vagrant, cdk, jdk, jbds);
 
             jdk.thenInstall(jbds);
             jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(vagrant).thenInstall(cdk);

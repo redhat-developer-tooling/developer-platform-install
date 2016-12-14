@@ -21,7 +21,7 @@ function downloadFile(fromUrl, toFile, onFinish) {
       console.log('0%');
       previous = 0;
     }
-    let current = Math.round(state.percentage*100);
+    let current = Math.round(state.percent*100);
     if(current!=100 && current!=0 && previous!=current) {
       console.log(current + '%');
     }

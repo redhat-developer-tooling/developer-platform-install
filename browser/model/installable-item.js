@@ -1,6 +1,5 @@
 'use strict';
 
-import Util from './helpers/util';
 import Hash from './helpers/hash';
 import Logger from '../services/logger';
 import Platform from '../services/platform';
@@ -52,7 +51,7 @@ class InstallableItem {
     this.selectedOption = 'install';
 
     this.downloader = null;
-    this.downloadFolder = path.normalize(path.join(__dirname,'../../../..'));
+    this.downloadFolder = path.normalize(path.join(__dirname, '../../../..'));
     this.downloadedFile = '';
 
     this.installAfter = undefined;
@@ -136,29 +135,29 @@ class InstallableItem {
     }
   }
 
-  checkAndDownload(downloadedFile,url,sha,user,pass) {
+  checkAndDownload(downloadedFile, url, sha, user, pass) {
     if(fs.existsSync(downloadedFile)) {
       let h = new Hash();
-      h.SHA256(downloadedFile,(dlSha) => {
+      h.SHA256(downloadedFile, (dlSha) => {
         if(sha === dlSha) {
           Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
           this.downloader.successHandler(downloadedFile);
         } else {
-          this.startDownload(downloadedFile,url,sha,user,pass);
+          this.startDownload(downloadedFile, url, sha, user, pass);
         }
       });
     } else {
-      this.startDownload(downloadedFile,url,sha,user,pass);
+      this.startDownload(downloadedFile, url, sha, user, pass);
     }
   }
 
-  startDownload(downloadedFile,url,sha,user,pass) {
+  startDownload(downloadedFile, url, sha, user, pass) {
     let ws = fs.createWriteStream(downloadedFile);
     this.downloader.setWriteStream(ws);
     if(user === undefined && pass === undefined ) {
-      this.downloader.download(url,downloadedFile,sha);
+      this.downloader.download(url, downloadedFile, sha);
     } else {
-      this.downloader.downloadAuth(url,user,pass,downloadedFile,sha);
+      this.downloader.downloadAuth(url, user, pass, downloadedFile, sha);
     }
   }
 
@@ -194,7 +193,7 @@ class InstallableItem {
     };
   }
 
-  setOptionLocation(name,location) {
+  setOptionLocation(name, location) {
     if(this.option[name]) {
       this.option[name].location = location;
     }
@@ -249,8 +248,7 @@ class InstallableItem {
     return installer;
   }
 
-  setup(progress, success, failure) {
-    //no need to setup anything for JDK
+  setup(progress, success ) {
     progress.setStatus('Setting up');
     progress.setComplete();
     success();

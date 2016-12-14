@@ -34,7 +34,7 @@ describe('Install controller', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(InstallerDataService.prototype,'copyUninstaller').returns();
+    sandbox.stub(InstallerDataService.prototype, 'copyUninstaller').returns();
     installerDataSvc = new InstallerDataService();
     installerDataSvc.setup('installRoot');
     vagrant = new VagrantInstall(installerDataSvc,
@@ -61,10 +61,10 @@ describe('Install controller', function() {
     });
 
     it('should mark skipped installables as done', function() {
-      let stub = sandbox.stub(installerDataSvc,'setupDone').returns();
+      let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      sandbox.stub(vagrant,'isSkipped').returns(true);
-      sandbox.stub(vbox,'isSkipped').returns(true);
+      sandbox.stub(vagrant, 'isSkipped').returns(true);
+      sandbox.stub(vbox, 'isSkipped').returns(true);
       new InstallController(null, null, installerDataSvc);
       expect(stub).calledTwice;
     });

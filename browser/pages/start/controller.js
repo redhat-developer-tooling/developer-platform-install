@@ -35,7 +35,7 @@ class StartController {
   launchDevstudio_darwin() {
     let devStudioAppPath = path.join(this.installerDataSvc.jbdsDir(), 'Devstudio.app');
     let options = {
-      env : Object.assign({},Platform.ENV)
+      env : Object.assign({}, Platform.ENV)
     };
     options.env['rhel.subscription.password'] = this.installerDataSvc.password;
     Util.executeCommand(`open ${devStudioAppPath}`, 1, options).then(()=>{
@@ -95,7 +95,7 @@ class StartController {
     let env = Platform.ENV;
     env['rhel.subscription.password'] = this.installerDataSvc.password;
     let runJbdsBat = require('child_process').spawn(
-      'cmd.exe', ['/c',runJbdsFile], { env: env, timeout: 2000 });
+      'cmd.exe', ['/c', runJbdsFile], { env: env, timeout: 2000 });
 
     runJbdsBat.stdout.on('data',
       (data) => {
