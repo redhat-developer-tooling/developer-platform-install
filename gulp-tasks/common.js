@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 let path = require('path'),
   crypto = require('crypto'),
@@ -6,18 +6,18 @@ let path = require('path'),
 
 // Create default callback for exec
 function createExecCallback(cb, quiet) {
-  return function(err,stdout,stderr) {
+  return function(err, stdout, stderr) {
     if (!quiet) {
       console.log(stdout);
     }
     console.log(stderr);
     cb(err);
-  }
+  };
 }
 
 // for a given filename, return the sha256sum
 function getSHA256(filename, cb) {
-  var hashstring = "NONE";
+  var hashstring = 'NONE';
   var hash = crypto.createHash('sha256');
   var readStream = fs.createReadStream(filename);
   readStream.on('readable', function () {
@@ -35,7 +35,7 @@ function getSHA256(filename, cb) {
 function createSHA256File(filename, cb) {
   !cb && cb();
   getSHA256(filename, function(hashstring) {
-    fs.writeFile(filename + ".sha256", hashstring + " *" + path.parse(filename).base,(err)=>{
+    fs.writeFile(filename + '.sha256', hashstring + ' *' + path.parse(filename).base, (err)=>{
       cb(err);
     });
   });

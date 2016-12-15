@@ -33,14 +33,14 @@ module.exports = function(gulp) {
 
   gulp.task('unzip-7zip', function() {
     return gulp.src(zaZip)
-        .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
+        .pipe(unzip({ filter : function(entry) { return minimatch(entry.path, '**/7za.exe'); } }))
         .pipe(gulp.dest(config.buildFolderRoot));
   });
 
   gulp.task('unzip-7zip-extra', function(cb) {
     let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
     // console.log(cmd);
-    exec(cmd, common.createExecCallback(cb,true));
+    exec(cmd, common.createExecCallback(cb, true));
   });
 
   gulp.task('prepare-tools', function(cb) {
@@ -49,12 +49,12 @@ module.exports = function(gulp) {
 
   // wrap electron-generated app to 7zip archive
   gulp.task('create-7zip-archive', function(cb) {
-    let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*'
+    let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*';
     // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
-    if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
+    if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf('-bundle') > 0) {
       packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
     } else {
-        packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + 'cygwin.exe';
+      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + 'cygwin.exe';
     }
     //console.log('[DEBUG]' + packCmd);
     exec(packCmd, common.createExecCallback(cb, true));
@@ -82,7 +82,7 @@ module.exports = function(gulp) {
 
   gulp.task('package-bundle', function(cb) {
     runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
-     'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
+      'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
   });
 
   // Create both installers
@@ -93,7 +93,7 @@ module.exports = function(gulp) {
 
   // prefetch cygwin to always include into installer
   gulp.task('prefetch-cygwin', ['create-prefetch-cache-dir'], function() {
-    return download.prefetch(reqs,'always', config.prefetchFolder);
+    return download.prefetch(reqs, 'always', config.prefetchFolder);
   });
 
   gulp.task('prefetch-tools', ['create-tools-dir'], function() {
@@ -102,20 +102,20 @@ module.exports = function(gulp) {
 
   gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
     return download.prefetch(reqs, 'no', config.prefetchFolder).then(()=>{
-      return download.prefetch(reqs, 'yes', configprefetchFolder);
+      return download.prefetch(reqs, 'yes', config.prefetchFolder);
     });
   });
 
-  gulp.task('create-tools-dir',function() {
+  gulp.task('create-tools-dir', function() {
     if (!fs.existsSync(toolsFolder)) {
-       mkdirp(toolsFolder);
+      mkdirp(toolsFolder);
     }
   });
 
   // prefetch all the installer dependencies so we can package them up into the .exe
   gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {
     return download.prefetch(reqs, 'yes', config.prefetchFolder).then(()=>{
-      return new Promise((resolve, reject)=>{
+      return new Promise((resolve)=>{
         installerExe = path.join(zaRoot, config.artifactName + '-' + pjson.version + '-bundle' + '-installer.exe');
         resolve(true);
       });
@@ -137,7 +137,7 @@ module.exports = function(gulp) {
     }, cb);
   });
 
-  gulp.task('cleanup', function(cb) {
+  gulp.task('cleanup', function() {
     return del([bundled7z,
       path.resolve(path.join(config.buildFolderRoot, '7z*')),
       path.resolve(zaElectronPackage)],

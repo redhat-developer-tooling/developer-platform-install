@@ -10,7 +10,7 @@ const fs = require('fs-extra');
 const common = require('./common.js');
 const del = require('del');
 
-pjson.version = pjson.version.replace('GA','Alpha1');
+pjson.version = pjson.version.replace('GA', 'Alpha1');
 let productName = pjson.productName;
 let productVersion = pjson.version;
 
@@ -61,12 +61,12 @@ function darwinDist(gulp) {
     return download.prefetch(reqs, 'yes', config.prefetchFolder);
   });
 
-  gulp.task('dist', function(){
-    return runSequence('clean','check-requirements','update-package','dist-simple','dist-bundle','cleanup');
+  gulp.task('dist', function() {
+    return runSequence('clean', 'check-requirements', 'update-package', 'dist-simple', 'dist-bundle', 'cleanup');
   });
 
-  gulp.task('update-package',['update-requirements'], function() {
-    return new Promise((resolve,reject)=>{
+  gulp.task('update-package', ['update-requirements'], function() {
+    return new Promise((resolve, reject)=>{
       fs.writeFile('./transpiled/package.json', JSON.stringify(pjson, null, 2), function(error) {
         if(error) {
           reject(error);

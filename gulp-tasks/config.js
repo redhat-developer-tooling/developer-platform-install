@@ -12,7 +12,7 @@ let config = {
   prefetchFolder : 'requirements-cache',
   buildFolderPath : '',
   configIcon : ''
-}
+};
 
 config.buildFolderRoot = path.join('dist', config.artifactPlatform + '-' + config.artifactArch );
 config.buildFileNamePrefix = config.artifactName;

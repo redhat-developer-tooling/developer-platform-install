@@ -7,12 +7,12 @@ var path = require('path');
 const PORT=80;
 
 //We need a function which handles requests and send response
-function handleRequest(request, res){
-  let file = fs.readFileSync(path.join(__dirname,"..","requirements-cache",'virtualbox.exe'));
-  console.log("Sending file VirtualBox.exe");
+function handleRequest(request, res) {
+  let file = fs.readFileSync(path.join(__dirname, '..', 'requirements-cache', 'virtualbox.exe'));
+  console.log('Sending file VirtualBox.exe');
   res.writeHead(200, {
     'Content-Type': 'application/x-msdownload',
-    'Content-Disposition': `inline; filename=virtual.box`});
+    'Content-Disposition': 'inline; filename=virtual.box'});
   res.write(file, 'binary');
   res.end();
 }
@@ -21,7 +21,7 @@ function handleRequest(request, res){
 var server = http.createServer(handleRequest);
 
 //Lets start our server
-server.listen(PORT, function(){
-    //Callback triggered when server is successfully listening. Hurray!
-    console.log("Server listening on: http://localhost:%s", PORT);
+server.listen(PORT, function() {
+  //Callback triggered when server is successfully listening. Hurray!
+  console.log('Server listening on: http://localhost:%s', PORT);
 });
