@@ -1,29 +1,21 @@
 'use strict';
 
 var gulp = require('gulp'),
-    fs = require('fs-extra'),
-    babel = require('gulp-babel'),
-    runSequence = require('run-sequence'),
-    zip = require('gulp-zip'),
-    unzip = require('gulp-unzip'),
-		request = require("request"),
-    rename = require('gulp-rename'),
-    del = require('del'),
-    exec = require('child_process').exec,
-    pjson = require('./package.json'),
-    reqs = require('./requirements-' + process.platform + '.json'),
-    path = require('path'),
-    minimatch = require('minimatch'),
-    copy = require('gulp-copy'),
-    concat = require('gulp-concat'),
-    mkdirp = require('mkdirp'),
-    merge = require('merge-stream'),
-    rcedit = require('rcedit'),
-    sourcemaps = require("gulp-sourcemaps"),
-    symlink = require('gulp-symlink'),
-		common = require('./gulp-tasks/common'),
-		download = require('./gulp-tasks/download'),
-    config = require('./gulp-tasks/config');
+  fs = require('fs-extra'),
+  babel = require('gulp-babel'),
+  runSequence = require('run-sequence'),
+  request = require('request'),
+  del = require('del'),
+  exec = require('child_process').exec,
+  pjson = require('./package.json'),
+  reqs = require('./requirements-' + process.platform + '.json'),
+  path = require('path'),
+  mkdirp = require('mkdirp'),
+  merge = require('merge-stream'),
+  sourcemaps = require('gulp-sourcemaps'),
+  symlink = require('gulp-symlink'),
+  common = require('./gulp-tasks/common'),
+  config = require('./gulp-tasks/config');
 
 require('./gulp-tasks/tests')(gulp);
 require('./gulp-tasks/dist-' + process.platform)(gulp);
@@ -64,14 +56,14 @@ gulp.task('clean-all', ['clean'], function() {
 
 // clean dist/ folder in prep for fresh build
 gulp.task('clean', function() {
-  return del(['dist','transpiled'], { force: true });
+  return del(['dist', 'transpiled'], { force: true });
 });
 
 gulp.task('create-dist-dir', function(cb) {
   return mkdirp(config.buildFolderPath, cb);
 });
 
-gulp.task('generate', ['create-modules-link','update-requirements'], function(cb) {
+gulp.task('generate', ['create-modules-link', 'update-requirements'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + config.artifactName + ' --platform=' + config.artifactPlatform + ' --arch=' + config.artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar=true';
@@ -84,20 +76,20 @@ gulp.task('generate', ['create-modules-link','update-requirements'], function(cb
   cmd += ' --prune --ignore="test|' + config.prefetchFolder + '"';
   cmd += ' --icon="' + config.configIcon + '"';
   //console.log(cmd);
-  exec(cmd,common.createExecCallback(cb, true));
+  exec(cmd, common.createExecCallback(cb, true));
 });
 
 // default task
 gulp.task('default', ['run']);
 
 gulp.task('run', ['update-requirements'], function(cb) {
-  exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled',common.createExecCallback(cb));
+  exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled', common.createExecCallback(cb));
 });
 
-gulp.task('update-requirements',['transpile:app'], function() {
+gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf('/')) + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
@@ -153,7 +145,7 @@ gulp.task('system-test', function(cb) {
   return runSequence(['prepare-tools', 'protractor-install'], 'unpack-installer', 'protractor-run', cb);
 });
 
-gulp.task('create-prefetch-cache-dir',function() {
+gulp.task('create-prefetch-cache-dir', function() {
   if (!fs.existsSync(config.prefetchFolder)) {
     mkdirp(config.prefetchFolder);
   }

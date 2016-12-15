@@ -28,7 +28,7 @@
     "ui-test": "./node_modules/.bin/gulp ui-test",
     "system-test": "./node_modules/.bin/gulp system-test",
     "dist:mac": "./node_modules/.bin/gulp dist",
-    "eslint": "./node_modules/.bin/eslint browser main test"
+    "eslint": "./node_modules/.bin/eslint browser main test gulp-tasks"
   },
   "dependencies": {
     "angular": "1.6.0",
