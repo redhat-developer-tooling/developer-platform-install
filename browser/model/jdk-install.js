@@ -180,6 +180,7 @@ class JdkInstall extends InstallableItem {
       '/i',
       this.downloadedFile,
       'INSTALLDIR=' + this.installerDataSvc.jdkDir(),
+      'ADDLOCAL=jdk,update_notifier',
       '/qn',
       '/norestart',
       '/Lviwe',
