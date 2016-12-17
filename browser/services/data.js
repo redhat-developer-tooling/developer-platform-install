@@ -11,7 +11,7 @@ let electron = require('electron');
 var mkdirp = require('mkdirp');
 
 class InstallerDataService {
-  constructor($state, reqs = require('../../requirements-' + Platform.OS + '.json')) {
+  constructor($state, requirements = require('../../requirements-' + Platform.OS + '.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.OS === 'win32') {
@@ -31,7 +31,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
-    this.requirements = reqs;
+    this.requirements = requirements;
   }
 
   setup( vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
@@ -79,10 +79,6 @@ class InstallerDataService {
     for (const item of items) {
       this.addItemToInstall(item.keyName, item);
     }
-  }
-
-  getIpcRenderer() {
-    return this.ipcRenderer;
   }
 
   getInstallable(key) {
