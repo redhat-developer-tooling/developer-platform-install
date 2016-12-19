@@ -71,11 +71,12 @@ describe('Installer', function() {
     });
 
     it('should resolve as true if no error occurs', function() {
-      sandbox.stub(child_process, 'exec').yields();
-
+      sandbox.stub(child_process, 'exec').yields(undefined, 'stdout', 'stderr');
+      infoStub.reset();
       return installer.exec(command, args)
       .then(function(result) {
         expect(result).to.equal(true);
+        expect(infoStub).to.be.calledWith('test - stdout');
       });
     });
 
