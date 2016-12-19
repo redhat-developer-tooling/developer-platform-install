@@ -7,14 +7,14 @@ import Platform from '../../services/platform';
 
 class Util {
 
-  static executeCommand(command, outputCode=1,options) {
+  static executeCommand(command, outputCode=1, options) {
     return new Promise((resolve, reject) => {
       if (Platform.OS == 'darwin') {
         if(options === undefined) {
           options = {};
         }
         if(options['env'] === undefined) {
-          options.env = Object.assign({},Platform.ENV);
+          options.env = Object.assign({}, Platform.ENV);
         }
         if(options.env['PATH']) {
           options.env.PATH = options.env.PATH + ':/usr/local/bin';
@@ -91,7 +91,7 @@ class Util {
     return list.reduce(
       function(pacc, fn) {
         return pacc.then(fn);
-      },Promise.resolve());
+      }, Promise.resolve());
   }
 
   static getRejectUnauthorized() {
@@ -106,7 +106,7 @@ class Util {
   }
 }
 
-function defaultCallback(resolve,reject,outputCode) {
+function defaultCallback(resolve, reject, outputCode) {
   return function(error, stdout, stderr) {
     if (error && outputCode === 1) {
       reject(error);

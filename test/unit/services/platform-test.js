@@ -4,19 +4,19 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import Platform from 'browser/services/platform';
 
-describe('Platform', function(){
+describe('Platform', function() {
 
   let sandbox;
 
-  beforeEach(function(){
+  beforeEach(function() {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function(){
+  afterEach(function() {
     sandbox.restore();
   });
 
-  describe('identify method',function(){
+  describe('identify method', function() {
 
     let data = {
       darwin: ()=>'darwin',
@@ -30,8 +30,8 @@ describe('Platform', function(){
       linux: ()=>'linux'
     };
 
-    it('returns value of opject\'s property named the same as current platform', function(){
-      sandbox.stub(Platform,'getOS').returns('win32');
+    it('returns value of opject\'s property named the same as current platform', function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
       expect(Platform.identify(data)).to.be.equal('win32');
       Platform.getOS.returns('darwin');
       expect(Platform.identify(data)).to.be.equal('darwin');
@@ -39,36 +39,36 @@ describe('Platform', function(){
       expect(Platform.identify(data)).to.be.equal('linux');
     });
 
-    it('returns default property value if there no propyrty with current platform name', function(){
-      sandbox.stub(Platform,'getOS').returns('ps/2');
+    it('returns default property value if there no propyrty with current platform name', function() {
+      sandbox.stub(Platform, 'getOS').returns('ps/2');
       expect(Platform.identify(data)).to.be.equal('bummer');
     });
 
-    it('returns undefined if there no propyrty with current platform name and no default provided', function(){
-      sandbox.stub(Platform,'getOS').returns('ps/2');
+    it('returns undefined if there no propyrty with current platform name and no default provided', function() {
+      sandbox.stub(Platform, 'getOS').returns('ps/2');
       expect(Platform.identify(noDefaultData)).to.be.equal(undefined);
     });
 
   });
 
-  describe('Platform.PATH', function(){
+  describe('Platform.PATH', function() {
 
-    it('does not return undefined value form process.env', function(){
+    it('does not return undefined value form process.env', function() {
       expect(process.env[Platform.PATH]).to.be.not.equal(undefined);
     });
 
-    it('equals "Path" on Windows', function(){
-      sandbox.stub(Platform,'getOS').returns('win32');
+    it('equals "Path" on Windows', function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
       expect(Platform.PATH).to.be.equal('Path');
     });
 
-    it('equals "PATH" on Linux', function(){
-      sandbox.stub(Platform,'getOS').returns('linux');
+    it('equals "PATH" on Linux', function() {
+      sandbox.stub(Platform, 'getOS').returns('linux');
       expect(Platform.PATH).to.be.equal('PATH');
     });
 
-    it('equals "PATH" on Darwin', function(){
-      sandbox.stub(Platform,'getOS').returns('darwin');
+    it('equals "PATH" on Darwin', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
       expect(Platform.PATH).to.be.equal('PATH');
     });
 

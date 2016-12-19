@@ -4,17 +4,18 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
+import Electron from 'electron';
+
 chai.use(sinonChai);
 
 describe('Logger', function() {
   let sandbox, ipcRenderer;
 
-  before(function(){
+  before(function() {
     ipcRenderer = {
       send: function() {}
     };
-    // this call is required to getIpcRenderer coverage in report
-    expect(Logger.getIpcRenderer()).to.equal(undefined);
+    expect(Logger.getIpcRenderer()).to.equal(Electron.ipcRenderer);
     Logger.getIpcRenderer = function () { return ipcRenderer; };
   });
 

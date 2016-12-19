@@ -15,7 +15,7 @@ class Installer {
     this.key = key;
   }
 
-  exec(command, options, result) {
+  exec(command, options) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute command ' + command);
       child_process.exec(command, options, (error, stdout, stderr) => {
@@ -34,10 +34,10 @@ class Installer {
     });
   }
 
-  execFile(file, args, result) {
+  execFile(file, args) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute ' + file + ' ' + args);
-      child_process.execFile(file, args, {'maxBuffer': 1024*1024*2} , (error, stdout, stderr) => {
+      child_process.execFile(file, args, {'maxBuffer': 1024*1024*2}, (error, stdout, stderr) => {
         // vagrant exits with code 3010
         if (error && error.code !== 3010) {
           Logger.error(this.key + ' - ' + error);
@@ -54,7 +54,7 @@ class Installer {
     });
   }
 
-  unzip(zipFile, extractTo, result) {
+  unzip(zipFile, extractTo) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
       fs.createReadStream(zipFile)
@@ -70,7 +70,7 @@ class Installer {
     });
   }
 
-  moveFile(source, target, result) {
+  moveFile(source, target) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Move ' + source + ' to ' + target);
       fs.move(source, target, (err) => {
@@ -85,7 +85,7 @@ class Installer {
     });
   }
 
-  copyFile(source, target, result) {
+  copyFile(source, target) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Copy ' + source + ' to ' + target);
       fs.copy(source, target, (err) => {
@@ -100,7 +100,7 @@ class Installer {
     });
   }
 
-  writeFile(file, data, result) {
+  writeFile(file, data) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Write ' + file);
       fs.writeFile(file, data, (err) => {

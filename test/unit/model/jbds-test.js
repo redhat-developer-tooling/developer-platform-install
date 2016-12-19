@@ -50,7 +50,7 @@ describe('devstudio installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
 
     mockfs({
       tempDirectory : { 'testFile': 'file content here' },
@@ -106,7 +106,7 @@ describe('devstudio installer', function() {
   });
 
   describe('installer download', function() {
-    let downloadStub,downloadAuthStub;
+    let downloadStub, downloadAuthStub;
 
     beforeEach(function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
@@ -135,7 +135,7 @@ describe('devstudio installer', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadAuthStub).to.have.been.calledOnce;
-      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl,'user','passwd');
+      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl, 'user', 'passwd');
     });
 
     it('should skip download when the file is found in the download folder', function() {
@@ -153,8 +153,8 @@ describe('devstudio installer', function() {
 
     describe('on windows', function() {
       beforeEach(function() {
-          sandbox.stub(Platform, 'getOS').returns('win32');
-      })
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
 
       it('should not start until JDK has finished installing', function() {
         let installerDataSvc = stubDataService();
@@ -284,9 +284,8 @@ describe('devstudio installer', function() {
         sandbox.spy(installer, 'setupCdk');
 
         return installer.headlessInstall(helper)
-        .then((result) => {
+        .then(() => {
           expect(installer.setupCdk).calledOnce;
-          expect(installer.setupCdk).calledWith(result);
         });
       });
     });

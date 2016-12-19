@@ -1,10 +1,9 @@
 'use strict';
 
-import { ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-let logFile = null;
+let logFile;
 
 export function init(installRoot, version) {
   logFile = path.join(installRoot, 'install.log');
@@ -12,12 +11,10 @@ export function init(installRoot, version) {
 }
 
 export function log(message) {
-  if (logFile == null) {
-    return;
+  if (logFile) {
+    fs.appendFileSync(
+      logFile,
+      new Date().toUTCString() + '-' + message + '\r\n'
+    );
   }
-
-  fs.appendFileSync(
-    logFile,
-    new Date().toUTCString() + '-' + message + '\r\n'
-  );
 }

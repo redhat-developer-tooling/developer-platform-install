@@ -6,6 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallerDataService from 'browser/services/data';
+import Platform from 'browser/services/platform';
 import Logger from 'browser/services/logger';
 import path from 'path';
 import os from 'os';
@@ -58,12 +59,33 @@ describe('InstallerDataService', function() {
   });
 
   describe('initial state', function() {
-    it('should set installation folder according to OS', function() {
-      if (process.platform === 'win32') {
+
+    describe('on windows', function() {
+      it('should set installation folder to C:\\DevelopmentSuite', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        let svc = new InstallerDataService();
         expect(svc.installRoot).to.equal('c:\\DevelopmentSuite');
-      } else {
-        expect(svc.installRoot).to.equal(process.env.HOME + '/DevelopmentSuite');
-      }
+      });
+    });
+
+    describe('on macos', function () {
+      it('should set installation folder $HOME\\DevelopmentSuite', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(Platform, 'getEnv').returns({HOME:'/home/username'});
+        let svc = new InstallerDataService();
+        expect(svc.installRoot).to.equal(Platform.ENV.HOME + '/DevelopmentSuite');
+      });
+    });
+
+    it('should load requirements from requirements.json if requirements parameter is not provided', function() {
+      let svc = new InstallerDataService();
+      expect(svc.requirements['cdk.zip'].name).to.be.equal('Red Hat Container Development Kit');
+    });
+
+    it('should set requirements to provided in requirements parameter', function() {
+      let requirements = {'cdk.zip':{'url':'http.redhat.com'}};
+      let svc = new InstallerDataService(undefined, requirements);
+      expect(svc.requirements).to.be.equal(requirements);
     });
 
     it('should set default values correctly', function() {
@@ -76,6 +98,7 @@ describe('InstallerDataService', function() {
       expect(svc.installing).to.equal(false);
 
       expect(svc.installableItems).to.be.empty;
+      expect(svc.requirements).to.be.not.equal(undefined);
     });
 
     it('setup should correctly initialize folders', function() {
@@ -83,16 +106,17 @@ describe('InstallerDataService', function() {
 
       svc.setup();
 
-      expect(svc.vboxRoot).to.equal(path.join(svc.installRoot, 'virtualbox'));
-      expect(svc.jdkRoot).to.equal(path.join(svc.installRoot, 'jdk8'));
-      expect(svc.jbdsRoot).to.equal(path.join(svc.installRoot, 'devstudio'));
-      expect(svc.vagrantRoot).to.equal(path.join(svc.installRoot, 'vagrant'));
-      expect(svc.cygwinRoot).to.equal(path.join(svc.installRoot, 'cygwin'));
-      expect(svc.cdkRoot).to.equal(path.join(svc.installRoot, 'cdk'));
-      expect(svc.cdkBoxRoot).to.equal(path.join(svc.cdkRoot, 'boxes'));
-      expect(svc.ocBinRoot).to.equal(path.join(svc.cdkRoot, 'bin'));
-      expect(svc.cdkVagrantRoot).to.equal(path.join(svc.cdkRoot, 'components', 'rhel', 'rhel-ose'));
-      expect(svc.cdkMarkerFile).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
+      expect(svc.installDir()).to.equal(svc.installRoot);
+      expect(svc.virtualBoxDir()).to.equal(path.join(svc.installRoot, 'virtualbox'));
+      expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'jdk8'));
+      expect(svc.jbdsDir()).to.equal(path.join(svc.installRoot, 'devstudio'));
+      expect(svc.vagrantDir()).to.equal(path.join(svc.installRoot, 'vagrant'));
+      expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
+      expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
+      expect(svc.cdkBoxDir()).to.equal(path.join(svc.cdkRoot, 'boxes'));
+      expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
+      expect(svc.cdkVagrantfileDir()).to.equal(path.join(svc.cdkRoot, 'components', 'rhel', 'rhel-ose'));
+      expect(svc.cdkMarker()).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
     });
   });
 
@@ -104,6 +128,56 @@ describe('InstallerDataService', function() {
       expect(svc.getInstallable('key')).to.equal(vagrant);
       expect(svc.allInstallables()).to.equal(svc.installableItems);
     });
+  });
+
+  describe('copyUninstaller', function() {
+
+    beforeEach(function() {
+      sandbox.spy(svc, 'copyUninstaller');
+    });
+
+    describe('on windows', function() {
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should copy uninstaller powershell script to target install folder', function() {
+        svc.setup();
+        expect(svc.copyUninstaller).calledOnce;
+      });
+
+      it('should log error if copy operation failed', function() {
+        fxExtraStub.yields('error');
+        Logger.error.reset();
+        svc.setup();
+        expect(Logger.error).calledOnce;
+      });
+
+      it('should log sucess message if copy operation succed', function() {
+        fxExtraStub.yields();
+        Logger.info.reset();
+        svc.setup();
+        expect(Logger.info).calledTwice;
+      });
+    });
+
+    describe('on macos', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+
+    describe('on linux', function() {
+      it('should not copy uninstaller powershell script to target install folder', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        svc.setup();
+        expect(svc.copyUninstaller).not.called;
+      });
+    });
+
   });
 
   describe('downloading', function() {
@@ -146,6 +220,22 @@ describe('InstallerDataService', function() {
       expect(stub).calledOnce;
     });
 
+    it('downloadDone should call installDone when installation is finished', function() {
+      svc.addItemsToInstall(vagrant);
+      sandbox.stub(vagrant, 'install').yields();
+      sandbox.stub(svc, 'installDone');
+      svc.downloadDone(undefined, vagrant.keyName);
+      expect(svc.installDone).to.be.calledOnce;
+    });
+
+    it('downloadDone should log error when installation is failed', function() {
+      svc.addItemsToInstall(vagrant);
+      sandbox.stub(vagrant, 'install').callsArgWith(2, 'error');
+      Logger.error.reset();
+      svc.downloadDone(undefined, vagrant.keyName);
+      expect(Logger.error).to.be.calledOnce;
+    });
+
     it('downloadDone should send an event when all downloads have finished', function() {
       svc.startDownload('vagrant');
       svc.startDownload('vbox');
@@ -182,6 +272,22 @@ describe('InstallerDataService', function() {
       expect(svc.toInstall.size).to.equal(1);
       expect(stub).calledOnce;
     });
+
+    it('installDone should call setupDone when setup is finished', function() {
+      svc.addItemsToInstall(vagrant);
+      sandbox.stub(vagrant, 'setup').yields();
+      sandbox.stub(svc, 'setupDone');
+      svc.installDone(undefined, vagrant.keyName);
+      expect(svc.setupDone).to.be.calledOnce;
+    });
+
+    it('installDone should log error when setup is failed', function() {
+      svc.addItemsToInstall(vagrant);
+      sandbox.stub(vagrant, 'setup').callsArgWith(2, 'error');
+      Logger.error.reset();
+      svc.installDone(undefined, vagrant.keyName);
+      expect(Logger.error).to.be.calledOnce;
+    });
   });
 
   describe('setup', function() {
@@ -214,12 +320,44 @@ describe('InstallerDataService', function() {
       expect(spy).calledOnce;
       expect(spy).calledWith('start');
     });
+
+    it('setupDone should not log info message for skipped installer', function() {
+      sandbox.stub(vagrant, 'isSkipped').returns(true);
+      Logger.info.reset();
+      svc.setupDone(fakeProgress, 'vagrant');
+      expect(Logger.info).not.called;
+    });
+
   });
 
-  it('setCredentials saves userName and passwords', function(){
+  describe('getRequirementByName', function() {
+    it('returns requested requirement', function() {
+      svc.addItemsToInstall(vagrant);
+      try {
+        let result = svc.getRequirementByName('vagrant');
+        console.log(result);
+        expect(result.name).equal('Vagrant');
+      } catch (error) {
+        expect.fail();
+      }
+    });
+
+    it('throws exception if requested environment is missing', function() {
+      expect(function() {
+        svc.getRequirementByName('eclipse');
+      }).to.throw(Error);
+    });
+  });
+
+  it('setCredentials saves userName and passwords', function() {
     svc.setCredentials('username', 'password');
     expect(svc.getUsername()).to.be.equal('username');
     expect(svc.getPassword()).to.be.equal('password');
+  });
+
+  it('static factory should call installer with provided $sate', function() {
+    let svc = InstallerDataService.factory('value');
+    expect(svc).not.equal(undefined);
   });
 
 });

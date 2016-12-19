@@ -71,51 +71,51 @@ describe('Util', function() {
       });
     });
 
-    describe('on macos',function(){
-      describe('when options parameter is undefined', function(){
-        it('should set options.env.PATH to "/usr/local/bin" if process.env.PATH is not present or empty', function(){
-          sandbox.stub(Platform,'getOS').returns('darwin');
-          sandbox.stub(Platform,'getEnv').returns({PATH:''});
+    describe('on macos', function() {
+      describe('when options parameter is undefined', function() {
+        it('should set options.env.PATH to "/usr/local/bin" if process.env.PATH is not present or empty', function() {
+          sandbox.stub(Platform, 'getOS').returns('darwin');
+          sandbox.stub(Platform, 'getEnv').returns({PATH:''});
           let mock = sandbox.mock(child_process);
           let execExpect = mock.expects('exec');
           execExpect.withArgs('command', {env: {PATH:'/usr/local/bin'}});
-          execExpect.yields(null,'stdout','stderr');
+          execExpect.yields(null, 'stdout', 'stderr');
           return Util.executeCommand('command', 1).then(()=>{
             mock.verify();
           });
         });
 
-        it('should add ":/usr/local/bin" to the options.env.PATH if process.env.PATH is not empty', function(){
-          sandbox.stub(Platform,'getOS').returns('darwin');
-          sandbox.stub(Platform,'getEnv').returns({PATH:'/bin'});
+        it('should add ":/usr/local/bin" to the options.env.PATH if process.env.PATH is not empty', function() {
+          sandbox.stub(Platform, 'getOS').returns('darwin');
+          sandbox.stub(Platform, 'getEnv').returns({PATH:'/bin'});
           let mock = sandbox.mock(child_process);
           let execExpect = mock.expects('exec');
           execExpect.withArgs('command', {env: {PATH:'/bin:/usr/local/bin'}});
-          execExpect.yields(null,'stdout','stderr');
+          execExpect.yields(null, 'stdout', 'stderr');
           return Util.executeCommand('command', 1).then(()=>{
             mock.verify();
           });
         });
       });
 
-      describe('when options parameter is provided', function(){
-        it('should set options.env.PATH to "/usr/local/bin" if options.env.PATH is not present or empty', function(){
-          sandbox.stub(Platform,'getOS').returns('darwin');
+      describe('when options parameter is provided', function() {
+        it('should set options.env.PATH to "/usr/local/bin" if options.env.PATH is not present or empty', function() {
+          sandbox.stub(Platform, 'getOS').returns('darwin');
           let mock = sandbox.mock(child_process);
           let execExpect = mock.expects('exec');
           execExpect.withArgs('command', {env: {PATH:'/usr/local/bin'}});
-          execExpect.yields(null,'stdout','stderr');
+          execExpect.yields(null, 'stdout', 'stderr');
           return Util.executeCommand('command', 1, {env: {PATH:''}}).then(()=>{
             mock.verify();
           });
         });
 
-        it('should add ":/usr/local/bin" to the options.env.PATH if options.env.PATH is not empty', function(){
-          sandbox.stub(Platform,'getOS').returns('darwin');
+        it('should add ":/usr/local/bin" to the options.env.PATH if options.env.PATH is not empty', function() {
+          sandbox.stub(Platform, 'getOS').returns('darwin');
           let mock = sandbox.mock(child_process);
           let execExpect = mock.expects('exec');
           execExpect.withArgs('command', {env: {PATH:'/bin:/usr/local/bin'}});
-          execExpect.yields(null,'stdout','stderr');
+          execExpect.yields(null, 'stdout', 'stderr');
           return Util.executeCommand('command', 1, {env: {PATH:'/bin'}}).then(()=>{
             mock.verify();
           });
@@ -282,14 +282,14 @@ describe('Util', function() {
     });
   });
 
-  describe('writeFile', function(){
-    it('calls fs#writeFile with correct arguments', function(){
+  describe('writeFile', function() {
+    it('calls fs#writeFile with correct arguments', function() {
       sandbox.stub(fs, 'writeFile').yields();
 
-      return Util.writeFile('file','data')
+      return Util.writeFile('file', 'data')
       .then(function() {
         expect(fs.writeFile).to.have.been.calledOnce;
-        expect(fs.writeFile).to.have.been.calledWith('file','data');
+        expect(fs.writeFile).to.have.been.calledWith('file', 'data');
       });
     });
   });

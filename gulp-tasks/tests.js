@@ -1,31 +1,28 @@
 var angularProtractor = require('gulp-angular-protractor'),
-  del = require('del'),
   exec = require('child_process').exec,
   mocha = require('gulp-spawn-mocha'),
-  path = require('path'),
-  symlink = require('gulp-symlink');
-
+  path = require('path');
+  
 var yargs = require('yargs');
 var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
 module.exports = function(gulp) {
   gulp.task('unit-test', function() {
     return gulp.src(['test/unit/**/*.js'], {
-        read: false
-      })
-      .pipe(mocha({
-        recursive: true,
-        compilers: 'js:babel-core/register',
-        env: {
-          NODE_PATH: '.'
-        },
-        grep: yargs.argv.grep,
-        g: yargs.argv.g,
-        reporter: yargs.argv.reporter,
-        istanbul: {
-          report: yargs.argv.report || 'lcov'
-        }
-      }));
+      read: false
+    }).pipe(mocha({
+      recursive: true,
+      compilers: 'js:babel-core/register',
+      env: {
+        NODE_PATH: '.'
+      },
+      grep: yargs.argv.grep,
+      g: yargs.argv.g,
+      reporter: yargs.argv.reporter,
+      istanbul: {
+        report: yargs.argv.report || 'lcov'
+      }
+    }));
   });
 
   gulp.task('protractor-install', function(cb) {

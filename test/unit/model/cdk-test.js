@@ -43,9 +43,9 @@ describe('CDK installer', function() {
   installerDataSvc.cdkBoxDir.returns(path.join(installerDataSvc.cdkDir(), 'boxes'));
   installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkVagrantfileDir(), '.cdk'));
 
-  let vagrantInstallStub = new VagrantInstall(installerDataSvc,'url', null, 'vagrant');
-  vagrantInstallStub.isSkipped = function() {return false;};
-  vagrantInstallStub.addOption('install', '1.7.4',path.join('installFolder','vagrant'),true);
+  let vagrantInstallStub = new VagrantInstall(installerDataSvc, 'url', null, 'vagrant');
+  vagrantInstallStub.isSkipped = function() { return false; };
+  vagrantInstallStub.addOption('install', '1.7.4', path.join('installFolder', 'vagrant'), true);
   installerDataSvc.getInstallable.returns(vagrantInstallStub);
 
   let installer;
@@ -53,7 +53,7 @@ describe('CDK installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype,'SHA256', function(file,cb) {cb('hash');});
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
 
     mockfs({
       temporaryFolder: {},
@@ -220,9 +220,9 @@ describe('CDK installer', function() {
       });
 
       it('should return environmnet with VAGRANT_HOME defined', function() {
-        let processEnv = Object.assign({},process.env);
+        let processEnv = Object.assign({}, process.env);
         processEnv['VAGRANT_HOME'] = 'path/w/o/spaces';
-        sandbox.stub(Platform,'getEnv').returns(processEnv);
+        sandbox.stub(Platform, 'getEnv').returns(processEnv);
         let env = installer.createEnvironment();
         expect(env['VAGRANT_HOME']).to.be.not.equal(undefined);
       });
