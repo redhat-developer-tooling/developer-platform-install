@@ -232,7 +232,18 @@ describe('Cygwin installer', function() {
       });
     });
     describe('on Windows', function() {
-      it('should mark cygwin as detected when cygwin, openssh and rsync pacakes are installed', function(done) {
+
+      it('should mark cygwin for installation cygwin is not installed', function(done) {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.reject('cygcheck is not available'));
+        installer.detectExistingInstall(function() {
+          expect(installer.selectedOption).to.be.equal('install');
+          expect(installer.hasOption('install')).to.be.equal(true);
+          done();
+        });
+      });
+
+      it('should mark cygwin as detected when cygwin, openssh and rsync packages are installed', function(done) {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
           ['Cygwin Package Information',
@@ -245,6 +256,22 @@ describe('Cygwin installer', function() {
         installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('detected');
           expect(installer.hasOption('detected')).to.be.equal(true);
+          done();
+        });
+      });
+
+      it('should mark cygwin for installation when any of cygwin, openssh, rsync packages is missing', function(done) {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
+          ['Cygwin Package Information',
+            'Package              Version        Status',
+            'cygwin               2.6.0-1        OK',
+            'openssh              7.3p1-2        OK'
+          ].join('\n')));
+        Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
+        installer.detectExistingInstall(function() {
+          expect(installer.selectedOption).to.be.equal('install');
+          expect(installer.hasOption('install')).to.be.equal(true);
           done();
         });
       });
