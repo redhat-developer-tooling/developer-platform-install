@@ -335,7 +335,6 @@ describe('InstallerDataService', function() {
       svc.addItemsToInstall(vagrant);
       try {
         let result = svc.getRequirementByName('vagrant');
-        console.log(result);
         expect(result.name).equal('Vagrant');
       } catch (error) {
         expect.fail();
