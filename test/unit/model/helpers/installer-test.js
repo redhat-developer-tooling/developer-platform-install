@@ -107,9 +107,10 @@ describe('Installer', function() {
       });
     });
 
-    it('should resolve as true if no error occurs', function() {
-      sandbox.stub(child_process, 'execFile').yields();
-
+    it('should resolve as true if no error occurs' , function() {
+      let stub = sandbox.stub(child_process, 'execFile').yields(undefined, 'stdout', 'stderr');
+      infoStub.reset();
+      
       return installer.execFile(file, args)
       .then(function(result) {
         expect(result).to.equal(true);
