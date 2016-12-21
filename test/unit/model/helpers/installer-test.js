@@ -10,6 +10,7 @@ import Logger from 'browser/services/logger';
 import fs from 'fs-extra';
 import child_process from 'child_process';
 import unzip from 'unzip';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 describe('Installer', function() {
@@ -157,17 +158,33 @@ describe('Installer', function() {
       });
     });
 
-    it('should reject when an error occurs', function() {
-      let err = new Error('fatal error');
-      sandbox.stub(unzip, 'Extract').throws(err);
+    it('should resolve as true if no error occurs' , function() {
+        let eventEmitter = new EventEmitter();
+        sandbox.stub(eventEmitter, 'on').yields();
+        let readStreamMock = { pipe: function() { return eventEmitter; }};
+        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+        return installer.unzip(file, dir)
+        .then(function(result) {
+            expect(result).to.equal(true);
+        })
+        .catch(function(err) {
+            expect.fail(err);
+        });
+    });
 
-      return installer.unzip(file, dir)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+    it('should reject when an error occurs', function() {
+       let eventEmitter = new EventEmitter();
+       sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
+          .onSecondCall().yields('error');
+       let readStreamMock = { pipe: function() { return eventEmitter; }};
+       sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+
+       return installer.unzip(file, dir).then(function() {
+           expect.fail();
+       })
+       .catch(function(err) {
+           expect(err).to.equal('error');
+       });
     });
   });
 
