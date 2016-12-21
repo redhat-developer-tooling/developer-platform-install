@@ -29,7 +29,7 @@ To build installer follow steps below for specific platform.
 
 1. Download and install nvm for Windows from <https://github.com/coreybutler/nvm-windows/>. Pick the MSI installer.
 
-2. Install nodejs using 
+2. Install nodejs using
 
         nvm install 6.9.1
 
@@ -187,6 +187,15 @@ of any test, e.g.:
 
     npm test -- -g login
     npm test -- --grep login
+
+To run tests from specific file --spec-file parameter can be used to override default pattern to select files to run.
+Parameter value can be specific file name
+
+    npm test -- --spec-file test/unit/pages/account/controller-test.js
+
+or globe pattern
+
+    npm test -- --spec-file=test/unit/pages/**/*.js
 
 Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. Report format can be overriden with '--report' parameter like shown below
 

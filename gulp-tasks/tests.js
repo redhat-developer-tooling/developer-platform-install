@@ -2,13 +2,13 @@ var angularProtractor = require('gulp-angular-protractor'),
   exec = require('child_process').exec,
   mocha = require('gulp-spawn-mocha'),
   path = require('path');
-  
+
 var yargs = require('yargs');
 var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
 module.exports = function(gulp) {
   gulp.task('unit-test', function() {
-    return gulp.src(['test/unit/**/*.js'], {
+    return gulp.src([yargs.argv['spec-file'] || 'test/unit/**/*.js'], {
       read: false
     }).pipe(mocha({
       recursive: true,
