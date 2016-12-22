@@ -9,14 +9,18 @@ import Electron from 'electron';
 chai.use(sinonChai);
 
 describe('Logger', function() {
-  let sandbox, ipcRenderer;
+  let sandbox, ipcRenderer, getIpcRendererStub;
 
   before(function() {
     ipcRenderer = {
       send: function() {}
     };
     expect(Logger.getIpcRenderer()).to.equal(Electron.ipcRenderer);
-    Logger.getIpcRenderer = function () { return ipcRenderer; };
+    getIpcRendererStub = sinon.stub(Logger, 'getIpcRenderer').returns(ipcRenderer);
+  });
+
+  after(function() {
+    getIpcRendererStub.restore();
   });
 
   beforeEach(function() {
