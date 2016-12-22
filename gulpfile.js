@@ -131,9 +131,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     });
 });
 
-gulp.task('test', function() {
-  return runSequence('unit-test');
-});
+gulp.task('test', ['unit-test']);
 
 gulp.task('ui-test', function(cb) {
   process.env.PTOR_TEST_RUN = 'ui';

@@ -292,5 +292,14 @@ describe('Util', function() {
         expect(fs.writeFile).to.have.been.calledWith('file', 'data');
       });
     });
+
+    it('calls fs#writeFile and rejects promise with original error', function() {
+      sandbox.stub(fs, 'writeFile').yields('error');
+
+      return Util.writeFile('file', 'data')
+      .catch(function(error) {
+        expect(error).to.be.equal('error');
+      });
+    });
   });
 });

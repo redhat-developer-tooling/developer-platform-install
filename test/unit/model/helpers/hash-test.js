@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Hash from 'browser/model/helpers/hash';
 import { Readable } from 'stream';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 const fs = require('fs-extra');
@@ -59,6 +60,19 @@ describe('Hash', function() {
         done();
       });
       stream.emit('close');
+    });
+
+    it('should return correct hash after reading all chunks from stream', function(done) {
+      sandbox.restore();
+      let digest = crypto.createHash('sha256').update('string1string2').digest('hex');
+      stream = new Readable();
+      sandbox.stub(stream, 'on').yields().returns(stream);
+      sandbox.stub(stream, 'read').onFirstCall().returns('string1').onSecondCall().returns('string2').onThirdCall().returns(null);
+      sandbox.stub(fs, 'createReadStream').returns(stream);
+      hash.SHA256('file', (result) => {
+        expect(result).to.be.equal(digest);
+        done();
+      });
     });
   });
 });

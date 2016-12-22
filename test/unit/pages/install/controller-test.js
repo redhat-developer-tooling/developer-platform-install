@@ -3,11 +3,13 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import InstallController from 'browser/pages/install/controller.js';
-import InstallerDataService from 'browser/services/data.js';
-import VagrantInstall from 'browser/model/vagrant.js';
-import VirtualBoxInstall from 'browser/model/virtualbox.js';
+import InstallController from 'browser/pages/install/controller';
+import InstallerDataService from 'browser/services/data';
+import VagrantInstall from 'browser/model/vagrant';
+import VirtualBoxInstall from 'browser/model/virtualbox';
+import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
+
 import fs from 'fs';
 chai.use(sinonChai);
 
@@ -195,5 +197,27 @@ describe('Install controller', function() {
       expect(doneStub).calledWith(sinon.match.any, 'vagrant');
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
     });
+  });
+
+  it('downloadAgain closes dialog with error and start download for failed installers', function() {
+    sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+    sandbox.stub(InstallableItem.prototype, 'restartDownload').returns();
+
+    let scopeStub = {
+      $apply: function(callback) {
+        callback && callback();
+      }
+    };
+
+    let timeoutStub = function(callback) {
+      callback && callback();
+    };
+
+    let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+    expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+    sandbox.spy(installCtrl, 'closeDownloadAgainDialog');
+    installCtrl.downloadAgain();
+    expect(InstallableItem.prototype.restartDownload).calledTwice;
+    expect(installCtrl.closeDownloadAgainDialog).calledOnce;
   });
 });
