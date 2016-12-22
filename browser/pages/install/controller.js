@@ -40,11 +40,12 @@ class InstallController {
         this.installerDataSvc.downloadDone(progress, installableKey);
       },
       (error) => {
+        let that = this;
         Logger.error(installableKey + ' failed to download: ' + error);
         progress.setStatus('Download failed');
-        this.$timeout(()=>{
-          this.$scope.$apply(()=>{
-            this.failedDownloads.add(installableValue);
+        that.$timeout(function() {
+          that.$scope.$apply(function() {
+            that.failedDownloads.add(installableValue);
           });
         });
       }
@@ -145,9 +146,9 @@ class ProgressState {
       this.totalSize = 0;
     }
     this.status = newStatus;
-
+    let that = this;
     this.$timeout(() => {
-      this.$scope.$apply();
+      that.$scope.$apply();
     });
   }
 
