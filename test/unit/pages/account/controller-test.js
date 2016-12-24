@@ -7,7 +7,7 @@ import 'sinon-as-promised';
 import AccountController from 'browser/pages/account/controller.js';
 chai.use(sinonChai);
 
-describe('Login controller', function() {
+describe('Account controller', function() {
 
   let controller, timeout, scope;
 
