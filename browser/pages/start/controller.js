@@ -1,9 +1,7 @@
 'use strict';
 
-let remote = require('electron').remote;
 let path = require('path');
 let fs = require('fs-extra');
-let shell = require('electron').shell;
 
 import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';
@@ -11,16 +9,17 @@ import Platform from '../../services/platform';
 
 class StartController {
 
-  constructor(installerDataSvc) {
+  constructor(installerDataSvc, electron) {
     this.startDevstudio = true;
     this.installerDataSvc = installerDataSvc;
+    this.electron = electron;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
-    remote.getCurrentWindow().removeAllListeners('close');
+    this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
 
   learnCDK() {
-    shell.openExternal('http://developers.redhat.com/devstudio-preview');
+    this.electron.shell.openExternal('http://developers.redhat.com/devstudio-preview');
   }
 
   start() {
@@ -114,10 +113,10 @@ class StartController {
 
   exit() {
     Logger.info('Closing the installer window');
-    remote.getCurrentWindow().close();
+    this.electron.remote.getCurrentWindow().close();
   }
 }
 
-StartController.$inject = ['installerDataSvc'];
+StartController.$inject = ['installerDataSvc', 'electron'];
 
 export default StartController;

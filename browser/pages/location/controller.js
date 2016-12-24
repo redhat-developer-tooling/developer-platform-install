@@ -1,7 +1,5 @@
 'use strict';
 
-let remote = require('electron').remote;
-let dialog = remote.dialog;
 let fs = require('fs');
 let path = require('path');
 
@@ -9,7 +7,7 @@ import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';
 
 class LocationController {
-  constructor($scope, $state, $timeout, installerDataSvc) {
+  constructor($scope, $state, $timeout, installerDataSvc, electron) {
     this.router = $state;
     this.sc = $scope;
     this.timeout = $timeout;
@@ -21,6 +19,8 @@ class LocationController {
     $scope.checkboxModel = {};
     this.showCloseDialog = false;
     this.vagrantHomeHasSpace = true;
+
+    this.electron = electron;
   }
 
   confirm() {
@@ -32,8 +32,8 @@ class LocationController {
   }
 
   selectFolder() {
-    let selection = dialog.showOpenDialog(
-      remote.getCurrentWindow(), {
+    let selection = this.electron.remote.dialog.showOpenDialog(
+      this.electron.remote.getCurrentWindow(), {
         properties: ['openDirectory'],
         defaultPath: this.folder
       });
@@ -61,7 +61,7 @@ class LocationController {
 
   exit() {
     Logger.info('Closing the installer window');
-    remote.getCurrentWindow().close();
+    this.electron.remote.getCurrentWindow().close();
   }
 
   back() {
@@ -94,6 +94,6 @@ class LocationController {
   }
 }
 
-LocationController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc'];
+LocationController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc', 'electron'];
 
 export default LocationController;

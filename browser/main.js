@@ -20,6 +20,7 @@ import JbdsInstall from './model/jbds';
 import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
+import Electron from 'electron';
 
 let mainModule =
       angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
@@ -30,6 +31,7 @@ let mainModule =
           .controller(startCtrl.name, startCtrl)
           .factory('installerDataSvc', InstallerDataService.factory)
           .factory('request', Request.factory)
+          .factory('electron', function() { return Electron; })
           .directive(progressBar.name, progressBar)
           .directive(breadcrumb.name, breadcrumb)
           .directive(pathValidator.name, pathValidator)

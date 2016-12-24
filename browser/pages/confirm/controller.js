@@ -1,19 +1,16 @@
 'use strict';
 
-const remote = require('electron').remote;
-const dialog = remote.dialog;
-const shell = require('electron').shell;
-
 import Logger from '../../services/logger';
 import Platform from '../../services/platform';
 
 class ConfirmController {
 
-  constructor($scope, $state, $timeout, installerDataSvc) {
+  constructor($scope, $state, $timeout, installerDataSvc, electron) {
     this.router = $state;
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
+    this.electron = electron;
 
     this.installedSearchNote = ' The system is checking if you have any installed components.';
     this.isDisabled = true;
@@ -90,7 +87,7 @@ class ConfirmController {
   }
 
   download(url) {
-    shell.openExternal(url);
+    this.electron.shell.openExternal(url);
   }
 
   // Prep the install location path for each product, then go to the next page.
@@ -139,7 +136,7 @@ class ConfirmController {
 
   // Open up a browse dialog and select the dir that has the installed product you are looking for.
   selectItem(key) {
-    let selection = dialog.showOpenDialog({
+    let selection = this.electron.remote.dialog.showOpenDialog({
       properties: ['openDirectory'],
       defaultPath: this.installables[key] && this.installables[key][0].existingInstallLocation ? this.installables[key][0].existingInstallLocation : this.installerDataSvc.installRoot
     });
@@ -197,7 +194,7 @@ class ConfirmController {
 
   exit() {
     Logger.info('Closing the installer window');
-    remote.getCurrentWindow().close();
+    this.electron.remote.getCurrentWindow().close();
   }
 
   back() {
@@ -210,6 +207,6 @@ class ConfirmController {
   }
 }
 
-ConfirmController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc'];
+ConfirmController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc', 'electron'];
 
 export default ConfirmController;

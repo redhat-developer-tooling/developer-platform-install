@@ -1,19 +1,18 @@
 'use strict';
 
 import Util from '../../model/helpers/util';
-const remote = require('electron').remote;
-const shell = require('electron').shell;
 let pjson = require('../../../package.json');
 
 class AccountController {
 
-  constructor($state, $timeout, $scope, request, $base64, installerDataSvc) {
+  constructor($state, $timeout, $scope, request, $base64, installerDataSvc, electron) {
     this.router = $state;
     this.http = request;
     this.base64 = $base64;
     this.timeout = $timeout;
     this.scope = $scope;
     this.installerDataSvc = installerDataSvc;
+    this.electron = electron;
 
     this.username = '';
     this.password = '';
@@ -49,19 +48,19 @@ class AccountController {
   }
 
   getUserAgent() {
-    return remote.getCurrentWindow().webContents.session.getUserAgent();
+    return this.electron.remote.getCurrentWindow().webContents.session.getUserAgent();
   }
 
   forgotPassword() {
-    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
+    this.electron.shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
   }
 
   createAccount() {
-    shell.openExternal('https://developers.redhat.com/auth/realms/rhd/protocol/openid-connect/registrations?client_id=web&response_mode=fragment&response_type=code&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2F%2Fconfirmation');
+    this.electron.shell.openExternal('https://developers.redhat.com/auth/realms/rhd/protocol/openid-connect/registrations?client_id=web&response_mode=fragment&response_type=code&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2F%2Fconfirmation');
   }
 
   gotoDRH() {
-    shell.openExternal('https://developers.redhat.com');
+    this.electron.shell.openExternal('https://developers.redhat.com');
   }
 
   handleHttpSuccess(result) {
@@ -94,6 +93,6 @@ class AccountController {
   }
 }
 
-AccountController.$inject = ['$state', '$timeout', '$scope', 'request', '$base64', 'installerDataSvc'];
+AccountController.$inject = ['$state', '$timeout', '$scope', 'request', '$base64', 'installerDataSvc', 'electron'];
 
 export default AccountController;
