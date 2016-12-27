@@ -220,4 +220,78 @@ describe('Install controller', function() {
     expect(InstallableItem.prototype.restartDownload).calledTwice;
     expect(installCtrl.closeDownloadAgainDialog).calledOnce;
   });
+
+  describe('checking the key for productname, productversion, productdesc, current, lable, show and status', function() {
+    let scopeStub = {
+      $apply: function(callback) {
+      callback && callback();
+      }
+    };
+
+    let timeoutStub = function(callback) {
+      callback && callback();
+    };
+    it('productName', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      installCtrl.productName('vagrant');
+      expect(installCtrl.productName('vagrant')).to.equal('Vagrant');
+    });
+
+    it('Productversion', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.productVersion('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.productVersion('vagrant')).to.equal('1.8.1');
+    });
+
+    it('productdesc', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.productDesc('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.productDesc('vagrant')).to.equal('A container provisioning tool');
+    });
+
+    it('current', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.current('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.current('vagrant')).to.equal(100);
+    });
+
+    it('lable', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.label('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.label('vagrant')).to.equal('');
+    });
+
+    it('show', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.show('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.show('vagrant')).to.equal(true);
+    });
+
+    it('status', function() {
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+
+      let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+      installCtrl.status('vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
+      expect(installCtrl.status('vagrant')).to.equal('Download failed');
+    });
+  });
 });
