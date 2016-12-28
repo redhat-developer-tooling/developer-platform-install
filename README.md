@@ -197,7 +197,7 @@ or globe pattern
 
     npm test -- --spec-file=test/unit/pages/**/*.js
 
-Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. Report format can be overriden with '--report' parameter like shown below
+Unit tests code govergare is calculated by Istanbul. By default it generates html and raw coverage reports. The report format can be overriden with `--report` parameter like shown below
 
     npm test -- --report cobertura
 
