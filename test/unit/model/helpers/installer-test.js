@@ -158,32 +158,32 @@ describe('Installer', function() {
       });
     });
 
-    it('should resolve as true if no error occurs' , function() {
-        let eventEmitter = new EventEmitter();
-        sandbox.stub(eventEmitter, 'on').yields();
-        let readStreamMock = { pipe: function() { return eventEmitter; }};
-        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
-        return installer.unzip(file, dir)
+    it('should resolve as true if no error occurs', function() {
+      let eventEmitter = new EventEmitter();
+      sandbox.stub(eventEmitter, 'on').yields();
+      let readStreamMock = { pipe: function() { return eventEmitter; }};
+      sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+      return installer.unzip(file, dir)
         .then(function(result) {
-            expect(result).to.equal(true);
+          expect(result).to.equal(true);
         })
         .catch(function(err) {
-            expect.fail(err);
+          expect.fail(err);
         });
     });
 
     it('should reject when an error occurs', function() {
-       let eventEmitter = new EventEmitter();
-       sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
+      let eventEmitter = new EventEmitter();
+      sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
           .onSecondCall().yields('error');
-       let readStreamMock = { pipe: function() { return eventEmitter; }};
-       sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+      let readStreamMock = { pipe: function() { return eventEmitter; }};
+      sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
 
-       return installer.unzip(file, dir).then(function() {
-           expect.fail();
-       })
+      return installer.unzip(file, dir).then(function() {
+        expect.fail();
+      })
        .catch(function(err) {
-           expect(err).to.equal('error');
+         expect(err).to.equal('error');
        });
     });
   });
