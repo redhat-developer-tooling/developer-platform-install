@@ -14,9 +14,11 @@ chai.use(sinonChai);
 
 describe('InstallableItem', function() {
 
-  let infoStub;
+  let infoStub, item;
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
+    let svc = new InstallerDataService();
+    item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
   });
 
   after(function() {
@@ -133,6 +135,50 @@ describe('InstallableItem', function() {
       downloadStub.verify();
     });
 
+  });
+
+  describe('when instantiated', function(){
+    it('should have no existing install', function() {
+      expect(item.hasExistingInstall()).to.be.equal(false);
+    });
+
+    it('should have no installAfter initialized', function() {
+      expect(item.getInstallAfter()).to.be.equal(undefined);
+    });
+
+    it('should have no invalid version detected', function() {
+      expect(item.isInvalidVersionDetected()).to.be.equal(false);
+    });
+
+    it('should have nothing detected', function() {
+      expect(item.isNotDetected()).to.be.equal(true);
+    });
+
+    it('isConfigured', function() {
+      expect(item.isConfigured()).to.be.equal(true);
+    });
+  });
+
+  describe('checkForExistingInstall abstract method', function(){
+    it('should not add detected option when called', function() {
+      expect(item.checkForExistingInstall()).to.be.equal(undefined);
+    });
+  });
+
+  describe('changeIsCollapsed method', function(){
+    it('should invert isCollaspsed property for object\'s instance', function() {
+      let collapsed = item.isCollapsed;
+      item.changeIsCollapsed();
+      expect(item.isCollapsed).to.be.equal(!collapsed);
+    });
+  });
+
+  describe('setOptionLocation method', function(){
+    it('should set location property for specific option', function() {
+      item.addOption('detected');
+      item.setOptionLocation('detected', 'location');
+      expect(item.option.detected.location).to.be.equal('location');
+    });
   });
 
 });
