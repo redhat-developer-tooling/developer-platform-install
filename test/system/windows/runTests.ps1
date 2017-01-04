@@ -36,6 +36,6 @@ npm run system-test -- --binary $binary --virtualbox $virtualbox --vagrant $vagr
 $logs = $folder + '\..\..\..\logs';
 $targetFolder = if ($targetFolder) { $targetFolder } else { "C:\DevelopmentSuite\" }
 New-Item -ItemType Directory -Force -Path $logs;
-Get-ChildItem $targetFolder |
+Get-ChildItem $targetFolder -ErrorAction SilentlyContinue |
   Where-Object {$_.name -like "*.log"} |
   ForEach-Object { Copy-Item -Path $_.FullName -Destination $logs'\'$_ }
