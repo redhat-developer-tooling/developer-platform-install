@@ -43,6 +43,7 @@ function systemTest() {
       jdk: {},
       devstudio: {}
     };
+    let progress = {};
 
     beforeAll(function() {
       webdriver.wait(protractor.until.elementLocated(By.id('loginButton')), 20000)
@@ -78,12 +79,13 @@ function systemTest() {
         });
       });
 
-      describe('Confirmation page', function() {
-        let installButton;
+      describe('Detection and Installation', function() {
+        let installButton, backButton;
 
         beforeAll(function() {
           installButton = element(By.id('confirm-install-btn'));
-          browser.wait(conditions.elementToBeClickable(installButton), 60000);
+          backButton = element(By.id('confirm-back-btn'));
+          browser.wait(conditions.elementToBeClickable(backButton), 60000);
 
           if (detectComponents) {
             for (var key in components) {
@@ -144,7 +146,7 @@ function systemTest() {
 
           it('should display an error when vagrant or virtualbox is older than recommended', function() {
             for (var key in expectedComponents) {
-              if (expectedComponents[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
+              if (components[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
                 error = true;
                 expect(components[key].olderError.isDisplayed()).toBe(true);
               }
@@ -169,22 +171,21 @@ function systemTest() {
             installButton.click();
           }
         });
-      });
 
-      if (!error) {
-        describe('Installation', function() {
-          let progress = {};
-
-          beforeAll(function() {
+        it('should display progress bars for components being installed', function(done) {
+          if (!error) {
             browser.ignoreSynchronization = true;
             for (var key in components) {
               if (!expectedComponents[key] || (expectedComponents[key] && !expectedComponents[key].installedVersion)) {
                 progress[key] = element(By.id(key + '-progress'));
               }
             }
-          });
+          }
+          done();
+        });
 
-          it('should not fail during the installation', function(done) {
+        it('should not fail during the installation', function(done) {
+          if (!error) {
             let startTime = new Date().getTime();
 
             let check = function() {
@@ -217,9 +218,11 @@ function systemTest() {
             }
 
             setInterval(check, 2000);
-          }, 50*60*1000);
-        });
-      }
+          } else {
+            done();
+          }
+        }, 50*60*1000);
+      });
     });
   });
 }

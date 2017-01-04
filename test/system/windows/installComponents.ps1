@@ -27,7 +27,7 @@ function getVagrant($version) {
     
     $vagrantPath = "C:\HashiCorp\Vagrant\bin"
     $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User");
-    [Environment]::SetEnvironmentVariable("PATH", "$vagrant;$oldPath", "User");
+    [Environment]::SetEnvironmentVariable("PATH", "$vagrantPath;$oldPath", "User");
     [Environment]::Exit(0);
   }
 }
