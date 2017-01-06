@@ -137,7 +137,7 @@ describe('InstallableItem', function() {
 
   });
 
-  describe('when instantiated', function(){
+  describe('when instantiated', function() {
     it('should have no existing install', function() {
       expect(item.hasExistingInstall()).to.be.equal(false);
     });
@@ -159,13 +159,13 @@ describe('InstallableItem', function() {
     });
   });
 
-  describe('checkForExistingInstall abstract method', function(){
+  describe('checkForExistingInstall abstract method', function() {
     it('should not add detected option when called', function() {
       expect(item.checkForExistingInstall()).to.be.equal(undefined);
     });
   });
 
-  describe('changeIsCollapsed method', function(){
+  describe('changeIsCollapsed method', function() {
     it('should invert isCollaspsed property for object\'s instance', function() {
       let collapsed = item.isCollapsed;
       item.changeIsCollapsed();
@@ -173,7 +173,7 @@ describe('InstallableItem', function() {
     });
   });
 
-  describe('setOptionLocation method', function(){
+  describe('setOptionLocation method', function() {
     it('should set location property for specific option', function() {
       item.addOption('detected');
       item.setOptionLocation('detected', 'location');

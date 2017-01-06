@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 let path = require('path');
 
@@ -120,7 +120,7 @@ function systemTest() {
             }
           });
 
-          it('should allow reinstallation of non-msi software',function() {
+          it('should allow reinstallation of non-msi software', function() {
             for (var key in expectedComponents) {
               if (expectedComponents[key].installedVersion && !(key === 'vagrant' || key === 'virtualbox' || key === 'jdk')) {
                 expect(components[key].checkbox.isEnabled()).toBe(true);
@@ -215,7 +215,7 @@ function systemTest() {
                   }
                 }
               });
-            }
+            };
 
             setInterval(check, 2000);
           } else {
