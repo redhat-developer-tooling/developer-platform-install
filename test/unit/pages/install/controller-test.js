@@ -224,7 +224,7 @@ describe('Install controller', function() {
   describe('checking the key for productname, productversion, productdesc, current, lable, show and status', function() {
     let scopeStub = {
       $apply: function(callback) {
-      callback && callback();
+        callback && callback();
       }
     };
 

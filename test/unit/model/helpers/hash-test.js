@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Hash from 'browser/model/helpers/hash';
 import { Readable } from 'stream';
-import EventEmitter from 'events';
 chai.use(sinonChai);
 
 const fs = require('fs-extra');
