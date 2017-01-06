@@ -25,9 +25,7 @@ class ConfirmController {
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
-      $scope.$watch(function() {
-        return $scope.checkboxModel[key].selectedOption;
-      }, function() {
+      $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchInstallSelectionChange() {
         $scope.checkboxModel[key].validateVersion();
       });
     }
@@ -35,9 +33,7 @@ class ConfirmController {
     $scope.isConfigurationValid = this.isConfigurationValid;
 
     // IF the JDK is not Configured then you can't install devstudio
-    $scope.$watch(()=>{
-      return $scope.checkboxModel.cdk.selectedOption;
-    }, (nVal)=>{
+    $scope.$watch('checkboxModel.cdk.selectedOption', function watchCdkSelectionChange(nVal) {
       if(nVal=='install') {
         if($scope.checkboxModel.vagrant.selectedOption == 'detected'
           && !$scope.checkboxModel.vagrant.hasOption('detected')) {
@@ -52,11 +48,10 @@ class ConfirmController {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       }
+      throw Error('test');
     });
 
-    $scope.$watch(()=>{
-      return $scope.checkboxModel.jbds.selectedOption;
-    }, (nVal)=>{
+    $scope.$watch('checkboxModel.jbds.selectedOption', function watchDevStudioSelectionChange(nVal) {
       if(nVal=='install') {
         let jdk = $scope.checkboxModel.jdk;
         // if jdk is not selected for install and there is no detected version

@@ -8,5 +8,9 @@ module.exports = {
       "no-console" : [
         "off"
       ]
+    },
+    "globals": {
+        "inject": true,
+        "ngModule": false
     }
 };
