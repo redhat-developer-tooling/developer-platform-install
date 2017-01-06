@@ -31,7 +31,7 @@ let mainModule =
           .controller(startCtrl.name, startCtrl)
           .factory('installerDataSvc', InstallerDataService.factory)
           .factory('request', Request.factory)
-          .factory('electron', function() { return Electron; })
+          .value('electron', Electron)
           .directive(progressBar.name, progressBar)
           .directive(breadcrumb.name, breadcrumb)
           .directive(pathValidator.name, pathValidator)

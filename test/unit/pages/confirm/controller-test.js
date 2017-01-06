@@ -1,18 +1,31 @@
 'use strict';
+require('../../../angular-test-helper');
+require('browser/main');
 
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import 'sinon-as-promised';
-import ConfirmController from 'browser/pages/confirm/controller.js';
 chai.use(sinonChai);
 
-describe('Confirm controller', function() {
+describe('ConfirmController', function() {
   describe('initial state', function() {
-    beforeEach(function() {
-    });
+    beforeEach(ngModule('devPlatInstaller'));
 
-    it('installs watchers to track user choice for every installer ');
+    var $controller;
+
+    beforeEach(inject(function(_$controller_) {
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+      $controller = _$controller_;
+    }));
+
+    it('installs watchers to track components selected for install', function() {
+      let $watch = sinon.stub();
+      let $scope = {$watch};
+      let ctrl = $controller('ConfirmController', { $scope });
+
+      expect($watch.callCount).to.be.equal(ctrl.installerDataSvc.allInstallables().size+3);
+    });
 
   });
 });
