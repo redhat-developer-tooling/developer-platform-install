@@ -11,6 +11,7 @@ module.exports = {
     },
     "globals": {
         "inject": true,
-        "ngModule": false
+        "ngModule": false,
+        "angular": true
     }
 };

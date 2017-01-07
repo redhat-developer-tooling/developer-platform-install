@@ -3,7 +3,6 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import path from 'path';
 import rimraf from 'rimraf';
@@ -16,6 +15,7 @@ import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import mockfs from 'mock-fs';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
