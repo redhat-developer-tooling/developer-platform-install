@@ -136,6 +136,9 @@ class ProgressState {
   }
 
   setStatus(newStatus) {
+    if (newStatus === this.status) {
+      return;
+    }
     if (newStatus !== 'Downloading') {
       this.current = 100;
       this.label = '';

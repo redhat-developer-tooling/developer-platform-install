@@ -9,18 +9,12 @@ import Logger from 'browser/services/logger';
 import { Readable, PassThrough, Writable } from 'stream';
 import Hash from 'browser/model/helpers/hash';
 import fs from 'fs-extra';
+import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
 
 describe('Downloader', function() {
   let downloader;
-  let fakeProgress = {
-    setStatus: function () {},
-    setCurrent: function () {},
-    setLabel: function () {},
-    setComplete: function() {},
-    setTotalDownloadSize: function() {},
-    downloaded: function() {}
-  };
+  let fakeProgress;
   let sandbox;
   let succ = function() {};
   let fail = function() {};
@@ -41,6 +35,7 @@ describe('Downloader', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    fakeProgress = sandbox.stub(new ProgressState());
     downloader = new Downloader(fakeProgress, function() {}, function() {});
   });
 
@@ -64,26 +59,24 @@ describe('Downloader', function() {
     fakeProgress.totalSize = 1024;
 
     let data = { length: 512 };
-    let spy = sandbox.spy(fakeProgress, 'setCurrent');
 
     downloader.received = 1;
     downloader.dataHandler(data);
 
-    expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(data.length);
+    expect(fakeProgress.setCurrent).to.have.been.calledOnce;
+    expect(fakeProgress.setCurrent).to.have.been.calledWith(data.length);
   });
 
   it('dataHandler should not update the progress before time threshold is reached', function() {
     fakeProgress.totalSize = 1024;
 
     let data = { length: 512 };
-    let spy = sandbox.spy(fakeProgress, 'setCurrent');
 
     downloader.received = 1;
     downloader.lastTime = Date.now() + 9999999999;
     downloader.dataHandler(data);
 
-    expect(spy).not.called;
+    expect(fakeProgress.setCurrent).not.called;
   });
 
   it('errorHandler should close the stream', function() {
@@ -116,6 +109,25 @@ describe('Downloader', function() {
 
     expect(stub).to.have.been.calledOnce;
     expect(stub).to.have.been.calledWith('file');
+  });
+
+  it('closeHandler should set progress status to "Verifying Download" during SHA check if download is done', function () {
+    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    fakeProgress.current = 100;
+
+    downloader.closeHandler('file', 'hash', 'url');
+
+    expect(fakeProgress.setStatus).to.have.been.calledOnce;
+    expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying Download');
+  });
+
+  it('closeHandler should not set progress status to "Verifying Download" during SHA check if download is not done', function () {
+    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    fakeProgress.current = 88;
+
+    downloader.closeHandler('file', 'hash', 'url');
+
+    expect(fakeProgress.setStatus).to.have.not.been.called;
   });
 
   it('closeHandler should call success when verification succeeds', function() {
@@ -264,9 +276,8 @@ describe('Downloader', function() {
     let options = 'http://example.com/jdk.zip';
 
     it('should change downloader status from \'Download Failed\' to \'Downloading\'', function() {
-      let spy = sandbox.spy(fakeProgress, 'setStatus');
       downloader.restartDownload();
-      expect(spy).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(downloader.downloadSize).to.be.equal(0);
       expect(downloader.received).to.be.equal(0);
       expect(downloader.currentSize).to.be.equal(0);
