@@ -1,5 +1,7 @@
 'use strict';
 
+import LocationController from 'browser/pages/location/controller';
+import InstallerDataService from 'browser/services/data';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
@@ -10,8 +12,24 @@ require('browser/main');
 
 chai.use(sinonChai);
 
-
 describe('LocationController', function() {
+
+  let sandbox, locationcontroller, scope, timeout;
+  let installerDataSvc;
+
+  beforeEach(function() {
+
+    scope = { '$apply': function() { } };
+    timeout = function(cb) { cb(); };
+    sandbox = sinon.sandbox.create();
+    installerDataSvc = sinon.stub(new InstallerDataService());
+    locationcontroller = new LocationController(scope, {}, timeout, installerDataSvc);
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  });
+
   describe('initial state', function() {
     beforeEach(ngModule('devPlatInstaller'));
 
@@ -30,4 +48,13 @@ describe('LocationController', function() {
     });
 
   });
+
+  describe('setCloseDialog', function() {
+
+    it('should able to showCloseDialog', function() {
+      locationcontroller.setCloseDialog();
+      expect(locationcontroller.showCloseDialog).to.be.equal(true);
+    });
+  });
+
 });
