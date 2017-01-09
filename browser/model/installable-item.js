@@ -106,7 +106,6 @@ class InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setStatus('Downloading');
     this.downloader = new Downloader(progress, success, failure);
     if(fs.existsSync(this.bundledFile)) {
       this.downloadedFile = this.bundledFile;
@@ -117,28 +116,35 @@ class InstallableItem {
         this.downloadUrl,
         this.sha256,
         this.authRequired ? this.installerDataSvc.getUsername() : undefined,
-        this.authRequired ? this.installerDataSvc.getPassword() : undefined
+        this.authRequired ? this.installerDataSvc.getPassword() : undefined,
+        progress
       );
     }
   }
 
-  checkAndDownload(downloadedFile, url, sha, user, pass) {
+  checkAndDownload(downloadedFile, url, sha, user, pass, progress) {
     if(fs.existsSync(downloadedFile)) {
       let h = new Hash();
+
+      if (progress.current === 0 && progress.status !== 'Downloading') {
+        progress.setStatus("Verifying Existing Download");
+      }
+
       h.SHA256(downloadedFile, (dlSha) => {
         if(sha === dlSha) {
           Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
           this.downloader.successHandler(downloadedFile);
         } else {
-          this.startDownload(downloadedFile, url, sha, user, pass);
+          this.startDownload(downloadedFile, url, sha, user, pass, progress);
         }
       });
     } else {
-      this.startDownload(downloadedFile, url, sha, user, pass);
+      this.startDownload(downloadedFile, url, sha, user, pass, progress);
     }
   }
 
-  startDownload(downloadedFile, url, sha, user, pass) {
+  startDownload(downloadedFile, url, sha, user, pass, progress) {
+    progress.setStatus('Downloading');
     let ws = fs.createWriteStream(downloadedFile);
     this.downloader.setWriteStream(ws);
     if(user === undefined && pass === undefined ) {

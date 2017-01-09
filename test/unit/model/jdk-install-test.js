@@ -245,6 +245,7 @@ describe('JDK installer', function() {
     });
 
     it('should set progress to "Downloading"', function() {
+      sandbox.stub(fs, 'existsSync').returns(false);
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;

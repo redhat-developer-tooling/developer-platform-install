@@ -42,8 +42,6 @@ class CDKInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure) {
-    progress.setStatus('Downloading');
-
     let totalDownloads = 3;
     this.downloader = new Downloader(progress, success, failure, totalDownloads);
     let username = this.installerDataSvc.getUsername();
@@ -59,7 +57,8 @@ class CDKInstall extends InstallableItem {
         this.cdkIsoUrl,
         this.cdkIsoSha256,
         username,
-        password
+        password,
+        progress
       );
     }
 
@@ -72,7 +71,8 @@ class CDKInstall extends InstallableItem {
         this.getDownloadUrl(),
         this.minishiftSha256,
         username,
-        password
+        password,
+        progress
       );
     }
 
@@ -84,7 +84,10 @@ class CDKInstall extends InstallableItem {
       this.checkAndDownload(
         this.ocDownloadedFile,
         this.ocUrl,
-        this.ocSha256
+        this.ocSha256,
+        undefined,
+        undefined,
+        progress
       );
     }
   }

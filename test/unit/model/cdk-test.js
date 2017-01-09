@@ -112,7 +112,6 @@ describe('CDK installer', function() {
     it('should set progress to "Downloading"', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 

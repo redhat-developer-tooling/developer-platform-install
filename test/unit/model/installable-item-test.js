@@ -9,12 +9,13 @@ import Logger from 'browser/services/logger';
 import Downloader from 'browser/model/helpers/downloader';
 import InstallerDataService from 'browser/services/data';
 import Hash from 'browser/model/helpers/hash';
+import {ProgressState} from 'browser/pages/install/controller';
 
 chai.use(sinonChai);
 
 describe('InstallableItem', function() {
 
-  let infoStub, item;
+  let infoStub, item, fakeProgress;
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     let svc = new InstallerDataService();
@@ -28,6 +29,7 @@ describe('InstallableItem', function() {
   let sandbox;
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    fakeProgress = sandbox.stub(new ProgressState());
   });
 
   afterEach(function() {
@@ -91,7 +93,7 @@ describe('InstallableItem', function() {
       sandbox.stub(fs, 'existsSync').returns(false);
       let startDlMock = sandbox.stub(installItem, 'startDownload').returns();
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha');
+      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
       expect(startDlMock).to.have.been.calledOnce;
     });
@@ -101,7 +103,7 @@ describe('InstallableItem', function() {
       let startDlMock = sandbox.stub(installItem, 'startDownload').returns();
       sandbox.stub(Hash.prototype, 'SHA256').yields('wrongsha');
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha');
+      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
       expect(startDlMock).to.have.been.calledOnce;
     });
@@ -112,9 +114,21 @@ describe('InstallableItem', function() {
       sandbox.stub(installItem, 'startDownload').returns();
       sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha');
+      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
       expect(successHandStub).to.have.been.calledOnce;
+    });
+
+    it('should set progress status to "Verifying Existing Download" if a downloaded file exists', function() {
+      let successHandStub = sandbox.stub(downloader, 'successHandler').returns();
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(installItem, 'startDownload').returns();
+      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
+
+      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
+
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying Existing Download');
     });
 
   });
@@ -133,7 +147,7 @@ describe('InstallableItem', function() {
       let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
         downloadStub = sinon.mock(installItem.downloader).expects('download').once().withArgs('url', 'downloadto.zip', 'sha');
 
-      installItem.startDownload('downloadto.zip', 'url', 'sha');
+      installItem.startDownload('downloadto.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
       setWriteStreamStub.verify();
       downloadStub.verify();
@@ -143,10 +157,19 @@ describe('InstallableItem', function() {
       let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
         downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
 
-      installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password');
+      installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
 
       setWriteStreamStub.verify();
       downloadStub.verify();
+    });
+
+    it('should set the progress state to "Downloading"', function() {
+      let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
+        downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
+      installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
+
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
   });
