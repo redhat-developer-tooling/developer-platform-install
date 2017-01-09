@@ -48,7 +48,6 @@ class ConfirmController {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       }
-      throw Error('test');
     });
 
     $scope.$watch('checkboxModel.jbds.selectedOption', function watchDevStudioSelectionChange(nVal) {
