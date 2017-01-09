@@ -69,7 +69,10 @@ class Downloader {
     if(sha) {
       Logger.log(`Configured file='${file}' sha256='${sha}'`);
       var h = new Hash();
-      h.SHA256(file,(dlSha) => {
+      if(this.progress.current === 100) {
+        this.progress.setStatus('Verifying Download');
+      }
+      h.SHA256(file, (dlSha) => {
         if(sha === dlSha) {
           Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
           this.successHandler(file);
