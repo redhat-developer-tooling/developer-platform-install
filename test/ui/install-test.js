@@ -10,7 +10,6 @@ describe('Installation page', function() {
   let components = {
     virtualbox: requirements['virtualbox.exe'],
     cygwin: requirements['cygwin.exe'],
-    vagrant: requirements['vagrant.msi'],
     cdk: requirements['cdk.zip'],
     jdk: requirements['jdk.msi'],
     devstudio: requirements['jbds.jar']

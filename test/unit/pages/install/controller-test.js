@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import InstallController from 'browser/pages/install/controller';
 import InstallerDataService from 'browser/services/data';
-import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
@@ -16,7 +15,7 @@ chai.use(sinonChai);
 describe('Install controller', function() {
 
   let installerDataSvc, sandbox;
-  let vagrant, vbox;
+  let vbox;
   let logStub, fsStub, infoStub, errorStub;
   let timeoutStub = sinon.stub();
 
@@ -39,12 +38,9 @@ describe('Install controller', function() {
     sandbox.stub(InstallerDataService.prototype, 'copyUninstaller').returns();
     installerDataSvc = new InstallerDataService();
     installerDataSvc.setup('installRoot');
-    vagrant = new VagrantInstall(installerDataSvc,
-      'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
     vbox = new VirtualBoxInstall('5.0.8', '103449', installerDataSvc,
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
 
-    installerDataSvc.addItemToInstall(VagrantInstall.KEY, vagrant);
     installerDataSvc.addItemToInstall(VirtualBoxInstall.KEY, vbox);
   });
 
@@ -57,18 +53,16 @@ describe('Install controller', function() {
       let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
       new InstallController(null, null, installerDataSvc);
 
-      expect(stub).calledTwice;
-      expect(stub).calledWith(VagrantInstall.KEY, vagrant);
+      expect(stub).calledOnce;
       expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
     });
 
     it('should mark skipped installables as done', function() {
       let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      sandbox.stub(vagrant, 'isSkipped').returns(true);
       sandbox.stub(vbox, 'isSkipped').returns(true);
       new InstallController(null, null, installerDataSvc);
-      expect(stub).calledTwice;
+      expect(stub).calledOnce;
     });
   });
 
@@ -93,26 +87,20 @@ describe('Install controller', function() {
     it('should trigger download on not downloaded installables', function() {
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(dlStub).calledTwice;
-      expect(dlStub).calledWith('vagrant', vagrant);
+      expect(dlStub).calledOnce;
       expect(dlStub).calledWith('virtualbox', vbox);
     });
 
     it('should not trigger download on already downloaded items', function() {
-      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
-      sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(dlStub).not.called;
     });
 
     it('should trigger install on already downloaded items', function() {
-      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(inStub).calledTwice;
-      expect(inStub).calledWith('vagrant', vagrant);
+      expect(inStub).calledOnce;
       expect(inStub).calledWith('virtualbox', vbox);
     });
   });
@@ -121,7 +109,6 @@ describe('Install controller', function() {
     let vagrantStub, vboxStub, doneStub;
 
     beforeEach(function() {
-      vagrantStub = sandbox.stub(vagrant, 'downloadInstaller').yields();
       vboxStub = sandbox.stub(vbox, 'downloadInstaller').yields();
       doneStub = sandbox.stub(installerDataSvc, 'downloadDone').returns();
     });
@@ -130,19 +117,17 @@ describe('Install controller', function() {
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(spy).calledTwice;
-      expect(spy).calledWith('vagrant');
+      expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
 
       expect(installerDataSvc.downloading).to.be.true;
-      expect(installerDataSvc.toDownload.size).to.equal(2);
+      expect(installerDataSvc.toDownload.size).to.equal(1);
     });
 
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
       new InstallController(null, timeoutStub, installerDataSvc);
-      expect(vagrantStub).calledOnce;
       expect(vboxStub).calledOnce;
     });
 
@@ -151,8 +136,7 @@ describe('Install controller', function() {
 
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(doneStub).calledTwice;
-      expect(doneStub).calledWith(sinon.match.any, 'vagrant');
+      expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
     });
   });
@@ -161,9 +145,7 @@ describe('Install controller', function() {
     let vagrantStub, vboxStub, doneStub;
 
     beforeEach(function() {
-      sandbox.stub(vagrant, 'isDownloadRequired').returns(false);
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
-      vagrantStub = sandbox.stub(vagrant, 'install').yields();
       vboxStub = sandbox.stub(vbox, 'install').yields();
       doneStub = sandbox.stub(installerDataSvc, 'installDone').returns();
     });
@@ -172,19 +154,17 @@ describe('Install controller', function() {
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(spy).calledTwice;
-      expect(spy).calledWith('vagrant');
+      expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
 
       expect(installerDataSvc.installing).to.be.true;
-      expect(installerDataSvc.toInstall.size).to.equal(2);
+      expect(installerDataSvc.toInstall.size).to.equal(1);
     });
 
     it('should call the installables install method', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
       new InstallController(null, timeoutStub, installerDataSvc);
-      expect(vagrantStub).calledOnce;
       expect(vboxStub).calledOnce;
     });
 
@@ -193,8 +173,7 @@ describe('Install controller', function() {
 
       new InstallController(null, timeoutStub, installerDataSvc);
 
-      expect(doneStub).calledTwice;
-      expect(doneStub).calledWith(sinon.match.any, 'vagrant');
+      expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
     });
   });
@@ -214,10 +193,9 @@ describe('Install controller', function() {
     };
 
     let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-    expect(InstallableItem.prototype.downloadInstaller).calledTwice;
     sandbox.spy(installCtrl, 'closeDownloadAgainDialog');
     installCtrl.downloadAgain();
-    expect(InstallableItem.prototype.restartDownload).calledTwice;
+    expect(InstallableItem.prototype.restartDownload).calledOnce;
     expect(installCtrl.closeDownloadAgainDialog).calledOnce;
   });
 
@@ -235,63 +213,63 @@ describe('Install controller', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      installCtrl.productName('vagrant');
-      expect(installCtrl.productName('vagrant')).to.equal('Vagrant');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      installCtrl.productName('virtualbox');
+      expect(installCtrl.productName('virtualbox')).to.equal('Oracle VirtualBox');
     });
 
     it('Productversion', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.productVersion('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.productVersion('vagrant')).to.equal('1.8.1');
+      installCtrl.productVersion('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.productVersion('virtualbox')).to.equal('5.0.26');
     });
 
     it('productdesc', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.productDesc('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.productDesc('vagrant')).to.equal('A container provisioning tool');
+      installCtrl.productDesc('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.productDesc('virtualbox')).to.equal('A virtualization software package developed by Oracle');
     });
 
     it('current', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.current('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.current('vagrant')).to.equal(100);
+      installCtrl.current('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.current('virtualbox')).to.equal(100);
     });
 
     it('lable', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.label('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.label('vagrant')).to.equal('');
+      installCtrl.label('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.label('virtualbox')).to.equal('');
     });
 
     it('show', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.show('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.show('vagrant')).to.equal(true);
+      installCtrl.show('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.show('virtualbox')).to.equal(true);
     });
 
     it('status', function() {
       sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
-      installCtrl.status('vagrant');
-      expect(InstallableItem.prototype.downloadInstaller).calledTwice;
-      expect(installCtrl.status('vagrant')).to.equal('Download failed');
+      installCtrl.status('virtualbox');
+      expect(InstallableItem.prototype.downloadInstaller).calledOnce;
+      expect(installCtrl.status('virtualbox')).to.equal('Download failed');
     });
   });
 });

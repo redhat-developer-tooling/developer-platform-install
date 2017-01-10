@@ -239,7 +239,7 @@ class JbdsInstall extends InstallableItem {
 
   setupCdk() {
     let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.KEY);
-    let escapedPath = this.installerDataSvc.cdkVagrantfileDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
+    let escapedPath = this.installerDataSvc.cdkDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
     Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location');
     return new Promise((resolve, reject) => {
       if(cdkInstall.isSkipped) {

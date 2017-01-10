@@ -36,7 +36,7 @@ describe('devstudio installer', function() {
     ds.installDir.returns('installationFolder');
     ds.jdkDir.returns('install/jdk8');
     ds.jbdsDir.returns('installationFolder/developer-studio');
-    ds.cdkVagrantfileDir.returns('installationFolder/cdk/vagrant');
+    ds.cdkDir.returns('installationFolder/cdk');
     ds.getInstallable.returns(fakeInstall);
     ds.getUsername.returns('user');
     ds.getPassword.returns('passwd');
@@ -301,7 +301,7 @@ describe('devstudio installer', function() {
         let fsStub = sandbox.stub(fs, 'appendFile').yields();
 
         let runtimePath = path.join(installerDataSvc.jbdsDir(), 'studio', 'runtime_locations.properties');
-        let escapedPath = installerDataSvc.cdkVagrantfileDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
+        let escapedPath = installerDataSvc.cdkDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
         let data = 'CDKServer=' + escapedPath + ',true\r\n';
 
         return installer.setupCdk(helper)

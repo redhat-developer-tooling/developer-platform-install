@@ -3,23 +3,22 @@
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "2.3.0.GA",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-2.3.0.zip?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/21-Nov-2016.rc2/cdk.zip",
-    "filename": "cdk_2.3.0.GA.zip",
-    "sha256sum": "a5c4227dac4bc45f255138badf1de65f47aa355f90ca07e1bf089b1dc0e145c9",
-    "virusTotalReport": "https://virustotal.com/en/file/a5c4227dac4bc45f255138badf1de65f47aa355f90ca07e1bf089b1dc0e145c9/analysis/",
+    "version": "3.0.0.GA",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
+    "filename": "linux-amd64.tar.gz",
+    "sha256sum": "257c8bf8346bcc1245645908dc1ede40d212605385ba413d2df9cfdee06577be",
     "vendor": "Red Hat, Inc."
   },
-  "rhel-vagrant-virtualbox.box": {
-    "name": "Red Hat Container Development Kit RHEL 7.2 Vagrant box for VirtualBox",
+  "rhel.iso": {
+    "name": "RHEL 7.3 for Hyper-V and VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "7.2-32",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/rhel-cdk-kubernetes-7.2-32.x86_64.vagrant-virtualbox.box?workflow=direct",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/21-Nov-2016.rc2/rhel-cdk-kubernetes-7.2-32.x86_64.vagrant-virtualbox.box",
-    "filename": "rhel-7-cdk-vagrant-scratch-7.2.20161121-32.x86_64.vagrant-virtualbox.box",
-    "sha256sum": "92f1abe3516643c603072b5a54f788ec58aa87045a31265f9c8c501c8bdfde4f",
+    "version": "7.3",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift-rhel.iso",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift-rhel.iso",
+    "filename": "minishift-rhel.iso",
+    "sha256sum": "f83d0cde0ff3854eaa959f92c616cc70dc7a55c900ba2b4090e0afa6b5a14678",
     "vendor": "Red Hat, Inc."
   },
   "oc.zip": {
@@ -67,17 +66,6 @@
     "sha256sum": "",
     "virusTotalReport": "",
     "vendor": "Oracle, Inc."
-  },
-  "vagrant.msi": {
-    "name": "Vagrant",
-    "description": "A container provisioning tool",
-    "bundle": "no",
-    "version": "1.8.1",
-    "url": "https://developers.redhat.com/redirect/to/vagrant-macos-1.8.1.download",
-    "filename": "vagrant_1.8.1.dmg",
-    "sha256sum": "2cfdbeec9e40376e49dae9d9f27511896e3b296f0e24f8731339bb3d32c48c93",
-    "virusTotalReport": "https://virustotal.com/en/file/2cfdbeec9e40376e49dae9d9f27511896e3b296f0e24f8731339bb3d32c48c93/analysis/",
-    "vendor": "HashiCorp"
   },
   "virtualbox.exe": {
     "name": "Oracle VirtualBox",

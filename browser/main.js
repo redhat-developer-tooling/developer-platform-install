@@ -17,7 +17,6 @@ import Request from './services/request';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
 import JbdsInstall from './model/jbds';
-import VagrantInstall from './model/vagrant';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
 import Electron from 'electron';
@@ -108,23 +107,16 @@ let mainModule =
               'cygwin',
               reqs['cygwin.exe'].sha256sum);
 
-            let vagrant = new VagrantInstall(
-              installerDataSvc,
-              reqs['vagrant.msi'].url,
-              null,
-              'vagrant',
-              reqs['vagrant.msi'].sha256sum);
-
             let cdk = new CDKInstall(
               installerDataSvc,
               $timeout,
               reqs['cdk.zip'].dmUrl,
-              reqs['rhel-vagrant-virtualbox.box'].dmUrl,
+              reqs['rhel.iso'].dmUrl,
               reqs['oc.zip'].url,
               null,
               'cdk',
               reqs['cdk.zip'].sha256sum,
-              reqs['rhel-vagrant-virtualbox.box'].sha256sum,
+              reqs['rhel.iso'].sha256sum,
               reqs['oc.zip'].sha256sum);
 
             let jdk = new JdkInstall(
@@ -142,10 +134,10 @@ let mainModule =
               'developer-studio',
               reqs['jbds.jar'].sha256sum);
 
-            installerDataSvc.addItemsToInstall(virtualbox, cygwin, vagrant, cdk, jdk, jbds);
+            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, jbds);
 
             jdk.thenInstall(jbds);
-            jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(vagrant).thenInstall(cdk);
+            jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(cdk);
 
           }]);
 

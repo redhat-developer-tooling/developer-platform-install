@@ -22,7 +22,7 @@
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input id="virtualbox-checkbox" type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+             <input id="virtualbox-checkbox" type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected')" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
@@ -190,105 +190,6 @@
           </label>
         </div>
       </div>
-    </div>
-
-    <!-- Vagrant-->
-    <div id="vagrant-panel" class="panel panel-default panel2pxborder"  ng-class="{'zero-border':checkboxModel.vagrant.hasOption('detected')}">
-      <div id="vagrant-panel-heading" class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
-           <!--ng-click="checkboxModel.vagrant.changeIsCollapsed()">-->
-        <div class="checkbox-container verticalLine">
-          <input id="vagrant-checkbox" type="checkbox" ng-disabled="checkboxModel.vagrant.hasOption('detected') || checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.vagrant.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'" class="vallign-middle" title="{{checkboxModel.vagrant.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
-        </div>
-        <div class="product-container">
-          <div class="warnings-in-panel">
-            <span id="vagrant-installed-note" class="installed-note" ng-show="checkboxModel.vagrant.hasOption('detected')">
-              <i class="fa fa-check"></i> Using detected version {{checkboxModel.vagrant.option.detected.version}}
-            </span>
-            <div ng-show="checkboxModel.vagrant.hasOption('detected')">
-              <div id="vagrant-newer-warning" ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
-                <div class="help-block">
-                  <span class="pficon pficon-warning-triangle-o"></span>
-                  <span id="vagrant-newer-message">Newer than recommended!</span>
-                </div>
-              </div>
-              <div id="vagrant-older-error" ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-error">
-                <div class="help-block">
-                  <span class="pficon pficon-error-circle-o"></span>
-                  <span id="vagrant-older-message">Older than recommended!</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <span id="vagrant-name" class="product-name">{{checkboxModel.vagrant.productName}}</span><span id="vagrant-version" class="product-version">{{checkboxModel.vagrant.version}}</span>
-          <div id="vagrant-description">{{checkboxModel.vagrant.productDesc}}</div>
-        </div>
-      </div>
-      <div class="animate-show confirm-radio-container"
-           ng-hide="checkboxModel.vagrant.isCollapsed"
-           ng-class="{'dotted-panel':checkboxModel.vagrant.hasOption('detected')}">
-        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('install')">
-          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-install" class="confirm-radio-btn"
-                 ng-model="checkboxModel.vagrant.selectedOption" value="install">
-          <label for="confirm-radio-btn-vagrant-install" class="confirm-radio-btn-label">
-            Install
-          </label>
-        </div>
-        <div class="confirm-radio-container" ng-show="checkboxModel.vagrant.hasOption('detected')">
-          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn"
-                 ng-model="checkboxModel.vagrant.selectedOption" value="detected">
-          <label for="confirm-radio-btn-vagrant-exists" class="confirm-radio-btn-label">
-            Use the detected version {{checkboxModel.vagrant.option.detected.version}} at {{checkboxModel.vagrant.option.detected.location}}
-          </label>
-          <div ng-show="checkboxModel.vagrant.option.detected.warning!==''" class="has-warning">
-            <div class="help-block">
-              <span class="pficon pficon-warning-triangle-o"></span>
-              <strong>The detected Vagrant installation is newer than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
-            </div>
-          </div>
-          <div ng-show="checkboxModel.vagrant.option.detected.error!==''" class="has-warning">
-            <div class="help-block">
-              <span class="pficon pficon-warning-triangle-o"></span>
-              <strong>The detected Vagrant installation is older than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
-            </div>
-          </div>
-        </div>
-        <div class="confirm-radio-container" ng-show="false">
-          <input type="radio" name="confirm-radio-btn-vagrant-group" id="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn">
-          <label for="confirm-radio-btn-vagrant-browse" class="confirm-radio-btn-label">
-            <div class="confirm-browse-container">
-              <label for="confirm-browse-input-vagrant" class="browse-browse-label">
-                Use a different version
-              </label>
-              <input type="text" id="confirm-browse-input-vagrant" name="confirm-browse-input-vagrant" class="confirm-browse-input"
-                     ng-model="checkboxModel.vagrant.selectedOption" value="different"/>
-              <button type="button" class="btn btn-primary confirm-browse-btn" ng-click="confCtrl.selectItem('vagrant')">Browse</button>
-            </div>
-            <div ng-hide="checkboxModel.vagrant.detected" class="has-warning">
-              <div class="help-block">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selection is either not a valid vagrant installation or you do not have vagrant on path. We will install vagrant for you.</strong>
-              </div>
-            </div>
-            <div ng-show="checkboxModel.vagrant.detected && checkboxModel.vagrant.existingVersion === checkboxModel.vagrant.minimumVersion" class="has-warning">
-              <div class="help-block">
-                <strong>The detected vagrant version is {{checkboxModel.vagrant.existingVersion}}</strong>
-              </div>
-            </div>
-            <div ng-show="checkboxModel.vagrant.existingVersion > checkboxModel.vagrant.minimumVersion" class="has-warning">
-              <div class="help-block">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>The selected vagrant installation is newer than recommended {{checkboxModel.vagrant.minimumVersion}}</strong>
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="message-container error-message" ng-show="!checkboxModel.vagrant.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
-      <span class="pficon pficon-error-circle-o"></span>
-      <span>Red Hat Container Development Kit requires Vagrant {{checkboxModel.vagrant.minimumVersion}} or newer. Please uninstall detected Vagrant and restart Installer to continue.</span>
     </div>
 
     <!-- CDK -->
