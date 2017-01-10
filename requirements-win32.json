@@ -70,12 +70,12 @@
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
     "bundle": "no",
-    "version": "5.0.26",
-    "revision": "108824",
-    "url": "http://developers.redhat.com/redirect/to/virtualbox-5.0.26.download",
-    "filename": "virtualbox_5.0.26.exe",
-    "sha256sum": "7195c5c71add512e8ac97ffc995f5a809d239ac550e20017c1d6d4766a0ced1c",
-    "virusTotalReport": "https://virustotal.com/en/file/7195c5c71add512e8ac97ffc995f5a809d239ac550e20017c1d6d4766a0ced1c/analysis/",
+    "version": "5.1.12",
+    "revision": "112440",
+    "url": "http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-Win.exe",
+    "filename": "virtualbox_5.1.12.exe",
+    "sha256sum": "0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54",
+    "virusTotalReport": "https://virustotal.com/en/file/0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54/analysis/",
     "vendor": "Oracle, Inc."
   },
   "7zip.zip": {
