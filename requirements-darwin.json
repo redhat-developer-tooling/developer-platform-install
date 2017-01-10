@@ -11,7 +11,7 @@
     "vendor": "Red Hat, Inc."
   },
   "rhel.iso": {
-    "name": "RHEL 7.3 for Hiper-V and VirtualBox",
+    "name": "RHEL 7.3 for Hyper-V and VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "7.3",
