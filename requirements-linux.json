@@ -4,10 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/windows-amd64.zip",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/windows-amd64.zip",
-    "filename": "windows-amd64.zip",
-    "sha256sum": "9b354ee04ea6fb5a32dba19c9c04772c0e9482df91a2412186f6846a21e433b1",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/linux-amd64.tar.gz",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/linux-amd64.tar.gz",
+    "filename": "linux-amd64.tar.gz",
+    "sha256sum": "70e1c5af6900ffd5cf79ca5b624e98f13a56f9e4d53cfc3077ce5b799d1f54a0",
     "vendor": "Red Hat, Inc."
   },
   "rhel.iso": {
