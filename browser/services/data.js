@@ -34,17 +34,15 @@ class InstallerDataService {
     this.requirements = requirements;
   }
 
-  setup( vboxRoot, jdkRoot, jbdsRoot, vagrantRoot, cygwinRoot, cdkRoot) {
+  setup(vboxRoot, jdkRoot, jbdsRoot, cygwinRoot, cdkRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
     this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
     this.jbdsRoot = jbdsRoot || path.join(this.installRoot, 'devstudio');
-    this.vagrantRoot = vagrantRoot || path.join(this.installRoot, 'vagrant');
     this.cygwinRoot = cygwinRoot || path.join(this.installRoot, 'cygwin');
     this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
-    this.cdkBoxRoot = path.join(this.cdkRoot, 'boxes');
+    this.cdkBoxRoot = this.cdkRoot;
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
-    this.cdkVagrantRoot = path.join(this.cdkRoot, 'components', 'rhel', 'rhel-ose');
-    this.cdkMarkerFile = path.join(this.cdkVagrantRoot, '.cdk');
+    this.cdkMarkerFile = path.join(this.cdkRoot, '.cdk');
 
     if (!fs.existsSync(this.installRoot)) {
       mkdirp.sync(path.resolve(this.installRoot));
@@ -124,10 +122,6 @@ class InstallerDataService {
     return this.jbdsRoot;
   }
 
-  vagrantDir() {
-    return this.vagrantRoot;
-  }
-
   cygwinDir() {
     return this.cygwinRoot;
   }
@@ -138,10 +132,6 @@ class InstallerDataService {
 
   cdkBoxDir() {
     return this.cdkBoxRoot;
-  }
-
-  cdkVagrantfileDir() {
-    return this.cdkVagrantRoot;
   }
 
   cdkMarker() {

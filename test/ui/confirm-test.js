@@ -34,7 +34,6 @@ describe('Confirm page', function() {
     let components = {
       virtualbox: requirements['virtualbox.exe'],
       cygwin: requirements['cygwin.exe'],
-      vagrant: requirements['vagrant.msi'],
       cdk: requirements['cdk.zip'],
       jdk: requirements['jdk.msi'],
       devstudio: requirements['jbds.jar']
@@ -57,7 +56,7 @@ describe('Confirm page', function() {
           components[key].versionElement = element(By.id(key + '-version'));
           components[key].descriptionElement = element(By.id(key + '-description'));
 
-          if(key === 'vagrant' || key === 'virtualbox') {
+          if(key === 'virtualbox') {
             components[key].installedNote = element(By.id(key + '-installed-note'));
             components[key].newerWarning = element(By.id(key + '-newer-warning'));
             components[key].newerMessage = element(By.id(key + '-newer-message'));
@@ -142,42 +141,6 @@ describe('Confirm page', function() {
         expect(vbox.olderError.isPresent()).toBe(true);
         expect(vbox.olderError.getAttribute('class')).toMatch('has-error');
         expect(vbox.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
-      });
-    });
-
-    describe('vagrant panel', function() {
-      let vagrant = components.vagrant;
-
-      it('should display a correct name', function() {
-        expect(vagrant.nameElement.isDisplayed()).toBe(true);
-        expect(vagrant.nameElement.getText()).toEqual(vagrant.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(vagrant.versionElement.isDisplayed()).toBe(true);
-        expect(vagrant.versionElement.getText()).toEqual(vagrant.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(vagrant.descriptionElement.isDisplayed()).toBe(true);
-        expect(vagrant.descriptionElement.getText()).toEqual(vagrant.description);
-      });
-
-      it('detected installation message should be available', function() {
-        expect(vagrant.installedNote.isPresent()).toBe(true);
-        expect(vagrant.installedNote.getAttribute('innerHTML')).toMatch(messages.detected);
-      });
-
-      it('newer versions should come with a warning', function() {
-        expect(vagrant.newerWarning.isPresent()).toBe(true);
-        expect(vagrant.newerWarning.getAttribute('class')).toMatch('has-warning');
-        expect(vagrant.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
-      });
-
-      it('older versions should come with an error', function() {
-        expect(vagrant.olderError.isPresent()).toBe(true);
-        expect(vagrant.olderError.getAttribute('class')).toMatch('has-error');
-        expect(vagrant.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
       });
     });
 

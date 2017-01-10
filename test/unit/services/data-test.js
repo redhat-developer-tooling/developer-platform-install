@@ -3,8 +3,8 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import VagrantInstall from 'browser/model/vagrant';
 import VirtualBoxInstall from 'browser/model/virtualbox';
+import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import Platform from 'browser/services/platform';
 import Logger from 'browser/services/logger';
@@ -16,7 +16,7 @@ chai.use(sinonChai);
 
 
 describe('InstallerDataService', function() {
-  let sandbox, svc, vagrant, vbox;
+  let sandbox, svc, jdk, vbox;
 
   beforeEach(function() {
     svc = new InstallerDataService();
@@ -27,7 +27,7 @@ describe('InstallerDataService', function() {
       go: function() {}
     };
     sandbox = sinon.sandbox.create();
-    vagrant = new VagrantInstall(svc, 'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip', null);
+    jdk = new InstallableItem('jdk', 10000, 'https://domain.com/jdk.msi', null, 'jdk', svc);
     vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
   });
@@ -110,22 +110,19 @@ describe('InstallerDataService', function() {
       expect(svc.virtualBoxDir()).to.equal(path.join(svc.installRoot, 'virtualbox'));
       expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'jdk8'));
       expect(svc.jbdsDir()).to.equal(path.join(svc.installRoot, 'devstudio'));
-      expect(svc.vagrantDir()).to.equal(path.join(svc.installRoot, 'vagrant'));
       expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
       expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
-      expect(svc.cdkBoxDir()).to.equal(path.join(svc.cdkRoot, 'boxes'));
+      expect(svc.cdkBoxDir()).to.equal(svc.cdkRoot);
       expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
-      expect(svc.cdkVagrantfileDir()).to.equal(path.join(svc.cdkRoot, 'components', 'rhel', 'rhel-ose'));
-      expect(svc.cdkMarker()).to.equal(path.join(svc.cdkVagrantRoot, '.cdk'));
     });
   });
 
   describe('installables', function() {
     it('should be able to handle installables', function() {
-      svc.addItemToInstall('key', vagrant);
+      svc.addItemToInstall('key', jdk);
 
       expect(svc.installableItems.size).to.equal(1);
-      expect(svc.getInstallable('key')).to.equal(vagrant);
+      expect(svc.getInstallable('key')).to.equal(jdk);
       expect(svc.allInstallables()).to.equal(svc.installableItems);
     });
   });
@@ -182,69 +179,69 @@ describe('InstallerDataService', function() {
 
   describe('downloading', function() {
     beforeEach(function() {
-      svc.addItemToInstall('vagrant', vagrant);
+      svc.addItemToInstall('jdk', jdk);
       svc.addItemToInstall('vbox', vbox);
 
-      sandbox.stub(vagrant, 'downloadInstaller').returns();
+      sandbox.stub(jdk, 'downloadInstaller').returns();
       sandbox.stub(vbox, 'downloadInstaller').returns();
     });
 
     it('startDownload should queue the installable for download', function() {
-      svc.startDownload('vagrant');
+      svc.startDownload('jdk');
       expect(svc.isDownloading()).to.be.true;
       expect(svc.toDownload.size).to.equal(1);
-      expect(svc.toDownload.has('vagrant')).to.be.true;
+      expect(svc.toDownload.has('jdk')).to.be.true;
     });
 
     it('downloadDone should signal that the download has finished', function() {
-      svc.startDownload('vagrant');
+      svc.startDownload('jdk');
       svc.startDownload('vbox');
-      sandbox.stub(vagrant, 'install');
+      sandbox.stub(jdk, 'install');
 
-      svc.downloadDone(fakeProgress, 'vagrant');
+      svc.downloadDone(fakeProgress, 'jdk');
 
-      expect(vagrant.isDownloaded()).to.be.true;
+      expect(jdk.isDownloaded()).to.be.true;
       expect(svc.toDownload.size).to.equal(1);
     });
 
     it('downloadDone should trigger install on the installable', function() {
-      svc.startDownload('vagrant');
+      svc.startDownload('jdk');
       svc.startDownload('vbox');
 
       let spy = sandbox.spy(svc, 'startInstall');
-      let stub = sandbox.stub(vagrant, 'install').returns();
+      let stub = sandbox.stub(jdk, 'install').returns();
 
-      svc.downloadDone(fakeProgress, 'vagrant');
+      svc.downloadDone(fakeProgress, 'jdk');
 
-      expect(spy).calledWith('vagrant');
+      expect(spy).calledWith('jdk');
       expect(stub).calledOnce;
     });
 
     it('downloadDone should call installDone when installation is finished', function() {
-      svc.addItemsToInstall(vagrant);
-      sandbox.stub(vagrant, 'install').yields();
+      svc.addItemsToInstall(jdk);
+      sandbox.stub(jdk, 'install').yields();
       sandbox.stub(svc, 'installDone');
-      svc.downloadDone(undefined, vagrant.keyName);
+      svc.downloadDone(undefined, jdk.keyName);
       expect(svc.installDone).to.be.calledOnce;
     });
 
     it('downloadDone should log error when installation is failed', function() {
-      svc.addItemsToInstall(vagrant);
-      sandbox.stub(vagrant, 'install').callsArgWith(2, 'error');
+      svc.addItemsToInstall(jdk);
+      sandbox.stub(jdk, 'install').callsArgWith(2, 'error');
       Logger.error.reset();
-      svc.downloadDone(undefined, vagrant.keyName);
+      svc.downloadDone(undefined, jdk.keyName);
       expect(Logger.error).to.be.calledOnce;
     });
 
     it('downloadDone should send an event when all downloads have finished', function() {
-      svc.startDownload('vagrant');
+      svc.startDownload('jdk');
       svc.startDownload('vbox');
 
-      sandbox.stub(vagrant, 'install').returns();
+      sandbox.stub(jdk, 'install').returns();
       sandbox.stub(vbox, 'install').returns();
       let spy = sandbox.spy(svc.ipcRenderer, 'send');
 
-      svc.downloadDone(fakeProgress, 'vagrant');
+      svc.downloadDone(fakeProgress, 'jdk');
       svc.downloadDone(fakeProgress, 'vbox');
 
       expect(spy).calledOnce;
@@ -254,66 +251,66 @@ describe('InstallerDataService', function() {
 
   describe('installing', function() {
     beforeEach(function() {
-      svc.addItemToInstall('vagrant', vagrant);
-      svc.startInstall('vagrant');
+      svc.addItemToInstall('jdk', jdk);
+      svc.startInstall('jdk');
     });
 
     it('startInstall should queue the installable for installing', function() {
       expect(svc.isInstalling()).to.be.true;
       expect(svc.toInstall.size).to.equal(1);
-      expect(svc.toInstall.has('vagrant')).to.be.true;
+      expect(svc.toInstall.has('jdk')).to.be.true;
     });
 
     it('installDone should trigger item setup', function() {
-      let stub = sandbox.stub(vagrant, 'setup').returns();
+      let stub = sandbox.stub(jdk, 'setup').returns();
 
-      svc.installDone(fakeProgress, 'vagrant');
+      svc.installDone(fakeProgress, 'jdk');
 
       expect(svc.toInstall.size).to.equal(1);
       expect(stub).calledOnce;
     });
 
     it('installDone should call setupDone when setup is finished', function() {
-      svc.addItemsToInstall(vagrant);
-      sandbox.stub(vagrant, 'setup').yields();
+      svc.addItemsToInstall(jdk);
+      sandbox.stub(jdk, 'setup').yields();
       sandbox.stub(svc, 'setupDone');
-      svc.installDone(undefined, vagrant.keyName);
+      svc.installDone(undefined, jdk.keyName);
       expect(svc.setupDone).to.be.calledOnce;
     });
 
     it('installDone should log error when setup is failed', function() {
-      svc.addItemsToInstall(vagrant);
-      sandbox.stub(vagrant, 'setup').callsArgWith(2, 'error');
+      svc.addItemsToInstall(jdk);
+      sandbox.stub(jdk, 'setup').callsArgWith(2, 'error');
       Logger.error.reset();
-      svc.installDone(undefined, vagrant.keyName);
+      svc.installDone(undefined, jdk.keyName);
       expect(Logger.error).to.be.calledOnce;
     });
   });
 
   describe('setup', function() {
     beforeEach(function() {
-      svc.addItemToInstall('vagrant', vagrant);
+      svc.addItemToInstall('jdk', jdk);
       svc.addItemToInstall('vbox', vbox);
 
-      svc.startInstall('vagrant');
+      svc.startInstall('jdk');
       svc.startInstall('vbox');
     });
 
     it('setupDone should send an event that a component has finished installing', function() {
       let spy = sandbox.spy(svc.ipcRenderer, 'send');
 
-      svc.setupDone(fakeProgress, 'vagrant');
+      svc.setupDone(fakeProgress, 'jdk');
       svc.setupDone(fakeProgress, 'vbox');
 
       expect(spy).calledTwice;
-      expect(spy).calledWith('installComplete', 'vagrant');
+      expect(spy).calledWith('installComplete', 'jdk');
       expect(spy).calledWith('installComplete', 'vbox');
     });
 
     it('setupDone should switch to final page when all installs have finished', function() {
       let spy = sandbox.spy(svc.router, 'go');
 
-      svc.setupDone(fakeProgress, 'vagrant');
+      svc.setupDone(fakeProgress, 'jdk');
       svc.setupDone(fakeProgress, 'vbox');
 
       expect(svc.installing).to.be.false;
@@ -322,9 +319,9 @@ describe('InstallerDataService', function() {
     });
 
     it('setupDone should not log info message for skipped installer', function() {
-      sandbox.stub(vagrant, 'isSkipped').returns(true);
+      sandbox.stub(jdk, 'isSkipped').returns(true);
       Logger.info.reset();
-      svc.setupDone(fakeProgress, 'vagrant');
+      svc.setupDone(fakeProgress, 'jdk');
       expect(Logger.info).not.called;
     });
 
@@ -332,10 +329,9 @@ describe('InstallerDataService', function() {
 
   describe('getRequirementByName', function() {
     it('returns requested requirement', function() {
-      svc.addItemsToInstall(vagrant);
       try {
-        let result = svc.getRequirementByName('vagrant');
-        expect(result.name).equal('Vagrant');
+        let result = svc.getRequirementByName('oc');
+        expect(result.name).equal('Openshift Origin');
       } catch (error) {
         expect.fail();
       }

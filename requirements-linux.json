@@ -67,17 +67,6 @@
     "virusTotalReport": "https://virustotal.com/en/file/fc4c77412446d6bbf6bf91d76d4bb5cf5d1e94dc1e932f524796e3f8a9789ccc/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "vagrant.msi": {
-    "name": "Vagrant",
-    "description": "A container provisioning tool",
-    "bundle": "no",
-    "version": "1.8.1",
-    "url": "https://developers.redhat.com/redirect/to/vagrant-1.8.1.download",
-    "filename": "vagrant_1.8.1.msi",
-    "sha256sum": "6468cc140f6f236c3ac4bc0bbb1cc2177114249bc344e0aba8c826eae9cc6eb2",
-    "virusTotalReport": "https://virustotal.com/en/file/6468cc140f6f236c3ac4bc0bbb1cc2177114249bc344e0aba8c826eae9cc6eb2/analysis/",
-    "vendor": "HashiCorp"
-  },
   "virtualbox.exe": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",

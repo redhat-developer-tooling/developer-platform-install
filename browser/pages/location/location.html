@@ -4,7 +4,7 @@
 </header>
 
 <main class="col-sm-12">
-  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()" ng-init="locCtrl.checkUserProfileLocation()">
+  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
     <div id="location-form-container">
       <p id="location-form-instructions" class="location-form-elements">
         This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
@@ -20,7 +20,7 @@
             Select the installation folder
           </label>
           <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
-                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.folderChanged()" ng-model="locCtrl.folder" path-validator autofocus/>
+                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
           <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
           <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
@@ -42,20 +42,9 @@
               <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
             </ng-messages>
           </div>
-
-          <div id="vagrantHomeStatus" ng-show="locCtrl.vagrantHomeHasSpace" class="help-block has-error">
-            <span class="pficon pficon-error-circle-o"></span>
-            <strong>
-              The directory where vagrant is/will be installed (the Vagrant home directory)
-              has a space(s) in it. On Windows, there is a bug in Ruby when compiling
-              plugins into directories with spaces. Please set up a VAGRANT_HOME user environment
-              variable pointing to a location with NO spaces and restart this installer.
-            </strong>
-          </div>
         </div>
       </div>
     </div>
-
   </form>
 </main>
 
@@ -66,5 +55,5 @@
   <button type="button" id="location-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="locationForm"
           ng-click="locCtrl.back()">Back</button>
   <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="locationForm"
-          ng-disabled="locationForm.folder.$invalid || locCtrl.vagrantHomeHasSpace" autofocus>Next</button>
+          ng-disabled="locationForm.folder.$invalid" autofocus>Next</button>
 </footer>

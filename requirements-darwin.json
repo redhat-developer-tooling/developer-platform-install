@@ -68,17 +68,6 @@
     "virusTotalReport": "",
     "vendor": "Oracle, Inc."
   },
-  "vagrant.msi": {
-    "name": "Vagrant",
-    "description": "A container provisioning tool",
-    "bundle": "no",
-    "version": "1.8.1",
-    "url": "https://developers.redhat.com/redirect/to/vagrant-macos-1.8.1.download",
-    "filename": "vagrant_1.8.1.dmg",
-    "sha256sum": "2cfdbeec9e40376e49dae9d9f27511896e3b296f0e24f8731339bb3d32c48c93",
-    "virusTotalReport": "https://virustotal.com/en/file/2cfdbeec9e40376e49dae9d9f27511896e3b296f0e24f8731339bb3d32c48c93/analysis/",
-    "vendor": "HashiCorp"
-  },
   "virtualbox.exe": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",

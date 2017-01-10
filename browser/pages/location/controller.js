@@ -4,7 +4,6 @@ let fs = require('fs');
 let path = require('path');
 
 import Logger from '../../services/logger';
-import Util from '../../model/helpers/util';
 
 class LocationController {
   constructor($scope, $state, $timeout, installerDataSvc, electron) {
@@ -12,14 +11,11 @@ class LocationController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
     this.showCloseDialog = false;
-    this.vagrantHomeHasSpace = true;
-
     this.electron = electron;
   }
 
@@ -55,10 +51,6 @@ class LocationController {
     }
   }
 
-  folderChanged() {
-    this.checkFolder();
-  }
-
   exit() {
     Logger.info('Closing the installer window');
     this.electron.remote.getCurrentWindow().close();
@@ -74,24 +66,6 @@ class LocationController {
     this.showCloseDialog = !this.showCloseDialog;
   }
 
-  checkUserProfileLocation() {
-
-    Util.executeCommand('echo %USERPROFILE%', 1).then((profile)=>{
-      if(profile.includes(' ') ) {
-        Util.executeCommand('echo %VAGRANT_HOME%').then((vagrantHome)=>{
-          if(vagrantHome==='%VAGRANT_HOME%') {
-            this.vagrantHomeHasSpace = true;
-          } else {
-            this.vagrantHomeHasSpace = false;
-          }
-          this.sc.$apply();
-        });
-      } else {
-        this.vagrantHomeHasSpace = false;
-        this.sc.$apply();
-      }
-    });
-  }
 }
 
 LocationController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc', 'electron'];

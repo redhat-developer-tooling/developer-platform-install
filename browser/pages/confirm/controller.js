@@ -35,14 +35,10 @@ class ConfirmController {
     // IF the JDK is not Configured then you can't install devstudio
     $scope.$watch('checkboxModel.cdk.selectedOption', function watchCdkSelectionChange(nVal) {
       if(nVal=='install') {
-        if($scope.checkboxModel.vagrant.selectedOption == 'detected'
-          && !$scope.checkboxModel.vagrant.hasOption('detected')) {
-          $scope.checkboxModel.vagrant.selectedOption = 'install';
-        }
-        if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
-          && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
-          $scope.checkboxModel.virtualbox.selectedOption = 'install';
-        }
+        // if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
+        //   && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
+        //   $scope.checkboxModel.virtualbox.selectedOption = 'install';
+        // }
         if($scope.checkboxModel.cygwin.selectedOption == 'detected'
           && !$scope.checkboxModel.cygwin.hasOption('detected')) {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
@@ -90,7 +86,6 @@ class ConfirmController {
       this.installerDataSvc.getInstallable('virtualbox').getLocation(),
       this.installerDataSvc.getInstallable('jdk').getLocation(),
       this.installerDataSvc.getInstallable('jbds').getLocation(),
-      this.installerDataSvc.getInstallable('vagrant').getLocation(),
       this.installerDataSvc.getInstallable('cygwin').getLocation(),
       this.installerDataSvc.getInstallable('cdk').getLocation()
     );
@@ -167,7 +162,6 @@ class ConfirmController {
     return this.sc.checkboxModel.cdk.isConfigured()
       && this.sc.checkboxModel.virtualbox.isConfigured()
       && this.sc.checkboxModel.cygwin.isConfigured()
-      && this.sc.checkboxModel.vagrant.isConfigured()
       || this.sc.checkboxModel.cdk.isSkipped();
   }
 
