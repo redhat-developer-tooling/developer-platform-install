@@ -26,9 +26,9 @@ describe('Virtualbox installer', function() {
   let infoStub, errorStub, sandbox, sha256Stub;
 
   let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe';
-  let version = '5.0.26';
-  let revision = '108824';
-  let finalUrl = 'http://download.virtualbox.org/virtualbox/5.0.26/VirtualBox-5.0.26-108824-Win.exe';
+  let version = '5.1.12';
+  let revision = '112440';
+  let finalUrl = 'http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-Win.exe';
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
@@ -219,6 +219,7 @@ describe('Virtualbox installer', function() {
             '/i',
             msiFile,
             'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
+            'ADDLOCAL=VBoxApplication,VBoxNetwork',
             '/qn',
             '/norestart',
             '/Liwe',
@@ -310,7 +311,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add warning for newer version', function() {
-      installer.option['detected'].version = '5.0.27';
+      installer.option['detected'].version = '5.1.99';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
@@ -319,7 +320,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add error for older version', function() {
-      installer.option['detected'].version = '5.0.1';
+      installer.option['detected'].version = '5.1.1';
       installer.validateVersion();
 
       expect(option.error).to.equal('oldVersion');
@@ -328,7 +329,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add neither warning nor error for recomended version', function() {
-      installer.option['detected'].version = '5.0.26';
+      installer.option['detected'].version = '5.1.12';
       installer.validateVersion();
 
       expect(option.error).to.equal('');

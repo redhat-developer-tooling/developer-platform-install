@@ -13,9 +13,8 @@ class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
     super(VirtualBoxInstall.KEY, 700, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
 
-    this.minimumVersion = '5.0.26';
-    this.version = this.minimumVersion;
-    this.maximumVersion = '5.1.0';
+    this.minimumVersion = version;
+    this.maximumVersion = '5.2.0';
     this.revision = revision;
     this.downloadedFileName = 'virtualbox.exe';
     this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
@@ -168,6 +167,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       '/i',
       this.msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
+      'ADDLOCAL=VBoxApplication,VBoxNetwork',
       '/qn',
       '/norestart',
       '/Liwe',
