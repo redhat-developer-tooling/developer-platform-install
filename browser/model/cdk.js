@@ -20,7 +20,7 @@ class CDKInstall extends InstallableItem {
     this.cdkIsoSha256 = cdkIsoSha256;
     this.ocSha256 = ocSha256;
 
-    this.minishiftFileName = 'minishift.zip';
+    this.minishiftFileName = 'cdk.zip';
     this.mnishiftDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.minishiftFileName);
 
     this.boxName = 'rhel.iso';
