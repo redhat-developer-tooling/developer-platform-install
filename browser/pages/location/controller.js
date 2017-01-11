@@ -15,7 +15,6 @@ class LocationController {
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
-    this.showCloseDialog = false;
     this.electron = electron;
   }
 
@@ -60,10 +59,6 @@ class LocationController {
     Logger.info('Going back a page');
     this.installerDataSvc.installRoot = this.folder;
     this.router.go('account');
-  }
-
-  setCloseDialog () {
-    this.showCloseDialog = !this.showCloseDialog;
   }
 
 }

@@ -16,8 +16,6 @@ class ConfirmController {
     this.isDisabled = true;
     this.numberOfExistingInstallations = 0;
 
-    this.showCloseDialog = false;
-
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
@@ -188,10 +186,6 @@ class ConfirmController {
   back() {
     Logger.info('Going back a page');
     this.router.go('location');
-  }
-
-  setCloseDialog () {
-    this.showCloseDialog = !this.showCloseDialog;
   }
 }
 
