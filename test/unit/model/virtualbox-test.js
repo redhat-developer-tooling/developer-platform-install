@@ -219,7 +219,7 @@ describe('Virtualbox installer', function() {
             '/i',
             msiFile,
             'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
-            'ADDLOCAL=VBoxApplication,VBoxNetwork',
+            'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
             '/qn',
             '/norestart',
             '/Liwe',
