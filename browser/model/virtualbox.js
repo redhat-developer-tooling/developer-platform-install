@@ -167,7 +167,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       '/i',
       this.msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
-      'ADDLOCAL=VBoxApplication,VBoxNetwork',
+      'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
       '/qn',
       '/norestart',
       '/Liwe',
