@@ -38,9 +38,8 @@ module.exports = function(gulp) {
   });
 
   gulp.task('protractor-run', function() {
-    yargs.string(['virtualbox', 'vagrant', 'cygwin', 'jdk', 'targetFolder']);
+    yargs.string(['virtualbox', 'cygwin', 'jdk', 'targetFolder']);
     assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VBOX');
-    assignArgument('vagrant', 'PDKI_TEST_INSTALLED_VAGRANT');
     assignArgument('cygwin', 'PDKI_TEST_INSTALLED_CYGWIN');
     assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
     assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');

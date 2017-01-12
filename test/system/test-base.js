@@ -10,7 +10,6 @@ const pass = 'Devsuite';
 let reqs = require(path.resolve('./requirements-' + process.platform + '.json'));
 let expectedComponents = {
   virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox.exe'].version },
-  vagrant: { installedVersion: process.env.PDKI_TEST_INSTALLED_VAGRANT, recommendedVersion: reqs['vagrant.msi'].version },
   cygwin: { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin.exe'].version },
   jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk.msi'].version.substring(0, 5) }
 };
@@ -38,7 +37,6 @@ function systemTest() {
     let components = {
       virtualbox: {},
       cygwin: {},
-      vagrant: {},
       cdk: {},
       jdk: {},
       devstudio: {}
@@ -93,8 +91,6 @@ function systemTest() {
               components[key].panel = element(By.id(key + '-panel-heading'));
               components[key].checkbox = element(By.id(key + '-checkbox'));
             }
-            components['vagrant'].newerWarning = element(By.id('vagrant-newer-warning'));
-            components['vagrant'].olderError = element(By.id('vagrant-older-error'));
             components['virtualbox'].newerWarning = element(By.id('virtualbox-newer-warning'));
             components['virtualbox'].olderError = element(By.id('virtualbox-older-error'));
             components['jdk'].olderError = element(By.id('jdk-older-warning'));
@@ -122,7 +118,7 @@ function systemTest() {
 
           it('should allow reinstallation of non-msi software', function() {
             for (var key in expectedComponents) {
-              if (expectedComponents[key].installedVersion && !(key === 'vagrant' || key === 'virtualbox' || key === 'jdk')) {
+              if (expectedComponents[key].installedVersion && !(key === 'virtualbox' || key === 'jdk')) {
                 expect(components[key].checkbox.isEnabled()).toBe(true);
               }
             }
@@ -130,7 +126,7 @@ function systemTest() {
 
           it('should not allow reinstallation of msi packages', function() {
             for (var key in expectedComponents) {
-              if (expectedComponents[key].installedVersion && (key === 'vagrant' || key === 'virtualbox' || key === 'jdk')) {
+              if (expectedComponents[key].installedVersion && (key === 'virtualbox' || key === 'jdk')) {
                 expect(components[key].checkbox.isEnabled()).toBe(false);
               }
             }
@@ -144,7 +140,7 @@ function systemTest() {
             }
           });
 
-          it('should display an error when vagrant or virtualbox is older than recommended', function() {
+          it('should display an error when virtualbox is older than recommended', function() {
             for (var key in expectedComponents) {
               if (components[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
                 error = true;
