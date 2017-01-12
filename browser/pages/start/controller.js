@@ -10,7 +10,6 @@ import Platform from '../../services/platform';
 class StartController {
 
   constructor(installerDataSvc, electron) {
-    this.startDevstudio = true;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
@@ -19,15 +18,18 @@ class StartController {
   }
 
   learnCDK() {
-    this.electron.shell.openExternal('http://developers.redhat.com/devstudio-preview');
+    this.electron.shell.openExternal(StartController.LEARN_CDK_URL);
+  }
+
+  static get LEARN_CDK_URL () {
+    return 'http://developers.redhat.com/devstudio-preview';
   }
 
   start() {
-    if(this.startDevstudio && (this.jbdsInstall.selected || this.jbdsInstall.existingInstall)) {
-      // Start devstudio
-      this.launchDevstudio();
-    } else {
+    if(this.jbdsInstall.isSkipped()) {
       this.exit();
+    } else {
+      this.launchDevstudio();
     }
   }
 
