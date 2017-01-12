@@ -293,7 +293,7 @@ describe('Downloader', function() {
       expect(downloader.downloadAuth).to.be.calledWith(options, 'username', 'password', 'key', 'sha');
     });
 
-    it('should call download method for entries that does not require authentication',function() {
+    it('should call download method for entries that does not require authentication', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
       response.auth = function() { return response; };

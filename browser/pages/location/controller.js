@@ -33,7 +33,6 @@ class LocationController {
         defaultPath: this.folder
       });
     this.installerDataSvc.installRoot = this.folder;
-
     if (selection) {
       this.folder = selection[0] || this.folder;
     }
