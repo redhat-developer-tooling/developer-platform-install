@@ -64,7 +64,7 @@ class InstallableItem {
   }
 
   getProductVersion() {
-    if(this.hasOption(this.selectedOption) && this.selectedOption==='detected') {
+    if(this.isDetected()) {
       return this.option[this.selectedOption].version;
     }
     return this.productVersion;
@@ -72,10 +72,6 @@ class InstallableItem {
 
   getProductDesc() {
     return this.productDesc;
-  }
-
-  getInstallTime() {
-    return this.installTime;
   }
 
   getDownloadUrl() {
@@ -92,10 +88,6 @@ class InstallableItem {
 
   hasExistingInstall() {
     return this.existingInstall;
-  }
-
-  existingInstallLocation() {
-    return this.existingInstallLocation;
   }
 
   isDownloadRequired() {

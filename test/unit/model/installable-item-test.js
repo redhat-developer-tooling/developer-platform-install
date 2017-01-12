@@ -64,6 +64,19 @@ describe('InstallableItem', function() {
 
   });
 
+  describe('getProductVersion', function() {
+    it('returns version for detected installation', function() {
+      let item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      item.addOption('detected', '1.2', 'location', true);
+      item.selectedOption = 'detected';
+      expect(item.getProductVersion()).to.be.equal('1.2');
+    });
+    it('returns version for included product if not detected', function() {
+      let item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      expect(item.getProductVersion()).to.be.equal(item.version);
+    });
+  });
+
   describe('checkAndDownload method', function() {
     let svc, downloader, installItem;
 
@@ -160,8 +173,16 @@ describe('InstallableItem', function() {
   });
 
   describe('checkForExistingInstall abstract method', function() {
-    it('should not add detected option when called', function() {
-      expect(item.checkForExistingInstall()).to.be.equal(undefined);
+    it('should not add detected option', function() {
+      item.checkForExistingInstall();
+      expect(item.option.size).to.be.equal(0);
+    });
+  });
+
+  describe('validateVersion abstract method', function() {
+    it('should not add detected option', function() {
+      item.validateVersion();
+      expect(item.option.size).to.be.equal(0);
     });
   });
 
