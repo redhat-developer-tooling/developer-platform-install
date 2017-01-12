@@ -113,6 +113,10 @@ class StartController {
       });
   }
 
+  launchDevstudio_linux() {
+    // TBD
+  }
+
   exit() {
     Logger.info('Closing the installer window');
     this.electron.remote.getCurrentWindow().close();
