@@ -106,7 +106,7 @@ describe('Install controller', function() {
   });
 
   describe('triggerDownload', function() {
-    let vagrantStub, vboxStub, doneStub;
+    let vboxStub, doneStub;
 
     beforeEach(function() {
       vboxStub = sandbox.stub(vbox, 'downloadInstaller').yields();
@@ -142,7 +142,7 @@ describe('Install controller', function() {
   });
 
   describe('triggerInstall', function() {
-    let vagrantStub, vboxStub, doneStub;
+    let vboxStub, doneStub;
 
     beforeEach(function() {
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);

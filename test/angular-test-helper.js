@@ -6,6 +6,8 @@ global.navigator = global.window.navigator = {};
 global.Node = global.window.Node;
 
 global.window.mocha = {};
+global.window.before = before;
+global.window.after = after;
 global.window.beforeEach = beforeEach;
 global.window.afterEach = afterEach;
 

@@ -2,7 +2,7 @@
 
 import chai, { expect } from 'chai';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
+import 'mock-fs';
 require('../../angular-test-helper');
 require('browser/main');
 
