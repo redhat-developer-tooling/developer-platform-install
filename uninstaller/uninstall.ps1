@@ -93,4 +93,5 @@ $pathFolders | foreach {
 [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, "User")
 
 echo 'DONE'
-$done = Read-Host 'Press any key to exit'
+Write-Host "Press any key to exit"
+$key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
