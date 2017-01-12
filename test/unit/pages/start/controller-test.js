@@ -29,15 +29,6 @@ describe('StartController', function() {
       let installerDataSvc = new InstallerDataService();
       let electron = new ElectronMock();
       sandbox.stub(electron.remote.currentWindow, 'removeAllListeners');
-      // {
-      //   remote : {
-      //     getCurrentWindow: function() {
-      //       return {
-      //         removeAllListeners
-      //       };
-      //     }
-      //   }
-      // };
       $controller('StartController', { installerDataSvc, electron });
       expect(electron.remote.currentWindow.removeAllListeners).calledOnce;
       expect(electron.remote.currentWindow.removeAllListeners).calledWith('close');
