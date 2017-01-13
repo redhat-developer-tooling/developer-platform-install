@@ -126,6 +126,7 @@ describe('InstallableItem', function() {
       svc = new InstallerDataService();
       installItem = new InstallableItem('jdk', 5000, 'downloadUrl', null, 'targetLocation', svc, false);
       installItem.downloader = new Downloader(null, function() {});
+      sandbox.stub(fs, 'createWriteStream').returns();
     });
 
     it('should start download w/o auth if no username and password provided', function() {
