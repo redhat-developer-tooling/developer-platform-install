@@ -7,7 +7,7 @@ let webdriver = browser.driver;
 const user = 'devsuite.test@gmail.com';
 const pass = 'Devsuite';
 
-let reqs = require(path.resolve('./requirements-' + process.platform + '.json'));
+let reqs = require(path.join(rootPath, './requirements-' + process.platform + '.json'));
 let expectedComponents = {
   virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox.exe'].version },
   cygwin: { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin.exe'].version },

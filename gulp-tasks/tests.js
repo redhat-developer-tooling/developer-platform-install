@@ -27,7 +27,7 @@ module.exports = function(gulp) {
 
   gulp.task('protractor-install', function(cb) {
     var cmd = path.join('node_modules', 'gulp-angular-protractor',
-      'node_modules', 'gulp-protractor', 'node_modules', '.bin') + path.sep + 'webdriver-manager';
+      'node_modules', '.bin', 'webdriver-manager');
     cmd += ' update';
 
     exec(cmd, function(err, stdout, stderr) {

@@ -4,7 +4,7 @@ let path = require('path');
 
 let context = { pageName: 'Download & Install' };
 let breadcrumbBase = require('./breadcrumbs-base');
-let requirements = require(path.resolve('./requirements-' + process.platform + '.json'));
+let requirements = require(path.join(rootPath, 'requirements-' + process.platform + '.json'));
 
 describe('Installation page', function() {
   let components = {
