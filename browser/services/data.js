@@ -17,7 +17,7 @@ class InstallerDataService {
     if (Platform.OS === 'win32') {
       this.installRoot = 'c:\\DevelopmentSuite';
     } else {
-      this.installRoot = Platform.ENV.HOME + '/DevelopmentSuite';
+      this.installRoot = '/Applications/DevelopmentSuite';
     }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;

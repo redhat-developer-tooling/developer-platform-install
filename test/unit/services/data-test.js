@@ -59,12 +59,32 @@ describe('InstallerDataService', function() {
   });
 
   describe('initial state', function() {
-    it('should set installation folder according to OS', function() {
-      if (process.platform === 'win32') {
+    describe('on windows', function() {
+      it('should set installation folder c:\\DevelopmentSuite', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        let svc = new InstallerDataService();
         expect(svc.installRoot).to.equal('c:\\DevelopmentSuite');
-      } else {
-        expect(svc.installRoot).to.equal(process.env.HOME + '/DevelopmentSuite');
-      }
+      });
+    });
+
+    describe('on macos', function () {
+      it('should set installation folder $HOME\\DevelopmentSuite', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(Platform, 'getEnv').returns({HOME:'/home/username'});
+        let svc = new InstallerDataService();
+        expect(svc.installRoot).to.equal('/Applications/DevelopmentSuite');
+      });
+    });
+
+    it('should load requirements from requirements.json if requirements parameter is not provided', function() {
+      let svc = new InstallerDataService();
+      expect(svc.requirements['cdk.zip'].name).to.be.equal('Red Hat Container Development Kit');
+    });
+
+    it('should set requirements to provided in requirements parameter', function() {
+      let requirements = {'cdk.zip':{'url':'http.redhat.com'}};
+      let svc = new InstallerDataService(undefined, requirements);
+      expect(svc.requirements).to.be.equal(requirements);
     });
 
     it('should set default values correctly', function() {
