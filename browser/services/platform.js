@@ -1,5 +1,7 @@
 'use strict';
 
+const child_process = require('child_process');
+
 class Platform {
   static identify(map) {
     try {
@@ -36,16 +38,25 @@ class Platform {
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
-        // put implementation here based on child_process.spawn method
-        // run systeminfo command and analyse stdout
-        // you should look for 'Virtualization Enabled In Firmware: Yes' line
-        // in output and if value is Yes resolve promise to true or false otherwise
-        // if output has no Virtualization Enabled In Firmware return undefined
-        // do not forget tests for platform-test.js
-        return Promise.resolve(undefined);
+        return new Promise( function(resolve, reject) {
+          child_process.exec('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled"', (error, stdout, stderr) => {
+            if(typeof(stdout) == "string") {
+              stdout = stdout.replace(/\s/g,"");
+              if(stdout == "True") {
+                resolve(true);
+              } else if(stdout == "False") {
+                resolve(false);
+              } else {
+                resolve();
+              }
+            } else {
+              resolve();
+            }
+          });
+        });
       },
       default: function() {
-        return Promise.resolve(undefined);
+        return Promise.resolve();
       }
     });
   }

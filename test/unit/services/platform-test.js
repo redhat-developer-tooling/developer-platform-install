@@ -3,6 +3,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Platform from 'browser/services/platform';
+import child_process from 'child_process';
 
 describe('Platform', function() {
 
@@ -72,6 +73,54 @@ describe('Platform', function() {
       expect(Platform.PATH).to.be.equal('PATH');
     });
 
+  });
+
+  describe('isVirtualizationEnabled', function(){
+
+    describe('on mac', function() {
+      it('should return true if virtualization check shell script returns true');
+    });
+
+    describe('on linux', function() {
+      it('should return true if virtualization check shell script returns true');
+    });
+
+    describe('on windows', function(){
+
+      let stub;
+
+      beforeEach(function() {
+        stub = sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should return promise resolved to true if powershell script returns `True` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, "True", undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.true;
+        });
+      });
+
+      it('should return promise resolved to true if powershell script returns `False` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'False', undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script returns nothing in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '', undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script returns null in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, null, undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
   });
 
 });
