@@ -5,7 +5,8 @@ let path = require('path');
 let webdriver = browser.driver;
 let context = { pageName: 'Confirmation' };
 let breadcrumbBase = require('./breadcrumbs-base');
-let requirements = require(path.resolve('./requirements-' + process.platform + '.json'));
+let requirements = require(path.join(rootPath, 'requirements-' + process.platform + '.json'));
+let conditions = protractor.ExpectedConditions;
 
 describe('Confirm page', function() {
   let confirmForm, detectionInfo, nextButton;
@@ -47,7 +48,7 @@ describe('Confirm page', function() {
     let footer, cancelButton, backButton;
 
     beforeAll(function() {
-      webdriver.wait(protractor.until.elementIsVisible(element(By.id('instructions'))))
+      browser.wait(conditions.visibilityOf(element(By.id('instructions'))))
       .then(function() {
         for (var key in components) {
           components[key].name = components[key].name.toUpperCase();
