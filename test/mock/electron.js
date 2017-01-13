@@ -2,7 +2,8 @@
 
 function electron() {
   let electronWindow = {
-    close: function() {}
+    close() {},
+    removeAllListeners() {}
   };
   let remote = {
     getCurrentWindow () {
@@ -13,9 +14,12 @@ function electron() {
       showOpenDialog() {}
     }
   };
-
+  let shell = {
+    openExternal() {}
+  };
   return {
-    remote
+    remote,
+    shell
   };
 }
 
