@@ -73,7 +73,7 @@ describe('InstallerDataService', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         sandbox.stub(Platform, 'getEnv').returns({HOME:'/home/username'});
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal(Platform.ENV.HOME + '/DevelopmentSuite');
+        expect(svc.installRoot).to.equal('/Applications/DevelopmentSuite');
       });
     });
 
