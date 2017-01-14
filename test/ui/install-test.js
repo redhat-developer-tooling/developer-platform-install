@@ -8,11 +8,11 @@ let requirements = require(path.resolve('./requirements-' + process.platform + '
 
 describe('Installation page', function() {
   let components = {
-    virtualbox: requirements['virtualbox.exe'],
-    cygwin: requirements['cygwin.exe'],
-    cdk: requirements['cdk.zip'],
-    jdk: requirements['jdk.msi'],
-    devstudio: requirements['jbds.jar']
+    virtualbox: requirements['virtualbox'],
+    cygwin: requirements['cygwin'],
+    cdk: requirements['cdk'],
+    jdk: requirements['jdk'],
+    devstudio: requirements['jbds']
   };
 
   beforeAll(function() {
