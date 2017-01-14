@@ -63,7 +63,7 @@ describe('Virtualbox installer', function() {
   });
 
   beforeEach(function () {
-    installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, null);
+    installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -71,11 +71,6 @@ describe('Virtualbox installer', function() {
 
   afterEach(function () {
     sandbox.restore();
-  });
-
-  it('should not download virtualbox when an installation exists', function() {
-    let jdk = new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', 'file');
-    expect(jdk.useDownload).to.be.false;
   });
 
   it('should fail when no url is set and installed file not defined', function() {
@@ -90,12 +85,8 @@ describe('Virtualbox installer', function() {
     }).to.throw('No download URL set');
   });
 
-  it('should download virtualbox when no installation is found', function() {
-    expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', null).useDownload).to.be.true;
-  });
-
-  it('should download virtualbox installer to temporary folder as virtualbox.exe', function() {
-    expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', null).downloadedFile).to.equal(
+  it('should download virtualbox installer to temporary folder with name configured file name', function() {
+    expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', 'virtualbox.exe', 'virtualbox', 'sha').downloadedFile).to.equal(
       path.join(installerDataSvc.tempDir(), 'virtualbox.exe'));
   });
 
@@ -145,7 +136,7 @@ describe('Virtualbox installer', function() {
       let installer;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, null);
+        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
         installer.ipcRenderer = { on: function() {} };
       });
 

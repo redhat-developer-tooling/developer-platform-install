@@ -2,6 +2,7 @@
 
 let child_process = require('child_process');
 let fs = require('fs-extra');
+import path from 'path';
 
 import Platform from '../../services/platform';
 
@@ -84,6 +85,11 @@ class Util {
         }
       });
     });
+  }
+
+  static runPowerShellScript() {
+    const prefix = path.join('resources', 'app.asar.unpacked');
+    console.log(process.cwd());
   }
 
   // Execute a list of Promise return functions in series

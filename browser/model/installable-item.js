@@ -10,11 +10,9 @@ import Downloader from './helpers/downloader';
 let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallableItem {
-  constructor(keyName, installTime, downloadUrl, installFile, targetFolderName, installerDataSvc, authRequired) {
+  constructor(keyName, installTime, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
     this.keyName = keyName;
-
     let requirement = installerDataSvc.getRequirementByName(keyName);
-
     this.productName = requirement.name;
     this.productVersion = requirement.version;
     this.productDesc = requirement.description;
@@ -41,19 +39,16 @@ class InstallableItem {
 
     this.downloadUrl = downloadUrl;
 
-    if (installFile != null && installFile != '') {
-      this.useDownload = false;
-      this.installFile = installFile;
-    }
+    this.bundleFolder = path.normalize(path.join(__dirname, '../../../..'));
+    this.bundledFile = path.join(this.bundleFolder, fileName);
 
     this.isCollapsed = true;
     this.option = new Set();
     this.selectedOption = 'install';
 
     this.downloader = null;
-    this.downloadFolder = path.normalize(path.join(__dirname, '../../../..'));
-    this.downloadedFile = '';
-
+    this.downloadFolder = this.installerDataSvc.tempDir();
+    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), fileName);
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;

@@ -87,14 +87,12 @@ class InstallerDataService {
     return this.installableItems;
   }
 
-  getRequirementByName(keyName) {
-    for (let key in this.requirements) {
-      let regex = new RegExp('^' + keyName + '\\.\\w+');
-      if (regex.test(key)) {
-        return this.requirements[key];
-      }
+  getRequirementByName(key) {
+    let result = this.requirements[key];
+    if(result) {
+      return result;
     }
-    throw Error(`Cannot find requested requirement ${keyName}`);
+    throw Error(`Cannot find requested requirement ${key}`);
   }
 
   getUsername() {

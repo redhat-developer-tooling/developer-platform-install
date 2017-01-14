@@ -66,7 +66,7 @@ gulp.task('create-dist-dir', function(cb) {
 gulp.task('generate', ['create-modules-link', 'update-requirements'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + config.artifactName + ' --platform=' + config.artifactPlatform + ' --arch=' + config.artifactArch;
-  cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar=true';
+  cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar.unpack=**/browser/**/*.ps1 --asar.unpackDir="browser/model/helpers/win32/*"';
   cmd += ' --version-string.CompanyName="Red Hat, Inc."';
   cmd += ' --version-string.ProductName="' + pjson.productName + '"';
   cmd += ' --version-string.OriginalFilename="' + config.artifactName + '-' + pjson.version + '-installer.exe"';
@@ -90,7 +90,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url = reqs['jbds.jar'].url.substring(0, reqs['jbds.jar'].url.lastIndexOf('/')) + '/content.json';
+      let url = reqs['jbds'].url.substring(0, reqs['jbds'].url.lastIndexOf('/')) + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
@@ -98,8 +98,8 @@ gulp.task('update-requirements', ['transpile:app'], function() {
           let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
           let finalVersion = versionRegex.exec(body)[1];
 
-          if (reqs['jbds.jar'].version != finalVersion) {
-            reqs['jbds.jar'].version = finalVersion;
+          if (reqs['jbds'].version != finalVersion) {
+            reqs['jbds'].version = finalVersion;
           }
           resolve();
         }
@@ -109,12 +109,12 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioSha = ()=>{
     return new Promise((resolve) => {
-      let url = reqs['jbds.jar'].sha256sum;
+      let url = reqs['jbds'].sha256sum;
       if (url.length == 64 && url.indexOf('http')<0 && url.indexOf('ftp')<0) {
         resolve();
       } else {
         request(url, (err, response, body) => {
-          reqs['jbds.jar'].sha256sum = body;
+          reqs['jbds'].sha256sum = body;
           resolve();
         });
       }

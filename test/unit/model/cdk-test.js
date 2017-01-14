@@ -11,14 +11,12 @@ import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
-import chaiAsPromised from 'chai-as-promised';
 import {ProgressState} from 'browser/pages/install/controller';
+import 'sinon-as-promised';
 
-chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 let sinon  = require('sinon');
-require('sinon-as-promised');
 
 describe('CDK installer', function() {
   let sandbox, installerDataSvc;
@@ -69,15 +67,15 @@ describe('CDK installer', function() {
 
   let reqs = require(path.resolve('./requirements-' + process.platform + '.json'));
 
-  let cdkUrl = reqs['cdk.zip'].url;
-  let cdkBoxUrl = reqs['rhel.iso'].url;
-  let ocUrl = reqs['oc.zip'].url;
+  let cdkUrl = reqs['cdk'].url;
+  let cdkBoxUrl = reqs['minishift-rhel'].url;
+  let ocUrl = reqs['oc'].url;
 
   let success = () => {};
   let failure = () => {};
 
   beforeEach(function () {
-    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null, null, null);
+    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, 'installFile', 'folderName', 'sha1', 'sha2', 'sha3', 'installfile2', 'installFile3');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -87,25 +85,20 @@ describe('CDK installer', function() {
     sandbox.restore();
   });
 
-  it('should not download cdk when an installation exists', function() {
-    let cdk = new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'installFile');
-    expect(cdk.useDownload).to.be.false;
-  });
-
   it('should fail when some download url is not set and installed file not defined', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', null);
+      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', null, 'installFile', 'folderName', 'sha1', 'sha2', 'sha3', 'installfile2', 'installFile3');
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', '');
+      new CDKInstall(installerDataSvc, 900, null, 'ocUrl', 'pscpUrl', '', 'installFile', 'folderName', 'sha1', 'sha2', 'sha3', 'installfile2', 'installFile3');
     }).to.throw('No download URL set');
   });
 
   it('should download files when no installation is found', function() {
-    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', null).useDownload).to.be.true;
+    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'cdkBoxUrl', 'ocUrl', 'installFile', 'folderName', 'sha1', 'sha2', 'sha3', 'installfile2', 'installFile3').useDownload).to.be.true;
   });
 
   describe('files download', function() {
@@ -129,16 +122,16 @@ describe('CDK installer', function() {
 
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      //expect 4 streams to be set and created
+      //expect 3 streams to be set and created
       expect(streamSpy.callCount).to.equal(3);
       expect(fsSpy.callCount).to.equal(3);
-      expect(fsSpy).calledWith(installer.mnishiftDownloadedFile);
+      expect(fsSpy).calledWith(installer.downloadedFile);
       expect(fsSpy).calledWith(installer.cdkIsoDownloadedFile);
       expect(fsSpy).calledWith(installer.ocDownloadedFile);
     });
 
     it('should call a correct downloader request for each file', function() {
-      installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl,  null);
+      installer = new CDKInstall(installerDataSvc, 900, cdkUrl, cdkBoxUrl, ocUrl, 'installFile', 'folderName',  'sha1', 'sha2', 'sha3', 'installfile2', 'installFile3');
       installer.downloadInstaller(fakeProgress, success, failure);
 
       //we download 1 out of 4 files with authentication
@@ -179,7 +172,7 @@ describe('CDK installer', function() {
       installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(stub).to.have.been.called;
-      expect(stub).calledWith(installer.mnishiftDownloadedFile, installerDataSvc.ocDir());
+      expect(stub).calledWith(installer.downloadedFile, installerDataSvc.ocDir());
     });
   });
 });

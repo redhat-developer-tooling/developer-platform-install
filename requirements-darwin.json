@@ -1,5 +1,5 @@
 {
-  "cdk.zip": {
+  "cdk": {
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -10,7 +10,7 @@
     "sha256sum": "257c8bf8346bcc1245645908dc1ede40d212605385ba413d2df9cfdee06577be",
     "vendor": "Red Hat, Inc."
   },
-  "rhel.iso": {
+  "minishift-rhel": {
     "name": "RHEL 7.3 for Hyper-V and VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -21,7 +21,7 @@
     "sha256sum": "f83d0cde0ff3854eaa959f92c616cc70dc7a55c900ba2b4090e0afa6b5a14678",
     "vendor": "Red Hat, Inc."
   },
-  "oc.zip": {
+  "oc": {
     "name": "Openshift Origin",
     "description": "The Open Source Container Application Platform",
     "bundle": "yes",
@@ -32,7 +32,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/252ee8a1ff8a455a9b55aff82f6980dbf28bd75b601414765b4f06f6c1ec370e/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "cygwin.exe": {
+  "cygwin": {
     "name": "Cygwin",
     "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
     "bundle": "always",
@@ -43,7 +43,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
     "vendor": "Community Project"
   },
-  "jbds.jar": {
+  "jbds": {
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
@@ -54,7 +54,7 @@
     "sha256sum": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
-  "jdk.msi": {
+  "jdk": {
     "name": "Java Platform, Standard Edition",
     "description": "An implementation of the Java Platform, Standard Edition (Java SE) by Oracle",
     "bundle": "no",
@@ -67,7 +67,7 @@
     "virusTotalReport": "",
     "vendor": "Oracle, Inc."
   },
-  "virtualbox.exe": {
+  "virtualbox": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
     "bundle": "no",

@@ -20,6 +20,7 @@ class AccountController {
     this.tandcNotSigned = false;
     this.pdkVersion = pjson.version;
     this.isLoginBtnClicked = false;
+    Util.runPowerShellScript();
   }
 
   login() {

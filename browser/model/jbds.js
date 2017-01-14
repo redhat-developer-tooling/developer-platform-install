@@ -15,15 +15,14 @@ import Util from './helpers/util';
 import Platform from '../services/platform';
 
 class JbdsInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, jbdsSha256) {
-    super(JbdsInstall.KEY, 1600, downloadUrl, installFile, targetFolderName, installerDataSvc, true);
+  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, jbdsSha256, additionalLocations, additionalIus) {
+    super(JbdsInstall.KEY, 1600, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
-    this.downloadedFileName = 'jbds.jar';
     this.jbdsSha256 = jbdsSha256;
-    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
     this.addOption('install', this.version, '', true);
+    this.additionalLocations = additionalLocations;
+    this.additionalIus = additionalIus;
   }
 
   static get KEY() {

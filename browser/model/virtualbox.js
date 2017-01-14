@@ -10,15 +10,12 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class VirtualBoxInstall extends InstallableItem {
-  constructor(version, revision, installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
-    super(VirtualBoxInstall.KEY, 700, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
+  constructor(version, revision, installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
+    super(VirtualBoxInstall.KEY, 700, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = version;
     this.maximumVersion = '5.2.0';
     this.revision = revision;
-    this.downloadedFileName = 'virtualbox.exe';
-    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);

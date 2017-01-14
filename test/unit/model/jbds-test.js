@@ -17,6 +17,7 @@ import InstallableItem from 'browser/model/installable-item';
 import JbdsAutoInstallGenerator from 'browser/model/jbds-autoinstall';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import 'sinon-as-promised';
 chai.use(sinonChai);
 
 describe('devstudio installer', function() {
@@ -69,7 +70,7 @@ describe('devstudio installer', function() {
   });
 
   beforeEach(function () {
-    installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
+    installer = new JbdsInstall(installerDataSvc, downloadUrl, 'jbds.jar', 'dev-studio', 'sha' );
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -77,11 +78,6 @@ describe('devstudio installer', function() {
 
   afterEach(function () {
     sandbox.restore();
-  });
-
-  it('should not download jbds when an installation exists', function() {
-    let jbds = new JbdsInstall(installerDataSvc, 'url', 'file');
-    expect(jbds.useDownload).to.be.false;
   });
 
   it('should fail when no url is set and installed file not defined', function() {
@@ -96,12 +92,8 @@ describe('devstudio installer', function() {
     }).to.throw('No download URL set');
   });
 
-  it('should download jbds when no installation is found', function() {
-    expect(new JbdsInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
-  });
-
-  it('should download jbds installer to temporary folder as jbds.jar', function() {
-    expect(new JbdsInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
+  it('should download jbds installer to temporary folder with configured filename', function() {
+    expect(new JbdsInstall(installerDataSvc, 'url', 'jbds.jar').downloadedFile).to.equal(
       path.join('tempDirectory', 'jbds.jar'));
   });
 
@@ -158,7 +150,6 @@ describe('devstudio installer', function() {
 
       it('should not start until JDK has finished installing', function() {
         let installerDataSvc = stubDataService();
-        let installer = new JbdsInstall(installerDataSvc, downloadUrl, null);
         installer.ipcRenderer = { on: function() {} };
         let installSpy = sandbox.spy(installer, 'installAfterRequirements');
         let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);

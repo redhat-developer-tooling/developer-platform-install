@@ -83,7 +83,7 @@ describe('InstallableItem', function() {
     beforeEach(function() {
       svc = new InstallerDataService();
       downloader = new Downloader(null, function() {});
-      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', null, 'targetLocation', svc, false);
+      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', svc, false);
       installItem.downloader = downloader;
     });
 
@@ -124,7 +124,7 @@ describe('InstallableItem', function() {
 
     beforeEach(function() {
       svc = new InstallerDataService();
-      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', null, 'targetLocation', svc, false);
+      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', svc, false);
       installItem.downloader = new Downloader(null, function() {});
     });
 
