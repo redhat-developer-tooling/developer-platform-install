@@ -17,6 +17,7 @@ import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
 import {ProgressState} from 'browser/pages/install/controller';
+import 'sinon-as-promised';
 chai.use(sinonChai);
 
 describe('Cygwin installer', function() {
@@ -64,7 +65,7 @@ describe('Cygwin installer', function() {
   });
 
   beforeEach(function () {
-    installer = new CygwinInstall(installerDataSvc, downloadUrl, null);
+    installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -72,11 +73,6 @@ describe('Cygwin installer', function() {
 
   afterEach(function () {
     sandbox.restore();
-  });
-
-  it('should not download cygwin when an installation exists', function() {
-    let cygwin = new CygwinInstall(installerDataSvc, 'url', 'file');
-    expect(cygwin.useDownload).to.be.false;
   });
 
   it('should fail when no url is set and installed file not defined', function() {
@@ -91,12 +87,8 @@ describe('Cygwin installer', function() {
     }).to.throw('No download URL set');
   });
 
-  it('should download cygwin when no installation is found', function() {
-    expect(new CygwinInstall(installerDataSvc, 'url', null).useDownload).to.be.true;
-  });
-
   it('should download cygwin installer to temporary folder as ssh-rsync.zip', function() {
-    expect(new CygwinInstall(installerDataSvc, 'url', null).downloadedFile).to.equal(
+    expect(new CygwinInstall(installerDataSvc, 'url', 'cygwin.exe', 'cygwin', 'sha').downloadedFile).to.equal(
       path.join('tempDirectory', 'cygwin.exe'));
   });
 

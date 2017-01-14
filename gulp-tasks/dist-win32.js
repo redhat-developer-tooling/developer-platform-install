@@ -54,7 +54,7 @@ module.exports = function(gulp) {
     if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf('-bundle') > 0) {
       packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
     } else {
-      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + 'cygwin.exe';
+      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].filename;
     }
     //console.log('[DEBUG]' + packCmd);
     exec(packCmd, common.createExecCallback(cb, true));
@@ -87,7 +87,7 @@ module.exports = function(gulp) {
 
   // Create both installers
   gulp.task('dist', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
+    runSequence(['clean'], 'create-dist-dir', 'update-requirements', ['generate',
       'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'package', 'cleanup', cb);
   });
 

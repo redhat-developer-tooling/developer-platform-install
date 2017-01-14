@@ -8,12 +8,8 @@ import Util from './helpers/util';
 import Platform from '../services/platform';
 
 class CygwinInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile, targetFolderName, sha256) {
-    super(CygwinInstall.KEY, 720, downloadUrl, installFile, targetFolderName, installerDataSvc, false);
-
-    this.downloadedFileName = 'cygwin.exe';
-    this.bundledFile = path.join(this.downloadFolder, this.downloadedFileName);
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
+  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
+    super(CygwinInstall.KEY, 720, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install', this.version, '', true);
     this.checksum = sha256;

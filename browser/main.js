@@ -92,47 +92,50 @@ let mainModule =
             }
 
             let virtualbox = new VirtualBoxInstall(
-              reqs['virtualbox.exe'].version,
-              reqs['virtualbox.exe'].revision,
+              reqs['virtualbox'].version,
+              reqs['virtualbox'].revision,
               installerDataSvc,
-              reqs['virtualbox.exe'].url,
-              null,
+              reqs['virtualbox'].url,
+              reqs['virtualbox'].filename,
               'virtualbox',
-              reqs['virtualbox.exe'].sha256sum);
+              reqs['virtualbox'].sha256sum);
 
             let cygwin = new CygwinInstall(
               installerDataSvc,
-              reqs['cygwin.exe'].url,
-              null,
+              reqs['cygwin'].url,
+              reqs['cygwin'].filename,
               'cygwin',
-              reqs['cygwin.exe'].sha256sum);
+              reqs['cygwin'].sha256sum);
 
             let cdk = new CDKInstall(
               installerDataSvc,
               $timeout,
-              reqs['cdk.zip'].dmUrl,
-              reqs['rhel.iso'].dmUrl,
-              reqs['oc.zip'].url,
-              null,
+              reqs['cdk'].dmUrl,
+              reqs['minishift-rhel'].dmUrl,
+              reqs['oc'].url,
+              reqs['cdk'].filename,
               'cdk',
-              reqs['cdk.zip'].sha256sum,
-              reqs['rhel.iso'].sha256sum,
-              reqs['oc.zip'].sha256sum);
+              reqs['cdk'].sha256sum,
+              reqs['minishift-rhel'].sha256sum,
+              reqs['oc'].sha256sum,
+              reqs['minishift-rhel'].filename,
+              reqs['oc'].filename
+            );
 
             let jdk = new JdkInstall(
               installerDataSvc,
-              reqs['jdk.msi'].dmUrl,
-              null,
-              reqs['jdk.msi'].prefix,
+              reqs['jdk'].dmUrl,
+              reqs['jdk'].filename,
+              reqs['jdk'].prefix,
               'jdk8',
-              reqs['jdk.msi'].sha256sum);
+              reqs['jdk'].sha256sum);
 
             let jbds = new JbdsInstall(
               installerDataSvc,
-              reqs['jbds.jar'].dmUrl,
-              null,
+              reqs['jbds'].dmUrl,
+              reqs['jbds'].filename,
               'developer-studio',
-              reqs['jbds.jar'].sha256sum);
+              reqs['jbds'].sha256sum);
 
             installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, jbds);
 

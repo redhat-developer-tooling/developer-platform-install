@@ -1,5 +1,5 @@
 {
-  "cdk.zip": {
+  "cdk": {
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -10,7 +10,7 @@
     "sha256sum": "9b354ee04ea6fb5a32dba19c9c04772c0e9482df91a2412186f6846a21e433b1",
     "vendor": "Red Hat, Inc."
   },
-  "rhel.iso": {
+  "minishift-rhel": {
     "name": "RHEL 7.3 for Hyper-V and VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -21,7 +21,7 @@
     "sha256sum": "f83d0cde0ff3854eaa959f92c616cc70dc7a55c900ba2b4090e0afa6b5a14678",
     "vendor": "Red Hat, Inc."
   },
-  "oc.zip": {
+  "oc": {
     "name": "Openshift Origin",
     "description": "The Open Source Container Application Platform",
     "bundle": "yes",
@@ -32,7 +32,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/b90bc1249e7407717b0a0d7f92248ed6926ae0cd27d8fd038e054b866fa84baf/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "cygwin.exe": {
+  "cygwin": {
     "name": "Cygwin",
     "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
     "bundle": "always",
@@ -43,7 +43,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
     "vendor": "Community Project"
   },
-  "jbds.jar": {
+  "jbds": {
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
@@ -51,10 +51,21 @@
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.2.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
     "filename": "devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
-    "sha256sum": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar.sha256",
+    "sha256sum": "f7ab824501a7236fe110f17e10d0a9c32c18efbcdeee2497cc7fdd14701ba71e",
     "vendor": "Red Hat, Inc."
   },
-  "jdk.msi": {
+  "is": {
+    "name": "Red Hat JBoss Developer Studio",
+    "description": "A certified Eclipse-based integrated development environment (IDE)",
+    "bundle": "yes",
+    "version": "10.2.0.GA",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.2.0.GA-installer-standalone.jar?workflow=direct",
+    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
+    "filename": "devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
+    "sha256sum": "f7ab824501a7236fe110f17e10d0a9c32c18efbcdeee2497cc7fdd14701ba71e",
+    "vendor": "Red Hat, Inc."
+  },
+  "jdk": {
     "name": "OpenJDK",
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
     "bundle": "yes",
@@ -66,7 +77,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/d4fa67a45cef119325e9ef775ea53dee0e2754b2df511618f91abf5acda6ddf0/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "virtualbox.exe": {
+  "virtualbox": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
     "bundle": "no",
@@ -78,7 +89,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54/analysis/",
     "vendor": "Oracle, Inc."
   },
-  "7zip.zip": {
+  "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
     "bundle": "tools",
@@ -88,7 +99,7 @@
     "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac",
     "vendor": "Igor Pavlov"
   },
-  "7zip-extra.zip": {
+  "7zip-extra": {
     "name": "7zipextra",
     "description": "7Zip Extra: SFXs for installers",
     "bundle": "tools",

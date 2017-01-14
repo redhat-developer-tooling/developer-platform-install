@@ -1,5 +1,5 @@
 {
-  "cdk.zip": {
+  "cdk": {
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -10,7 +10,7 @@
     "sha256sum": "70e1c5af6900ffd5cf79ca5b624e98f13a56f9e4d53cfc3077ce5b799d1f54a0",
     "vendor": "Red Hat, Inc."
   },
-  "rhel.iso": {
+  "minishift-rhel": {
     "name": "RHEL 7.3 for Hyper-V and VirtualBox",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
@@ -21,7 +21,7 @@
     "sha256sum": "f83d0cde0ff3854eaa959f92c616cc70dc7a55c900ba2b4090e0afa6b5a14678",
     "vendor": "Red Hat, Inc."
   },
-  "oc.zip": {
+  "oc": {
     "name": "Openshift Origin",
     "description": "The Open Source Container Application Platform",
     "bundle": "yes",
@@ -32,7 +32,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/b90bc1249e7407717b0a0d7f92248ed6926ae0cd27d8fd038e054b866fa84baf/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "cygwin.exe": {
+  "cygwin": {
     "name": "Cygwin",
     "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
     "bundle": "always",
@@ -43,7 +43,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
     "vendor": "Community Project"
   },
-  "jbds.jar": {
+  "jbds": {
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
@@ -54,7 +54,7 @@
     "sha256sum": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar.sha256",
     "vendor": "Red Hat, Inc."
   },
-  "jdk.msi": {
+  "jdk": {
     "name": "OpenJDK",
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
     "bundle": "yes",
@@ -66,7 +66,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/fc4c77412446d6bbf6bf91d76d4bb5cf5d1e94dc1e932f524796e3f8a9789ccc/analysis/",
     "vendor": "Red Hat, Inc."
   },
-  "virtualbox.exe": {
+  "virtualbox": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
     "bundle": "no",
@@ -78,7 +78,7 @@
     "virusTotalReport": "https://virustotal.com/en/file/4a97ca581f4aa4e8fc442d60c2cde214c52808bf6e24b28e0574bea22176c76c/analysis/",
     "vendor": "Oracle, Inc."
   },
-  "7zip.zip": {
+  "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
     "bundle": "tools",
@@ -88,7 +88,7 @@
     "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac",
     "vendor": "Igor Pavlov"
   },
-  "7zip-extra.zip": {
+  "7zip-extra": {
     "name": "7zipextra",
     "description": "7Zip Extra: SFXs for installers",
     "bundle": "tools",

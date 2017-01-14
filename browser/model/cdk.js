@@ -9,8 +9,9 @@ import Platform from '../services/platform';
 import Installer from './helpers/installer';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, minishiftUrl, cdkIsoUrl, ocUrl, installFile, targetFolderName, minishiftSha256, cdkIsoSha256, ocSha256) {
-    super(CDKInstall.KEY, 900, minishiftUrl, installFile, targetFolderName, installerDataSvc, true);
+  constructor(installerDataSvc, $timeout, minishiftUrl, cdkIsoUrl, ocUrl, fileName, targetFolderName, minishiftSha256, cdkIsoSha256, ocSha256,
+    cdkIsoFilename, ocFilename) {
+    super(CDKInstall.KEY, 900, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.$timeout = $timeout;
     this.cdkIsoUrl = cdkIsoUrl;
@@ -20,16 +21,13 @@ class CDKInstall extends InstallableItem {
     this.cdkIsoSha256 = cdkIsoSha256;
     this.ocSha256 = ocSha256;
 
-    this.minishiftFileName = 'cdk.zip';
-    this.mnishiftDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.minishiftFileName);
+    this.boxName = cdkIsoFilename;
+    this.cdkIsoDownloadedFile = path.join(this.downloadFolder, this.boxName);
 
-    this.boxName = 'rhel.iso';
-    this.cdkIsoDownloadedFile = path.join(this.installerDataSvc.tempDir(), this.boxName);
+    this.ocFileName = ocFilename;
+    this.ocDownloadedFile = path.join(this.downloadFolder,   this.ocFileName);
 
-    this.ocFileName = 'oc.zip';
-    this.ocDownloadedFile = path.join(this.installerDataSvc.tempDir(),   this.ocFileName);
-
-    this.pscpPathScript = path.join(this.installerDataSvc.tempDir(), 'set-pscp-path.ps1');
+    this.pscpPathScript = path.join(this.downloadFolder, 'set-pscp-path.ps1');
 
     this.addOption('install', '2.0.0', '', true);
     this.selected = false;
@@ -51,7 +49,7 @@ class CDKInstall extends InstallableItem {
     let username = this.installerDataSvc.getUsername();
     let password = this.installerDataSvc.getPassword();
 
-    let cdkIsoBundledFile = path.join(this.downloadFolder, this.boxName);
+    let cdkIsoBundledFile = path.join(this.bundleFolder, this.boxName);
     if(fs.existsSync(cdkIsoBundledFile)) {
       this.cdkIsoDownloadedFile = cdkIsoBundledFile;
       this.downloader.closeHandler();
@@ -65,13 +63,12 @@ class CDKInstall extends InstallableItem {
       );
     }
 
-    let minishiftBundledFile = path.join(this.downloadFolder, this.minishiftFileName);
-    if(fs.existsSync(minishiftBundledFile)) {
-      this.mnishiftDownloadedFile = minishiftBundledFile;
+    if(fs.existsSync(this.bundledFile)) {
+      this.downloadedFile = this.bundledFile;
       this.downloader.closeHandler();
     } else {
       this.checkAndDownload(
-        this.mnishiftDownloadedFile,
+        this.downloadedFile,
         this.getDownloadUrl(),
         this.minishiftSha256,
         username,
@@ -79,7 +76,7 @@ class CDKInstall extends InstallableItem {
       );
     }
 
-    let ocBundledFile = path.join(this.downloadFolder, this.ocFileName);
+    let ocBundledFile = path.join(this.bundleFolder, this.ocFileName);
     if(fs.existsSync(ocBundledFile)) {
       this.ocDownloadedFile = ocBundledFile;
       this.downloader.closeHandler();
@@ -118,7 +115,7 @@ class CDKInstall extends InstallableItem {
       'rhel.subscription.username=' + this.installerDataSvc.getUsername()
     ].join('\r\n');
     let ocDir = this.installerDataSvc.ocDir();
-    installer.unzip(this.mnishiftDownloadedFile, ocDir)
+    installer.unzip(this.downloadedFile, ocDir)
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/minishift`); })
     .then((result) => { return installer.unzip(this.ocDownloadedFile, ocDir, result); })
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`); })

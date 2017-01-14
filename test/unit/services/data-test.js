@@ -27,9 +27,9 @@ describe('InstallerDataService', function() {
       go: function() {}
     };
     sandbox = sinon.sandbox.create();
-    jdk = new InstallableItem('jdk', 10000, 'https://domain.com/jdk.msi', null, 'jdk', svc);
+    jdk = new InstallableItem('jdk', 10000, 'https://domain.com/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
-      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', null);
+      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'virtualbox', 'sha');
   });
 
   afterEach(function() {
@@ -79,7 +79,7 @@ describe('InstallerDataService', function() {
 
     it('should load requirements from requirements.json if requirements parameter is not provided', function() {
       let svc = new InstallerDataService();
-      expect(svc.requirements['cdk.zip'].name).to.be.equal('Red Hat Container Development Kit');
+      expect(svc.requirements['cdk'].name).to.be.equal('Red Hat Container Development Kit');
     });
 
     it('should set requirements to provided in requirements parameter', function() {
