@@ -87,7 +87,7 @@ module.exports = function(gulp) {
 
   // Create both installers
   gulp.task('dist', function(cb) {
-    runSequence(['clean'], 'create-dist-dir', 'update-requirements', ['generate',
+    runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
       'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'package', 'cleanup', cb);
   });
 
