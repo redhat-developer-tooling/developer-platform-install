@@ -87,11 +87,6 @@ class Util {
     });
   }
 
-  static runPowerShellScript() {
-    const prefix = path.join('resources', 'app.asar.unpacked');
-    console.log(process.cwd());
-  }
-
   // Execute a list of Promise return functions in series
   static runPromiseSequence(list) {
     return list.reduce(
