@@ -56,7 +56,12 @@ gulp.task('clean-all', ['clean'], function() {
 
 // clean dist/ folder in prep for fresh build
 gulp.task('clean', function() {
-  return del(['dist', 'transpiled'], { force: true });
+  var files = ['dist', 'transpiled', config.prefetchFolder + '/*'];
+  for (var key in reqs) {
+    files.push('!' + config.prefetchFolder + '/' + reqs[key].filename);
+  }
+
+  return del(files, { force: true });
 });
 
 gulp.task('create-dist-dir', function(cb) {
