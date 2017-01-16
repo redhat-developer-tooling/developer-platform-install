@@ -6,7 +6,7 @@
     "version": "3.0.0.GA",
     "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
     "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
-    "filename": "linux-amd64.tar.gz",
+    "filename": "darwin-amd64.tar.gz",
     "sha256sum": "257c8bf8346bcc1245645908dc1ede40d212605385ba413d2df9cfdee06577be",
     "vendor": "Red Hat, Inc."
   },
