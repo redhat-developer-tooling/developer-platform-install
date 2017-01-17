@@ -32,9 +32,9 @@
   },
   "dependencies": {
     "angular": "1.6.1",
-    "angular-mocks": "1.6.1",
     "angular-base64": "2.0.5",
     "angular-messages": "1.6.1",
+    "angular-mocks": "1.6.1",
     "angular-ui-router": "0.3.2",
     "fs-extra": "1.0.0",
     "glob": "7.1.1",
@@ -43,6 +43,7 @@
     "request": "2.79.0",
     "rimraf": "2.5.4",
     "semver": "5.3.0",
+    "targz": "1.0.1",
     "unzip": "0.1.11"
   },
   "devDependencies": {

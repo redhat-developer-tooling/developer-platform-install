@@ -3,6 +3,7 @@
 let fs = require('fs-extra');
 let child_process = require('child_process');
 let unzip = require('unzip');
+let targz = require('targz');
 
 import Logger from '../../services/logger';
 
@@ -53,19 +54,44 @@ class Installer {
     });
   }
 
-  unzip(zipFile, extractTo) {
+  unzip(zipFile, extractTo, prefix) {
     return new Promise((resolve, reject) => {
-      Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
-      fs.createReadStream(zipFile)
-      .pipe(unzip.Extract({path: extractTo}))
-      .on('close', () => {
-        Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
-        resolve(true);
-      })
-      .on('error', (err) => {
-        Logger.error(this.key + ' - ' + err);
-        reject(err);
-      });
+      if(zipFile.endsWith('.tar.gz')) {
+        targz.decompress({
+          src: zipFile,
+          dest: extractTo,
+          tar: {
+            map: function(header) {
+              if (prefix && header.name.startsWith(prefix)) {
+                header.name = header.name.substring(prefix.length);
+              }
+              return header;
+            }
+          }
+        }, (err)=> {
+          if(err) {
+            Logger.error(this.key + ' - ' + err);
+            reject(err);
+          } else {
+            Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
+            resolve(true);
+          }
+        });
+      } else if(zipFile.endsWith('.zip')) {
+        Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
+        fs.createReadStream(zipFile)
+        .pipe(unzip.Extract({path: extractTo}))
+        .on('close', () => {
+          Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
+          resolve(true);
+        })
+        .on('error', (err) => {
+          Logger.error(this.key + ' - ' + err);
+          reject(err);
+        });
+      } else {
+        reject(`unsupported extension for ${zipFile}`);
+      }
     });
   }
 
