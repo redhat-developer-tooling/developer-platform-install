@@ -10,6 +10,7 @@ import Logger from 'browser/services/logger';
 import fs from 'fs-extra';
 import child_process from 'child_process';
 import unzip from 'unzip';
+import targz from 'targz';
 import EventEmitter from 'events';
 chai.use(sinonChai);
 
@@ -135,56 +136,98 @@ describe('Installer', function() {
 
   describe('unzip', function() {
     let dir = 'anInstallFolder';
-    let file = path.join('someTempFolder', 'somefile');
+    let file = path.join('someTempFolder', 'somefile.zip');
 
-    it('should read the specified file', function() {
-      sandbox.stub(unzip, 'Extract').throws('done');
-      let spy = sandbox.spy(fs, 'createReadStream');
+    describe('for .zip files', function() {
+      it('should read the specified file', function() {
+        sandbox.stub(unzip, 'Extract').throws('done');
+        let spy = sandbox.stub(fs, 'createReadStream');
 
-      return installer.unzip(file, dir)
-      .catch(function() {
-        expect(spy).to.have.been.calledOnce;
-        expect(spy).to.have.been.calledWith(file);
-      });
-    });
-
-    it('should call unzip#Extract into a correct folder', function() {
-      let stub = sandbox.stub(unzip, 'Extract').throws('done');
-
-      return installer.unzip(file, dir)
-      .catch(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith({ path: dir });
-      });
-    });
-
-    it('should resolve as true if no error occurs', function() {
-      let eventEmitter = new EventEmitter();
-      sandbox.stub(eventEmitter, 'on').yields();
-      let readStreamMock = { pipe: function() { return eventEmitter; }};
-      sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
-      return installer.unzip(file, dir)
-        .then(function(result) {
-          expect(result).to.equal(true);
-        })
-        .catch(function(err) {
-          expect.fail(err);
+        return installer.unzip(file, dir)
+        .catch(function() {
+          expect(spy).to.have.been.calledOnce;
+          expect(spy).to.have.been.calledWith(file);
         });
+      });
+
+      it('should call unzip#Extract into a correct folder', function() {
+        let stub = sandbox.stub(unzip, 'Extract').throws('done');
+        let eventEmitter = new EventEmitter();
+        sandbox.stub(eventEmitter, 'on').yields();
+        let readStreamMock = { pipe: function() { return eventEmitter; }};
+        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+        return installer.unzip(file, dir)
+        .catch(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith({ path: dir });
+        });
+      });
+
+      it('should resolve as true if no error occurs', function() {
+        let eventEmitter = new EventEmitter();
+        sandbox.stub(eventEmitter, 'on').yields();
+        let readStreamMock = { pipe: function() { return eventEmitter; }};
+        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+        return installer.unzip(file, dir)
+          .then(function(result) {
+            expect(result).to.equal(true);
+          })
+          .catch(function(err) {
+            expect.fail(err);
+          });
+      });
+
+      it('should reject when an error occurs', function() {
+        let eventEmitter = new EventEmitter();
+        sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
+            .onSecondCall().yields('error');
+        let readStreamMock = { pipe: function() { return eventEmitter; }};
+        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
+
+        return installer.unzip(file, dir).then(function() {
+          expect.fail();
+        }).catch(function(err) {
+          expect(err).to.equal('error');
+        });
+      });
     });
-
-    it('should reject when an error occurs', function() {
-      let eventEmitter = new EventEmitter();
-      sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
-          .onSecondCall().yields('error');
-      let readStreamMock = { pipe: function() { return eventEmitter; }};
-      sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
-
-      return installer.unzip(file, dir).then(function() {
-        expect.fail();
-      })
-       .catch(function(err) {
-         expect(err).to.equal('error');
-       });
+    describe('for .tar.gz files', function() {
+      it('should use targz.decompress for specified file', function() {
+        sandbox.stub(targz, 'decompress').yields();
+        installer.unzip('testfile.tar.gz').then(function() {
+          expect(targz.decompress).calledOnce;
+          expect(targz.decompress.args[0][0].src).to.be.equal('testfile.tar.gz');
+        });
+      });
+      it('should reject with error if an error occurs during decompressing the file', function() {
+        sandbox.stub(targz, 'decompress').yields('error message');
+        installer.unzip('testfile.tar.gz').catch(function(error) {
+          expect(error).to.be.equal('error message');
+        });
+      });
+      it('should strip specified prefix from entry\'s path', function() {
+        sandbox.stub(targz, 'decompress', function(options, callback) {
+          let result = options.tar.map({name : 'prefix/filename.ext' }).name;
+          expect(result).to.be.equal('filename.ext');
+          callback();
+        });
+        installer.unzip('testfile.tar.gz', 'destination', 'prefix/');
+      });
+      it('should not change file names without prefix', function() {
+        sandbox.stub(targz, 'decompress', function(options, callback) {
+          let result = options.tar.map({name : 'folder/name/filename.ext' }).name;
+          expect(result).to.be.equal('folder/name/filename.ext');
+          callback();
+        });
+        installer.unzip('testfile.tar.gz', 'destination', 'prefix/');
+      });
+    });
+    describe('for other extensions', function() {
+      it('it rejects with error message', function() {
+        installer.unzip('testfile.tar', 'destination/folder', 'prefix').catch((error) =>{
+          expect(error).is.not.undefined;
+        });
+      });
     });
   });
 
