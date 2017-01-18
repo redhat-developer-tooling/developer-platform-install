@@ -51,7 +51,7 @@ describe('Install controller', function() {
   describe('constrution', function() {
     it('should process all installables', function() {
       let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      new InstallController(null, null, installerDataSvc);
+      new InstallController({}, {}, installerDataSvc);
 
       expect(stub).calledOnce;
       expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
@@ -61,7 +61,7 @@ describe('Install controller', function() {
       let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
       sandbox.stub(vbox, 'isSkipped').returns(true);
-      new InstallController(null, null, installerDataSvc);
+      new InstallController({}, {}, installerDataSvc);
       expect(stub).calledOnce;
     });
   });
@@ -85,20 +85,20 @@ describe('Install controller', function() {
     });
 
     it('should trigger download on not downloaded installables', function() {
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(dlStub).calledOnce;
       expect(dlStub).calledWith('virtualbox', vbox);
     });
 
     it('should not trigger download on already downloaded items', function() {
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
     });
 
     it('should trigger install on already downloaded items', function() {
       sandbox.stub(vbox, 'isDownloadRequired').returns(false);
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(inStub).calledOnce;
       expect(inStub).calledWith('virtualbox', vbox);
@@ -115,7 +115,7 @@ describe('Install controller', function() {
 
     it('data service should register the new downloads', function() {
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
@@ -127,14 +127,14 @@ describe('Install controller', function() {
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
       expect(vboxStub).calledOnce;
     });
 
     it('should call data services downloadDone when download finishes', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
@@ -152,7 +152,7 @@ describe('Install controller', function() {
 
     it('data service should register the new install', function() {
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
@@ -164,14 +164,14 @@ describe('Install controller', function() {
     it('should call the installables install method', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
       expect(vboxStub).calledOnce;
     });
 
     it('should call data services installDone when install finishes', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController(null, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc);
 
       expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
