@@ -59,10 +59,17 @@ module.exports = function(gulp) {
     process.env.PTOR_BINARY = yargs.argv.binary;
     var zip = path.join(buildFolder, '7za.exe');
     var targetFolder = path.join(buildFolder, 'target');
-    var cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
-    process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
+    var cmd;
 
-    exec(cmd, function(err, stdout, stderr) {
+    if (process.platform === 'win32') {
+      cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
+      process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
+    } else if (process.platform === 'darwin') {
+      cmd = 'unzip -o ' + process.env.PTOR_BINARY;
+      process.env.PTOR_BINARY = path.join('Red\ Hat\ Development\ Suite\ Installer.app', 'Contents', 'MacOS', 'Red\ Hat\ Development\ Suite\ Installer')
+    }
+
+    exec(cmd, {maxbuffer: 1024 * 512}, function(err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
       cb(err);

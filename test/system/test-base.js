@@ -9,10 +9,12 @@ const pass = 'Devsuite';
 
 let reqs = require(path.join(rootPath, './requirements-' + process.platform + '.json'));
 let expectedComponents = {
-  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox.exe'].version },
-  cygwin: { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin.exe'].version },
-  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk.msi'].version.substring(0, 5) }
+  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox'].version },
+  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk'].version.substring(0, 5) }
 };
+if (process.platform === 'win32') {
+  expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin'].version };
+}
 
 let detectComponents = false;
 for (var key in expectedComponents) {
@@ -36,11 +38,14 @@ function systemTest() {
 
     let components = {
       virtualbox: {},
-      cygwin: {},
       cdk: {},
       jdk: {},
       devstudio: {}
     };
+    if (process.platform === 'win32') {
+      components.cygwin = {};
+    }
+
     let progress = {};
 
     beforeAll(function() {
@@ -64,8 +69,18 @@ function systemTest() {
         .then(function(elm) {
           let locationField = elm;
           let nextButton = element(By.id('location-install-btn'));
+          let defaultFolder;
 
-          expect(locationField.getAttribute('value')).toEqual(path.join('c:', 'DevelopmentSuite'));
+          switch (process.platform) {
+            case 'win32':
+              defaultFolder = path.join('c:', 'DevelopmentSuite');
+              break;
+            case 'darwin':
+              defaultFolder = '/Applications/DevelopmentSuite';
+              break;
+          }
+
+          expect(locationField.getAttribute('value')).toEqual(defaultFolder);
           expect(nextButton.isEnabled()).toBe(true);
 
           if (target && target.length > 0) {

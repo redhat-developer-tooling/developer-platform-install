@@ -145,7 +145,11 @@ gulp.task('ui-test', function(cb) {
 
 gulp.task('system-test', function(cb) {
   process.env.PTOR_TEST_RUN = 'system';
-  return runSequence(['prepare-tools', 'protractor-install'], 'unpack-installer', 'protractor-run', cb);
+  let tasks = ['protractor-install'];
+  if (process.platform === 'win32') {
+    tasks.push('prepare-tools');
+  }
+  return runSequence(tasks, 'unpack-installer', 'protractor-run', cb);
 });
 
 gulp.task('create-prefetch-cache-dir', function() {
