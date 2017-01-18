@@ -5,14 +5,7 @@ function progressBar() {
     restrict: 'E',
     replace: true,
     scope: {
-      productName: '=',
-      productVersion: '=',
-      productDesc: '=',
-      current: '=',
-      min: '=',
-      max: '=',
-      label: '=',
-      status: '='
+      progress: '='
     },
     templateUrl: 'directives/progressBar.html'
   };

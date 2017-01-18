@@ -9,20 +9,17 @@ class InstallController {
     this.installerDataSvc = installerDataSvc;
     this.failedDownloads = new Set();
 
-    this.data = Object.create(null);
+    this.data = {};
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let itemProgress = new ProgressState(value.getProductName(), value.getProductVersion(), value.getProductDesc(), this.$scope, this.$timeout);
-      Object.defineProperty(this.data, key, {
-        enumerable: true,
-        writable: true,
-        value: itemProgress
-      });
+      let itemProgress = new ProgressState(key, value.getProductName(), value.getProductVersion(), value.getProductDesc(), this.$scope, this.$timeout);
       if(value.isSkipped()) {
         this.installerDataSvc.setupDone(itemProgress, key);
       } else {
+        this.data[key] = itemProgress;
         this.processInstallable(key, value, itemProgress);
       }
     }
+    this.$scope.data = this.data;
   }
 
   processInstallable(key, value, itemProgress) {
@@ -40,14 +37,9 @@ class InstallController {
         this.installerDataSvc.downloadDone(progress, installableKey);
       },
       (error) => {
-        let that = this;
         Logger.error(installableKey + ' failed to download: ' + error);
         progress.setStatus('Download failed');
-        that.$timeout(function() {
-          that.$scope.$apply(function() {
-            that.failedDownloads.add(installableValue);
-          });
-        });
+        this.failedDownloads.add(installableValue);
       }
     );
   }
@@ -108,7 +100,8 @@ class InstallController {
 }
 
 class ProgressState {
-  constructor(productName, productVersion, productDesc, $scope, $timeout) {
+  constructor(key, productName, productVersion, productDesc, $scope, $timeout, minValue=0, maxValue=100) {
+    this.key = key;
     this.productName = productName;
     this.productVersion = productVersion;
     this.productDesc = productDesc;
@@ -119,6 +112,8 @@ class ProgressState {
     this.status = '';
     this.currentAmount = 0;
     this.totalSize = 0;
+    this.min = minValue;
+    this.max = maxValue;
   }
 
   setTotalDownloadSize(size) {
@@ -130,9 +125,8 @@ class ProgressState {
       this.currentAmount = newVal;
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
       this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
-
-      this.$timeout(this.setCurrent.bind(this), 0);
     }
+    this.$timeout(()=>this.$scope.$apply());
   }
 
   setStatus(newStatus) {
@@ -149,10 +143,7 @@ class ProgressState {
       this.totalSize = 0;
     }
     this.status = newStatus;
-    let that = this;
-    this.$timeout(() => {
-      that.$scope.$apply();
-    });
+    this.$timeout(()=>this.$scope.$apply());
   }
 
   setComplete() {

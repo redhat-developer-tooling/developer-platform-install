@@ -12,7 +12,7 @@ describe('Installation page', function() {
     cygwin: requirements['cygwin'],
     cdk: requirements['cdk'],
     jdk: requirements['jdk'],
-    devstudio: requirements['jbds']
+    jbds: requirements['jbds']
   };
 
   beforeAll(function() {
