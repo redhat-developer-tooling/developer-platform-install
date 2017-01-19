@@ -2,7 +2,6 @@
 
 let path = require('path');
 let fs = require('fs-extra');
-let Glob = require('glob').Glob;
 let replace = require('replace-in-file');
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
@@ -12,7 +11,6 @@ import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
 import CDKInstall from './cdk.js';
 import Util from './helpers/util';
-import Platform from '../services/platform';
 
 class JbdsInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, jbdsSha256, key=JbdsInstall.KEY, additionalLocations, additionalIus) {
@@ -48,6 +46,14 @@ class JbdsInstall extends InstallableItem {
 
   checkForExistingInstall() {
 
+  }
+
+  isDownloadRequired() {
+    if(this.keyName !== 'jbds') {
+      let jbds = this.installerDataSvc.getInstallable('jbds');
+      return !jbds.hasOption('install');
+    }
+    return this.useDownload;
   }
 
   installAfterRequirements(progress, success, failure) {
