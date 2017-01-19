@@ -137,9 +137,20 @@ let mainModule =
               'developer-studio',
               reqs['jbds'].sha256sum);
 
-            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, jbds);
+            let fuse = new JbdsInstall(
+                installerDataSvc,
+                reqs['fuse'].dmUrl,
+                reqs['fuse'].filename,
+                'developer-studio',
+                reqs['fuse'].sha256sum,
+                'fuse',
+                'devstudio-is',
+                'com.jboss.devstudio.integration-stack.fuse.feature.feature.group');
 
-            jdk.thenInstall(jbds);
+
+            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, jbds, fuse);
+
+            jdk.thenInstall(jbds).thenInstall(fuse);
             jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(cdk);
 
           }]);

@@ -100,11 +100,15 @@ gulp.task('update-requirements', ['transpile:app'], function() {
         if (err) {
           reject(err);
         } else {
-          let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
-          let finalVersion = versionRegex.exec(body)[1];
+          try {
+            let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
+            let finalVersion = versionRegex.exec(body)[1];
 
-          if (reqs['jbds'].version != finalVersion) {
-            reqs['jbds'].version = finalVersion;
+            if (reqs['jbds'].version != finalVersion) {
+              reqs['jbds'].version = finalVersion;
+            }
+          } catch (excep) {
+            console.log('cannot read version from content.js');
           }
           resolve();
         }
