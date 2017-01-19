@@ -64,16 +64,25 @@ class Platform {
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
-        // put implementation here based on child_process.spawn method
-        // run powershell command explained here
-        // https://issues.jboss.org/browse/JBDS-3869?focusedCommentId=13345706&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13345706
-        // for Disabled return false
-        // for Enabled return true
-        // for empty string undefined
-        return Promise.resolve(undefined);
+        return new Promise( function(resolve, reject) {
+          child_process.exec(`PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-All | foreach{$_.state}"`, (error, stdout, stderr) => {
+            if(typeof(stdout) == "string") {
+              stdout = stdout.replace(/\s/g,"");
+              if(stdout == "Enabled") {
+                resolve(true);
+              } else if(stdout == "Disabled") {
+                resolve(false);
+              } else {
+                resolve();
+              }
+            } else {
+              resolve();
+            }
+          });
+        });
       },
       default: function() {
-        return Promise.resolve(undefined);
+        return Promise.resolve();
       }
     });
   }

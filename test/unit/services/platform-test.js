@@ -123,4 +123,50 @@ describe('Platform', function() {
     });
   });
 
+  describe('isHypervisorEnabled', function(){
+
+    describe('on mac', function() {
+      it('should return true if hypervisor check shell script returns true');
+    });
+
+    describe('on linux', function() {
+      it('should return true if hypervisor check shell script returns true');
+    });
+
+    describe('on windows', function(){
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should return promise resolved to true if powershell script returns `Enabled` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled', undefined);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.true;
+        });
+      });
+
+      it('should return promise resolved to true if powershell script returns `Disabled` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled', undefined);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script returns nothing in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '', undefined);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script returns null in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, null, undefined);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
+  });
+
 });
