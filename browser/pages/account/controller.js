@@ -20,6 +20,7 @@ class AccountController {
     this.tandcNotSigned = false;
     this.pdkVersion = pjson.version;
     this.isLoginBtnClicked = false;
+    this.httpError = undefined;
   }
 
   login() {
@@ -64,25 +65,27 @@ class AccountController {
   }
 
   handleHttpSuccess(result) {
-    if (result.status == 200) {
-      if (result.data == true) {
-        this.installerDataSvc.setCredentials(this.username, this.password);
-        this.router.go('location');
-        this.isLoginBtnClicked = false;
-        return;
-      } else if (result.data == false) {
-        this.tandcNotSigned = true;
-        this.isLoginBtnClicked = false;
-        return;
-      }
+    this.httpError = undefined;
+    if (result.status == 200 && result.data == true) {
+      this.installerDataSvc.setCredentials(this.username, this.password);
+      this.isLoginBtnClicked = false;
+      this.router.go('location');
+      this.authFailed = false;
+    } else if (result.status == 200 && result.data == false) {
+      this.tandcNotSigned = true;
+      this.isLoginBtnClicked = false;
+      this.authFailed = false;
+    } else {
+      this.isLoginBtnClicked = false;
+      this.authFailed = true;
     }
-    this.authFailed = true;
     this.apply();
   }
 
-  handleHttpFailure() {
-    this.authFailed = true;
+  handleHttpFailure(error) {
+    this.authFailed = false;
     this.isLoginBtnClicked = false;
+    this.httpError = error;
     this.apply();
   }
 

@@ -9,13 +9,22 @@ class Request {
   get(req) {
     return new Promise((resolve, reject)=>{
       request(req, (error, response, data) => {
-        if (!error && response.statusCode == 200) {
+        if (error) {
+          reject(error);
+        } else if(response.statusCode == 200) {
           resolve({
             status: response.statusCode,
             data: JSON.parse(data)
           });
+        } else if (response.statusCode == 401) {
+          resolve({
+            status: response.statusCode,
+            data: data
+          });
         } else {
-          reject();
+          resolve({
+            status: response.statusCode
+          });
         }
       });
     });
