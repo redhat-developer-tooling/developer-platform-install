@@ -97,6 +97,10 @@ class InstallableItem {
     this.installed = true;
   }
 
+  detectExistingInstall () {
+    // to be overridden
+  }
+
   checkForExistingInstall() {
     // To be overridden
   }
