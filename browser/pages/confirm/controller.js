@@ -161,15 +161,21 @@ class ConfirmController {
 
   cdkIsConfigured() {
     return this.sc.checkboxModel.cdk.isConfigured()
-      && this.sc.checkboxModel.virtualbox.isConfigured()
+      && this.virtualizationIsConfigured()
       && this.sc.checkboxModel.cygwin.isConfigured()
       || this.sc.checkboxModel.cdk.isSkipped();
+  }
+
+  virtualizationIsConfigured() {
+    return this.sc.checkboxModel.virtualbox
+      && this.sc.checkboxModel.virtualbox.isConfigured()
+      || this.sc.checkboxModel.hyperv.isConfigured();
   }
 
   isConfigurationValid() {
     return this.devstudioIsConfigured()
       && this.cdkIsConfigured()
-      && this.sc.checkboxModel.virtualbox.isConfigured()
+      && this.virtualizationIsConfigured()
       && this.isAtLeastOneSelected();
   }
 

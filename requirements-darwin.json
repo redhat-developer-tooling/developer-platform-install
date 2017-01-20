@@ -56,5 +56,17 @@
     "sha256sum": "74b10d9af01b8eb7d987088ffe52c74646a479a27cba4f98dc5149f1f6b93c76",
     "virusTotalReport": "https://virustotal.com/en/file/74b10d9af01b8eb7d987088ffe52c74646a479a27cba4f98dc5149f1f6b93c76/analysis/",
     "vendor": "Oracle, Inc."
+  },
+  "hyperv": {
+    "name": "Microsoft Hyper-V",
+    "description": "Microsoft Windows Virtualization Platform",
+    "bundle": "no",
+    "version": "",
+    "revision": "112440",
+    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
+    "filename": "",
+    "sha256sum": "",
+    "virusTotalReport": "",
+    "vendor": "Microsoft, Inc."
   }
 }

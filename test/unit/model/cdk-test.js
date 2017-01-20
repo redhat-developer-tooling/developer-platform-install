@@ -241,6 +241,21 @@ describe('CDK installer', function() {
         });
       });
 
+      it('should run downloaded file with virtualbox driver if no hyper-v detected', function() {
+        let hyperv = new InstallableItem('hyperv', 'url', 'file', 'folder', installer.installerDataSvc, false);
+        hyperv.addOption('detected');
+        installer.installerDataSvc.addItemsToInstall(hyperv);
+        return new Promise((resolve, reject)=> {
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
+          expect(Installer.prototype.exec).to.have.been.calledWith(
+              path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=hyperv',
+              {PATH:''}
+            );
+          expect(installer.createEnvironment).to.have.been.called;
+        });
+      });
+
       it('should not run chmod command on windows for installed file', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);

@@ -56,6 +56,18 @@
     "virusTotalReport": "https://virustotal.com/en/file/0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54/analysis/",
     "vendor": "Oracle, Inc."
   },
+  "hyperv": {
+    "name": "Microsoft Hyper-V",
+    "description": "Microsoft Windows Virtualization Platform",
+    "bundle": "no",
+    "version": "",
+    "revision": "112440",
+    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
+    "filename": "",
+    "sha256sum": "",
+    "virusTotalReport": "",
+    "vendor": "Microsoft, Inc."
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",

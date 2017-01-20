@@ -248,8 +248,27 @@
       </div>
     </div>
 
+    <!-- hyper-v -->
+    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
+      <div id="hyperv-panel-heading" class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.hyperv.hasOption('detected')}">
+        <div class="checkbox-container verticalLine">
+          <input id="hyperv-checkbox" type="checkbox" ng-disabled="true" ng-model="checkboxModel.hyperv.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+        </div>
+        <div class="product-container">
+          <div class="warnings-in-panel">
+            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected')">
+              <i class="fa fa-check"></i> Using detected version {{checkboxModel.hyperv.option.detected.version}}
+            </span>
+          </div>
+          <span id="hyperv-name" class="product-name">{{checkboxModel.hyperv.productName}}</span><span id="hyperv-version" class="product-version">{{checkboxModel.hyperv.option['detected'].version}}</span>
+          <div id="hyperv-description">{{checkboxModel.hyperv.productDesc}}</div>
+        </div>
+      </div>
+    </div>
+
     <!-- VirtualBox -->
-    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
       <div id="virtualbox-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
@@ -350,17 +369,17 @@
       </div>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled && checkboxModel.cdk.selectedOption == 'install'">
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && !checkboxModel.virtualbox.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled && checkboxModel.cdk.selectedOption == 'install'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.1.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
     </div>
 
-    <div class="message-container error-message" ng-show="checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install')">
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install')">
       <span class="pficon pficon-error-circle-o"></span>
       <span>Please enable hardware virtualization support in BIOS for your platform.</span>
     </div>
 
-    <div class="message-container warning-message" ng-show="checkboxModel.virtualbox.virtualizationEnabled === undefined && checkboxModel.cdk.selectedOption == 'install'">
+    <div class="message-container warning-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === undefined && checkboxModel.cdk.selectedOption == 'install'">
       <span class="pficon pficon-warning-triangle-o"></span>
       <span>Please make sure hardware virtualization is enabled on your platform if supported.</span>
     </div>
