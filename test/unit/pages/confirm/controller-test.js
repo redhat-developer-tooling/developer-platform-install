@@ -8,7 +8,6 @@ import Logger from 'browser/services/logger';
 import ElectronMock from '../../../mock/electron';
 import InstallerDataService from 'browser/services/data';
 import InstallableItem from 'browser/model/installable-item';
-import ConfirmController from 'browser/pages/confirm/controller';
 
 require('../../../angular-test-helper');
 require('browser/main');
@@ -19,29 +18,62 @@ describe('ConfirmController', function() {
 
   let sandbox = sinon.sandbox.create();
   let electron = new ElectronMock();
-  let $watch = sinon.stub();
-  let $scope = {$watch};
+  let $watch;
   let $controller;
-  let $rootScope;
-  let confirmcontroller;
+  let $scope;
+  let confirmController;
   let installerDataSvc;
 
   describe('initial state', function() {
     beforeEach(ngModule('devPlatInstaller'));
-    beforeEach(inject(function(_$controller_, _$rootScope_, _$state_) {
+    beforeEach(inject(function(_$controller_, _$rootScope_, _$state_, _$timeout_, _installerDataSvc_) {
     // The injector unwraps the underscores (_) from around the parameter names when matching
       $controller = _$controller_;
-      $rootScope = _$rootScope_;
-      confirmcontroller = $controller('ConfirmController', {
-        $scope: $rootScope,
+      $scope = _$rootScope_.$new();
+      $watch = sandbox.spy($scope, '$watch');
+      installerDataSvc = _installerDataSvc_;
+      for (var installer of installerDataSvc.allInstallables().values()) {
+        sandbox.stub(installer, 'detectExistingInstall').yields();
+      }
+      // installerDataSvc = new InstallerDataService();
+      // let jdk = new InstallableItem('jdk', 10000, 'https://domain.com/jdk.msi', null, 'jdk', installerDataSvc);
+      // sandbox.stub(jdk, 'detectExistingInstall').yields();
+      // installerDataSvc.addItemToInstall('jdk', jdk);
+      confirmController = $controller('ConfirmController', {
+        $scope,
         $state: _$state_,
-        $timeout: undefined,
-        installerDataSvc: new InstallerDataService(),
-        electron });
+        $timeout: function(callback) { callback(); },
+        installerDataSvc,
+        electron
+      });
+      sandbox.spy(confirmController, 'setIsDisabled');
     }));
 
+    it('install watcher to track cdk selection to select its requirements', function() {
+      expect($watch).to.be.calledWith('checkboxModel.cdk.selectedOption');
+    });
+
+    it('install watcher to track devstudio selection to select its requirements', function() {
+      expect($watch).to.be.calledWith('checkboxModel.jbds.selectedOption');
+    });
+
+    it('install watcher for $viewContentLoaded to trigger detection', function() {
+      expect($watch).to.be.calledWith('$viewContentLoaded');
+    });
+
     it('installs watchers to track components selected for install', function() {
-      expect($watch.callCount).to.be.equal(confirmcontroller.installerDataSvc.allInstallables().size+0);
+      expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+3);
+    });
+
+    it('unlock user interface after detection ends without errors', function() {
+      return new Promise(function(resolve) {
+        confirmController.sc.$apply = function() {
+          resolve();
+        };
+        $scope.$digest();
+      }).then(function() {
+        expect(confirmController.setIsDisabled).to.be.called;
+      });
     });
   });
 
@@ -55,24 +87,19 @@ describe('ConfirmController', function() {
 
   describe('back', function() {
     beforeEach(function() {
-      sandbox.stub(confirmcontroller.router, 'go');
-      confirmcontroller.installerDataSvc.installRoot = 'folderName';
-      confirmcontroller.back();
-    });
-
-    it('sets selected folder as target folder in data service', function() {
-      expect(confirmcontroller.installerDataSvc.installRoot).to.be.equal('folderName');
+      sandbox.stub(confirmController.router, 'go');
+      confirmController.back();
     });
 
     it('navigates to location page', function() {
-      expect(confirmcontroller.router.go).calledWith('location');
+      expect(confirmController.router.go).calledWith('location');
     });
   });
 
   describe('exit', function() {
     it('exit closes active window', function() {
       sandbox.stub(electron.remote.currentWindow);
-      confirmcontroller.exit();
+      confirmController.exit();
       expect(electron.remote.currentWindow.close).calledOnce;
     });
   });
@@ -80,7 +107,7 @@ describe('ConfirmController', function() {
   describe('download', function() {
     it('should open url in browser using electron.shell.openExternal', function() {
       sandbox.stub(electron.shell);
-      confirmcontroller.download('url');
+      confirmController.download('url');
       expect(electron.shell.openExternal).calledOnce;
     });
   });

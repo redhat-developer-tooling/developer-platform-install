@@ -118,7 +118,7 @@ class ConfirmController {
 
       // Call the digest cycle so that the view gets updated.
       this.sc.$apply();
-    }, 2000);
+    });
   }
 
   // Open up a browse dialog and select the dir that has the installed product you are looking for.
