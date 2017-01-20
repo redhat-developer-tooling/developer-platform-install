@@ -203,6 +203,13 @@ describe('InstallableItem', function() {
     });
   });
 
+  describe('detectExistingInstall abstract method', function() {
+    it('should not add detected option', function() {
+      item.detectExistingInstall();
+      expect(item.option.size).to.be.equal(0);
+    });
+  });
+
   describe('validateVersion abstract method', function() {
     it('should not add detected option', function() {
       item.validateVersion();
