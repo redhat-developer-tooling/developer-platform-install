@@ -128,8 +128,9 @@ describe('Login controller', function(){
       controller = new AccountController({}, timeout, scope);
       controller.handleHttpFailure('some error');
 
-      expect(controller.authFailed).to.be.true;
+      expect(controller.authFailed).to.be.false;
       expect(controller.tandcNotSigned).to.be.false;
+      expect(controller.httpError).to.be.not.undefined;
     });
   });
 
@@ -142,8 +143,8 @@ describe('Login controller', function(){
       expect(controller.tandcNotSigned).to.be.false;
     });
 
-    it('should set tandcNotSigned when no data returned', function(){
-      controller = new AccountController({});
+    it('should set tandcNotSigned when data is false', function() {
+      controller = new AccountController({}, timeout, scope);
       controller.handleHttpSuccess({ status: 200, data: false });
 
       expect(controller.authFailed).to.be.false;

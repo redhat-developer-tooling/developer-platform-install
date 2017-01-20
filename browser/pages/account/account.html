@@ -1,4 +1,4 @@
-<header class="login-header">
+  <header class="login-header">
   <div class="login-title">
     <img class="branding-title" src="images/RHDSP.svg"/><span class="login-title-post-text"></span>
   </div>
@@ -23,7 +23,7 @@
           <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
           <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="align-to-input help-block has-error">Please enter a password.</div>
         </div>
-        <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned)" class="form-group has-error pull-right">
+        <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned || acctCtrl.httpError)" class="form-group has-error pull-right">
           <div id="invalidLoginError" ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
             <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
             <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
@@ -31,6 +31,10 @@
           <div id="tcError" ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
             <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
             <strong id="tcMessage">Terms and Conditions for CDK have not been signed.</strong>
+          </div>
+          <div id="httpError" ng-show="accountForm.$submitted && acctCtrl.httpError" class="help-block">
+            <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="httpErrorMessage">Cannot access developers.redhat.com, please check your internet connection.</strong>
           </div>
         </div>
         <div class="form-group pull-right form-buttons">
