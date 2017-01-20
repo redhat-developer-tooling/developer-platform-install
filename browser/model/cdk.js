@@ -35,7 +35,12 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return Platform.makeFileExecutable(minishiftExe);
     }).then(()=> {
-      return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=virtualbox`, this.createEnvironment());
+      let driverName = 'virtualbox';
+      let hv = this.installerDataSvc.getInstallable('hyperv');
+      if (hv && hv.hasOption('detected')) {
+        driverName = 'hyperv';
+      }
+      return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=${driverName}`, this.createEnvironment());
     }).then(()=> {
       return Platform.getUserHomePath();
     }).then((home)=> {

@@ -102,6 +102,11 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     return super.isConfigured() && (this.virtualizationEnabled || this.virtualizationEnabled == undefined);
   }
 
+  isSkipped() {
+    let hyperv = this.installerDataSvc.getInstallable('hyperv');
+    return hyperv && hyperv.isConfigured() || super.isSkipped();
+  }
+
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
     installer.execFile(

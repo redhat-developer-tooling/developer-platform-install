@@ -49,6 +49,8 @@ class Platform {
             }
           }
           return result;
+        }).catch(()=>{
+          return Promise.resolve();
         });
       },
       default: function() {
@@ -71,10 +73,12 @@ class Platform {
             }
           }
           return result;
+        }).catch(()=>{
+          return Promise.resolve();
         });
       },
       default: function() {
-        return Promise.resolve();
+        return Promise.resolve(false);
       }
     });
   }
@@ -168,7 +172,7 @@ class Platform {
   }
 
   /*
-    mac OS Platform Support
+    macOS Platform Support
   */
 
   static addToUserPath_darwin(executables) {
@@ -181,7 +185,5 @@ class Platform {
   }
 
 }
-
-
 
 export default Platform;

@@ -19,6 +19,7 @@ import JdkInstall from './model/jdk-install';
 import DevstudioInstall from './model/devstudio';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
+import HypervInstall from './model/hyperv';
 import Electron from 'electron';
 
 let mainModule =
@@ -130,10 +131,15 @@ let mainModule =
               'developer-studio',
               reqs['devstudio'].sha256sum);
 
-            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, devstudio);
+            let hyperv = new HypervInstall(
+              installerDataSvc,
+              reqs['hyperv'].url
+            );
+
+            installerDataSvc.addItemsToInstall(virtualbox, hyperv, cygwin, cdk, jdk, devstudio);
 
             jdk.thenInstall(devstudio);
-            jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(cdk);
+            jdk.thenInstall(virtualbox).thenInstall(hyperv).thenInstall(cygwin).thenInstall(cdk);
 
           }]);
 
