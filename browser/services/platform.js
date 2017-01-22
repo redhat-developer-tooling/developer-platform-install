@@ -1,6 +1,6 @@
 'use strict';
-
 const child_process = require('child_process');
+const pify = require('pify');
 
 class Platform {
   static identify(map) {
@@ -38,21 +38,17 @@ class Platform {
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
-        return new Promise( function(resolve, reject) {
-          child_process.exec('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled"', (error, stdout, stderr) => {
-            if(typeof(stdout) == "string") {
-              stdout = stdout.replace(/\s/g,"");
-              if(stdout == "True") {
-                resolve(true);
-              } else if(stdout == "False") {
-                resolve(false);
-              } else {
-                resolve();
-              }
-            } else {
-              resolve();
+        return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled"').then((stdout)=>{
+          let result = Promise.resolve();
+          if(stdout) {
+            stdout = stdout.replace(/\s/g,"");
+            if(stdout == "True") {
+              result = Promise.resolve(true);
+            } else if(stdout == "False") {
+              result = Promise.resolve(false);
             }
-          });
+          }
+          return result;
         });
       },
       default: function() {
@@ -64,26 +60,55 @@ class Platform {
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
-        return new Promise( function(resolve, reject) {
-          child_process.exec(`PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-All | foreach{$_.state}"`, (error, stdout, stderr) => {
-            if(typeof(stdout) == "string") {
-              stdout = stdout.replace(/\s/g,"");
-              if(stdout == "Enabled") {
-                resolve(true);
-              } else if(stdout == "Disabled") {
-                resolve(false);
-              } else {
-                resolve();
-              }
-            } else {
-              resolve();
+        return pify(child_process.exec)(`PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-All | foreach{$_.state}"`).then((stdout) => {
+          let result = Promise.resolve();
+          if(stdout) {
+            stdout = stdout.replace(/\s/g,"");
+            if(stdout == "Enabled") {
+              result = Promise.resolve(true);
+            } else if(stdout == "Disabled") {
+              result = Promise.resolve(false);
             }
-          });
+          }
+          return result;
         });
       },
       default: function() {
         return Promise.resolve();
       }
+    });
+  }
+
+  static addToPath(locations) {
+    return Platform.identify({
+      win32: ()=> Platform.addToPath_win32(locations),
+      default: ()=> Promise.resolve()
+    });
+  }
+
+  static getUserPath_win32() {
+    return pify(child_process.exec)(
+      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\')"'
+    ).then(result=> Promise.resolve(result.replace(/\r?\n/g, '')));
+  }
+
+  static setUserPath_win32(newPath) {
+    return pify(child_process.exec)(
+      `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable(\'Path\', \'${newPath}\', \'User\');[Environment]::Exit(0);"`
+    );
+  }
+
+  static addToPath_win32(locations) {
+    return Platform.getUserPath_win32().then((pathString)=>{
+      let pathLocations = pathString.split(';');
+      return Platform.setUserPath_win32([...locations.filter(item=>!pathLocations.includes(item)), pathString].join(';'));
+    });
+  }
+
+  static removeFromPath_win32(locations) {
+    return Platform.getUserPath_win32().then((pathString)=>{
+      let pathLocations = pathString.split(';');
+      return Platform.setUserPath_win32([...pathLocations.filter(item=>!locations.includes(item))].join(';'));
     });
   }
 }

@@ -169,4 +169,17 @@ describe('Platform', function() {
     });
   });
 
+  describe('getUserPath',function() {
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+      it('returns Path variable value without \\r\\n at the end', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path\r\n', undefined);
+        return Platform.getUserPath_win32().then((result) => {
+          expect(result).to.be.equal('c:\\path');
+        });
+      });
+    });
+  });
 });
