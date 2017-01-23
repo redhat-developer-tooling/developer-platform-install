@@ -112,7 +112,7 @@ class CDKInstall extends InstallableItem {
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`); })
     .then((result) => { return installer.copyFile(this.cdkIsoDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
-    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath(ocDir) : installer.exec(`rm -f /usr/local/bin/oc; ln -s ${ocDir}/oc /usr/local/bin/oc;`); })
+    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`,`${ocDir}/minishift`])})
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
   }
