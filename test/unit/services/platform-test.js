@@ -221,6 +221,32 @@ describe('Platform', function() {
         });
       });
     });
+    describe('on macos', function(){
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('passes new path value to shell script', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        let executables = ['/Applications/devsuite/cdk/bin/oc',
+          '/Appications/devsuite/cdk/bin/minishift'];
+        return Platform.addToUserPath(executables).then(() => {
+          expect(child_process.exec.getCall(0).args[0].includes(executables[0])).to.be.true;
+          expect(child_process.exec.getCall(0).args[0].includes(executables[1])).to.be.true;
+        });
+      });
+    });
+    describe('on linux', function(){
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+      });
+      it('it does nothing', function() {
+        let executables = ['/home/user/devsuite/cdk/bin/oc',
+          '/home/user/devsuite/cdk/bin/minishift'];
+        return Platform.addToUserPath(executables).then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
   });
 
   describe('setUserPath', function() {
@@ -230,14 +256,35 @@ describe('Platform', function() {
       });
       it('passes new path value to powershell script', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '');
-        return Platform.setUserPath_win32('c:\\path').then(() => {
+        return Platform.setUserPath('c:\\path').then(() => {
           expect(child_process.exec.getCall(0).args[0].includes('\'c:\\path\'')).to.be.true;
+        });
+      });
+    });
+    describe('on linux', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+      });
+      it('does nothing', function() {
+        return Platform.setUserPath('c:\\path').then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
+    describe('on macos', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('does nothing', function() {
+        return Platform.setUserPath('c:\\path').then((result) => {
+          expect(result).to.be.undefined;
         });
       });
     });
   });
 
   describe('removeFromUserPath', function() {
+    let locations = ['c:\\path1', 'c:\\path2', 'c:\\path3'];
     describe('on windows', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
@@ -245,9 +292,28 @@ describe('Platform', function() {
       it('removes only locations that passed in', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path1;c:\\path2;c:\\path3;c:\\path4');
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
-        let locations = ['c:\\path1', 'c:\\path2', 'c:\\path3'];
         return Platform.removeFromUserPath(locations).then(() => {
           expect(Platform.setUserPath_win32).calledWith('c:\\path4');
+        });
+      });
+    });
+    describe('on macos', function(){
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('it does nothing', function() {
+        return Platform.removeFromUserPath(locations).then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
+    describe('on linux', function(){
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+      });
+      it('it does nothing', function() {
+        return Platform.removeFromUserPath(locations).then((result) => {
+          expect(result).to.be.undefined;
         });
       });
     });

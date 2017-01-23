@@ -1,6 +1,7 @@
 'use strict';
 const child_process = require('child_process');
 const pify = require('pify');
+const path = require('path');
 
 class Platform {
   static identify(map) {
@@ -82,6 +83,7 @@ class Platform {
   static addToUserPath(locations) {
     return Platform.identify({
       win32: ()=> Platform.addToUserPath_win32(locations),
+      darwin: ()=> Platform.addToUserPath_darwin(locations),
       default: ()=> Promise.resolve()
     });
   }
@@ -92,6 +94,17 @@ class Platform {
       default: ()=> Promise.resolve()
     });
   }
+
+  static setUserPath(newPath) {
+    return Platform.identify({
+      win32: ()=> Platform.setUserPath_win32(newPath),
+      default: ()=> Promise.resolve()
+    });
+  }
+
+  /*
+    Windows Platform Support
+  */
 
   static getUserPath_win32() {
     return pify(child_process.exec)(
@@ -118,6 +131,22 @@ class Platform {
       return Platform.setUserPath_win32([...pathLocations.filter(item=>!locations.includes(item))].join(';'));
     });
   }
+
+  /*
+    mac OS Platform Support
+  */
+
+  static addToUserPath_darwin(executables) {
+    let commands = [];
+    executables.forEach(function(executable){
+      let name = path.parse(executable).name;
+      commands.push(`rm -f /usr/local/bin/${name}; ln -s ${executable} /usr/local/bin/${name};`)
+    })
+    return pify(child_process.exec)(commands.join());
+  }
+
 }
+
+
 
 export default Platform;
