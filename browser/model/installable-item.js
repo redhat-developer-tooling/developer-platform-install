@@ -131,7 +131,7 @@ class InstallableItem {
       let h = new Hash();
 
       if (progress.current === 0 && progress.status !== 'Downloading') {
-        progress.setStatus("Verifying Existing Download");
+        progress.setStatus('Verifying Existing Download');
       }
 
       h.SHA256(downloadedFile, (dlSha) => {
