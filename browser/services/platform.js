@@ -142,7 +142,7 @@ class Platform {
       let name = path.parse(executable).name;
       commands.push(`rm -f /usr/local/bin/${name}; ln -s ${executable} /usr/local/bin/${name};`)
     })
-    return pify(child_process.exec)(commands.join());
+    return pify(child_process.exec)(commands.join(' '));
   }
 
 }
