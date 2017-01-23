@@ -41,10 +41,10 @@ class Platform {
         return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled"').then((stdout)=>{
           let result = Promise.resolve();
           if(stdout) {
-            stdout = stdout.replace(/\s/g,"");
-            if(stdout == "True") {
+            stdout = stdout.replace(/\s/g, '');
+            if(stdout == 'True') {
               result = Promise.resolve(true);
-            } else if(stdout == "False") {
+            } else if(stdout == 'False') {
               result = Promise.resolve(false);
             }
           }
@@ -60,13 +60,13 @@ class Platform {
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)(`PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-All | foreach{$_.state}"`).then((stdout) => {
+        return pify(child_process.exec)('PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-All | foreach{$_.state}"').then((stdout) => {
           let result = Promise.resolve();
           if(stdout) {
-            stdout = stdout.replace(/\s/g,"");
-            if(stdout == "Enabled") {
+            stdout = stdout.replace(/\s/g, '');
+            if(stdout == 'Enabled') {
               result = Promise.resolve(true);
-            } else if(stdout == "Disabled") {
+            } else if(stdout == 'Disabled') {
               result = Promise.resolve(false);
             }
           }
@@ -79,9 +79,16 @@ class Platform {
     });
   }
 
-  static addToPath(locations) {
+  static addToUserPath(locations) {
     return Platform.identify({
-      win32: ()=> Platform.addToPath_win32(locations),
+      win32: ()=> Platform.addToUserPath_win32(locations),
+      default: ()=> Promise.resolve()
+    });
+  }
+
+  static removeFromUserPath(locations) {
+    return Platform.identify({
+      win32: ()=> Platform.removeFromUserPath_win32(locations),
       default: ()=> Promise.resolve()
     });
   }
@@ -98,14 +105,14 @@ class Platform {
     );
   }
 
-  static addToPath_win32(locations) {
+  static addToUserPath_win32(locations) {
     return Platform.getUserPath_win32().then((pathString)=>{
       let pathLocations = pathString.split(';');
       return Platform.setUserPath_win32([...locations.filter(item=>!pathLocations.includes(item)), pathString].join(';'));
     });
   }
 
-  static removeFromPath_win32(locations) {
+  static removeFromUserPath_win32(locations) {
     return Platform.getUserPath_win32().then((pathString)=>{
       let pathLocations = pathString.split(';');
       return Platform.setUserPath_win32([...pathLocations.filter(item=>!locations.includes(item))].join(';'));
