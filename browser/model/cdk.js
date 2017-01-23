@@ -96,18 +96,6 @@ class CDKInstall extends InstallableItem {
     progress.setStatus('Installing');
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
 
-    let opts = [
-      '-ExecutionPolicy',
-      'ByPass',
-      '-File',
-      this.pscpPathScript
-    ];
-    let data = [
-      '$newPath = "' + this.installerDataSvc.ocDir() + '";',
-      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-      '[Environment]::SetEnvironmentVariable("Path", "$newPath;$oldPath", "User");',
-      '[Environment]::Exit(0)'
-    ].join('\r\n');
     let markerContent = [
       'openshift.auth.scheme=Basic',
       'openshift.auth.username=openshift-dev',
@@ -120,13 +108,11 @@ class CDKInstall extends InstallableItem {
     let ocDir = this.installerDataSvc.ocDir();
     installer.unzip(this.downloadedFile, ocDir, Platform.OS === 'win32' ? '' :'darwin-amd64/')
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/minishift`); })
-    .then((result) => { return installer.unzip(this.ocDownloadedFile, ocDir); })
+    .then(() => { return installer.unzip(this.ocDownloadedFile, ocDir); })
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`); })
     .then((result) => { return installer.copyFile(this.cdkIsoDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
-    .then((result) => { return Platform.OS === 'win32' ? installer.writeFile(this.pscpPathScript, data, result) : Promise.resolve(true); })
     .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
-    .then((result) => { return Platform.OS === 'win32' ? installer.execFile('powershell', opts, result) : Promise.resolve(true); })
-    .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`rm -f /usr/local/bin/oc; ln -s ${ocDir}/oc /usr/local/bin/oc;`); })
+    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`,`${ocDir}/minishift`])})
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
   }
