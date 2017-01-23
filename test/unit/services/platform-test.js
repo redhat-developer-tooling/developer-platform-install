@@ -114,6 +114,13 @@ describe('Platform', function() {
         });
       });
 
+      it('should return promise resolved to undefined if powershell script returns unexpected value in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Unexpected', undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
       it('should return promise resolved to undefined if powershell script returns null in stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, null, undefined);
         return Platform.isVirtualizationEnabled().then((result) => {
@@ -155,6 +162,13 @@ describe('Platform', function() {
 
       it('should return promise resolved to undefined if powershell script returns nothing in stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '', undefined);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script returns unexpected value in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Unexpected', undefined);
         return Platform.isHypervisorEnabled().then((result) => {
           expect(result).to.be.undefined;
         });
