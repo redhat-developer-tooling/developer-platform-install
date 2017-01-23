@@ -89,10 +89,8 @@ describe('Platform', function() {
 
     describe('on windows', function() {
 
-      let stub;
-
       beforeEach(function() {
-        stub = sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getOS').returns('win32');
       });
 
       it('should return promise resolved to true if powershell script returns `True` in stdout', function() {
@@ -221,7 +219,7 @@ describe('Platform', function() {
         });
       });
     });
-    describe('on macos', function(){
+    describe('on macos', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
@@ -235,7 +233,7 @@ describe('Platform', function() {
         });
       });
     });
-    describe('on linux', function(){
+    describe('on linux', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
       });
@@ -297,7 +295,7 @@ describe('Platform', function() {
         });
       });
     });
-    describe('on macos', function(){
+    describe('on macos', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
@@ -307,7 +305,7 @@ describe('Platform', function() {
         });
       });
     });
-    describe('on linux', function(){
+    describe('on linux', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
       });

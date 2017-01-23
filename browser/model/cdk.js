@@ -110,10 +110,10 @@ class CDKInstall extends InstallableItem {
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/minishift`); })
     .then(() => { return installer.unzip(this.ocDownloadedFile, ocDir); })
     .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`); })
-    .then((result) => { return installer.copyFile(this.cdkIsoDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName), result); })
-    .then((result) => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result); })
-    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`,`${ocDir}/minishift`])})
-    .then((result) => { return installer.succeed(result); })
+    .then(() => { return installer.copyFile(this.cdkIsoDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName)); })
+    .then(() => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent); })
+    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]); })
+    .then(() => { return installer.succeed(true); })
     .catch((error) => { return installer.fail(error); });
   }
 }
