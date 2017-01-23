@@ -217,9 +217,40 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
         let locations = ['c:\\path1', 'c:\\path2'];
         return Platform.addToUserPath(locations).then(() => {
-          expect(Platform.setUserPath_win32.getCall(0).args[0].startsWith('c:\\path2')).to.be.equal(true);
+          expect(Platform.setUserPath_win32.getCall(0).args[0].startsWith('c:\\path2')).to.be.true;
         });
       });
     });
   });
+
+  describe('setUserPath', function() {
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+      it('passes new path value to powershell script', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.setUserPath_win32('c:\\path').then(() => {
+          expect(child_process.exec.getCall(0).args[0].includes('\'c:\\path\'')).to.be.true;
+        });
+      });
+    });
+  });
+
+  describe('removeFromUserPath', function() {
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+      it('removes only locations that passed in', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path1;c:\\path2;c:\\path3;c:\\path4');
+        sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        let locations = ['c:\\path1', 'c:\\path2', 'c:\\path3'];
+        return Platform.removeFromUserPath(locations).then(() => {
+          expect(Platform.setUserPath_win32).calledWith('c:\\path4');
+        });
+      });
+    });
+  });
+
 });
