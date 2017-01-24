@@ -1,6 +1,8 @@
 'use strict';
 
-let path = require('path');
+import path from 'path';
+import fs from 'fs-extra';
+import rimraf from 'rimraf';
 
 import InstallableItem from './installable-item';
 import Platform from '../services/platform';
@@ -12,8 +14,8 @@ class CDKInstall extends InstallableItem {
     super(CDKInstall.KEY, 900, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.$timeout = $timeout;
-    this.minishiftSha256 = minishiftSha256;
-    this.addOption('install', '2.0.0', '', true);
+    this.sha256 = minishiftSha256;
+    this.addOption('install', '3.0.0', '', true);
     this.selected = false;
   }
 
@@ -29,53 +31,58 @@ class CDKInstall extends InstallableItem {
     progress.setStatus('Installing');
     let cdkDotFolder;
     let minishiftDir = this.installerDataSvc.ocDir();
-    let minishiftExe = path.join(minishiftDir,'minishift' + Platform.OS === 'win32' ? '.exe' : '');
+    let minishiftExe = path.join(minishiftDir, 'minishift' + (Platform.OS === 'win32' ? '.exe' : ''));
     let ocDir;
     let ocExe;
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
 
-    let markerContent = [
-      'openshift.auth.scheme=Basic',
-      'openshift.auth.username=openshift-dev',
-      'openshift.auth.password=devel',
-      'oc.binary.path=' + this.installerDataSvc.ocDir(),
-      'minishift.binary.path=' + this.installerDataSvc.ocDir(),
-      'rhel.iso.binary.path=' + this.installerDataSvc.cdkBoxDir(),
-      'rhel.subscription.username=' + this.installerDataSvc.getUsername()
-    ].join('\r\n');
     Promise.resolve().then(()=> {
       return Platform.getUserHomePath().then((home)=>{
-        cdkDotFolder = path.join(home,".minishift")
+        cdkDotFolder = path.join(home, '.minishift');
+        if(fs.existsSync(cdkDotFolder)) {
+          rimraf.sync(cdkDotFolder);
+        }
         return Promise.resolve();
       });
     }).then(() => {
-      if(this.downloadedFile.endsWith('.exe')) {
-        return installer.copyFile(this.downloadedFile, minishiftDir);
+      if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
+        return installer.copyFile(this.downloadedFile, minishiftExe);
       } else if(this.downloadedFile.endsWith('.zip') || this.downloadedFile.endsWith('.tar.gz') ) {
-        return installer.unzip(this.downloadedFile, minishiftDir, Platform.OS === 'win32' ? '' :'darwin-amd64/')
+        return installer.unzip(this.downloadedFile, minishiftDir, Platform.OS === 'win32' ? '' :'darwin-amd64/');
       }
       return Promise.reject('Cannot process downloaded cdk distribution');
     }).then(() => {
-      return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${minishiftDir}/minishift`);
+      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${minishiftDir}/minishift`);
     }).then(() => {
-      return installer.exec(`${minishiftDir}/minishift setup-cdk --default-vm-driver=virtualbox`);
+      return installer.exec(`${minishiftExe} setup-cdk --default-vm-driver=virtualbox`);
     }).then(() => {
-      return globby(['oc','oc.exe'],{root: cdkDotFolder}).then((files)=>{
-        ocExe = files[0];
+      return globby(['/**/oc', '/**/oc.exe'], {root: path.join(cdkDotFolder, 'cache', 'oc')}).then((files)=>{
+        ocExe = files[0].replace(/\//g, path.sep);
         ocDir = path.parse(ocExe).dir;
         return Promise.resolve();
       });
     }).then(()=> {
-      return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocExe}`);
+      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${ocExe}`);
     }).then(() => {
-      return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent, result);
+      return installer.writeFile(this.installerDataSvc.cdkMarker(), this.generateMarkerFileContent(ocDir, minishiftDir, this.installerDataSvc.getUsername()));
     }).then(() => {
-      return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`,`${ocDir}/minishift`]);
-    }).then((result) => {
-      return installer.succeed(result);
+      return Platform.OS === 'win32' ? Platform.addToUserPath([minishiftDir, ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]);
+    }).then(() => {
+      return installer.succeed(true);
     }).catch((error) => {
       return installer.fail(error);
     });
+  }
+
+  generateMarkerFileContent(ocDir, minishiftDir, userName) {
+    return [
+      'openshift.auth.scheme=Basic',
+      'openshift.auth.username=openshift-dev',
+      'openshift.auth.password=devel',
+      `oc.binary.path=${ocDir}`,
+      `minishift.binary.path=${minishiftDir}`,
+      `rhel.subscription.username=${userName}`
+    ].join('\r\n');
   }
 }
 

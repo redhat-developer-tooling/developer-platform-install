@@ -39,6 +39,7 @@
     "fs-extra": "2.0.0",
     "glob": "7.1.1",
     "globby": "6.1.0",
+    "mkdirp": "^0.5.1",
     "patternfly": "3.17.0",
     "pify": "2.3.0",
     "replace-in-file": "2.0.3",

@@ -4,32 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/darwin-amd64.tar.gz",
-    "filename": "darwin-amd64.tar.gz",
-    "sha256sum": "257c8bf8346bcc1245645908dc1ede40d212605385ba413d2df9cfdee06577be",
-    "vendor": "Red Hat, Inc."
-  },
-  "minishift-rhel": {
-    "name": "RHEL 7.3 for Hyper-V and VirtualBox",
-    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
-    "bundle": "yes",
-    "version": "7.3",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift-rhel.iso",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift-rhel.iso",
-    "filename": "minishift-rhel.iso",
-    "sha256sum": "f83d0cde0ff3854eaa959f92c616cc70dc7a55c900ba2b4090e0afa6b5a14678",
-    "vendor": "Red Hat, Inc."
-  },
-  "oc": {
-    "name": "Openshift Origin",
-    "description": "The Open Source Container Application Platform",
-    "bundle": "yes",
-    "version": "1.3.1",
-    "url": "https://developers.redhat.com/redirect/to/oc-origin-cli-macos-1.3.1.download",
-    "filename": "openshift-origin-client-tools-v1.3.1-2748423-mac.zip",
-    "sha256sum": "252ee8a1ff8a455a9b55aff82f6980dbf28bd75b601414765b4f06f6c1ec370e",
-    "virusTotalReport": "https://virustotal.com/en/file/252ee8a1ff8a455a9b55aff82f6980dbf28bd75b601414765b4f06f6c1ec370e/analysis/",
+    "dmUrl": "http://wonka.mw.lab.eng.bos.redhat.com/rhd/cdk3/minishift-20170123-56",
+    "url": "http://wonka.mw.lab.eng.bos.redhat.com/rhd/cdk3/minishift-20170123-56",
+    "filename": "minishift",
+    "sha256sum": "2dd507dbc16f81757faab1a11269300dfb2d8efce89d7e351474ce60913e3345",
     "vendor": "Red Hat, Inc."
   },
   "cygwin": {
