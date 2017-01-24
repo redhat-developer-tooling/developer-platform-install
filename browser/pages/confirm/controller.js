@@ -20,6 +20,7 @@ class ConfirmController {
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
+    $scope.virtualization = true;
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -64,6 +65,9 @@ class ConfirmController {
 
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
+      detectors.push(Platform.isVirtualizationEnabled().then(status => {
+        $scope.virtualization = status;
+      }));
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
