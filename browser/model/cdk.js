@@ -1,35 +1,21 @@
 'use strict';
 
-let fs = require('fs-extra');
-let path = require('path');
+import path from 'path';
+import fs from 'fs-extra';
+import rimraf from 'rimraf';
 
 import InstallableItem from './installable-item';
-import Downloader from './helpers/downloader';
 import Platform from '../services/platform';
 import Installer from './helpers/installer';
+import globby from 'globby';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, minishiftUrl, cdkIsoUrl, ocUrl, fileName, targetFolderName, minishiftSha256, cdkIsoSha256, ocSha256,
-    cdkIsoFilename, ocFilename) {
+  constructor(installerDataSvc, $timeout, minishiftUrl, fileName, targetFolderName, minishiftSha256) {
     super(CDKInstall.KEY, 900, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.$timeout = $timeout;
-    this.cdkIsoUrl = cdkIsoUrl;
-    this.ocUrl = ocUrl;
-
-    this.minishiftSha256 = minishiftSha256;
-    this.cdkIsoSha256 = cdkIsoSha256;
-    this.ocSha256 = ocSha256;
-
-    this.boxName = cdkIsoFilename;
-    this.cdkIsoDownloadedFile = path.join(this.downloadFolder, this.boxName);
-
-    this.ocFileName = ocFilename;
-    this.ocDownloadedFile = path.join(this.downloadFolder,   this.ocFileName);
-
-    this.pscpPathScript = path.join(this.downloadFolder, 'set-pscp-path.ps1');
-
-    this.addOption('install', '2.0.0', '', true);
+    this.sha256 = minishiftSha256;
+    this.addOption('install', '3.0.0', '', true);
     this.selected = false;
   }
 
@@ -41,80 +27,62 @@ class CDKInstall extends InstallableItem {
     cb();
   }
 
-  downloadInstaller(progress, success, failure) {
-    let totalDownloads = 3;
-    this.downloader = new Downloader(progress, success, failure, totalDownloads);
-    let username = this.installerDataSvc.getUsername();
-    let password = this.installerDataSvc.getPassword();
-
-    let cdkIsoBundledFile = path.join(this.bundleFolder, this.boxName);
-    if(fs.existsSync(cdkIsoBundledFile)) {
-      this.cdkIsoDownloadedFile = cdkIsoBundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.cdkIsoDownloadedFile,
-        this.cdkIsoUrl,
-        this.cdkIsoSha256,
-        username,
-        password,
-        progress
-      );
-    }
-
-    if(fs.existsSync(this.bundledFile)) {
-      this.downloadedFile = this.bundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.downloadedFile,
-        this.getDownloadUrl(),
-        this.minishiftSha256,
-        username,
-        password,
-        progress
-      );
-    }
-
-    let ocBundledFile = path.join(this.bundleFolder, this.ocFileName);
-    if(fs.existsSync(ocBundledFile)) {
-      this.ocDownloadedFile = ocBundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.ocDownloadedFile,
-        this.ocUrl,
-        this.ocSha256,
-        undefined,
-        undefined,
-        progress
-      );
-    }
-  }
-
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
+    let cdkDotFolder;
+    let minishiftDir = this.installerDataSvc.ocDir();
+    let minishiftExe = path.join(minishiftDir, 'minishift' + (Platform.OS === 'win32' ? '.exe' : ''));
+    let ocDir;
+    let ocExe;
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
 
-    let markerContent = [
+    Promise.resolve().then(()=> {
+      return Platform.getUserHomePath().then((home)=>{
+        cdkDotFolder = path.join(home, '.minishift');
+        if(fs.existsSync(cdkDotFolder)) {
+          rimraf.sync(cdkDotFolder);
+        }
+        return Promise.resolve();
+      });
+    }).then(() => {
+      if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
+        return installer.copyFile(this.downloadedFile, minishiftExe);
+      } else if(this.downloadedFile.endsWith('.zip') || this.downloadedFile.endsWith('.tar.gz') ) {
+        return installer.unzip(this.downloadedFile, minishiftDir, Platform.OS === 'win32' ? '' :'darwin-amd64/');
+      }
+      return Promise.reject('Cannot process downloaded cdk distribution');
+    }).then(() => {
+      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${minishiftDir}/minishift`);
+    }).then(() => {
+      return installer.exec(`${minishiftExe} setup-cdk --default-vm-driver=virtualbox`);
+    }).then(() => {
+      return globby(['/**/oc', '/**/oc.exe'], {root: path.join(cdkDotFolder, 'cache', 'oc')}).then((files)=>{
+        ocExe = files[0].replace(/\//g, path.sep);
+        ocDir = path.parse(ocExe).dir;
+        return Promise.resolve();
+      });
+    }).then(()=> {
+      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${ocExe}`);
+    }).then(() => {
+      return installer.writeFile(this.installerDataSvc.cdkMarker(), this.generateMarkerFileContent(ocDir, minishiftDir, this.installerDataSvc.getUsername()));
+    }).then(() => {
+      return Platform.OS === 'win32' ? Platform.addToUserPath([minishiftDir, ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]);
+    }).then(() => {
+      return installer.succeed(true);
+    }).catch((error) => {
+      return installer.fail(error);
+    });
+  }
+
+  generateMarkerFileContent(ocDir, minishiftDir, userName) {
+    return [
       'openshift.auth.scheme=Basic',
       'openshift.auth.username=openshift-dev',
       'openshift.auth.password=devel',
-      'oc.binary.path=' + this.installerDataSvc.ocDir(),
-      'minishift.binary.path=' + this.installerDataSvc.ocDir(),
-      'rhel.iso.binary.path=' + this.installerDataSvc.cdkBoxDir(),
-      'rhel.subscription.username=' + this.installerDataSvc.getUsername()
+      `oc.binary.path=${ocDir}`,
+      `minishift.binary.path=${minishiftDir}`,
+      `rhel.subscription.username=${userName}`
     ].join('\r\n');
-    let ocDir = this.installerDataSvc.ocDir();
-    installer.unzip(this.downloadedFile, ocDir, Platform.OS === 'win32' ? '' :'darwin-amd64/')
-    .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/minishift`); })
-    .then(() => { return installer.unzip(this.ocDownloadedFile, ocDir); })
-    .then(() => { return Platform.OS === 'win32' ? Promise.resolve(true) : installer.exec(`chmod +x ${ocDir}/oc`); })
-    .then(() => { return installer.copyFile(this.cdkIsoDownloadedFile, path.join(this.installerDataSvc.cdkBoxDir(), this.boxName)); })
-    .then(() => { return installer.writeFile(this.installerDataSvc.cdkMarker(), markerContent); })
-    .then(() => { return Platform.OS === 'win32' ? Platform.addToUserPath([ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]); })
-    .then(() => { return installer.succeed(true); })
-    .catch((error) => { return installer.fail(error); });
   }
 }
 

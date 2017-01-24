@@ -330,8 +330,8 @@ describe('InstallerDataService', function() {
   describe('getRequirementByName', function() {
     it('returns requested requirement', function() {
       try {
-        let result = svc.getRequirementByName('oc');
-        expect(result.name).equal('Openshift Origin');
+        let result = svc.getRequirementByName('cdk');
+        expect(result.name).equal('Red Hat Container Development Kit');
       } catch (error) {
         expect.fail();
       }

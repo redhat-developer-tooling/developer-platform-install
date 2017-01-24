@@ -80,6 +80,21 @@ class Platform {
     });
   }
 
+  static getUserHomePath() {
+    return Platform.identify({
+      win32: ()=> {
+        return pify(child_process.exec)('echo %USERPROFILE%').then((profilePath)=>{
+          return Promise.resolve(profilePath.replace(/\r?\n/g, ''));
+        });
+      },
+      darwin: ()=> {
+        return pify(child_process.exec)('echo $HOME').then((homePath)=>{
+          return Promise.resolve(homePath.replace(/\r?\n/g, ''));
+        });
+      }
+    })
+  }
+
   static addToUserPath(locations) {
     return Platform.identify({
       win32: ()=> Platform.addToUserPath_win32(locations),
