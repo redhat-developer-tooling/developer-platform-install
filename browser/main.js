@@ -111,15 +111,9 @@ let mainModule =
               installerDataSvc,
               $timeout,
               reqs['cdk'].dmUrl,
-              reqs['minishift-rhel'].dmUrl,
-              reqs['oc'].url,
               reqs['cdk'].filename,
               'cdk',
-              reqs['cdk'].sha256sum,
-              reqs['minishift-rhel'].sha256sum,
-              reqs['oc'].sha256sum,
-              reqs['minishift-rhel'].filename,
-              reqs['oc'].filename
+              reqs['cdk'].sha256sum
             );
 
             let jdk = new JdkInstall(

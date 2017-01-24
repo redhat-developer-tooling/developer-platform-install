@@ -87,7 +87,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements'], function(c
 // default task
 gulp.task('default', ['run']);
 
-gulp.task('run', ['update-requirements'], function(cb) {
+gulp.task('run', ['update-requirements','create-modules-link'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled', common.createExecCallback(cb));
 });
 

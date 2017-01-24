@@ -4,10 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/windows-amd64.zip",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/windows-amd64.zip",
-    "filename": "windows-amd64.zip",
-    "sha256sum": "9b354ee04ea6fb5a32dba19c9c04772c0e9482df91a2412186f6846a21e433b1",
+    "dmUrl": "https://dev-platform-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/CDK/job/cdk_build/ws/windows-amd64/minishift.exe",
+    "url": "https://dev-platform-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/CDK/job/cdk_build/ws/windows-amd64/minishift.exe",
+    "filename": "minishift.exe",
+    "sha256sum": "e5d3ae84f3cb57e73a55f1301b94898b9e897c730cfbd53059042bde6ec0f62f",
     "vendor": "Red Hat, Inc."
   },
   "minishift-rhel": {
