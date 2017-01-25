@@ -22,7 +22,7 @@
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input id="virtualbox-checkbox" type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected')" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
+             <input id="virtualbox-checkbox" type="checkbox" ng-disabled="checkboxModel.virtualbox.hasOption('detected') || checkboxModel.cdk.selectedOption=='install'" ng-model="checkboxModel.virtualbox.selectedOption" ng-true-value="'install'" ng-false-value="'detected'" aria-label="Toggle ngHide" class="vallign-middle"  title="{{checkboxModel.virtualbox.hasOption('detected')?'Update is not supported yet':'Select to install';}}">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-virtualbox" class="arrow" ng-class="{'arrow-down':!checkboxModel.virtualbox.isCollapsed}" aria-label="Toggle ngHide"></div>
