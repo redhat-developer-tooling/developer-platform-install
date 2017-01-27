@@ -4,10 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/linux-amd64.tar.gz",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/26-Dec-2016.3_0.alpha/minishift/linux-amd64.tar.gz",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/linux-amd64/minishift",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/linux-amd64/minishift",
     "filename": "linux-amd64.tar.gz",
-    "sha256sum": "70e1c5af6900ffd5cf79ca5b624e98f13a56f9e4d53cfc3077ce5b799d1f54a0",
+    "sha256sum": "61c924c21963281a995d79a3599c314eb4e0b0a1372a8165a339b17ed08b4141",
     "vendor": "Red Hat, Inc."
   },
   "cygwin": {

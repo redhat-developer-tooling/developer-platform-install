@@ -4,10 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://wonka.mw.lab.eng.bos.redhat.com/rhd/cdk3/minishift-20170123-56.exe",
-    "url": "http://wonka.mw.lab.eng.bos.redhat.com/rhd/cdk3/minishift-20170123-56.exe",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/windows-amd64/minishift.exe",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/windows-amd64/minishift.exe",
     "filename": "minishift.exe",
-    "sha256sum": "e5d3ae84f3cb57e73a55f1301b94898b9e897c730cfbd53059042bde6ec0f62f",
+    "sha256sum": "5fd30867cc62954660e3fc745146ac7434f5e362c10be996466adc4cae8169e9",
     "vendor": "Red Hat, Inc."
   },
   "cygwin": {
