@@ -48,11 +48,11 @@
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
     "bundle": "yes",
-    "version": "10.2.0.GA",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.2.0.GA-installer-standalone.jar?workflow=direct",
-    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
-    "filename": "devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar",
-    "sha256sum": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.2.0.GA-build-product/2016-11-25_14-44-04-B55/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar.sha256",
+    "version": "10.3.0.AM2",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.3.0.GA-installer-standalone.jar?workflow=direct",
+    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.3.0.AM2-build-product/2017-01-27_12-08-21-B6970/all/devstudio-10.3.0.AM2-v20170127-1155-B6970-installer-standalone.jar",
+    "filename": "devstudio-10.3.0.AM2-v20170127-1155-B6970-installer-standalone.jar",
+    "sha256sum": "5c30f07b4c1671655e3476b3c6df4a23e8724f7c80476e7c3f6cc375a2f465a7",
     "vendor": "Red Hat, Inc."
   },
   "jdk.msi": {

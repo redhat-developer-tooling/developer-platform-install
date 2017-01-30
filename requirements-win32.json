@@ -50,9 +50,9 @@
     "bundle": "yes",
     "version": "10.3.0.AM2",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.3.0.GA-installer-standalone.jar?workflow=direct",
-    "url": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_master/2017-01-25_18-11-50-B6954/all/devstudio-10.3.0.AM2-v20170125-1754-B6954-installer-standalone.jar",
-    "filename": "devstudio-10.3.0.AM2-v20170125-1754-B6954-installer-standalone.jar",
-    "sha256sum": "c21d35aef7ac6984f19aae60cfa0041bb82d1add6e87c48fbedb29df5f9e03a1",
+    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.3.0.AM2-build-product/2017-01-27_12-08-21-B6970/all/devstudio-10.3.0.AM2-v20170127-1155-B6970-installer-standalone.jar",
+    "filename": "devstudio-10.3.0.AM2-v20170127-1155-B6970-installer-standalone.jar",
+    "sha256sum": "5c30f07b4c1671655e3476b3c6df4a23e8724f7c80476e7c3f6cc375a2f465a7",
     "vendor": "Red Hat, Inc."
   },
   "jdk.msi": {
