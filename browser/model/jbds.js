@@ -2,7 +2,6 @@
 
 let path = require('path');
 let fs = require('fs-extra');
-let Glob = require('glob').Glob;
 let replace = require('replace-in-file');
 
 import JbdsAutoInstallGenerator from './jbds-autoinstall';
@@ -12,11 +11,10 @@ import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
 import CDKInstall from './cdk.js';
 import Util from './helpers/util';
-import Platform from '../services/platform';
 
 class JbdsInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, jbdsSha256, additionalLocations, additionalIus) {
-    super(JbdsInstall.KEY, 1600, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
+  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, jbdsSha256, key=JbdsInstall.KEY, additionalLocations, additionalIus) {
+    super(key, 1600, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.jbdsSha256 = jbdsSha256;
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbds-autoinstall.xml');
@@ -46,71 +44,22 @@ class JbdsInstall extends InstallableItem {
     cb();
   }
 
-  checkForExistingInstall(selection, data) {
-    let pattern, directory;
-    let versionRegex = /version\s(\d+)\.\d+\.\d+/;
-    let matched = false;
+  checkForExistingInstall() {
 
-    if(selection) {
-      this.existingInstallLocation = selection[0];
-    } else {
-      this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
-      return;
+  }
+
+  isDownloadRequired() {
+    if(this.keyName !== 'jbds') {
+      let jbds = this.installerDataSvc.getInstallable('jbds');
+      return !jbds.hasOption('install');
     }
-
-    if (Platform.OS === 'win32') {
-      directory = selection ? selection[0] : 'c:';
-      pattern = selection ? 'studio/devstudio.exe' : '**/studio/devstudio.exe';
-    } else {
-      directory = selection ? selection[0] : Platform.ENV[Platform.HOME];
-      pattern = selection ? 'studio/devstudio' : '{*,*/*,*/*/*,*/*/*/*}/studio/devstudio';
-    }
-
-    let globster = new Glob(pattern, { cwd: directory, silent: true, nodir: true, strict : false});
-    globster.on('match', (match) => {
-      globster.pause();
-      let jbdsRoot = path.join(directory, path.dirname(path.dirname(match)));
-      this.checkVersion(jbdsRoot, versionRegex)
-      .then((result) => {
-        if (result) {
-          matched = true;
-          this.existingInstall = true;
-          if (selection && data) {
-            data[JbdsInstall.KEY][1] = true;
-          } else {
-            this.existingInstallLocation = selection ? this.existingInstallLocation : jbdsRoot;
-          }
-          globster.abort();
-          this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
-        } else {
-          globster.resume();
-        }
-      });
-    }).on('end', () => {
-      if (!matched) {
-        if (data && selection) {
-          this.existingInstall = false;
-        }
-      } else {
-        if (data && selection) {
-          this.existingInstall = true;
-        }
-      }
-      if(data && selection) {
-        if (data[JbdsInstall.KEY]) {
-          data[JbdsInstall.KEY][1] = this.existingInstall;
-        } else {
-          data[JbdsInstall.KEY] = [this, this.existingInstall];
-        }
-      }
-      this.ipcRenderer.send('checkComplete', JbdsInstall.KEY);
-    });
+    return this.useDownload;
   }
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     if(this.selectedOption === 'install') {
-      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
+      this.installGenerator = new JbdsAutoInstallGenerator(this.getLocation(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
       let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
 
       Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content');

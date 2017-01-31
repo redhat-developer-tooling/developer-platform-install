@@ -13,6 +13,7 @@ class StartController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
+    this.fuseInstall = this.installerDataSvc.getInstallable('fuse');
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
@@ -26,7 +27,7 @@ class StartController {
   }
 
   start() {
-    if(this.jbdsInstall.isSkipped()) {
+    if(this.jbdsInstall.isSkipped() && this.fuseInstall.isSkipped()) {
       this.exit();
     } else {
       this.launchDevstudio();

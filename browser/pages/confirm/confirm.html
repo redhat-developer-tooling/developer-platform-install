@@ -423,6 +423,22 @@
         </div>
       </div>
     </div>
+
+    <!-- fuse tooling -->
+    <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.fuse.hasOption('detected')}">
+      <div id="devstudio-panel-heading" class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.fuse.hasOption('detected')}">
+        <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
+        <div class="checkbox-container verticalLine"> <!--ng-show="!checkboxModel.jbds.hasOption('detected')"-->
+         <input id="devstudio-checkbox" type="checkbox" ng-model="checkboxModel.fuse.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+        </div>
+        <div class="product-container">
+          <span id="devstudio-installed-note" class="installed-note" ng-show="checkboxModel.fuse.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="devstudio-name" class="product-name">{{checkboxModel.fuse.productName}}</span><span id="devstudio-version" class="product-version">{{checkboxModel.fuse.version}}</span>
+          <div id="devstudio-description">{{checkboxModel.fuse.productDesc}}</div>
+        </div>
+      </div>
+    </div>
   </form>
 </main>
 
