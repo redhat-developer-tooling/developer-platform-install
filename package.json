@@ -28,7 +28,8 @@
     "ui-test": "./node_modules/.bin/gulp ui-test",
     "system-test": "./node_modules/.bin/gulp system-test",
     "dist:mac": "./node_modules/.bin/gulp dist",
-    "eslint": "./node_modules/.bin/eslint browser main test gulp-tasks"
+    "eslint": "./node_modules/.bin/eslint browser main test gulp-tasks",
+    "update-deps": "node_modules/.bin/ncu --upgrade --loglevel verbose --packageFile package.json && npm update"
   },
   "dependencies": {
     "angular": "1.6.1",
@@ -68,7 +69,7 @@
     "gulp-copy": "1.0.0",
     "gulp-rename": "1.2.2",
     "gulp-run": "1.7.1",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "^2.4.1",
     "gulp-spawn-mocha": "3.1.0",
     "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.2.0",
@@ -81,7 +82,8 @@
     "minimatch": "3.0.3",
     "mkdirp": "0.5.1",
     "mocha": "3.2.0",
-    "mock-fs": "3.12.1",
+    "mock-fs": "4.0.0",
+    "npm-check-updates": "2.10.1",
     "pem": "1.9.4",
     "protractor": "5.1.0",
     "querystring": "0.2.0",

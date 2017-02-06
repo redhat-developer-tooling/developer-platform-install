@@ -3,8 +3,8 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
 import fs from 'fs-extra';
+import mockfs from 'mock-fs';
 import path from 'path';
 import JbdsInstall from 'browser/model/jbds';
 import JdkInstall from 'browser/model/jdk-install';
