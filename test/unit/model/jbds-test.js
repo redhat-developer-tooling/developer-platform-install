@@ -3,8 +3,8 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
 import fs from 'fs-extra';
+import mockfs from 'mock-fs';
 import path from 'path';
 import JbdsInstall from 'browser/model/jbds';
 import JdkInstall from 'browser/model/jdk-install';
@@ -31,7 +31,12 @@ describe('devstudio installer', function() {
   let failure = () => {};
 
   function stubDataService() {
-    let ds = sinon.stub(new InstallerDataService());
+    let ds = sinon.stub(new InstallerDataService({}, {
+      jbds: {},
+      jdk:{
+        name: 'OpenJDK'
+      }
+    }));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
     ds.installDir.returns('installationFolder');

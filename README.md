@@ -298,6 +298,16 @@ download-manager. Start dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
 from package explorer and use it as you would normally do after release.
 
 
+Updating dependencies to latest
+-------------------------------
+
+Most of dependencies are declared with exact version. That was done to get
+reproducible build results in various environments. To move declared dependencies
+to latest available versions run command below and then send regular github.com
+pull request.
+
+    npm run update-deps
+
 Releasing the installer
 -----------------------
 
