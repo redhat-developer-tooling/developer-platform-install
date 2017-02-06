@@ -146,9 +146,4 @@ class Platform {
   }
 }
 
-Platform.PATH = Platform.identify({
-  win32: ()=>'Path',
-  default: ()=>'PATH'
-});
-
 export default Platform;
