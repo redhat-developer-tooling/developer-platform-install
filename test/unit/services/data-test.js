@@ -113,6 +113,7 @@ describe('InstallerDataService', function() {
       expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
       expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
       expect(svc.cdkBoxDir()).to.equal(svc.cdkRoot);
+      expect(svc.cdkMarker()).to.equal(path.join(svc.cdkRoot, '.cdk'));
       expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
     });
   });
