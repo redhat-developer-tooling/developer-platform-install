@@ -31,7 +31,12 @@ describe('devstudio installer', function() {
   let failure = () => {};
 
   function stubDataService() {
-    let ds = sinon.stub(new InstallerDataService());
+    let ds = sinon.stub(new InstallerDataService({}, {
+      jbds: {},
+      jdk:{
+        name: 'OpenJDK'
+      }
+    }));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
     ds.installDir.returns('installationFolder');
