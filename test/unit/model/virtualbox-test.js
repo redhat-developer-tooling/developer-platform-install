@@ -29,6 +29,7 @@ describe('Virtualbox installer', function() {
   let version = '5.1.12';
   let revision = '112440';
   let finalUrl = 'http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-Win.exe';
+  let item2;
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
@@ -45,6 +46,7 @@ describe('Virtualbox installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
+    item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
 
     mockfs({
       tempDirectory: {},
@@ -133,8 +135,9 @@ describe('Virtualbox installer', function() {
     let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
 
     describe('on windows', function() {
-      let installer;
+      let installer, helper;
       beforeEach(function() {
+        helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
         installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
         installer.ipcRenderer = { on: function() {} };
@@ -161,7 +164,6 @@ describe('Virtualbox installer', function() {
       });
 
       it('setup should wait for all downloads to complete', function() {
-        let helper = new Installer('virtualbox', fakeProgress);
         let spy = sandbox.spy(installer, 'installMsi');
 
         installerDataSvc.downloading = true;
@@ -174,7 +176,6 @@ describe('Virtualbox installer', function() {
 
       describe('configure', function() {
         it('should call installMsi if all downloads have finished', function() {
-          let helper = new Installer('virtualbox', fakeProgress);
           let spy = sandbox.spy(installer, 'installMsi');
           sandbox.stub(child_process, 'execFile').yields();
 
@@ -228,7 +229,6 @@ describe('Virtualbox installer', function() {
     it('should catch errors during the installation', function(done) {
       sandbox.stub(child_process, 'execFile').yields(new Error('critical error'));
       sandbox.stub(child_process, 'exec').yields(new Error('critical error'));
-      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
 
@@ -240,10 +240,23 @@ describe('Virtualbox installer', function() {
       }
     });
 
+    it('should run virtualbox installer executable to extract msi installer into temp folder', function(done) {
+      let stub = sandbox.stub(child_process, 'execFile').yields(null, done(), "");
+      let data = [
+        '--extract',
+        '-path',
+        installerDataSvc.tempDir(),
+        '--silent'
+      ];
+      let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
+      installer.install(fakeProgress, success, failure);
+      expect(stub).to.be.calledOnce;
+      expect(stub).calledWith(downloadedFile, data);
+    });
+
     it('should skip installation when an existing version is used', function() {
       installer.selectedOption = 'detect';
       let spy = sandbox.spy(Installer.prototype, 'execFile');
-      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
       installer.install(fakeProgress, success, failure);
