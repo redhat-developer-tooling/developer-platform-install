@@ -4,16 +4,20 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import 'sinon-as-promised';
+import ElectronMock from '../../../mock/electron';
 import AccountController from 'browser/pages/account/controller.js';
 chai.use(sinonChai);
 
 describe('Account controller', function() {
 
   let controller, timeout, scope;
+  let sandbox = sinon.sandbox.create();
+  let electron = new ElectronMock();
 
   beforeEach(function() {
     timeout = function(cb) { cb(); };
     scope = { '$apply': function() { } };
+    controller = new AccountController({}, timeout, scope, null, null, {}, electron);
   });
 
 
@@ -131,6 +135,31 @@ describe('Account controller', function() {
       expect(controller.authFailed).to.be.false;
       expect(controller.tandcNotSigned).to.be.false;
       expect(controller.httpError).to.be.not.undefined;
+    });
+  });
+
+  describe('createAccount', function() {
+    it('should open createAccount url in browser using electron.shell.openExternal', function() {
+      sandbox.stub(electron.shell);
+      controller.createAccount();
+      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/protocol/openid-connect/registrations?client_id=web&response_mode=fragment&response_type=code&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2F%2Fconfirmation');
+    });
+  });
+
+  describe('forgotPassword', function() {
+    it('should open forgotPassword url in browser using electron.shell.openExternal', function() {
+      controller.forgotPassword();
+      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/account');
+    });
+  });
+
+  describe('gotoDRH', function() {
+    it('should open DRH url in browser using electron.shell.openExternal', function() {
+      controller.gotoDRH();
+      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com');
     });
   });
 
