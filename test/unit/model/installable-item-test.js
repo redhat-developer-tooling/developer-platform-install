@@ -210,6 +210,12 @@ describe('InstallableItem', function() {
     });
   });
 
+  describe('getDownloadUrl', function() {
+    it('should able to get the download Url', function() {
+      expect(item.getDownloadUrl()).to.be.equal('url');
+    });
+  });
+
   describe('validateVersion abstract method', function() {
     it('should not add detected option', function() {
       item.validateVersion();
