@@ -17,6 +17,7 @@ import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import 'sinon-as-promised';
 chai.use(sinonChai);
 
 let child_process = require('child_process');
@@ -143,11 +144,12 @@ describe('Virtualbox installer', function() {
 
     describe('on windows', function() {
       let installer;
+      let helper;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, null);
         installer.ipcRenderer = { on: function() {} };
-      })
+      });
 
       it('should execute the silent extract', function() {
         sandbox.stub(child_process, 'execFile').yields('done');
@@ -248,6 +250,24 @@ describe('Virtualbox installer', function() {
       }
     });
 
+    it('should add virtualbox target install folder to user PATH environment variable', function() {
+      sandbox.stub(child_process, 'execFile').yields(undefined, "", "");
+      sandbox.stub(installer, 'configure').resolves(true);
+      sandbox.stub(Platform, 'addToUserPath').resolves(true);
+
+      installer.selectedOption = 'install';
+      installer.addOption('install', installer.version, 'targetLocation', true);
+
+      return new Promise((resolve, reject)=> {
+        installer.install(fakeProgress, resolve, reject);
+      }).then(()=>{
+        expect(Platform.addToUserPath).to.be.calledOnce;
+        expect(Platform.addToUserPath).calledWith(['targetLocation']);
+      }).catch(()=>{
+        expect.fail()
+      });
+    });
+
     it('should skip installation when an existing version is used', function() {
       installer.selectedOption = 'detect';
       let spy = sandbox.spy(Installer.prototype, 'execFile');
@@ -262,32 +282,48 @@ describe('Virtualbox installer', function() {
 
   describe('detection', function() {
     let validateStub;
+    const VERSION = '5.0.26r1234';
+    const VERSION_PARSED = '5.0.26';
+    const LOCATION = 'folder/vbox';
+
 
     beforeEach(function() {
       let stub = sandbox.stub(Util, 'executeCommand');
       if (process.platform === 'win32') {
         stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
-        stub.onCall(1).resolves('folder/vbox');
-        stub.onCall(2).resolves('5.0.26r1234');
+        stub.onCall(1).resolves(LOCATION);
+        stub.onCall(2).resolves(VERSION);
+
       } else {
-        stub.onCall(0).resolves('folder/vbox');
-        stub.onCall(1).resolves('5.0.26r1234');
+        stub.onCall(0).resolves(LOCATION);
+        stub.onCall(1).resolves(VERSION);
         sandbox.stub(Util, 'findText').resolves('dir=folder/vbox');
       }
-      sandbox.stub(Util, 'folderContains').resolves('folder/vbox');
+      sandbox.stub(Util, 'folderContains').resolves(LOCATION);
       validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
 
-    it('should set virtualbox as detected in the appropriate folder when found', function(done) {
-      return installer.detectExistingInstall(function() {
-        expect(installer.option['detected'].location).to.equal('folder/vbox');
-        done();
+    it('should add option \'detected\' with detected version and location', function() {
+      return new Promise((resolve, rejects)=> {
+        installer.detectExistingInstall(resolve);
+      }).then(()=>{
+        expect(installer.option['detected'].location).to.equal(LOCATION);
+        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+      });
+    });
+
+    it('should add option \'install\' when nothing detected', function() {
+      return new Promise((resolve, rejects)=> {
+        Util.executeCommand.onCall(2).rejects();
+        installer.detectExistingInstall(resolve);
+      }).then(()=>{
+        expect(installer.option['install']).is.not.undefined;
       });
     });
 
     it('should check the detected version', function(done) {
       return installer.detectExistingInstall(function() {
-        expect(installer.option['detected'].version).to.equal('5.0.26');
+        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
         done();
       });
     });
