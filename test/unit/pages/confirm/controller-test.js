@@ -8,6 +8,7 @@ import Logger from 'browser/services/logger';
 import ElectronMock from '../../../mock/electron';
 import InstallerDataService from 'browser/services/data';
 import InstallableItem from 'browser/model/installable-item';
+import ConfirmController from 'browser/pages/confirm/controller';
 
 require('../../../angular-test-helper');
 require('browser/main');
@@ -101,6 +102,22 @@ describe('ConfirmController', function() {
       sandbox.stub(electron.remote.currentWindow);
       confirmController.exit();
       expect(electron.remote.currentWindow.close).calledOnce;
+    });
+  });
+
+  describe('isConfigurationValid', function() {
+    it('should return true if all components selected for install are configured correctly', function() {
+      expect(confirmController.isConfigurationValid()).to.be.true;
+    });
+
+    it('should return false if nothing is selected for installation', function() {
+      sandbox.stub(ConfirmController.prototype, 'isAtLeastOneSelected').returns(false);
+      expect(confirmController.isConfigurationValid()).to.be.false;
+    });
+
+    it('should return false if at least one component selected for installation is not configured correctly', function() {
+      sandbox.stub(ConfirmController.prototype, 'cdkIsConfigured').returns(false);
+      expect(confirmController.isConfigurationValid()).to.be.false;
     });
   });
 
