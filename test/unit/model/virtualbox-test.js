@@ -277,16 +277,12 @@ describe('Virtualbox installer', function() {
 
     beforeEach(function() {
       let stub = sandbox.stub(Util, 'executeCommand');
-      if (process.platform === 'win32') {
-        stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
-        stub.onCall(1).resolves(LOCATION);
-        stub.onCall(2).resolves(VERSION);
+      sandbox.stub(Platform, 'getOS').returns('win32');
 
-      } else {
-        stub.onCall(0).resolves(LOCATION);
-        stub.onCall(1).resolves(VERSION);
-        sandbox.stub(Util, 'findText').resolves('dir=folder/vbox');
-      }
+      stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
+      stub.onCall(1).resolves(LOCATION);
+      stub.onCall(2).resolves(VERSION);
+
       sandbox.stub(Util, 'folderContains').resolves(LOCATION);
       validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
