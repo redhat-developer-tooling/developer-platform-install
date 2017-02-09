@@ -102,7 +102,7 @@ module.exports = function(gulp) {
 
   gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
     return download.prefetch(reqs, 'no', config.prefetchFolder).then(()=>{
-      return download.prefetch(reqs, 'yes', configprefetchFolder);
+      return download.prefetch(reqs, 'yes', config.prefetchFolder);
     });
   });
 
