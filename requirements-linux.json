@@ -26,11 +26,11 @@
     "name": "Openshift Origin",
     "description": "The Open Source Container Application Platform",
     "bundle": "yes",
-    "version": "1.3.1",
-    "url": "https://github.com/openshift/origin/releases/download/v1.3.1/openshift-origin-client-tools-v1.3.1-dad658de7465ba8a234a4fb40b5b446a45a4cee1-windows.zip",
-    "filename": "openshift-origin-client-tools-v1.3.1-dad658de7465ba8a234a4fb40b5b446a45a4cee1-windows.zip",
-    "sha256sum": "b90bc1249e7407717b0a0d7f92248ed6926ae0cd27d8fd038e054b866fa84baf",
-    "virusTotalReport": "https://virustotal.com/en/file/b90bc1249e7407717b0a0d7f92248ed6926ae0cd27d8fd038e054b866fa84baf/analysis/",
+    "version": "1.4.1",
+    "url": "https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz",
+    "filename": "openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz",
+    "sha256sum": "c2ac117e85a968c4d16d5657a31dce0715dcbfa4ab4a7bc49e5c6fd7caffb7da",
+    "virusTotalReport": "https://virustotal.com/en/file/c2ac117e85a968c4d16d5657a31dce0715dcbfa4ab4a7bc49e5c6fd7caffb7da/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "cygwin.exe": {
