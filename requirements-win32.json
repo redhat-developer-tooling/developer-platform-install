@@ -59,12 +59,12 @@
     "name": "OpenJDK",
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
     "bundle": "yes",
-    "version": "1.8.0_111",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.111-3.b15.redhat.windows.x86_64.msi?workflow=direct",
-    "url": " http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.111/3.b15/win/java-1.8.0-openjdk-1.8.0.111-3.b15.redhat.windows.x86_64.msi",
-    "filename": "java-1.8.0-openjdk-1.8.0.111-3.b15.redhat.windows.x86_64.msi",
-    "sha256sum": "d4fa67a45cef119325e9ef775ea53dee0e2754b2df511618f91abf5acda6ddf0",
-    "virusTotalReport": "https://virustotal.com/en/file/d4fa67a45cef119325e9ef775ea53dee0e2754b2df511618f91abf5acda6ddf0/analysis/",
+    "version": "1.8.0_121",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi?workflow=direct",
+    "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.121/1.b13/win/java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi",
+    "filename": "java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi",
+    "sha256sum": "de5ea4e373cc913fa89942800998d92fb926f29ae393a2d24a9140a1d821e611",
+    "virusTotalReport": "https://virustotal.com/en/file/de5ea4e373cc913fa89942800998d92fb926f29ae393a2d24a9140a1d821e611/analysis/",
     "vendor": "Red Hat, Inc."
   },
   "vagrant.msi": {
