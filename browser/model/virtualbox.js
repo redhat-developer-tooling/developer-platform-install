@@ -79,9 +79,9 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
           }
         } else {
           return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-            return resolve(result.split('=')[1]);
+            resolve(result.split('=')[1]);
           }).catch(()=>{
-            return resolve(path.parse(output).dir);
+            resolve(path.parse(output).dir);
           });
         }
       });
@@ -89,18 +89,13 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       // with VBox 5.0.8 or later installed in C:\Program Files\Oracle\VirtualBox, output = C:\Program Files\Oracle\VirtualBox
       if(output === '%VBOX_MSI_INSTALL_PATH%') {
         return Util.executeCommand('where VirtualBox', 1);
-      } else {
-        // this ensures that by default the previous install is selected for reuse
-        // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
-        return new Promise((resolve) => {
-          resolve(output);
-        });
       }
+      // this ensures that by default the previous install is selected for reuse
+      // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
+      return Promise.resolve(output);
     }).then((output) => {
-      return new Promise((resolve) => {
-        tempDetectedLocation = output;
-        resolve(output);
-      });
+      tempDetectedLocation = output;
+      return Promise.resolve(output);
     }).then((output) => {
       return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension]);
     }).then((output) => {
@@ -128,9 +123,9 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         return this.configure(installer);
       }).then((result) => {
         Platform.addToUserPath([this.option['install'].location]);
-        return installer.succeed(result);
+        installer.succeed(result);
       }).catch((error) => {
-        return installer.fail(error);
+        installer.fail(error);
       });
     } else {
       success();

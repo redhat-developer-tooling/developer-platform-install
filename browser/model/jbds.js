@@ -122,10 +122,10 @@ class JbdsInstall extends InstallableItem {
           return this.postJDKInstall(installer, result);
         })
         .then((result) => {
-          return installer.succeed(result);
+          installer.succeed(result);
         })
         .catch((error) => {
-          return installer.fail(error);
+          installer.fail(error);
         });
     } else {
       success();
@@ -139,30 +139,28 @@ class JbdsInstall extends InstallableItem {
       let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
 
       if (jdkInstall !== undefined && jdkInstall.isInstalled()) {
-        this.setupCdk()
-            .then((result) => {
-              return this.setupJDK(jdkInstall, installer, result);
-            })
-            .then((result) => {
-              return installer.succeed(result);
-            })
-            .catch((error) => {
-              return installer.fail(error);
-            });
+        this.setupCdk().then((result) => {
+          return this.setupJDK(jdkInstall, installer, result);
+        })
+        .then((result) => {
+          installer.succeed(result);
+        })
+        .catch((error) => {
+          installer.fail(error);
+        });
       } else {
         Logger.info(JbdsInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
-            this.setupCdk()
-                .then(() => {
-                  return this.setupJDK(jdkInstall);
-                })
-                .then((result) => {
-                  return installer.succeed(result);
-                })
-                .catch((error) => {
-                  return installer.fail(error);
-                });
+            this.setupCdk().then(() => {
+              return this.setupJDK(jdkInstall);
+            })
+            .then((result) => {
+              installer.succeed(result);
+            })
+            .catch((error) => {
+              installer.fail(error);
+            });
           }
         });
       }
@@ -207,15 +205,15 @@ class JbdsInstall extends InstallableItem {
 
       if (jdkInstall.isInstalled()) {
         return this.headlessInstall(installer, result)
-        .then((res) => { return resolve(res); })
-        .catch((err) => { return reject(err); });
+        .then((res) => { resolve(res); })
+        .catch((err) => { reject(err); });
       } else {
         Logger.info(JbdsInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
             return this.headlessInstall(installer, result)
-            .then((res) => { return resolve(res); })
-            .catch((err) => { return reject(err); });
+            .then((res) => { resolve(res); })
+            .catch((err) => { reject(err); });
           }
         });
       }
@@ -255,7 +253,8 @@ class JbdsInstall extends InstallableItem {
               Logger.info(JbdsInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location SUCCESS');
               resolve(true);
             }
-          });
+          }
+        );
       }
     });
   }
