@@ -164,7 +164,7 @@ class JdkInstall extends InstallableItem {
           installer.succeed(result);
         });
       }).catch((error) => {
-        return installer.fail(error);
+        installer.fail(error);
       });
     } else {
       success();

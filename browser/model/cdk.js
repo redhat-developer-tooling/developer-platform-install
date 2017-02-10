@@ -68,9 +68,9 @@ class CDKInstall extends InstallableItem {
     }).then(() => {
       return Platform.OS === 'win32' ? Platform.addToUserPath([minishiftDir, ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]);
     }).then(() => {
-      return installer.succeed(true);
+      installer.succeed(true);
     }).catch((error) => {
-      return installer.fail(error);
+      installer.fail(error);
     });
   }
 
