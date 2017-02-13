@@ -27,7 +27,7 @@
     "description": "The Open Source Container Application Platform",
     "bundle": "yes",
     "version": "1.4.1",
-    "url": "https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-windows.zip",
+    "url": "https://developers.redhat.com/redirect/to/oc-origin-cli-win64-1.4.1.download",
     "filename": "openshift-origin-client-tools-v1.4.1-3f9807a-windows.zip",
     "sha256sum": "922bc2318685c4ea3518e17099c17ad609529a744fc48231c226f4e1e76d3288",
     "virusTotalReport": "https://virustotal.com/en/file/922bc2318685c4ea3518e17099c17ad609529a744fc48231c226f4e1e76d3288/analysis/",
