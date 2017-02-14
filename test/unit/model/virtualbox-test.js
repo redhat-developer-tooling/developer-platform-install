@@ -314,7 +314,7 @@ describe('Virtualbox installer', function() {
 
     it('should add option \'install\' when nothing detected', function() {
       return new Promise((resolve, rejects)=> {
-        Util.executeCommand.onCall(2).rejects();
+        Util.executeCommand.onCall(0).rejects();
         installer.detectExistingInstall(resolve);
       }).then(()=>{
         expect(installer.option['install']).is.not.undefined;
