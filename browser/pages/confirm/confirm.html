@@ -82,6 +82,7 @@
         </div>
       </div>
     </div>
+
     <!-- JDK -->
     <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
       <div class="panel-heading panel-normal"
@@ -245,6 +246,13 @@
           </label>
         </div>
       </div>
+    </div>
+
+    <div class="help-block">
+      <span class="pficon pficon-info"></span>
+      <span>Red Hat Container Development Kit 3.0 Beta Technical Preview is now available for download from
+        <a type="button" class="pointer" ng-click="confCtrl.download('https://developers.redhat.com/products/cdk/download/')">developers.redhat.com</a>!
+      </span>
     </div>
 
     <!-- VirtualBox -->
