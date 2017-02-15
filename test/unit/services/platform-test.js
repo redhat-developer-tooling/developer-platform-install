@@ -5,11 +5,35 @@ import sinon from 'sinon';
 import Platform from 'browser/services/platform';
 import child_process from 'child_process';
 import { default as sinonChai } from 'sinon-chai';
+import mockfs from 'mock-fs';
 chai.use(sinonChai);
 
 describe('Platform', function() {
 
   let sandbox;
+
+  before(function() {
+    mockfs({
+      'path1': {
+        file1: 'content1'
+      },
+      'path2': {
+        file1: 'content1'
+      },
+      'path3': {
+        file1: 'content1'
+      },
+      '/Applications/devsuite/cdk/bin/oc': '',
+      '/home/user/devsuite/cdk/bin/minishift': ''
+    }, {
+      createCwd: false,
+      createTmp: false
+    });
+  });
+
+  after(function() {
+    mockfs.restore();
+  });
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -203,19 +227,27 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
       });
       it('adds only locations that is not present in Path variable', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path1\r\n');
+        sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
-        let locations = ['c:\\path1', 'c:\\path2', 'c:\\path3'];
+        let locations = ['path1', 'path2', 'path3'];
         return Platform.addToUserPath(locations).then(() => {
-          expect(Platform.setUserPath_win32).calledWith(['c:\\path2', 'c:\\path3', 'c:\\path1'].join(';'));
+          expect(Platform.setUserPath_win32).calledWith(['path2', 'path3', 'path1'].join(';'));
         });
       });
       it('adds new locations in the beginning of Path value', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path1\r\n');
+        sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
-        let locations = ['c:\\path1', 'c:\\path2'];
+        let locations = ['path1', 'path2'];
         return Platform.addToUserPath(locations).then(() => {
-          expect(Platform.setUserPath_win32.getCall(0).args[0].startsWith('c:\\path2')).to.be.true;
+          expect(Platform.setUserPath_win32.getCall(0).args[0].startsWith('path2')).to.be.true;
+        });
+      });
+      it('adds directory if file passed in', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
+        sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        let locations = ['path1/file1', 'path2/file1', 'path3/file1'];
+        return Platform.addToUserPath(locations).then(() => {
+          expect(Platform.setUserPath_win32).calledWith(['path2', 'path3', 'path1'].join(';'));
         });
       });
     });

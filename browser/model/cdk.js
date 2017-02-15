@@ -1,9 +1,7 @@
 'use strict';
 
 import path from 'path';
-import fs from 'fs-extra';
-import rimraf from 'rimraf';
-
+import Logger from '../services/logger';
 import InstallableItem from './installable-item';
 import Platform from '../services/platform';
 import Installer from './helpers/installer';
@@ -25,61 +23,58 @@ class CDKInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let cdkDotFolder;
     let minishiftDir = this.installerDataSvc.ocDir();
-    let minishiftExe = path.join(minishiftDir, 'minishift' + (Platform.OS === 'win32' ? '.exe' : ''));
-    let ocDir;
-    let ocExe;
+    let minishiftExe = path.join(minishiftDir, Platform.OS === 'win32' ? 'minishift.exe' : 'minishift');
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
-
+    let ocExe;
+    let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
     Promise.resolve().then(()=> {
-      return Platform.getUserHomePath().then((home)=>{
-        cdkDotFolder = path.join(home, '.minishift');
-        if(fs.existsSync(cdkDotFolder)) {
-          rimraf.sync(cdkDotFolder);
-        }
-        return Promise.resolve();
-      });
-    }).then(() => {
       if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
         return installer.copyFile(this.downloadedFile, minishiftExe);
-      } else if(this.downloadedFile.endsWith('.zip') || this.downloadedFile.endsWith('.tar.gz') ) {
-        return installer.unzip(this.downloadedFile, minishiftDir, Platform.OS === 'win32' ? '' :'darwin-amd64/');
       }
       return Promise.reject('Cannot process downloaded cdk distribution');
-    }).then(() => {
-      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${minishiftDir}/minishift`);
-    }).then(() => {
-      return installer.exec(`${minishiftExe} setup-cdk --default-vm-driver=virtualbox`);
-    }).then(() => {
-      return globby(['/**/oc', '/**/oc.exe'], {root: path.join(cdkDotFolder, 'cache', 'oc')}).then((files)=>{
-        ocExe = files[0].replace(/\//g, path.sep);
-        ocDir = path.parse(ocExe).dir;
-        return Promise.resolve();
-      });
     }).then(()=> {
-      return Platform.OS === 'win32' ? Promise.resolve() : installer.exec(`chmod +x ${ocExe}`);
-    }).then(() => {
-      return installer.writeFile(this.installerDataSvc.cdkMarker(), this.generateMarkerFileContent(ocDir, minishiftDir, this.installerDataSvc.getUsername()));
-    }).then(() => {
-      return Platform.OS === 'win32' ? Platform.addToUserPath([minishiftDir, ocDir]) : Platform.addToUserPath([`${ocDir}/oc`, `${ocDir}/minishift`]);
-    }).then(() => {
+      return Platform.makeFileExecutable(minishiftExe);
+    }).then(()=> {
+      return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=virtualbox`, this.createEnvironment());
+    }).then(()=> {
+      return Platform.getUserHomePath();
+    }).then((home)=> {
+      return globby(ocExePattern, {root: path.join(home, '.minishift', 'cache', 'oc')});
+    }).then((files)=> {
+      ocExe = files[0].replace(/\//g, path.sep);
+      return Promise.resolve();
+    }).then(()=> {
+      return Platform.makeFileExecutable(ocExe);
+    }).then(()=> {
+      return Platform.addToUserPath([ocExe, minishiftExe]);
+    }).then(()=> {
       installer.succeed(true);
-    }).catch((error) => {
+    }).catch((error)=> {
       installer.fail(error);
     });
   }
 
-  generateMarkerFileContent(ocDir, minishiftDir, userName) {
-    return [
-      'openshift.auth.scheme=Basic',
-      'openshift.auth.username=openshift-dev',
-      'openshift.auth.password=devel',
-      `oc.binary.path=${ocDir}`,
-      `minishift.binary.path=${minishiftDir}`,
-      `rhel.subscription.username=${userName}`
-    ].join('\r\n');
+  createEnvironment() {
+    let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
+    let cygwinInstall = this.installerDataSvc.getInstallable('cygwin');
+    let env = Object.assign({}, Platform.ENV);
+    let newPath = [vboxInstall.getLocation()];
+    let oldPath = Platform.ENV[Platform.PATH];
+
+    if (Platform.OS === 'win32') {
+      newPath.push(cygwinInstall.getLocation());
+    }
+
+    if(oldPath.trim()) {
+      newPath.push(oldPath);
+    }
+
+    env[Platform.PATH] = newPath.join(path.delimiter);
+    Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
+    return env;
   }
+
 }
 
 export default CDKInstall;

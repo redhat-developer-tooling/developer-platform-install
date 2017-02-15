@@ -2,15 +2,14 @@
 const child_process = require('child_process');
 const pify = require('pify');
 const path = require('path');
+const fs = require('fs-extra');
 
 class Platform {
   static identify(map) {
-    try {
+    if (map[Platform.OS]) {
       return map[Platform.OS]();
-    } catch (error) {
-      let defaultCallback = map['default'];
-      return defaultCallback ? defaultCallback() : undefined;
     }
+    return map['default'] ? map['default']() : undefined;
   }
 
   static get OS() {
@@ -97,7 +96,17 @@ class Platform {
 
   static addToUserPath(locations) {
     return Platform.identify({
-      win32: ()=> Platform.addToUserPath_win32(locations),
+      win32: ()=> {
+        let dirs = [];
+        locations.forEach((location)=>{
+          if(fs.statSync(location).isFile()) {
+            dirs.push(path.parse(location).dir);
+          } else {
+            dirs.push(location);
+          }
+        });
+        return Platform.addToUserPath_win32(dirs);
+      },
       darwin: ()=> Platform.addToUserPath_darwin(locations),
       default: ()=> Promise.resolve()
     });
@@ -114,6 +123,17 @@ class Platform {
     return Platform.identify({
       win32: ()=> Platform.setUserPath_win32(newPath),
       default: ()=> Promise.resolve()
+    });
+  }
+
+  static makeFileExecutable(file) {
+    return Platform.identify({
+      win32: ()=> {
+        return Promise.resolve();
+      },
+      default: ()=> {
+        return pify(child_process.exec)(`chmod +x ${file}`);
+      }
     });
   }
 

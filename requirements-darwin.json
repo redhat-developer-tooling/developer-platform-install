@@ -4,10 +4,10 @@
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
     "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/darwin-amd64/minishift",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/25-Jan-2017.3.0_alpha.2/darwin-amd64/minishift",
+    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/11-Feb-2017/darwin-amd64/minishift",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/11-Feb-2017/darwin-amd64/minishift",
     "filename": "minishift",
-    "sha256sum": "09d078a359b3087cd7dcc2caf8c8565ac9d8faaf511a862c7dd33c3405804aca",
+    "sha256sum": "1e7472175e25d9d197149a3ed2192440a1f581f1884cf2b2c77d97674ee73e5e",
     "vendor": "Red Hat, Inc."
   },
   "cygwin": {
