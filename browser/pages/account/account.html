@@ -14,19 +14,29 @@
           <input type="text" id="username" name="username" class="login-form-input form-control" ng-model="acctCtrl.username" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="usernameStatus" autofocus/>
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>-->
           <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
-          <div ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$error.required" class="align-to-input help-block has-error">Please enter a username.</div>
         </div>
         <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid}">
           <label for="password" class="login-form-label">Password</label>
           <input type="password" id="password" name="password" class="login-form-input form-control" ng-model="acctCtrl.password" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="passwordStatus"/>
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid"></span>-->
           <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
-          <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$error.required" class="align-to-input help-block has-error">Please enter a password.</div>
         </div>
-        <div ng-show="accountForm.$submitted && (acctCtrl.authFailed || acctCtrl.tandcNotSigned || acctCtrl.httpError)" class="form-group has-error pull-right">
-          <div id="invalidLoginError" ng-show="accountForm.$submitted && acctCtrl.authFailed" class="help-block">
+        <div class="form-group has-error pull-right">
+          <div id="invalidLoginError" ng-show="accountForm.$submitted && acctCtrl.authFailed && !accountForm.username.$error.required && !accountForm.password.$error.required" class="help-block">
             <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
             <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
+          </div>
+          <div ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.username.$error.required && accountForm.password.$error.required" class="help-block">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your username and password.</strong>
+          </div>
+          <div ng-show="accountForm.username.$error.required === !accountForm.password.$error.required" class="help-block">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your username.</strong>
+          </div>
+          <div ng-show="accountForm.password.$error.required === !accountForm.username.$error.required" class="help-block">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your password.</strong>
           </div>
           <div id="tcError" ng-show="accountForm.$submitted && acctCtrl.tandcNotSigned" class="help-block">
             <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
