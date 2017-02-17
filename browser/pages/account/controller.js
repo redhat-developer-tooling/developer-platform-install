@@ -24,9 +24,7 @@ class AccountController {
   }
 
   login() {
-    this.authFailed = false;
-    this.tandcNotSigned = false;
-
+    this.resetLoginErrors();
     let req = {
       method: 'GET',
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
@@ -46,6 +44,20 @@ class AccountController {
     this.http(req)
       .then(this.handleHttpSuccess.bind(this))
       .catch(this.handleHttpFailure.bind(this));
+  }
+
+  resetLoginErrors() {
+    this.authFailed = false;
+    this.httpError = undefined;
+    this.tandcNotSigned = false;
+  }
+
+  isInvalid(field) {
+    return field.$invalid && (field.$dirty || field.$touched);
+  }
+
+  isValid(field) {
+    return !this.isInvalid(field);
   }
 
   getUserAgent() {
