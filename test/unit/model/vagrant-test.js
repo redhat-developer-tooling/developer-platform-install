@@ -3,8 +3,8 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import mockfs from 'mock-fs';
 import fs from 'fs-extra';
+import mockfs from 'mock-fs';
 import path from 'path';
 import VagrantInstall from 'browser/model/vagrant';
 import {VagrantInstallWindows} from 'browser/model/vagrant';
