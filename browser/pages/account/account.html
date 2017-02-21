@@ -19,7 +19,7 @@
           <input type="password" id="password" name="password" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.password" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="passwordStatus"/>
           <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
         </div>
-        <div class="form-group has-error" style="height: 160px;">
+        <div class="form-group has-error login-form-error-container">
           <div id="invalidLoginError" ng-show="acctCtrl.authFailed && !accountForm.username.$error.required && !accountForm.password.$error.required" class="help-block form-group has-error">
             <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
             <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
