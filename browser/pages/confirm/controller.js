@@ -42,7 +42,7 @@ class ConfirmController {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       } else if (nVal=='detected') {
-          $scope.checkboxModel.vagrant.selectedOption =
+        $scope.checkboxModel.vagrant.selectedOption =
             $scope.checkboxModel.virtualbox.selectedOption =
             $scope.checkboxModel.cygwin.selectedOption = 'detected';
       }
@@ -66,11 +66,7 @@ class ConfirmController {
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(new Promise(function(resolve) {
-          installer.detectExistingInstall(()=> {
-            resolve();
-          });
-        }));
+        detectors.push(installer.detectExistingInstall());
       }
       Promise.all(detectors).then(
         ()=>this.setIsDisabled()
@@ -143,7 +139,9 @@ class ConfirmController {
     } else {
       this.timeout(()=>{
         this.sc.$apply(()=>{
-          item.detectExistingInstall();
+          item.detectExistingInstall().catch(()=> {
+            // ignore the errors
+          });
         });
       });
     }
