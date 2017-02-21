@@ -181,7 +181,7 @@ footer {
   }
 
     #accountForm {
-      padding-right: 20%;
+      padding-right: 15%;
     }
 
       #accountForm div {
@@ -193,18 +193,23 @@ footer {
         float: right;
       }
 
+      .login-form-error-container {
+        float: right;
+        width: 296px;
+      }
+
       .login-form-label {
-        width: 80px;
+        width: 73px;
         vertical-align: middle;
       }
 
       .login-form-input {
         display: inline;
-        width: 250px;
+        width: 220px;
       }
 
       .align-to-input {
-        padding-left: 83px;
+        padding-left: 50px;
       }
 
       .form-buttons {

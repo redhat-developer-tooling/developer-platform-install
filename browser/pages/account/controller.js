@@ -25,7 +25,6 @@ class AccountController {
   }
 
   login() {
-    this.resetLoginErrors();
     let req = {
       method: 'GET',
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
