@@ -23,7 +23,7 @@ This installer is desktop application for Windows and macOS built with [Electron
 Building Installer
 ------------------
 
-To build installer follow steps below for specific platform.
+To build installer follow steps below for specific platform (please note that 'browser/images' and 'resources' folders contains graphical files which are the copyrighted work of Red Hat).
 
 #### Windows
 
