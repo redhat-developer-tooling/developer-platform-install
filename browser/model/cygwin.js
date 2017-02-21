@@ -23,31 +23,33 @@ class CygwinInstall extends InstallableItem {
     return 'cygwin';
   }
 
-  detectExistingInstall(done = function() {}) {
-    if (Platform.OS === 'win32') {
-      let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
-      let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
-      let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
-      Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
-        let cygwinVersion = cygwinPackageRegex.exec(out)[1];
-        opensshPackageReqex.exec(out)[1];
-        rsyncPackageRegex.exec(out)[1];
-        this.addOption('detected', '', '', true);
-        this.option['detected'].version = cygwinVersion;
-        this.selectedOption = 'detected';
-      }).then(()=>{
-        return Util.executeCommand('where cygcheck', 1);
-      }).then((output)=>{
-        this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
-        done();
-      }).catch((error)=>{
-        this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'cygwin'), true);
-        this.addOption('different', '', '', false);
-        done(error);
-      });
-    } else {
-      done();
-    }
+  detectExistingInstall() {
+    return new Promise((resolve, reject)=> {
+      if (Platform.OS === 'win32') {
+        let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
+        let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
+        let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
+        Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
+          let cygwinVersion = cygwinPackageRegex.exec(out)[1];
+          opensshPackageReqex.exec(out)[1];
+          rsyncPackageRegex.exec(out)[1];
+          this.addOption('detected', '', '', true);
+          this.option['detected'].version = cygwinVersion;
+          this.selectedOption = 'detected';
+        }).then(()=>{
+          return Util.executeCommand('where cygcheck', 1);
+        }).then((output)=>{
+          this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
+          resolve();
+        }).catch((error)=>{
+          this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'cygwin'), true);
+          this.addOption('different', '', '', false);
+          reject(error);
+        });
+      } else {
+        resolve();
+      }
+    });
   }
 
   installAfterRequirements(progress, success, failure) {

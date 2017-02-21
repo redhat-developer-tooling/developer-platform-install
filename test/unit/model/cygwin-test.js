@@ -234,11 +234,10 @@ describe('Cygwin installer', function() {
         installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
-          done();
         });
       });
 
-      it('should mark cygwin as detected when cygwin, openssh and rsync packages are installed', function(done) {
+      it('should mark cygwin as detected when cygwin, openssh and rsync packages are installed', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
           ['Cygwin Package Information',
@@ -248,14 +247,13 @@ describe('Cygwin installer', function() {
             'rsync                3.1.2-1        OK'
           ].join('\n')));
         Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
-        installer.detectExistingInstall(function() {
+        installer.detectExistingInstall().then(()=> {
           expect(installer.selectedOption).to.be.equal('detected');
           expect(installer.hasOption('detected')).to.be.equal(true);
-          done();
         });
       });
 
-      it('should mark cygwin for installation when any of cygwin, openssh, rsync packages is missing', function(done) {
+      it('should mark cygwin for installation when any of cygwin, openssh, rsync packages is missing', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
           ['Cygwin Package Information',
@@ -269,7 +267,6 @@ describe('Cygwin installer', function() {
         installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
-          done();
         });
       });
     });
