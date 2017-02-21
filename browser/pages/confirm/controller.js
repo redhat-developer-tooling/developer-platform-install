@@ -41,6 +41,10 @@ class ConfirmController {
           && !$scope.checkboxModel.cygwin.hasOption('detected')) {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
+      } else if (nVal=='detected') {
+          $scope.checkboxModel.vagrant.selectedOption =
+            $scope.checkboxModel.virtualbox.selectedOption =
+            $scope.checkboxModel.cygwin.selectedOption = 'detected';
       }
     });
 
@@ -54,6 +58,8 @@ class ConfirmController {
           // force to install included version
           jdk.selectedOption = 'install';
         }
+      } else if (nVal=='detected') {
+        $scope.checkboxModel.jdk.selectedOption = 'detected';
       }
     });
 
