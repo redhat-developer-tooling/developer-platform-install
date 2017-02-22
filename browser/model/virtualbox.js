@@ -53,64 +53,65 @@ class VirtualBoxInstall extends InstallableItem {
 
 class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
-  detectExistingInstall(cb = function() {}) {
-    let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
-    let command;
-    let extension = '';
+  detectExistingInstall() {
+    return new Promise((resolve, reject)=> {
+      let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
+      let command;
+      let extension = '';
 
-    if (Platform.OS === 'win32') {
-      command = 'echo %VBOX_INSTALL_PATH%';
-      extension = '.exe';
-    } else {
-      command = 'which virtualbox';
-    }
-
-    let tempDetectedLocation = '';
-
-    Util.executeCommand(command, 1).then((output) => {
-      return new Promise((resolve) => {
-        if (Platform.OS === 'win32') {
-          if (output === '%VBOX_INSTALL_PATH%') {
-            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
-              resolve(output);
-            });
-          } else {
-            resolve(output);
-          }
-        } else {
-          return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-            resolve(result.split('=')[1]);
-          }).catch(()=>{
-            resolve(path.parse(output).dir);
-          });
-        }
-      });
-    }).then((output) => {
-      // with VBox 5.0.8 or later installed in C:\Program Files\Oracle\VirtualBox, output = C:\Program Files\Oracle\VirtualBox
-      if(output === '%VBOX_MSI_INSTALL_PATH%') {
-        return Util.executeCommand('where VirtualBox', 1);
+      if (Platform.OS === 'win32') {
+        command = 'echo %VBOX_INSTALL_PATH%';
+        extension = '.exe';
+      } else {
+        command = 'which virtualbox';
       }
-      // this ensures that by default the previous install is selected for reuse
-      // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
-      return Promise.resolve(output);
-    }).then((output) => {
-      tempDetectedLocation = output;
-      return Promise.resolve(output);
-    }).then((output) => {
-      return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension]);
-    }).then((output) => {
-      var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
-      return Util.executeCommand(command, 1);
-    }).then((output) => {
-      let version = versionRegex.exec(output)[1];
-      this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
-      this.selectedOption = 'detected';
-      this.validateVersion();
-      cb();
-    }).catch(() => {
-      this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'virtualbox'), true);
-      this.addOption('different', '', '', false);
-      cb();
+
+      let tempDetectedLocation = '';
+      Util.executeCommand(command, 1).then((output) => {
+        return new Promise((resolve) => {
+          if (Platform.OS === 'win32') {
+            if (output === '%VBOX_INSTALL_PATH%') {
+              return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
+                resolve(output);
+              });
+            } else {
+              resolve(output);
+            }
+          } else {
+            return Util.findText(output, 'INSTALL_DIR=').then((result) => {
+              resolve(result.split('=')[1]);
+            }).catch(()=>{
+              resolve(path.parse(output).dir);
+            });
+          }
+        });
+      }).then((output) => {
+        // with VBox 5.0.8 or later installed in C:\Program Files\Oracle\VirtualBox, output = C:\Program Files\Oracle\VirtualBox
+        if(output === '%VBOX_MSI_INSTALL_PATH%') {
+          return Util.executeCommand('where VirtualBox', 1);
+        }
+        // this ensures that by default the previous install is selected for reuse
+        // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
+        return Promise.resolve(output);
+      }).then((output) => {
+        tempDetectedLocation = output;
+        return Promise.resolve(output);
+      }).then((output) => {
+        return Util.folderContains(output, ['VirtualBox' + extension, 'VBoxManage' + extension]);
+      }).then((output) => {
+        var command = '"' + path.join(output, 'VBoxManage' + extension) +'"' + ' --version';
+        return Util.executeCommand(command, 1);
+      }).then((output) => {
+        let version = versionRegex.exec(output)[1];
+        this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
+        this.selectedOption = 'detected';
+        this.validateVersion();
+        resolve();
+      }).catch(() => {
+        this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'virtualbox'), true);
+        this.addOption('different', '', '', false);
+        resolve();
+      });
     });
   }
 
@@ -182,33 +183,34 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
-  detectExistingInstall(done = function() {}) {
-    let tempDetectedLocation = '';
-
-    Util.executeCommand('which virtualbox', 1).then((output) => {
-      return new Promise((resolve) => {
-        return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-          return resolve(result.split('=')[1]);
-        }).catch(()=>{
-          return resolve(path.parse(output).dir);
+  detectExistingInstall() {
+    return new Promise((resolve, reject)=> {
+      let tempDetectedLocation = '';
+      Util.executeCommand('which virtualbox', 1).then((output) => {
+        return new Promise((resolve) => {
+          return Util.findText(output, 'INSTALL_DIR=').then((result) => {
+            return resolve(result.split('=')[1]);
+          }).catch(()=>{
+            return resolve(path.parse(output).dir);
+          });
         });
+      }).then((output) => {
+        return Util.folderContains(output, ['VirtualBox', 'VBoxManage']);
+      }).then((output) => {
+        tempDetectedLocation = output;
+        var command = '"' + path.join(output, 'VBoxManage') +'"' + ' --version';
+        return Util.executeCommand(command, 1);
+      }).then((output) => {
+        let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
+        let version = versionRegex.exec(output)[1];
+        this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
+        this.selectedOption = 'detected';
+        this.validateVersion();
+        resolve();
+      }).catch(() => {
+        this.addOption('install', this.version, '/usr/local/bin', true);
+        reject(error);
       });
-    }).then((output) => {
-      return Util.folderContains(output, ['VirtualBox', 'VBoxManage']);
-    }).then((output) => {
-      tempDetectedLocation = output;
-      var command = '"' + path.join(output, 'VBoxManage') +'"' + ' --version';
-      return Util.executeCommand(command, 1);
-    }).then((output) => {
-      let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
-      let version = versionRegex.exec(output)[1];
-      this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
-      this.selectedOption = 'detected';
-      this.validateVersion();
-      done();
-    }).catch(() => {
-      this.addOption('install', this.version, '/usr/local/bin', true);
-      done();
     });
   }
 

@@ -29,58 +29,58 @@ class JdkInstall extends InstallableItem {
     return this.installerDataSvc.jdkDir();
   }
 
-  detectExistingInstall(done = function() {}) {
-    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
-    let versionRegex1 = /(\d+\.\d+\.\d+)_.*/;
-    let command = 'java -XshowSettings';
-
-    this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
-
-    Promise.resolve().then(()=>{
-      return this.findMsiInstalledJava();
-    }).then((output)=>{
-      this.openJdkMsi = output.length>0;
-      return Util.executeCommand('java -version', 2);
-    }).then((output) => {
-      return new Promise((resolve, reject) => {
-        let version = versionRegex.exec(output);
-        if (version && version.length > 1) {
-          this.addOption('detected', version[1], '', true);
-          this.option['detected'].version = version[1];
-          this.selected = false;
-          this.selectedOption = 'detected';
-          this.validateVersion();
-          if(this.option['detected'].valid) {
+  detectExistingInstall() {
+    return new Promise((resolve, reject)=> {
+      let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
+      let versionRegex1 = /(\d+\.\d+\.\d+)_.*/;
+      let command = 'java -XshowSettings';
+      this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
+      Promise.resolve().then(()=>{
+        return this.findMsiInstalledJava();
+      }).then((output)=>{
+        this.openJdkMsi = output.length>0;
+        return Util.executeCommand('java -version', 2);
+      }).then((output) => {
+        return new Promise((resolve, reject) => {
+          let version = versionRegex.exec(output);
+          if (version && version.length > 1) {
+            this.addOption('detected', version[1], '', true);
+            this.option['detected'].version = version[1];
+            this.selected = false;
             this.selectedOption = 'detected';
-          } else if(Platform.OS !== 'darwin') {
-            this.selectedOption = 'install';
+            this.validateVersion();
+            if(this.option['detected'].valid) {
+              this.selectedOption = 'detected';
+            } else if(Platform.OS !== 'darwin') {
+              this.selectedOption = 'install';
+            }
+            resolve(true);
+          } else {
+            reject('No java detected');
           }
-          resolve(true);
+        });
+      }).then(() => {
+        return Util.executeCommand(command, 2);
+      }).then((output) => {
+        let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
+        this.openJdk = output.includes('OpenJDK');
+        var t = locationRegex.exec(output);
+        if(t && t.length > 1) {
+          this.option['detected'].location = t[1];
         } else {
-          reject('No java detected');
+          reject();
         }
+        resolve();
+      }).catch((error) => {
+        Logger.info(JdkInstall.KEY + ' - Detection failed with error');
+        Logger.info(JdkInstall.KEY + ' - ' + error);
+        if(Platform.OS !== 'darwin' ) {
+          this.selectedOption = 'install';
+        } else {
+          this.selectedOption = 'detected';
+        }
+        resolve();
       });
-    }).then(() => {
-      return Util.executeCommand(command, 2);
-    }).then((output) => {
-      let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
-      this.openJdk = output.includes('OpenJDK');
-      var t = locationRegex.exec(output);
-      if(t && t.length > 1) {
-        this.option['detected'].location = t[1];
-      } else {
-        this.selectedOption = 'install';
-      }
-      done();
-    }).catch((error) => {
-      Logger.info(JdkInstall.KEY + ' - Detection failed with error');
-      Logger.info(JdkInstall.KEY + ' - ' + error);
-      if(Platform.OS !== 'darwin' ) {
-        this.selectedOption = 'install';
-      } else {
-        this.selectedOption = 'detected';
-      }
-      done();
     });
   }
 

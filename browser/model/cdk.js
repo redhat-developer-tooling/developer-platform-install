@@ -23,8 +23,8 @@ class CDKInstall extends InstallableItem {
     return 'cdk';
   }
 
-  detectExistingInstall(cb = function() {}) {
-    cb();
+  detectExistingInstall() {
+    return Promise.resolve();
   }
 
   installAfterRequirements(progress, success, failure) {
