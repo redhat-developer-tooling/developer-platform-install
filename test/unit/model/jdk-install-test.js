@@ -163,11 +163,11 @@ describe('JDK installer', function() {
         });
       });
 
-      it('should select openjdk for installation if location for java is not found', function() {
+      it('should reject openjdk if location for java is not found', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
-        mockDetectedJvm('', '');
-        return jdk.detectExistingInstall().then(()=>{
+        mockDetectedJvm('1.8.0', '');
+        return jdk.detectExistingInstall().then(()=> {
           expect(jdk.selectedOption).to.be.equal('install');
         });
       });

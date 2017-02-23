@@ -68,7 +68,7 @@ class JdkInstall extends InstallableItem {
         if(t && t.length > 1) {
           this.option['detected'].location = t[1];
         } else {
-          reject();
+          reject('Cannot detect Java home folder');
         }
         resolve();
       }).catch((error) => {

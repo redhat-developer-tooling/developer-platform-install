@@ -225,7 +225,7 @@ describe('Virtualbox installer', function() {
       });
     });
 
-    it('should catch errors during the installation', function() {
+    it('should catch errors during the installation', function(done) {
       sandbox.stub(child_process, 'execFile').yields(new Error('critical error'));
       sandbox.stub(child_process, 'exec').yields(new Error('critical error'));
       item2.setInstallComplete();
@@ -233,6 +233,7 @@ describe('Virtualbox installer', function() {
 
       try {
         installer.install(fakeProgress, success, failure);
+        done();
       } catch (error) {
         expect.fail('it did not catch the error');
       }

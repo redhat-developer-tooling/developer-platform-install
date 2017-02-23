@@ -32,7 +32,7 @@ describe('ConfirmController', function() {
     $watch = sandbox.spy($scope, '$watch');
     installerDataSvc = _installerDataSvc_;
     for (var installer of installerDataSvc.allInstallables().values()) {
-      sandbox.stub(installer, 'detectExistingInstall').yields();
+      sandbox.stub(installer, 'detectExistingInstall').resolves();
     }
     confirmController = $controller('ConfirmController', {
       $scope,
@@ -50,6 +50,7 @@ describe('ConfirmController', function() {
       beforeEach(inject(context));
       it('install watcher to track cdk selection to select its requirements', function() {
         expect($watch).to.be.calledWith('checkboxModel.cdk.selectedOption');
+      });
 
       it('install watcher to track devstudio selection to select its requirements', function() {
         expect($watch).to.be.calledWith('checkboxModel.jbds.selectedOption');

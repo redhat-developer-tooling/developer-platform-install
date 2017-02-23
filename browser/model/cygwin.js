@@ -42,9 +42,7 @@ class CygwinInstall extends InstallableItem {
           this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
           resolve();
         }).catch((error)=>{
-          this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'cygwin'), true);
-          this.addOption('different', '', '', false);
-          reject(error);
+          resolve();
         });
       } else {
         resolve();

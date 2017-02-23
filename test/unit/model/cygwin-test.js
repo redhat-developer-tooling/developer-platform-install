@@ -226,12 +226,12 @@ describe('Cygwin installer', function() {
       });
     });
     describe('on Windows', function() {
-      it('should mark cygwin for installation cygwin is not installed', function(done) {
+      it('should mark cygwin for installation cygwin is not installed', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.reject('cygcheck is not available'));
         installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
         installer.ipcRenderer = { on: function() {} };
-        installer.detectExistingInstall(function() {
+        installer.detectExistingInstall().then(()=> {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
         });
