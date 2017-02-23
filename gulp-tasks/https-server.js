@@ -51,15 +51,13 @@ function handleRequest(req, res) {
       }
       url = url.substring(1);
       console.log(`Sending file ${url}`);
-      let filePath = path.join(__dirname, '..', url);
-      let fileData = fs.readFileSync(filePath);
 
+      let filePath = path.join(__dirname, '..', url);
+      var readStream = fs.createReadStream(filePath);
       res.writeHead(200, {
         'Content-Type': 'application/x-msdownload',
-        'Content-length': fs.statSync(filePath).size,
-        'Content-Disposition': `inline; filename=${url}`});
-      res.write(fileData, 'binary');
-      res.end();
+        'Content-length': fs.statSync(filePath).size});
+      readStream.pipe(res);
     }
   }
 }
