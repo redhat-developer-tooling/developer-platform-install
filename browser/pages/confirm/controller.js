@@ -42,9 +42,8 @@ class ConfirmController {
           $scope.checkboxModel.cygwin.selectedOption = 'install';
         }
       } else if (nVal=='detected') {
-          $scope.checkboxModel.vagrant.selectedOption =
-            $scope.checkboxModel.virtualbox.selectedOption =
-            $scope.checkboxModel.cygwin.selectedOption = 'detected';
+        $scope.checkboxModel.virtualbox.selectedOption = 'detected';
+        $scope.checkboxModel.cygwin.selectedOption = 'detected';
       }
     });
 
