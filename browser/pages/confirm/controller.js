@@ -108,6 +108,13 @@ class ConfirmController {
         }
       }
 
+      // temp solution to skip cygwin from counting on macOS
+      Platform.identify({
+        darwin: ()=>{
+          this.numberOfExistingInstallations--;
+        }
+      });
+
       // Set the message depending on if the view is disabled or not.
       if (this.isDisabled) {
         this.installedSearchNote = '  The system is checking if you have any installed components';
