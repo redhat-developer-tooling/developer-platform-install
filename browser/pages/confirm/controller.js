@@ -133,28 +133,6 @@ class ConfirmController {
     });
   }
 
-  // Open up a browse dialog and select the dir that has the installed product you are looking for.
-  selectItem(key) {
-    let selection = this.electron.remote.dialog.showOpenDialog({
-      properties: ['openDirectory'],
-      defaultPath: this.installables[key] && this.installables[key][0].existingInstallLocation ? this.installables[key][0].existingInstallLocation : this.installerDataSvc.installRoot
-    });
-
-    let item = this.installerDataSvc.allInstallables().get(key);
-
-    // If the browsed for dir is found then expect it to be devstudio
-    if (selection) {
-      // only devstudio at the moment
-      item.checkForExistingInstall(selection, this.installables);
-    } else {
-      this.timeout(()=>{
-        this.sc.$apply(()=>{
-          item.detectExistingInstall();
-        });
-      });
-    }
-  }
-
   // Check if the product is already installed
   // ATM this is only devstudio
   checkItem(key) {
