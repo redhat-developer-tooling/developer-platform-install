@@ -12,6 +12,10 @@ class CygwinInstall extends InstallableItem {
     super(CygwinInstall.KEY, 720, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install', this.version, '', true);
+    if(Platform.OS !== 'win32') {
+      this.selectedOption = 'detected';
+      this.addOption('detected', '', '', true);
+    }
     this.checksum = sha256;
   }
 
@@ -42,8 +46,6 @@ class CygwinInstall extends InstallableItem {
         done(error);
       });
     } else {
-      this.selectedOption = 'detected';
-      this.addOption('detected', '', '', true);
       done();
     }
   }

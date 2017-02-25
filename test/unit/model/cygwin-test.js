@@ -210,6 +210,7 @@ describe('Cygwin installer', function() {
     describe('on macOS', function() {
       it('should mark cygwin as detected', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
+        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
@@ -218,16 +219,18 @@ describe('Cygwin installer', function() {
     describe('on Linux', function() {
       it('should mark cygwin as detected', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
+        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
       });
     });
     describe('on Windows', function() {
-
       it('should mark cygwin for installation cygwin is not installed', function(done) {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.reject('cygcheck is not available'));
+        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer.ipcRenderer = { on: function() {} };
         installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
@@ -261,6 +264,8 @@ describe('Cygwin installer', function() {
             'openssh              7.3p1-2        OK'
           ].join('\n')));
         Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
+        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer.ipcRenderer = { on: function() {} };
         installer.detectExistingInstall(function() {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
