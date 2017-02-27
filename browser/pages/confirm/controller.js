@@ -65,11 +65,7 @@ class ConfirmController {
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(new Promise((resolve)=> {
-          installer.detectExistingInstall().then(()=> {
-            resolve();
-          });
-        }));
+        detectors.push(installer.detectExistingInstall());
       }
       Promise.all(detectors).then(()=> {
         this.setIsDisabled();
