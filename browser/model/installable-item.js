@@ -98,7 +98,7 @@ class InstallableItem {
   }
 
   detectExistingInstall () {
-    // to be overridden
+    return Promise.resolve();
   }
 
   checkForExistingInstall() {

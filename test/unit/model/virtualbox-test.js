@@ -269,14 +269,14 @@ describe('Virtualbox installer', function() {
   });
 
   describe('detection', function() {
-    let validateStub;
+    let validateStub, stub;
     const VERSION = '5.0.26r1234';
     const VERSION_PARSED = '5.0.26';
     const LOCATION = 'folder/vbox';
 
 
     beforeEach(function() {
-      let stub = sandbox.stub(Util, 'executeCommand');
+      stub = sandbox.stub(Util, 'executeCommand');
       sandbox.stub(Platform, 'getOS').returns('win32');
 
       stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
@@ -288,34 +288,28 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add option \'detected\' with detected version and location', function() {
-      return new Promise((resolve, rejects)=> {
-        installer.detectExistingInstall(resolve);
-      }).then(()=>{
+      return installer.detectExistingInstall().then(()=> {
         expect(installer.option['detected'].location).to.equal(LOCATION);
         expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
       });
     });
 
     it('should add option \'install\' when nothing detected', function() {
-      return new Promise((resolve, rejects)=> {
-        Util.executeCommand.onCall(2).rejects();
-        installer.detectExistingInstall(resolve);
-      }).then(()=>{
+      stub.onCall(2).rejects();
+      return installer.detectExistingInstall().then(()=> {
         expect(installer.option['install']).is.not.undefined;
       });
     });
 
-    it('should check the detected version', function(done) {
-      return installer.detectExistingInstall(function() {
+    it('should check the detected version', function() {
+      return installer.detectExistingInstall().then(()=>{
         expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
-        done();
       });
     });
 
-    it('should validate the detected version against the required one', function(done) {
-      return installer.detectExistingInstall(function() {
+    it('should validate the detected version against the required one', function() {
+      return installer.detectExistingInstall().then(()=>{
         expect(validateStub).calledOnce;
-        done();
       });
     });
   });

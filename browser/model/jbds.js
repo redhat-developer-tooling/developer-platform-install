@@ -42,8 +42,8 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  detectExistingInstall(cb = function() {}) {
-    cb();
+  detectExistingInstall() {
+    return Promise.resolve();
   }
 
   checkForExistingInstall(selection, data) {

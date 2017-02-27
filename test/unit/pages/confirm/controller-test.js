@@ -32,7 +32,7 @@ describe('ConfirmController', function() {
     $watch = sandbox.spy($scope, '$watch');
     installerDataSvc = _installerDataSvc_;
     for (var installer of installerDataSvc.allInstallables().values()) {
-      sandbox.stub(installer, 'detectExistingInstall').yields();
+      sandbox.stub(installer, 'detectExistingInstall').resolves();
     }
     confirmController = $controller('ConfirmController', {
       $scope,

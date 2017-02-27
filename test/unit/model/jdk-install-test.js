@@ -106,14 +106,13 @@ describe('JDK installer', function() {
   // function callback done called again
   describe('when detecting existing installation', function() {
 
-    it('should detect java location if installed', function(done) {
+    it('should detect java location if installed', function() {
       let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
       mockDetectedJvm('1.8.0_111');
-      return jdk.detectExistingInstall(function() {
+      return jdk.detectExistingInstall().then(()=>{
         expect(jdk.selectedOption).to.be.equal('detected');
         expect(jdk.hasOption('detected')).to.be.equal(true);
         expect(jdk.getLocation()).to.be.equal('/java/home');
-        done();
       });
     });
 
@@ -134,104 +133,95 @@ describe('JDK installer', function() {
     });
 
     describe('on windows', function() {
-      it('should select openjdk for installation if no java detected', function(done) {
+      it('should select openjdk for installation if no java detected', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('install');
           expect(jdk.getLocation()).to.be.equal('');
-          done();
         });
       });
 
 
       // FIXME is not the case for JDK 9, because version has different format
-      it('should select openjdk for installation if newer than supported java version detected', function(done) {
+      it('should select openjdk for installation if newer than supported java version detected', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.9.0_1');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
-          done();
         });
       });
 
-      it('should select openjdk for installation if older than supported java version detected', function(done) {
+      it('should select openjdk for installation if older than supported java version detected', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.7.0_1');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('install');
-          done();
         });
       });
 
-      it('should select openjdk for installation if location for java is not found', function(done) {
+      it('should reject openjdk if location for java is not found', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
-        mockDetectedJvm('1.8.0_1', '');
-        return jdk.detectExistingInstall(function() {
+        mockDetectedJvm('1.8.0', '');
+        return jdk.detectExistingInstall().then(()=> {
           expect(jdk.selectedOption).to.be.equal('install');
-          done();
         });
       });
 
-      it('should check for available msi installtion', function(done) {
+      it('should check for available msi installtion', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         jdk.findMsiInstalledJava.restore();
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(Util.writeFile).to.have.been.calledWith(
             jdk.getMsiSearchScriptLocation(), jdk.getMsiSearchScriptData());
           expect(Util.executeFile).to.have.been.calledWith(
             'powershell', jdk.getMsiSearchScriptPowershellArgs(jdk.getMsiSearchScriptLocation()));
-          done();
         });
       });
     });
 
     describe('on macos', function() {
-      it('should not select jdk for installation if no java detected', function(done) {
+      it('should not select jdk for installation if no java detected', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
-          done();
         });
       });
 
-      it('should not select openjdk for installation if newer than supported supported version detected', function(done) {
+      it('should not select openjdk for installation if newer than supported supported version detected', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.9.0_1');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
-          done();
         });
       });
 
-      it('should not select openjdk for installation if older than supported supported java version detected', function(done) {
+      it('should not select openjdk for installation if older than supported supported java version detected', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.7.0_1');
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
-          done();
         });
       });
 
-      it('should not check for available msi installtion', function(done) {
+      it('should not check for available msi installtion', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         jdk.findMsiInstalledJava.restore();
-        return jdk.detectExistingInstall(function() {
+        return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).to.have.not.been.called;
           expect(Util.writeFile).to.have.not.been.called;
-          done();
         });
       });
     });

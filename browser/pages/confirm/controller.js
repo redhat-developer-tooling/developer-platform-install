@@ -65,17 +65,17 @@ class ConfirmController {
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(new Promise(function(resolve) {
-          installer.detectExistingInstall(()=> {
+        detectors.push(new Promise((resolve)=> {
+          installer.detectExistingInstall().then(()=> {
             resolve();
           });
         }));
       }
-      Promise.all(detectors).then(
-        ()=>this.setIsDisabled()
-      ).catch(
-        ()=>this.setIsDisabled()
-      );
+      Promise.all(detectors).then(()=> {
+        this.setIsDisabled();
+      }).catch(()=> {
+        this.setIsDisabled();
+      });
     });
   }
 
