@@ -264,7 +264,7 @@ describe('Cygwin installer', function() {
         Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
         installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
         installer.ipcRenderer = { on: function() {} };
-        installer.detectExistingInstall(function() {
+        installer.detectExistingInstall().then(()=> {
           expect(installer.selectedOption).to.be.equal('install');
           expect(installer.hasOption('install')).to.be.equal(true);
         });
