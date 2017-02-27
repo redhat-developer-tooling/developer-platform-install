@@ -5,6 +5,7 @@ import path from 'path';
 import Platform from '../services/platform';
 
 let pathWindowsRegex = /^[a-zA-Z]:\\(?:[^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*$/;
+let nonAsciiRegex = /[^\x00-\x7F]+/;
 
 function pathValidator() {
   return {
@@ -12,9 +13,11 @@ function pathValidator() {
     link: function(scope, element, attr, mCtrl) {
 
       function validateFormatWindows(value) {
-        let trimmedValue = value.trim();
+        return pathWindowsRegex.test(value);
+      }
 
-        return pathWindowsRegex.test(trimmedValue);
+      function validateAscii(value) {
+        return !nonAsciiRegex.test(value);
       }
 
       function validateLength(value) {
@@ -43,6 +46,7 @@ function pathValidator() {
       mCtrl.$validators['tooLong'] = validateLength;
       mCtrl.$validators['hasSpaces'] = hasNoSpaces;
       if(Platform.OS == 'win32') {
+        mCtrl.$validators['invalidAscii'] = validateAscii;
         mCtrl.$validators['invalidFormat'] = validateFormatWindows;
         mCtrl.$validators['invalidDisk'] = validateDisk;
       }
