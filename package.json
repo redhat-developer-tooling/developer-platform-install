@@ -14,11 +14,6 @@
     "url": "https://issues.jboss.org/projects/JBDS/summary"
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
-  "build": {
-    "directories": {
-      "app": "transpiled"
-    }
-  },
   "scripts": {
     "start": "./node_modules/.bin/gulp run",
     "generate": "./node_modules/.bin/gulp generate",
