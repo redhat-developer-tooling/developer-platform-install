@@ -151,6 +151,15 @@ describe('Location page', function() {
       expect(nextButton.isEnabled()).toBe(true);
     });
 
+    it('should not allow if Non-ASCII character found', function() {
+      locationField.sendKeys('c:\\thisfolderˇ');
+
+      let NonAscii = element(By.id('pathAsciiStatus'));
+      expect(NonAscii.isDisplayed()).toBe(true);
+      expect(NonAscii.getAttribute('class')).toMatch('help-block has-error');
+      expect(nextButton.isEnabled()).toBe(false);
+    });
+
     it('should show info that non-existing folder will be created', function() {
       locationField.sendKeys('c:\\thisfolder\\definitely\\doesnot\\exist');
 
