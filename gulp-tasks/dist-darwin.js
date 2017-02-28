@@ -29,10 +29,10 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
           icon: 'resources/devsuite.icns',
           target: 'zip'
         },
-        extraFiles
-      },
-      directories: {
-        app : 'transpiled'
+        extraFiles,
+        directories: {
+          app : 'transpiled'
+        }
       }
     }
   }).then(() => {
