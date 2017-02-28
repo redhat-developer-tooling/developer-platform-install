@@ -23,10 +23,6 @@ class CDKInstall extends InstallableItem {
     return 'cdk';
   }
 
-  detectExistingInstall() {
-    return Promise.resolve();
-  }
-
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let cdkDotFolder;

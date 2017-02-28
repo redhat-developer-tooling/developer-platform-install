@@ -42,10 +42,6 @@ class JbdsInstall extends InstallableItem {
     });
   }
 
-  detectExistingInstall() {
-    return Promise.resolve();
-  }
-
   checkForExistingInstall(selection, data) {
     let pattern, directory;
     let versionRegex = /version\s(\d+)\.\d+\.\d+/;
