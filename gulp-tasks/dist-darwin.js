@@ -21,7 +21,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
   // Promise is returned
   return builder.build({
     targets: Platform.MAC.createTarget(),
-    devMetadata: {
+    config: {
       build: {
         appId: 'com.redhat.devsuite.installer',
         category: 'public.app-category.developer-tools',
