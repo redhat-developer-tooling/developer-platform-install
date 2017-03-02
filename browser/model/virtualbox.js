@@ -54,7 +54,7 @@ class VirtualBoxInstall extends InstallableItem {
 class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   detectExistingInstall() {
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve)=> {
       let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
       let command;
       let extension = '';
@@ -209,7 +209,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
         resolve();
       }).catch(() => {
         this.addOption('install', this.version, '/usr/local/bin', true);
-        reject(error);
+        reject();
       });
     });
   }

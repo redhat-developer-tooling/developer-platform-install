@@ -92,7 +92,7 @@ class Platform {
           return Promise.resolve(homePath.replace(/\r?\n/g, ''));
         });
       }
-    })
+    });
   }
 
   static addToUserPath(locations) {
@@ -153,10 +153,10 @@ class Platform {
 
   static addToUserPath_darwin(executables) {
     let commands = [];
-    executables.forEach(function(executable){
+    executables.forEach(function(executable) {
       let name = path.parse(executable).name;
-      commands.push(`rm -f /usr/local/bin/${name}; ln -s ${executable} /usr/local/bin/${name};`)
-    })
+      commands.push(`rm -f /usr/local/bin/${name}; ln -s ${executable} /usr/local/bin/${name};`);
+    });
     return pify(child_process.exec)(commands.join(' '));
   }
 

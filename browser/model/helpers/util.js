@@ -2,8 +2,6 @@
 
 let child_process = require('child_process');
 let fs = require('fs-extra');
-import path from 'path';
-
 import Platform from '../../services/platform';
 
 class Util {
