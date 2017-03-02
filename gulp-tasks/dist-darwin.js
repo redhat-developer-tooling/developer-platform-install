@@ -21,18 +21,16 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
   // Promise is returned
   return builder.build({
     targets: Platform.MAC.createTarget(),
-    devMetadata: {
-      build: {
-        appId: 'com.redhat.devsuite.installer',
+    config: {
+      appId: 'com.redhat.devsuite.installer',
+      mac: {
         category: 'public.app-category.developer-tools',
-        mac: {
-          icon: 'resources/devsuite.icns',
-          target: 'zip'
-        },
-        extraFiles,
-        directories: {
-          app : 'transpiled'
-        }
+        icon: 'resources/devsuite.icns',
+        target: ['zip']
+      },
+      extraFiles,
+      directories: {
+        app : 'transpiled'
       }
     }
   }).then(() => {
