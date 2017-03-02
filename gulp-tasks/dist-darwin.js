@@ -23,10 +23,9 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
     targets: Platform.MAC.createTarget(),
     config: {
       appId: 'com.redhat.devsuite.installer',
-      category: 'public.app-category.developer-tools',
       mac: {
         icon: 'resources/devsuite.icns',
-        target: 'zip'
+        target: ['zip']
       },
       extraFiles,
       directories: {

@@ -55,7 +55,7 @@
     "codecov": "1.0.1",
     "crypto": "0.0.3",
     "del": "2.2.2",
-    "electron": "1.4.15",
+    "electron": "1.6.1",
     "electron-builder": "15.0.0",
     "electron-packager": "8.5.2",
     "eslint": "3.16.1",
