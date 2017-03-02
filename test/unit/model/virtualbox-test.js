@@ -7,7 +7,6 @@ import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import path from 'path';
 import VirtualBoxInstall from 'browser/model/virtualbox';
-import {VirtualBoxInstallWindows} from 'browser/model/virtualbox';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
@@ -240,7 +239,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add virtualbox target install folder to user PATH environment variable', function() {
-      sandbox.stub(child_process, 'execFile').yields(undefined, "", "");
+      sandbox.stub(child_process, 'execFile').yields(undefined, '', '');
       sandbox.stub(installer, 'configure').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
 
@@ -253,7 +252,7 @@ describe('Virtualbox installer', function() {
         expect(Platform.addToUserPath).to.be.calledOnce;
         expect(Platform.addToUserPath).calledWith(['targetLocation']);
       }).catch(()=>{
-        expect.fail()
+        expect.fail();
       });
     });
 

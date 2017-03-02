@@ -120,7 +120,7 @@ describe('InstallableItem', function() {
     });
 
     it('should set progress status to "Verifying Existing Download" if a downloaded file exists', function() {
-      let successHandStub = sandbox.stub(downloader, 'successHandler').returns();
+      sandbox.stub(downloader, 'successHandler').returns();
       sandbox.stub(fs, 'existsSync').returns(true);
       sandbox.stub(installItem, 'startDownload').returns();
       sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
@@ -164,8 +164,8 @@ describe('InstallableItem', function() {
     });
 
     it('should set the progress state to "Downloading"', function() {
-      let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
-        downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
+      sinon.mock(installItem.downloader).expects('setWriteStream').once(),
+      sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
       installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;

@@ -24,7 +24,7 @@ class CygwinInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve)=> {
       if (Platform.OS === 'win32') {
         let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
         let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
@@ -41,7 +41,7 @@ class CygwinInstall extends InstallableItem {
         }).then((output)=>{
           this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
           resolve();
-        }).catch((error)=>{
+        }).catch(()=>{
           resolve();
         });
       } else {

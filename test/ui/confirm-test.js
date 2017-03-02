@@ -2,7 +2,6 @@
 
 let path = require('path');
 
-let webdriver = browser.driver;
 let context = { pageName: 'Confirmation' };
 let breadcrumbBase = require('./breadcrumbs-base');
 let requirements = require(path.join(rootPath, 'requirements-' + process.platform + '.json'));

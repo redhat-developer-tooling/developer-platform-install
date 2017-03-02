@@ -66,7 +66,7 @@ module.exports = function(gulp) {
       process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
     } else if (process.platform === 'darwin') {
       cmd = 'unzip -o ' + process.env.PTOR_BINARY;
-      process.env.PTOR_BINARY = path.join('Red\ Hat\ Development\ Suite\ Installer.app', 'Contents', 'MacOS', 'Red\ Hat\ Development\ Suite\ Installer')
+      process.env.PTOR_BINARY = path.join('Red\ Hat\ Development\ Suite\ Installer.app', 'Contents', 'MacOS', 'Red\ Hat\ Development\ Suite\ Installer');
     }
 
     exec(cmd, {maxbuffer: 1024 * 512}, function(err, stdout, stderr) {

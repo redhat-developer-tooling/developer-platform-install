@@ -12,6 +12,8 @@ module.exports = {
     "globals": {
         "inject": true,
         "ngModule": false,
-        "angular": true
+        "angular": true,
+        "rootPath": true,
+        "webdriver": true
     }
 };
