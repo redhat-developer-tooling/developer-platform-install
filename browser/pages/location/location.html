@@ -23,21 +23,29 @@
                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
           <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
-          <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
+          <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists && !locCtrl.nonasciichars" class="has-warning">
             <strong id="existingFolderStatus" class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
               The selected folder already exists, some files might be overwritten.
             </strong>
           </div>
 
-          <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists">
+          <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists && !locCtrl.nonasciichars">
             <strong id="createFolderStatus" class="help-block">
               <span class="pficon pficon-info"></span>
               The selected folder will be created.
             </strong>
           </div>
 
-          <div ng-show="locationForm.folder.$error" class="help-block has-error">
+          <div ng-show="locCtrl.checkUserProfilestatus() && locCtrl.nonasciichars" class="help-block has-error">
+            <strong id="checkUserProfilestatus" class="help-block has-error">
+              <span class="pficon-error-circle-o"></span>
+              Path to user home directory has Non-ASCII characters
+            </strong>
+          </div>
+
+
+          <div ng-show="locationForm.folder.$error && !locCtrl.nonasciichars" class="help-block has-error">
             <ng-messages for="locationForm.folder.$error">
               <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
             </ng-messages>
@@ -55,5 +63,5 @@
   <button type="button" id="location-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="locationForm"
           ng-click="locCtrl.back()">Back</button>
   <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="locationForm"
-          ng-disabled="locationForm.folder.$invalid" autofocus>Next</button>
+          ng-disabled="locationForm.folder.$invalid || (locCtrl.checkUserProfilestatus() && locCtrl.nonasciichars)" autofocus>Next</button>
 </footer>

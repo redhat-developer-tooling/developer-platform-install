@@ -6,6 +6,8 @@ import sinon from 'sinon';
 import Logger from 'browser/services/logger';
 import { default as sinonChai } from 'sinon-chai';
 import 'sinon-as-promised';
+import Util from 'browser/model/helpers/util';
+import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
 import InstallerDataService from 'browser/services/data';
 import InstallableItem from 'browser/model/installable-item';
@@ -116,6 +118,27 @@ describe('LocationController', function() {
       sandbox.stub(electron.remote.dialog, 'showOpenDialog').returns(['selectedFolder']);
       locationcontroller.selectFolder();
       expect(locationcontroller.checkFolder).to.be.calledOnce;
+    });
+  });
+
+  describe('checkUserProfilestatus', function() {
+
+    beforeEach(function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
+    });
+
+    it('return false if Non-Ascii character not found', function() {
+      sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve('c:\\profile\\username'));
+      locationcontroller.checkUserProfilestatus().then(()=> {
+        expect(locationcontroller.nonasciichars).to.be.equal(false);
+      });
+    });
+
+    it('return true if Non-Ascii character found', function() {
+      sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve('c:\\profile\\userňame'));
+      locationcontroller.checkUserProfilestatus().then(()=> {
+        expect(locationcontroller.nonasciichars).to.be.equal(true);
+      });
     });
   });
 
