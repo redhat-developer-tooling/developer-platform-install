@@ -328,17 +328,6 @@ describe('JDK installer', function() {
       });
     });
 
-    it('should skip the installation if it is not selected', function() {
-      installer.selectedOption = 'do nothing';
-      let calls = 0;
-      let succ = function() { return calls++; };
-
-      installer.install(fakeProgress, succ, failure);
-
-      expect(fakeProgress.setStatus).not.called;
-      expect(calls).to.equal(1);
-    });
-
     it('setup should call success callback', function() {
       let calls = 0;
       let succ = function() { return calls++; };

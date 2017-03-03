@@ -142,33 +142,31 @@ class JdkInstall extends InstallableItem {
   }
 
   installAfterRequirements(progress, success, failure) {
-    if(this.selectedOption === 'install') {
-      progress.setStatus('Installing');
-      let installer = new Installer(JdkInstall.KEY, progress, success, failure);
+    progress.setStatus('Installing');
+    let installer = new Installer(JdkInstall.KEY, progress, success, failure);
 
-      if(fs.existsSync(this.installerDataSvc.jdkDir())) {
-        rimraf.sync(this.installerDataSvc.jdkDir());
-      }
-      installer.execFile('msiexec', this.createMsiExecParameters()).then((result) => {
-        // msiexec logs are in UCS-2
-        Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
-          let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
-          let targetDir = regexTargetDir.exec(line)[1];
-          if(targetDir !== this.getLocation()) {
-            Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
-            this.installerDataSvc.jdkRoot = targetDir;
-          }
-          installer.succeed(true);
-        }).catch(()=>{
-          // location doesn't parsed correctly, nothing to verify just resolve and keep going
-          installer.succeed(result);
-        });
-      }).catch((error) => {
-        installer.fail(error);
-      });
-    } else {
-      success();
+    if(fs.existsSync(this.installerDataSvc.jdkDir())) {
+      rimraf.sync(this.installerDataSvc.jdkDir());
     }
+    installer.execFile(
+      'msiexec', this.createMsiExecParameters()
+    ).then((result) => {
+      // msiexec logs are in UCS-2
+      Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
+        let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
+        let targetDir = regexTargetDir.exec(line)[1];
+        if(targetDir !== this.getLocation()) {
+          Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
+          this.installerDataSvc.jdkRoot = targetDir;
+        }
+        installer.succeed(true);
+      }).catch(()=>{
+        // location doesn't parsed correctly, nothing to verify just resolve and keep going
+        installer.succeed(result);
+      });
+    }).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   createMsiExecParameters() {

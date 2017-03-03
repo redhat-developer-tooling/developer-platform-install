@@ -105,27 +105,20 @@ class JbdsInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    if(this.selectedOption === 'install') {
-      this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
-      let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
+    this.installGenerator = new JbdsAutoInstallGenerator(this.installerDataSvc.jbdsDir(), this.installerDataSvc.jdkDir(), this.version);
+    let installer = new Installer(JbdsInstall.KEY, progress, success, failure);
 
-      Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content');
-      let data = this.installGenerator.fileContent();
-      Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content SUCCESS');
+    Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content');
+    let data = this.installGenerator.fileContent();
+    Logger.info(JbdsInstall.KEY + ' - Generate devstudio auto install file content SUCCESS');
 
-      installer.writeFile(this.installConfigFile, data)
-        .then((result) => {
-          return this.postJDKInstall(installer, result);
-        })
-        .then((result) => {
-          installer.succeed(result);
-        })
-        .catch((error) => {
-          installer.fail(error);
-        });
-    } else {
-      success();
-    }
+    installer.writeFile(this.installConfigFile, data).then((result) => {
+      return this.postJDKInstall(installer, result);
+    }).then((result) => {
+      installer.succeed(result);
+    }).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   setup(progress, success, failure) {

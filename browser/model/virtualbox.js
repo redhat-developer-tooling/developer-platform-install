@@ -117,20 +117,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
-    if(this.selectedOption === 'install') {
-      installer.execFile(
-        this.downloadedFile, ['--extract', '-path', this.installerDataSvc.tempDir(), '--silent']
-      ).then(() => {
-        return this.configure(installer);
-      }).then((result) => {
-        Platform.addToUserPath([this.option['install'].location]);
-        installer.succeed(result);
-      }).catch((error) => {
-        installer.fail(error);
-      });
-    } else {
-      success();
-    }
+    installer.execFile(
+      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.tempDir(), '--silent']
+    ).then(() => {
+      return this.configure(installer);
+    }).then((result) => {
+      Platform.addToUserPath([this.option['install'].location]);
+      installer.succeed(result);
+    }).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   configure(installer) {
