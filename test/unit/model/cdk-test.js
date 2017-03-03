@@ -291,8 +291,7 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
           expect(child_process.exec).calledWith('chmod +x ' + path.join('ocBinRoot', 'minishift'));
-          expect(child_process.exec).calledWith('chmod +x ' + path.join(
-            Platform.OS === 'win32'? process.cwd() : '', 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc '));
+          expect(child_process.exec).calledWith('chmod +x ' + path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc'));
         });
       });
 
