@@ -38,7 +38,7 @@
     "glob": "7.1.1",
     "globby": "6.1.0",
     "mkdirp": "^0.5.1",
-    "patternfly": "3.21.0",
+    "patternfly": "3.22.1",
     "pify": "2.3.0",
     "replace-in-file": "2.4.0",
     "request": "2.79.0",
@@ -92,6 +92,6 @@
     "sinon-chai": "2.8.0",
     "tmp": "0.0.31",
     "xunit-file": "1.0.0",
-    "yargs": "6.6.0"
+    "yargs": "7.0.1"
   }
 }
