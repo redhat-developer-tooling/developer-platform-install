@@ -265,17 +265,6 @@ describe('Virtualbox installer', function() {
         expect.fail('it did not catch the error');
       }
     });
-
-
-    it('should skip installation when an existing version is used', function() {
-      installer.selectedOption = 'detect';
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
-      item2.setInstallComplete();
-      item2.thenInstall(installer);
-      installer.install(fakeProgress, success, failure);
-
-      expect(spy).to.have.not.been.called;
-    });
   });
 
   describe('detection', function() {

@@ -212,29 +212,26 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    if(this.selectedOption === 'install') {
-      let dmgFile = this.downloadedFile;
-      //let timestamp = new Date().toJSON().replace(/:/g,'')
-      let volumeName = 'virtualbox-5.0.26';
-      let shellScript = [
-        `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
-        `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`
-      ].join(';');
-      let osaScript = [
-        'osascript',
-        '-e',
-        `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
-      ].join(' ');
 
-      let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
-      installer.exec(osaScript).then((result) => {
-        return installer.succeed(result);
-      }).catch((error) => {
-        return installer.fail(error);
-      });
-    } else {
-      success();
-    }
+    let dmgFile = this.downloadedFile;
+    //let timestamp = new Date().toJSON().replace(/:/g,'')
+    let volumeName = 'virtualbox-5.0.26';
+    let shellScript = [
+      `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
+      `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`
+    ].join(';');
+    let osaScript = [
+      'osascript',
+      '-e',
+      `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
+    ].join(' ');
+
+    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
+    installer.exec(osaScript).then((result) => {
+      return installer.succeed(result);
+    }).catch((error) => {
+      return installer.fail(error);
+    });
   }
 
 }
