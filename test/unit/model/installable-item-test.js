@@ -232,11 +232,25 @@ describe('InstallableItem', function() {
   });
 
   describe('setOptionLocation method', function() {
-    it('should set location property for specific option', function() {
+    it('should set location property for specific option if it is present', function() {
       item.addOption('detected');
       item.setOptionLocation('detected', 'location');
       expect(item.option.detected.location).to.be.equal('location');
     });
+
+    it('should set location property for specific option if it is present', function() {
+      item.setOptionLocation('unknown', 'location');
+      expect(item.option.unknown).to.be.undefined;
+    });
   });
 
+  describe('restartDownload', function() {
+    it('delegatest to downloader instance', function(){
+      let installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', new InstallerDataService(), false);
+      installItem.downloader = new Downloader(null, function() {});
+      let rdStub = sandbox.stub(Downloader.prototype,'restartDownload').returns();
+      installItem.restartDownload()
+      expect(rdStub).calledOnce;
+    })
+  })
 });
