@@ -53,7 +53,7 @@ describe('ConfirmController', function() {
       });
 
       it('install watcher to track devstudio selection to select its requirements', function() {
-        expect($watch).to.be.calledWith('checkboxModel.jbds.selectedOption');
+        expect($watch).to.be.calledWith('checkboxModel.devstudio.selectedOption');
       });
 
       it('install watcher for $viewContentLoaded to trigger detection', function() {

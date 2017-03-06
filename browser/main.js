@@ -16,7 +16,7 @@ import InstallerDataService from './services/data';
 import Request from './services/request';
 import VirtualBoxInstall from './model/virtualbox';
 import JdkInstall from './model/jdk-install';
-import JbdsInstall from './model/jbds';
+import DevstudioInstall from './model/devstudio';
 import CygwinInstall from './model/cygwin';
 import CDKInstall from './model/cdk';
 import Electron from 'electron';
@@ -124,16 +124,16 @@ let mainModule =
               'jdk8',
               reqs['jdk'].sha256sum);
 
-            let jbds = new JbdsInstall(
+            let devstudio = new DevstudioInstall(
               installerDataSvc,
-              reqs['jbds'].dmUrl,
-              reqs['jbds'].filename,
+              reqs['devstudio'].dmUrl,
+              reqs['devstudio'].filename,
               'developer-studio',
-              reqs['jbds'].sha256sum);
+              reqs['devstudio'].sha256sum);
 
-            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, jbds);
+            installerDataSvc.addItemsToInstall(virtualbox, cygwin, cdk, jdk, devstudio);
 
-            jdk.thenInstall(jbds);
+            jdk.thenInstall(devstudio);
             jdk.thenInstall(virtualbox).thenInstall(cygwin).thenInstall(cdk);
 
           }]);

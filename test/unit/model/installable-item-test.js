@@ -56,7 +56,7 @@ describe('InstallableItem', function() {
       let item1 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
       let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', svc);
       item2.selectedOption = 'detected';
-      let item3 = new InstallableItem('jbds', 1000, 'url', 'installFile', 'targetFolderName', svc);
+      let item3 = new InstallableItem('devstudio', 1000, 'url', 'installFile', 'targetFolderName', svc);
       item3.selectedOption = 'detected';
       let item4 = new InstallableItem('cdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
       svc.addItemsToInstall(item1, item2, item3, item4);
