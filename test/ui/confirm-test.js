@@ -36,7 +36,7 @@ describe('Confirm page', function() {
       cygwin: requirements['cygwin'],
       cdk: requirements['cdk'],
       jdk: requirements['jdk'],
-      devstudio: requirements['jbds']
+      devstudio: requirements['devstudio']
     };
     let messages = {
       detected: 'Using detected version',

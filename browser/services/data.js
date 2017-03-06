@@ -34,10 +34,10 @@ class InstallerDataService {
     this.requirements = requirements;
   }
 
-  setup(vboxRoot, jdkRoot, jbdsRoot, cygwinRoot, cdkRoot) {
+  setup(vboxRoot, jdkRoot, devstudioRoot, cygwinRoot, cdkRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
     this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
-    this.jbdsRoot = jbdsRoot || path.join(this.installRoot, 'devstudio');
+    this.devstudioRoot = devstudioRoot || path.join(this.installRoot, 'devstudio');
     this.cygwinRoot = cygwinRoot || path.join(this.installRoot, 'cygwin');
     this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = this.cdkRoot;
@@ -116,8 +116,8 @@ class InstallerDataService {
     return this.jdkRoot;
   }
 
-  jbdsDir() {
-    return this.jbdsRoot;
+  devstudioDir() {
+    return this.devstudioRoot;
   }
 
   cygwinDir() {
