@@ -238,7 +238,7 @@ describe('InstallableItem', function() {
       expect(item.option.detected.location).to.be.equal('location');
     });
 
-    it('should set location property for specific option if it is present', function() {
+    it('should not set location for not available option', function() {
       item.setOptionLocation('unknown', 'location');
       expect(item.option.unknown).to.be.undefined;
     });
