@@ -7,6 +7,7 @@ import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import path from 'path';
 import VirtualBoxInstall from 'browser/model/virtualbox';
+import {VirtualBoxInstallWindows} from 'browser/model/virtualbox';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
@@ -139,6 +140,12 @@ describe('Virtualbox installer', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
+        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer.ipcRenderer = {on: function(){}};
+      });
+
+      afterEach(function () {
+        sandbox.restore();
       });
 
       it('should execute the silent extract', function() {
@@ -189,7 +196,7 @@ describe('Virtualbox installer', function() {
 
         beforeEach(function() {
           helper = new Installer('virtualbox', fakeProgress, success, failure);
-          sandbox.stub(child_process, 'execFile').yields();
+          sandbox.stub(child_process, 'execFile').yields(undefined, '', '');
           resolve = (argument) => { Promise.resolve(argument); };
           reject = (argument) => { Promise.reject(argument); };
         });
@@ -221,6 +228,27 @@ describe('Virtualbox installer', function() {
           expect(spy).to.have.been.calledOnce;
           expect(spy).to.have.been.calledWith('msiexec', opts);
         });
+
+        it('should add virtualbox target install folder to user PATH environment variable', function() {
+          sandbox.stub(installer, 'configure').resolves(true);
+          sandbox.stub(Platform, 'addToUserPath').resolves(true);
+
+          installer.selectedOption = 'install';
+          installer.addOption('install', installer.version, 'targetLocation', true);
+
+          return new Promise((resolve, reject)=> {
+            installer.install(fakeProgress, resolve, reject);
+          }).then(()=>{
+            expect(Platform.addToUserPath).to.be.calledOnce;
+            expect(Platform.addToUserPath).calledWith(['targetLocation']);
+          }).catch(()=>{
+            expect.fail();
+          });
+        });
+
+        afterEach(function () {
+          sandbox.restore();
+        });
       });
     });
 
@@ -236,34 +264,6 @@ describe('Virtualbox installer', function() {
       } catch (error) {
         expect.fail('it did not catch the error');
       }
-    });
-
-    it('should add virtualbox target install folder to user PATH environment variable', function() {
-      sandbox.stub(child_process, 'execFile').yields(undefined, '', '');
-      sandbox.stub(installer, 'configure').resolves(true);
-      sandbox.stub(Platform, 'addToUserPath').resolves(true);
-
-      installer.selectedOption = 'install';
-      installer.addOption('install', installer.version, 'targetLocation', true);
-
-      return new Promise((resolve, reject)=> {
-        installer.install(fakeProgress, resolve, reject);
-      }).then(()=>{
-        expect(Platform.addToUserPath).to.be.calledOnce;
-        expect(Platform.addToUserPath).calledWith(['targetLocation']);
-      }).catch(()=>{
-        expect.fail();
-      });
-    });
-
-    it('should skip installation when an existing version is used', function() {
-      installer.selectedOption = 'detect';
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
-      item2.setInstallComplete();
-      item2.thenInstall(installer);
-      installer.install(fakeProgress, success, failure);
-
-      expect(spy).to.have.not.been.called;
     });
   });
 
@@ -283,7 +283,8 @@ describe('Virtualbox installer', function() {
       stub.onCall(2).resolves(VERSION);
 
       sandbox.stub(Util, 'folderContains').resolves(LOCATION);
-      validateStub = sandbox.stub(installer, 'validateVersion').returns();
+      installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+            validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
 
     it('should add option \'detected\' with detected version and location', function() {

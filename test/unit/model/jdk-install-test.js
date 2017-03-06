@@ -187,8 +187,11 @@ describe('JDK installer', function() {
     });
 
     describe('on macos', function() {
-      it('should not select jdk for installation if no java detected', function() {
+      beforeEach(function(){
         sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+
+      it('should not select jdk for installation if no java detected', function() {
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('');
         return jdk.detectExistingInstall().then(()=>{
@@ -197,7 +200,6 @@ describe('JDK installer', function() {
       });
 
       it('should not select openjdk for installation if newer than supported supported version detected', function() {
-        sandbox.stub(Platform, 'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.9.0_1');
         return jdk.detectExistingInstall().then(()=>{
@@ -206,7 +208,6 @@ describe('JDK installer', function() {
       });
 
       it('should not select openjdk for installation if older than supported supported java version detected', function() {
-        sandbox.stub(Platform, 'getOS').returns('darwin');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         mockDetectedJvm('1.7.0_1');
         return jdk.detectExistingInstall().then(()=>{
@@ -215,7 +216,6 @@ describe('JDK installer', function() {
       });
 
       it('should not check for available msi installtion', function() {
-        sandbox.stub(Platform, 'getOS').returns('darwin');
         mockDetectedJvm('1.8.0_1');
         let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
         jdk.findMsiInstalledJava.restore();
@@ -326,17 +326,6 @@ describe('JDK installer', function() {
       }, function() {
         expect.fail('it should not fail');
       });
-    });
-
-    it('should skip the installation if it is not selected', function() {
-      installer.selectedOption = 'do nothing';
-      let calls = 0;
-      let succ = function() { return calls++; };
-
-      installer.install(fakeProgress, succ, failure);
-
-      expect(fakeProgress.setStatus).not.called;
-      expect(calls).to.equal(1);
     });
 
     it('setup should call success callback', function() {
