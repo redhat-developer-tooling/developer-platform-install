@@ -47,7 +47,7 @@ class ConfirmController {
       }
     });
 
-    $scope.$watch('checkboxModel.jbds.selectedOption', function watchDevStudioSelectionChange(nVal) {
+    $scope.$watch('checkboxModel.devstudio.selectedOption', function watchDevStudioSelectionChange(nVal) {
       if(nVal=='install') {
         let jdk = $scope.checkboxModel.jdk;
         // if jdk is not selected for install and there is no detected version
@@ -84,7 +84,7 @@ class ConfirmController {
     this.installerDataSvc.setup(
       this.installerDataSvc.getInstallable('virtualbox').getLocation(),
       this.installerDataSvc.getInstallable('jdk').getLocation(),
-      this.installerDataSvc.getInstallable('jbds').getLocation(),
+      this.installerDataSvc.getInstallable('devstudio').getLocation(),
       this.installerDataSvc.getInstallable('cygwin').getLocation(),
       this.installerDataSvc.getInstallable('cdk').getLocation()
     );
@@ -136,10 +136,10 @@ class ConfirmController {
     item.checkForExistingInstall();
   }
 
-  jbdsIsConfigured() {
+  devstudioIsConfigured() {
     return this.sc.checkboxModel.jdk.isConfigured()
-      && this.sc.checkboxModel.jbds.isConfigured()
-      || this.sc.checkboxModel.jbds.isSkipped();
+      && this.sc.checkboxModel.devstudio.isConfigured()
+      || this.sc.checkboxModel.devstudio.isSkipped();
   }
 
   cdkIsConfigured() {
@@ -150,7 +150,7 @@ class ConfirmController {
   }
 
   isConfigurationValid() {
-    return this.jbdsIsConfigured()
+    return this.devstudioIsConfigured()
       && this.cdkIsConfigured()
       && this.isAtLeastOneSelected();
   }

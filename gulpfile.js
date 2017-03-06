@@ -95,7 +95,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url = reqs['jbds'].url.substring(0, reqs['jbds'].url.lastIndexOf('/')) + '/content.json';
+      let url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
@@ -103,8 +103,8 @@ gulp.task('update-requirements', ['transpile:app'], function() {
           let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
           let finalVersion = versionRegex.exec(body)[1];
 
-          if (reqs['jbds'].version != finalVersion) {
-            reqs['jbds'].version = finalVersion;
+          if (reqs['devstudio'].version != finalVersion) {
+            reqs['devstudio'].version = finalVersion;
           }
           resolve();
         }
@@ -114,12 +114,12 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioSha = ()=>{
     return new Promise((resolve) => {
-      let url = reqs['jbds'].sha256sum;
+      let url = reqs['devstudio'].sha256sum;
       if (url.length == 64 && url.indexOf('http')<0 && url.indexOf('ftp')<0) {
         resolve();
       } else {
         request(url, (err, response, body) => {
-          reqs['jbds'].sha256sum = body;
+          reqs['devstudio'].sha256sum = body;
           resolve();
         });
       }

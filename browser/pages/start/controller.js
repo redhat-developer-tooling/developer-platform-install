@@ -12,7 +12,7 @@ class StartController {
   constructor(installerDataSvc, electron) {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
-    this.jbdsInstall = this.installerDataSvc.getInstallable('jbds');
+    this.devstudioInstall = this.installerDataSvc.getInstallable('devstudio');
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
@@ -26,7 +26,7 @@ class StartController {
   }
 
   start() {
-    if(this.jbdsInstall.isSkipped()) {
+    if(this.devstudioInstall.isSkipped()) {
       this.exit();
     } else {
       this.launchDevstudio();
@@ -34,7 +34,7 @@ class StartController {
   }
 
   launchDevstudio_darwin() {
-    let devStudioAppPath = path.join(this.installerDataSvc.jbdsDir(), 'Devstudio.app');
+    let devStudioAppPath = path.join(this.installerDataSvc.devstudioDir(), 'Devstudio.app');
     let options = {
       env : Object.assign({}, Platform.ENV)
     };
@@ -50,8 +50,8 @@ class StartController {
 
   launchDevstudio_win32() {
     Logger.info('devstudio Start - Write temp files...');
-    let devstudioBat = path.join(this.jbdsInstall.selected ? this.installerDataSvc.jbdsDir()
-        :  this.jbdsInstall.existingInstallLocation, 'devstudio.bat');
+    let devstudioBat = path.join(this.devstudioInstall.selected ? this.installerDataSvc.devstudioDir()
+        :  this.devstudioInstall.existingInstallLocation, 'devstudio.bat');
 
     let resetvarsBatFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.bat');
     let resetvarsVbsFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.vbs');
@@ -80,33 +80,33 @@ class StartController {
     fs.writeFileSync(resetvarsVbsFile, resetvarsVbsFileData);
     Logger.info('devstudio Start - Write resetvarsVbsFile: ' + resetvarsVbsFile + ' - SUCCESS');
 
-    let runJbdsFile = path.join(this.installerDataSvc.tempDir(), 'runjbds.bat');
-    let runJbdsFileData = [
+    let runDevstudioFile = path.join(this.installerDataSvc.tempDir(), 'rundevstudio.bat');
+    let runDevstudioFileData = [
       '"' + resetvarsVbsFile + '"',
       'call "' + resetvarsBatFile + '"',
       'call "' + devstudioBat + '"'
     ].join('\r\n');
-    Logger.info('devstudio Start - Write runJbdsFile: ' + runJbdsFile);
-    fs.writeFileSync(runJbdsFile, runJbdsFileData);
+    Logger.info('devstudio Start - Write runDevstudioFile: ' + runDevstudioFile);
+    fs.writeFileSync(runDevstudioFile, runDevstudioFileData);
 
-    Logger.info('devstudio Start - Write runJbdsFile: ' + runJbdsFile + ' - SUCCESS');
+    Logger.info('devstudio Start - Write runDevstudioFile: ' + runDevstudioFile + ' - SUCCESS');
     Logger.info('devstudio Start - Write temp file SUCCESS');
-    Logger.info('devstudio Start - Run runJbdsFile: ' + runJbdsFile);
+    Logger.info('devstudio Start - Run runDevstudioFile: ' + runDevstudioFile);
 
     let env = Platform.ENV;
     env['rhel.subscription.password'] = this.installerDataSvc.password;
-    let runJbdsBat = require('child_process').spawn(
-      'cmd.exe', ['/c', runJbdsFile], { env: env, timeout: 2000 });
+    let runDevstudioBat = require('child_process').spawn(
+      'cmd.exe', ['/c', runDevstudioFile], { env: env, timeout: 2000 });
 
-    runJbdsBat.stdout.on('data',
+    runDevstudioBat.stdout.on('data',
       (data) => {
-        Logger.info(`devstudio Start - [${runJbdsFile}]: ${data}`);
+        Logger.info(`devstudio Start - [${runDevstudioFile}]: ${data}`);
       });
-    runJbdsBat.stderr.on('data',
+    runDevstudioBat.stderr.on('data',
       (data) => {
-        Logger.info(`devstudio Start ERROR - [${runJbdsFile}]: ${data}`);
+        Logger.info(`devstudio Start ERROR - [${runDevstudioFile}]: ${data}`);
       });
-    runJbdsBat.on('exit',
+    runDevstudioBat.on('exit',
       (code) => {
         Logger.info(`devstudio Start Exit - Code: ${code}`);
         this.exit();
