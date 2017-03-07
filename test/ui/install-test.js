@@ -4,7 +4,7 @@ let path = require('path');
 
 let context = { pageName: 'Download & Install' };
 let breadcrumbBase = require('./breadcrumbs-base');
-let requirements = require(path.join(rootPath, 'requirements-' + process.platform + '.json'));
+let requirements = require(path.join(rootPath, 'requirements.json'));
 
 describe('Installation page', function() {
   let components = {
@@ -58,7 +58,7 @@ describe('Installation page', function() {
         for (var key in components) {
           let productVersion = components[key].descriptionPane.all(By.className('product-version')).first();
           expect(productVersion.isDisplayed()).toBe(true);
-          expect(productVersion.getText()).toEqual(components[key].version);
+          expect(productVersion.getText()).toEqual(components[key].platform[process.platform].version);
         }
       });
 

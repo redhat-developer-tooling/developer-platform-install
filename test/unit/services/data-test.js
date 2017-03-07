@@ -82,12 +82,6 @@ describe('InstallerDataService', function() {
       expect(svc.requirements['cdk'].name).to.be.equal('Red Hat Container Development Kit');
     });
 
-    it('should set requirements to provided in requirements parameter', function() {
-      let requirements = {'cdk.zip':{'url':'http.redhat.com'}};
-      let svc = new InstallerDataService(undefined, requirements);
-      expect(svc.requirements).to.be.equal(requirements);
-    });
-
     it('should set default values correctly', function() {
       expect(svc.tmpDir).to.equal(os.tmpdir());
 

@@ -84,7 +84,7 @@ let mainModule =
             let stageHost = process.env['DM_STAGE_HOST'];
             if(stageHost) {
               for (let variable in reqs) {
-                let dmUrl = reqs[variable]['dmUrl'];
+                let dmUrl = reqs[variable].dmUrl;
                 if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
                   reqs[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
                 }

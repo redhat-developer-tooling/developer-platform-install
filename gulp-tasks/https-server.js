@@ -5,7 +5,7 @@ var fs = require('fs');
 var qs = require('querystring');
 var pem = require('pem');
 var path = require('path');
-var requirements = require('..\\requirements-' + process.platform + '.json');
+var requirements = require('..\\requirements.json');
 
 var PORT = 443;
 
@@ -41,8 +41,8 @@ function handleRequest(req, res) {
       console.log('Request to download manager ');
       for (let prop in requirements) {
         let requirement = requirements[prop];
-        if(requirement['dmUrl'] && requirement['dmUrl'].endsWith(url)
-          || requirement['url'] && requirement['url'].endsWith(url) ) {
+        if(requirement.platform[process.platform].dmUrl && requirement.platform[process.platform].dmUrl.endsWith(url)
+          || requirement.platform[process.platform].url && requirement.platform[process.platform].url.endsWith(url) ) {
           console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + prop);
           res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + prop });
           res.end();

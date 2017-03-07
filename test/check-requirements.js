@@ -1,6 +1,6 @@
 'use strict';
 
-let reqs = require('../requirements-' + process.platform + '.json');
+let reqs = require('../requirements.json');
 let request = require('request');
 
 let minSizes = new Object();
@@ -11,9 +11,11 @@ let count = 0;
 function checkRequirements() {
   for (var attribute in reqs) {
     // sha256 is not set for macOS Java SE
-    if(reqs[attribute].sha256sum !== '') {
-      data[attribute] = reqs[attribute].url;
-      count++;
+    if (reqs[attribute].platform[process.platform]) {
+      if(reqs[attribute].platform[process.platform].sha256sum !== '') {
+        data[attribute] = reqs[attribute].platform[process.platform].url;
+        count++;
+      }
     }
   }
 

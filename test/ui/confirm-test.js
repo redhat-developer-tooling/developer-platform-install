@@ -4,7 +4,7 @@ let path = require('path');
 
 let context = { pageName: 'Confirmation' };
 let breadcrumbBase = require('./breadcrumbs-base');
-let requirements = require(path.join(rootPath, 'requirements-' + process.platform + '.json'));
+let requirements = require(path.join(rootPath, 'requirements.json'));
 let conditions = protractor.ExpectedConditions;
 
 describe('Confirm page', function() {
@@ -118,7 +118,7 @@ describe('Confirm page', function() {
 
       it('should display a correct version', function() {
         expect(vbox.versionElement.isDisplayed()).toBe(true);
-        expect(vbox.versionElement.getText()).toEqual(vbox.version);
+        expect(vbox.versionElement.getText()).toEqual(vbox.platform[process.platform].version);
       });
 
       it('should display a correct description', function() {
@@ -154,7 +154,7 @@ describe('Confirm page', function() {
 
       it('should display a correct version', function() {
         expect(cygwin.versionElement.isDisplayed()).toBe(true);
-        expect(cygwin.versionElement.getText()).toEqual(cygwin.version);
+        expect(cygwin.versionElement.getText()).toEqual(cygwin.platform[process.platform].version);
       });
 
       it('should display a correct description', function() {
@@ -173,7 +173,7 @@ describe('Confirm page', function() {
 
       it('should display a correct version', function() {
         expect(cdk.versionElement.isDisplayed()).toBe(true);
-        expect(cdk.versionElement.getText()).toEqual(cdk.version);
+        expect(cdk.versionElement.getText()).toEqual(cdk.platform[process.platform].version);
       });
 
       it('should display a correct description', function() {
@@ -192,7 +192,7 @@ describe('Confirm page', function() {
 
       it('should display a correct version', function() {
         expect(devstudio.versionElement.isDisplayed()).toBe(true);
-        expect(devstudio.versionElement.getText()).toEqual(devstudio.version);
+        expect(devstudio.versionElement.getText()).toEqual(devstudio.platform[process.platform].version);
       });
 
       it('should display a correct description', function() {
@@ -211,7 +211,7 @@ describe('Confirm page', function() {
 
       it('should display a correct version', function() {
         expect(jdk.versionElement.isDisplayed()).toBe(true);
-        expect(jdk.versionElement.getText()).toEqual(jdk.version);
+        expect(jdk.versionElement.getText()).toEqual(jdk.platform[process.platform].version);
       });
 
       it('should display a correct description', function() {

@@ -7,13 +7,13 @@ let webdriver = browser.driver;
 const user = 'devsuite.test@gmail.com';
 const pass = 'Devsuite';
 
-let reqs = require(path.join(rootPath, './requirements-' + process.platform + '.json'));
+let reqs = require(path.join(rootPath, './requirements.json'));
 let expectedComponents = {
-  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox'].version },
-  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk'].version.substring(0, 5) }
+  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox'].platform[process.platform].version },
+  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk'].platform[process.platform].version.substring(0, 5) }
 };
 if (process.platform === 'win32') {
-  expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin'].version };
+  expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin'].platform[process.platform].version };
 }
 
 let detectComponents = false;

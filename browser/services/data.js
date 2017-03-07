@@ -11,7 +11,7 @@ let electron = require('electron');
 var mkdirp = require('mkdirp');
 
 class InstallerDataService {
-  constructor($state, requirements = require('../../requirements-' + Platform.OS + '.json')) {
+  constructor($state, requirements = require('../../requirements.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.OS === 'win32') {
@@ -31,7 +31,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
-    this.requirements = requirements;
+    this.requirements = this.transformation(requirements);
   }
 
   setup(vboxRoot, jdkRoot, devstudioRoot, cygwinRoot, cdkRoot) {
@@ -51,6 +51,23 @@ class InstallerDataService {
     if(Platform.OS === 'win32') {
       this.copyUninstaller();
     }
+  }
+
+  transformation(requirements) {
+    var obj = {};
+    for(var object in requirements) {
+      obj[object] = {};
+      for(var platform in requirements[object]) {
+        if(platform === 'platform') {
+          for(var key in requirements[object][platform][process.platform]) {
+            obj[object][key] = requirements[object][platform][process.platform][key];
+          }
+        } else {
+          obj[object][platform] = requirements[object][platform];
+        }
+      }
+    }
+    return obj;
   }
 
   copyUninstaller() {
