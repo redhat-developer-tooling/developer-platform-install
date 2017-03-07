@@ -3,11 +3,11 @@
     "name": "Red Hat Container Development Kit",
     "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
     "bundle": "yes",
-    "version": "3.0.0.GA",
-    "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/nightly/11-Feb-2017/windows-amd64/minishift.exe",
-    "url": "http://cdk-builds.usersys.redhat.com/builds/nightly/11-Feb-2017/windows-amd64/minishift.exe",
+    "version": "3.0.0.Beta2",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0.beta-minishift-windows-amd64.exe?workflow=direct",
+    "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/23-Feb-2017.cdk-3.0.0-beta.2/windows-amd64/minishift.exe",
     "filename": "minishift.exe",
-    "sha256sum": "984318638a5c0d67ae4483bb508f6b90b99f885153dc525660bfff07fa883c94",
+    "sha256sum": "cd5857e3560d813c073d2a0c18921c5c0d2d545cabc173c5d15d52c9af12d834",
     "vendor": "Red Hat, Inc."
   },
   "cygwin": {
