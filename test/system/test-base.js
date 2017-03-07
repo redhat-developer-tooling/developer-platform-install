@@ -222,6 +222,14 @@ function systemTest() {
                         fail(product + 'failed to install');
                         done();
                       }
+                    }).catch(function(error) {
+                      if (error.message.indexOf('element is not attached') > -1) {
+                        browser.getLocationAbsUrl().then(function(url) {
+                          if (url !== '/start') {
+                            throw error;
+                          }
+                        });
+                      }
                     });
                   }
                 }
