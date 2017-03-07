@@ -8,7 +8,8 @@ var gulp = require('gulp'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
-  reqs = require('./requirements-' + process.platform + '.json'),
+  loadMetadata = require('./browser/services/metadata'),
+  reqs = loadMetadata(require('./requirements.json'), process.platform),
   path = require('path'),
   mkdirp = require('mkdirp'),
   merge = require('merge-stream'),
@@ -35,7 +36,7 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('transpiled'));
 
   var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
-    'uninstaller/*.ps1', 'requirements-' + process.platform + '.json'], {base: '.'}
+    'uninstaller/*.ps1', 'requirements.json'], {base: '.'}
 	).pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
@@ -87,7 +88,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements'], function(c
 // default task
 gulp.task('default', ['run']);
 
-gulp.task('run', ['update-requirements','create-modules-link'], function(cb) {
+gulp.task('run', ['update-requirements', 'create-modules-link'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled', common.createExecCallback(cb));
 });
 
@@ -130,7 +131,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     .then(updateDevStudioVersion)
     .then(updateDevStudioSha)
     .then(()=>{
-      fs.writeFile('./transpiled/requirements-'  + process.platform + '.json', JSON.stringify(reqs, null, 2));
+      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
     }).catch((err)=>{
       console.log(err);
     });

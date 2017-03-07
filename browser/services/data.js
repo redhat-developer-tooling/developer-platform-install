@@ -2,7 +2,7 @@
 
 import Logger from './logger';
 import Platform from '../services/platform';
-
+import loadMetadata from '../services/metadata';
 let os = require('os');
 let path = require('path');
 let fs = require('fs');
@@ -10,8 +10,9 @@ let fsExtra = require('fs-extra');
 let electron = require('electron');
 var mkdirp = require('mkdirp');
 
+
 class InstallerDataService {
-  constructor($state, requirements = require('../../requirements-' + Platform.OS + '.json')) {
+  constructor($state, requirements = require('../../requirements.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.OS === 'win32') {
@@ -31,7 +32,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
-    this.requirements = requirements;
+    this.requirements = loadMetadata(requirements, Platform.OS);
   }
 
   setup(vboxRoot, jdkRoot, devstudioRoot, cygwinRoot, cdkRoot) {

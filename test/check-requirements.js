@@ -1,6 +1,6 @@
 'use strict';
-
-let reqs = require('../requirements-' + process.platform + '.json');
+let loadMetadata = require('../browser/services/metadata');
+let reqs = loadMetadata(require('../requirements.json'), process.platform);
 let request = require('request');
 
 let minSizes = new Object();
