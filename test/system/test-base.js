@@ -6,8 +6,9 @@ let conditions = protractor.ExpectedConditions;
 let webdriver = browser.driver;
 const user = 'devsuite.test@gmail.com';
 const pass = 'Devsuite';
+loadMetadata = require('./browser/services/metadata'),
+let reqs = loadMetadata(require(path.join(rootPath, './requirements.json')), proess.platform);
 
-let reqs = require(path.join(rootPath, './requirements-' + process.platform + '.json'));
 let expectedComponents = {
   virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox'].version },
   jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk'].version.substring(0, 5) }

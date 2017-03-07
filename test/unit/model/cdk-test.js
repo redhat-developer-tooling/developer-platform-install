@@ -16,6 +16,7 @@ import Platform from 'browser/services/platform';
 import InstallableItem from 'browser/model/installable-item';
 import child_process from 'child_process';
 import mockfs from 'mock-fs';
+import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
 
 let sinon  = require('sinon');
@@ -54,8 +55,7 @@ describe('CDK installer', function() {
     sha256Stub.restore();
   });
 
-  let reqs = require('../../../requirements-win32.json');
-  require('../../../requirements-darwin.json');
+  let reqs = loadMetadata(require('../../../requirements.json'), process.platform);
 
   let cdkUrl = reqs['cdk'].url;
 

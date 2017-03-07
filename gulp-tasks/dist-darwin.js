@@ -1,7 +1,8 @@
 'use strict';
 
 const download = require('./download.js');
-const reqs = require('../requirements-darwin.json');
+const loadMetadata = require('../browser/services/metadata');
+const reqs = loadMetadata(require('../requirements.json'), process.platform);
 const config = require('./config.js');
 const rename = require('gulp-rename');
 const runSequence = require('run-sequence');
