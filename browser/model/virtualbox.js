@@ -20,7 +20,6 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
-    this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
     this.sha256 = sha256;
   }
 
@@ -118,7 +117,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
     installer.execFile(
-      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.tempDir(), '--silent']
+      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.virtualBoxDir(), '--silent']
     ).then(() => {
       return this.configure(installer);
     }).then((result) => {
@@ -148,9 +147,10 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installMsi(installer, resolve, reject) {
     installer.progress.setStatus('Installing');
+    let msiFile = path.join(this.installerDataSvc.virtualBoxDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
     return installer.execFile('msiexec', [
       '/i',
-      this.msiFile,
+      msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
       'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
       '/qn',
