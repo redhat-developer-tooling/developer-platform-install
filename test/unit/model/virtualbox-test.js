@@ -141,7 +141,7 @@ describe('Virtualbox installer', function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
         installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
-        installer.ipcRenderer = {on: function(){}};
+        installer.ipcRenderer = {on: function() {}};
       });
 
       afterEach(function () {
@@ -154,7 +154,7 @@ describe('Virtualbox installer', function() {
         let data = [
           '--extract',
           '-path',
-          installerDataSvc.tempDir(),
+          installerDataSvc.virtualBoxDir(),
           '--silent'
         ];
 
@@ -211,7 +211,7 @@ describe('Virtualbox installer', function() {
         it('should execute the msi installer', function() {
           let spy = sandbox.spy(Installer.prototype, 'execFile');
 
-          let msiFile = path.join(installerDataSvc.tempDir(), 'VirtualBox-' + version + '-r' + revision + '-MultiArch_amd64.msi');
+          let msiFile = path.join(installerDataSvc.virtualBoxDir(), 'VirtualBox-' + version + '-r' + revision + '-MultiArch_amd64.msi');
           let opts = [
             '/i',
             msiFile,
@@ -284,7 +284,7 @@ describe('Virtualbox installer', function() {
 
       sandbox.stub(Util, 'folderContains').resolves(LOCATION);
       installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
-            validateStub = sandbox.stub(installer, 'validateVersion').returns();
+      validateStub = sandbox.stub(installer, 'validateVersion').returns();
     });
 
     it('should add option \'detected\' with detected version and location', function() {
@@ -348,6 +348,15 @@ describe('Virtualbox installer', function() {
       expect(option.error).to.equal('');
       expect(option.warning).to.equal('');
       expect(option.valid).to.equal(true);
+    });
+
+    it('should add error for version out of range', function() {
+      installer.option['detected'].version = '5.2.12';
+      installer.validateVersion();
+
+      expect(option.error).to.equal('');
+      expect(option.warning).to.equal('newerVersion');
+      expect(option.valid).to.equal(false);
     });
   });
 });

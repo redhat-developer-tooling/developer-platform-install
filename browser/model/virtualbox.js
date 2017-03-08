@@ -8,6 +8,7 @@ import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Version from './helpers/version';
+import del from 'del';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
@@ -20,7 +21,6 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
-    this.msiFile = path.join(this.installerDataSvc.tempDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
     this.sha256 = sha256;
   }
 
@@ -56,33 +56,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   detectExistingInstall() {
     return new Promise((resolve)=> {
       let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
-      let command;
-      let extension = '';
-
-      if (Platform.OS === 'win32') {
-        command = 'echo %VBOX_INSTALL_PATH%';
-        extension = '.exe';
-      } else {
-        command = 'which virtualbox';
-      }
+      let command = 'echo %VBOX_INSTALL_PATH%';
+      let extension = '.exe';
 
       let tempDetectedLocation = '';
       Util.executeCommand(command, 1).then((output) => {
         return new Promise((resolve) => {
-          if (Platform.OS === 'win32') {
-            if (output === '%VBOX_INSTALL_PATH%') {
-              return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
-                resolve(output);
-              });
-            } else {
-              resolve(output);
-            }
+          if (output === '%VBOX_INSTALL_PATH%') {
+            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then(resolve);
           } else {
-            return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-              resolve(result.split('=')[1]);
-            }).catch(()=>{
-              resolve(path.parse(output).dir);
-            });
+            resolve(output);
           }
         });
       }).then((output) => {
@@ -118,7 +101,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
     installer.execFile(
-      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.tempDir(), '--silent']
+      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.virtualBoxDir(), '--silent']
     ).then(() => {
       return this.configure(installer);
     }).then((result) => {
@@ -148,9 +131,10 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installMsi(installer, resolve, reject) {
     installer.progress.setStatus('Installing');
+    let msiFile = path.join(this.installerDataSvc.virtualBoxDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
     return installer.execFile('msiexec', [
       '/i',
-      this.msiFile,
+      msiFile,
       'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
       'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
       '/qn',
@@ -173,6 +157,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       });
     }).catch((err) => {
       return reject(err);
+    }).then(()=>{
+      del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
   }
 }
