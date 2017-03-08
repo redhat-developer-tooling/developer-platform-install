@@ -43,6 +43,7 @@
     "replace-in-file": "2.4.0",
     "request": "2.79.0",
     "rimraf": "2.6.1",
+    "del": "2.2.2",
     "semver": "5.3.0",
     "targz": "1.0.1",
     "unzip": "0.1.11"
@@ -54,7 +55,6 @@
     "chai-as-promised": "6.0.0",
     "codecov": "1.0.1",
     "crypto": "0.0.3",
-    "del": "2.2.2",
     "electron": "1.6.1",
     "electron-builder": "15.0.0",
     "electron-packager": "8.5.2",

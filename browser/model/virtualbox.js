@@ -8,6 +8,7 @@ import Logger from '../services/logger';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Version from './helpers/version';
+import del from 'del';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
@@ -55,33 +56,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   detectExistingInstall() {
     return new Promise((resolve)=> {
       let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
-      let command;
-      let extension = '';
-
-      if (Platform.OS === 'win32') {
-        command = 'echo %VBOX_INSTALL_PATH%';
-        extension = '.exe';
-      } else {
-        command = 'which virtualbox';
-      }
+      let command = 'echo %VBOX_INSTALL_PATH%';
+      let extension = '.exe';
 
       let tempDetectedLocation = '';
       Util.executeCommand(command, 1).then((output) => {
         return new Promise((resolve) => {
-          if (Platform.OS === 'win32') {
-            if (output === '%VBOX_INSTALL_PATH%') {
-              return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then((output)=>{
-                resolve(output);
-              });
-            } else {
-              resolve(output);
-            }
+          if (output === '%VBOX_INSTALL_PATH%') {
+            return Util.executeCommand('echo %VBOX_MSI_INSTALL_PATH%', 1).then(resolve);
           } else {
-            return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-              resolve(result.split('=')[1]);
-            }).catch(()=>{
-              resolve(path.parse(output).dir);
-            });
+            resolve(output);
           }
         });
       }).then((output) => {
@@ -173,6 +157,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       });
     }).catch((err) => {
       return reject(err);
+    }).then(()=>{
+      del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
   }
 }

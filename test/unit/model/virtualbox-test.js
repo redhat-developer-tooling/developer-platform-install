@@ -349,5 +349,14 @@ describe('Virtualbox installer', function() {
       expect(option.warning).to.equal('');
       expect(option.valid).to.equal(true);
     });
+
+    it('should add error for version out of range', function() {
+      installer.option['detected'].version = '5.2.12';
+      installer.validateVersion();
+
+      expect(option.error).to.equal('');
+      expect(option.warning).to.equal('newerVersion');
+      expect(option.valid).to.equal(false);
+    });
   });
 });
