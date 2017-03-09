@@ -65,9 +65,6 @@ class ConfirmController {
 
     $scope.$watch('$viewContentLoaded', ()=>{
       let detectors = [];
-      detectors.push(Platform.isVirtualizationEnabled().then(status => {
-        $scope.virtualization = status;
-      }));
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
@@ -156,6 +153,7 @@ class ConfirmController {
   isConfigurationValid() {
     return this.devstudioIsConfigured()
       && this.cdkIsConfigured()
+      && this.sc.checkboxModel.virtualbox.isConfigured()
       && this.isAtLeastOneSelected();
   }
 

@@ -52,7 +52,7 @@ class Platform {
         });
       },
       default: function() {
-        return Promise.resolve();
+        return Promise.resolve(true);
       }
     });
   }

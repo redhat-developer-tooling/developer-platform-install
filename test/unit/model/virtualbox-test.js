@@ -277,7 +277,7 @@ describe('Virtualbox installer', function() {
     beforeEach(function() {
       stub = sandbox.stub(Util, 'executeCommand');
       sandbox.stub(Platform, 'getOS').returns('win32');
-
+      sandbox.stub(Platform, 'isVirtualizationEnabled').resolves(true);
       stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
       stub.onCall(1).resolves(LOCATION);
       stub.onCall(2).resolves(VERSION);

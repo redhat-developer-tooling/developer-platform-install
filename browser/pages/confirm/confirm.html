@@ -350,19 +350,19 @@
       </div>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.cdk.selectedOption == 'install'">
+    <div class="message-container error-message" ng-show="!checkboxModel.virtualbox.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled && checkboxModel.cdk.selectedOption == 'install'">
       <span class="pficon pficon-error-circle-o"></span>
-      <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.0.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
+      <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.1.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
     </div>
 
-    <div class="message-container error-message" ng-show="virtualization === false">
+    <div class="message-container error-message" ng-show="checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install')">
       <span class="pficon pficon-error-circle-o"></span>
-      <span>Please enable hardware virtualization for your platform to improve performance.</span>
+      <span>Please enable hardware virtualization support in BIOS for your platform.</span>
     </div>
 
-    <div class="message-container error-message" ng-show="virtualization === undefined">
-      <span class="pficon pficon-error-circle-o"></span>
-      <span>Make sure hardware virtualization is enabled on your platform if supported to improve performance.</span>
+    <div class="message-container warning-message" ng-show="checkboxModel.virtualbox.virtualizationEnabled === undefined && checkboxModel.cdk.selectedOption == 'install'">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <span>Please make sure hardware virtualization is enabled on your platform if supported.</span>
     </div>
 
     <!-- Cygwin -->
