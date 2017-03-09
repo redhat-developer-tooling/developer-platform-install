@@ -66,12 +66,9 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         }
       });
     }).then((output) => {
-        // with VBox 5.0.8 or later installed in C:\Program Files\Oracle\VirtualBox, output = C:\Program Files\Oracle\VirtualBox
       if(output === '%VBOX_MSI_INSTALL_PATH%') {
         return Util.executeCommand('where VirtualBox', 1);
       }
-        // this ensures that by default the previous install is selected for reuse
-        // to detect previous install, but NOT use the existing install, `return resolve(output);` here instead
       return Promise.resolve(output);
     }).then((output) => {
       tempDetectedLocation = output;
@@ -93,7 +90,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'virtualbox'), true);
       this.selectedOption = 'install';
       return Promise.resolve();
+    }).then(()=>{
+      return Platform.isVirtualizationEnabled();
+    }).then((result)=>{
+      this.virtualizationEnabled=result;
+      return Promise.resolve();
     });
+  }
+
+  isConfigured() {
+    return super.isConfigured() && (this.virtualizationEnabled || this.virtualizationEnabled == undefined);
   }
 
   installAfterRequirements(progress, success, failure) {
