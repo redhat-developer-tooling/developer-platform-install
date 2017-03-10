@@ -63,7 +63,7 @@ describe('CDK installer', function() {
   let failure = () => {};
 
   function stubInstaller() {
-    let svc = new InstallerDataService({},reqs);
+    let svc = new InstallerDataService({}, reqs);
     svc.cdkRoot = 'cdkLocation';
     svc.ocBinRoot = 'ocBinRoot';
     svc.vboxRoot = 'virtualboxLocation';

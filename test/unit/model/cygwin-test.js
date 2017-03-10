@@ -269,6 +269,27 @@ describe('Cygwin installer', function() {
           expect(installer.hasOption('install')).to.be.equal(true);
         });
       });
+
+      it('should remove detected option and mark for installation in case detection ran agian an nothing detected', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.resolve(
+          ['Cygwin Package Information',
+            'Package              Version        Status',
+            'cygwin               2.6.0-1        OK',
+            'openssh              7.3p1-2        OK',
+            'rsync                3.1.2-1        OK'
+          ].join('\n')));
+        Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
+        installer.detectExistingInstall().then(()=> {
+          expect(installer.selectedOption).to.be.equal('detected');
+          expect(installer.hasOption('detected')).to.be.equal(true);
+          Util.executeCommand.rejects('no cygwin detected');
+          return installer.detectExistingInstall();
+        }).then(()=>{
+          expect(installer.option['install']).to.not.equal(undefined);
+          expect(installer.option['detected']).to.equal(undefined);
+        });
+      });
     });
   });
 });
