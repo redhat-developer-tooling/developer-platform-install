@@ -18,7 +18,7 @@ class DevstudioInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, devstudioSha256, additionalLocations, additionalIus) {
     super(DevstudioInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
-    this.devstudioSha256 = devstudioSha256;
+    this.sha256 = devstudioSha256;
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
     this.addOption('install', this.version, '', true);
     this.additionalLocations = additionalLocations;

@@ -16,7 +16,7 @@ class CygwinInstall extends InstallableItem {
       this.selectedOption = 'detected';
       this.addOption('detected', '', '', true);
     }
-    this.checksum = sha256;
+    this.sha256 = sha256;
   }
 
   static get KEY() {
