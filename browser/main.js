@@ -76,7 +76,7 @@ let mainModule =
                 }
               });
           }])
-          .run( ['$timeout', 'installerDataSvc', ($timeout, installerDataSvc) => {
+          .run( ['installerDataSvc', (installerDataSvc) => {
             let reqs = installerDataSvc.requirements;
 
             // filter download-manager urls and replace host name with stage
@@ -109,7 +109,6 @@ let mainModule =
 
             let cdk = new CDKInstall(
               installerDataSvc,
-              $timeout,
               reqs['cdk'].dmUrl,
               reqs['cdk'].filename,
               'cdk',
