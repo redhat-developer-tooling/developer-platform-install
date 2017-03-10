@@ -15,16 +15,19 @@ require('browser/main');
 chai.use(sinonChai);
 
 describe('StartController', function() {
-  let $controller, sandbox = sinon.sandbox.create();
+  let $controller, sandbox;
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  });
+  afterEach(function() {
+    sandbox.restore();
+  });
   describe('constructor', function() {
     beforeEach(ngModule('devPlatInstaller'));
     beforeEach(inject(function(_$controller_) {
     // The injector unwraps the underscores (_) from around the parameter names when matching
       $controller = _$controller_;
     }));
-    afterEach(function() {
-      sandbox.restore();
-    });
     it('removes all window close event listeners', function() {
       let installerDataSvc = new InstallerDataService();
       let electron = new ElectronMock();
