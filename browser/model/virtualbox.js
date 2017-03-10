@@ -12,7 +12,7 @@ import del from 'del';
 
 class VirtualBoxInstall extends InstallableItem {
   constructor(version, revision, installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
-    super(VirtualBoxInstall.KEY, 700, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
+    super(VirtualBoxInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = version;
     this.maximumVersion = '5.2.0';

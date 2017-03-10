@@ -125,7 +125,7 @@ describe('LocationController', function() {
       sandbox.stub(locationcontroller, 'checkFolder');
       sandbox.stub(locationcontroller.router, 'go');
       sandbox.stub(InstallableItem.prototype, 'setOptionLocation');
-      locationcontroller.installerDataSvc.addItemsToInstall(new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', locationcontroller.installerDataSvc));
+      locationcontroller.installerDataSvc.addItemsToInstall(new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', locationcontroller.installerDataSvc));
       locationcontroller.confirm();
     });
 

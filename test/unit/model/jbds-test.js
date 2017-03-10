@@ -157,7 +157,7 @@ describe('devstudio installer', function() {
         let installerDataSvc = stubDataService();
         installer.ipcRenderer = { on: function() {} };
         let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-        let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+        let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
         item2.thenInstall(installer);
 
         installer.install(fakeProgress, success, failure);
@@ -171,7 +171,7 @@ describe('devstudio installer', function() {
     it('should install once JDK has finished', function() {
       let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-      let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
       item2.setInstallComplete();
       item2.thenInstall(installer);
       installer.install(fakeProgress, success, failure);

@@ -14,7 +14,7 @@ import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, fileName, prefix, targetFolderName, jdkSha256) {
-    super(JdkInstall.KEY, 260, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
+    super(JdkInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
     this.jdkSha256 = jdkSha256;
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';

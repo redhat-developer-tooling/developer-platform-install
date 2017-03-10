@@ -9,7 +9,7 @@ import Platform from '../services/platform';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
-    super(CygwinInstall.KEY, 720, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
+    super(CygwinInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install', this.version, '', true);
     if(Platform.OS !== 'win32') {

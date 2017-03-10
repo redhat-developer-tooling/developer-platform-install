@@ -19,7 +19,7 @@ describe('InstallableItem', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     let svc = new InstallerDataService();
-    item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
+    item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
   });
 
   after(function() {
@@ -40,8 +40,8 @@ describe('InstallableItem', function() {
 
     it('should return passed parameter', function() {
       let svc = new InstallerDataService();
-      let item1 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
-      let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', svc);
+      let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
+      let item2 = new InstallableItem('cygwin', 'url', 'installFile', 'targetFolderName', svc);
       item1.thenInstall(item2);
       expect(item2.installAfter).to.be.equal(item1);
       expect(item2.getInstallAfter()).to.be.equal(item1);
@@ -53,12 +53,12 @@ describe('InstallableItem', function() {
 
     it('should ignore skipped installers and return first selected for installation', function() {
       let svc = new InstallerDataService();
-      let item1 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
-      let item2 = new InstallableItem('cygwin', 1000, 'url', 'installFile', 'targetFolderName', svc);
+      let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
+      let item2 = new InstallableItem('cygwin', 'url', 'installFile', 'targetFolderName', svc);
       item2.selectedOption = 'detected';
-      let item3 = new InstallableItem('devstudio', 1000, 'url', 'installFile', 'targetFolderName', svc);
+      let item3 = new InstallableItem('devstudio', 'url', 'installFile', 'targetFolderName', svc);
       item3.selectedOption = 'detected';
-      let item4 = new InstallableItem('cdk', 1000, 'url', 'installFile', 'targetFolderName', svc);
+      let item4 = new InstallableItem('cdk', 'url', 'installFile', 'targetFolderName', svc);
       svc.addItemsToInstall(item1, item2, item3, item4);
       item1.thenInstall(item2).thenInstall(item3).thenInstall(item4);
       expect(item4.getInstallAfter()).to.be.equal(item1);
@@ -68,13 +68,13 @@ describe('InstallableItem', function() {
 
   describe('getProductVersion', function() {
     it('returns version for detected installation', function() {
-      let item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      let item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', new InstallerDataService());
       item.addOption('detected', '1.2', 'location', true);
       item.selectedOption = 'detected';
       expect(item.getProductVersion()).to.be.equal('1.2');
     });
     it('returns version for included product if not detected', function() {
-      let item = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      let item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', new InstallerDataService());
       expect(item.getProductVersion()).to.be.equal(item.version);
     });
   });
@@ -85,7 +85,7 @@ describe('InstallableItem', function() {
     beforeEach(function() {
       svc = new InstallerDataService();
       downloader = new Downloader(null, function() {});
-      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', svc, false);
+      installItem = new InstallableItem('jdk', 'downloadUrl', 'fileName', 'targetLocation', svc, false);
       installItem.downloader = downloader;
     });
 
@@ -138,7 +138,7 @@ describe('InstallableItem', function() {
 
     beforeEach(function() {
       svc = new InstallerDataService();
-      installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', svc, false);
+      installItem = new InstallableItem('jdk', 'downloadUrl', 'fileName', 'targetLocation', svc, false);
       installItem.downloader = new Downloader(null, function() {});
       sandbox.stub(fs, 'createWriteStream').returns();
     });
@@ -246,7 +246,7 @@ describe('InstallableItem', function() {
 
   describe('restartDownload', function() {
     it('delegatest to downloader instance', function(){
-      let installItem = new InstallableItem('jdk', 5000, 'downloadUrl', 'fileName', 'targetLocation', new InstallerDataService(), false);
+      let installItem = new InstallableItem('jdk', 'downloadUrl', 'fileName', 'targetLocation', new InstallerDataService(), false);
       installItem.downloader = new Downloader(null, function() {});
       let rdStub = sandbox.stub(Downloader.prototype,'restartDownload').returns();
       installItem.restartDownload()

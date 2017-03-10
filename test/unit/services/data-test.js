@@ -27,7 +27,7 @@ describe('InstallerDataService', function() {
       go: function() {}
     };
     sandbox = sinon.sandbox.create();
-    jdk = new InstallableItem('jdk', 10000, 'https://domain.com/jdk.msi', 'jdk.msi', 'jdk', svc);
+    jdk = new InstallableItem('jdk', 'https://domain.com/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'virtualbox', 'sha');
   });
