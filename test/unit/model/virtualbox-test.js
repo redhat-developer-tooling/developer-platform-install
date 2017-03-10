@@ -47,7 +47,7 @@ describe('Virtualbox installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
-    item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+    item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
 
     mockfs({
       tempDirectory: {},
@@ -159,7 +159,7 @@ describe('Virtualbox installer', function() {
         ];
 
         let spy = sandbox.spy(Installer.prototype, 'execFile');
-        let item2 = new InstallableItem('jdk', 1000, 'url', 'installFile', 'targetFolderName', installerDataSvc);
+        let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
         item2.setInstallComplete();
         item2.thenInstall(installer);
         installer.install(fakeProgress, success, failure);

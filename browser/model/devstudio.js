@@ -16,7 +16,7 @@ import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, devstudioSha256, additionalLocations, additionalIus) {
-    super(DevstudioInstall.KEY, 1600, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
+    super(DevstudioInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.devstudioSha256 = devstudioSha256;
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');

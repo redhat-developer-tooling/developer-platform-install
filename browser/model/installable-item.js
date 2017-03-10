@@ -10,13 +10,12 @@ import Downloader from './helpers/downloader';
 let ipcRenderer = require('electron').ipcRenderer;
 
 class InstallableItem {
-  constructor(keyName, installTime, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
+  constructor(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
     this.keyName = keyName;
     let requirement = installerDataSvc.getRequirementByName(keyName);
     this.productName = requirement.name;
     this.productVersion = requirement.version;
     this.productDesc = requirement.description;
-    this.installTime = installTime;
     this.targetFolderName = targetFolderName;
     this.installerDataSvc = installerDataSvc;
     this.existingInstall = false;
