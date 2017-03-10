@@ -24,30 +24,31 @@ class CygwinInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
-    return new Promise((resolve)=> {
-      if (Platform.OS === 'win32') {
-        let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
-        let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
-        let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
-        Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
-          let cygwinVersion = cygwinPackageRegex.exec(out)[1];
-          opensshPackageReqex.exec(out)[1];
-          rsyncPackageRegex.exec(out)[1];
-          this.addOption('detected', '', '', true);
-          this.option['detected'].version = cygwinVersion;
-          this.selectedOption = 'detected';
-        }).then(()=>{
-          return Util.executeCommand('where cygcheck', 1);
-        }).then((output)=>{
-          this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
-          resolve();
-        }).catch(()=>{
-          resolve();
-        });
-      } else {
-        resolve();
-      }
-    });
+    if (Platform.OS === 'win32') {
+      let cygwinPackageRegex = /cygwin\s*(\d+\.\d+\.\d+)/;
+      let opensshPackageReqex = /openssh\s*(\d+\.\d+)/;
+      let rsyncPackageRegex = /rsync\s*(\d+\.\d+\.\d+)/;
+      return Util.executeCommand('cygcheck -c cygwin openssh rsync').then((out)=>{
+        let cygwinVersion = cygwinPackageRegex.exec(out)[1];
+        opensshPackageReqex.exec(out)[1];
+        rsyncPackageRegex.exec(out)[1];
+        this.addOption('detected', '', '', true);
+        this.option['detected'].version = cygwinVersion;
+        this.selectedOption = 'detected';
+      }).then(()=>{
+        return Util.executeCommand('where cygcheck', 1);
+      }).then((output)=>{
+        this.option['detected'].location = path.parse(output.split('\n')[0]).dir;
+      }).catch(()=>{
+        if(this.option.detected) {
+          delete this.option.detected;
+        }
+        this.selectedOption = 'install';
+        return Promise.resolve();
+      });
+    } else {
+      return Promise.resolve();
+    }
   }
 
   installAfterRequirements(progress, success, failure) {

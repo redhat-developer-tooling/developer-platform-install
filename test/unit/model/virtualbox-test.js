@@ -312,6 +312,19 @@ describe('Virtualbox installer', function() {
         expect(validateStub).calledOnce;
       });
     });
+
+    it('should remove detected option in case detection ran agian an nothing detected', function() {
+      return installer.detectExistingInstall().then(()=>{
+        stub.rejects();
+        return installer.detectExistingInstall();
+      }).then(()=>{
+        expect(installer.option['install']).to.not.equal(undefined);
+        expect(installer.option['detected']).to.equal(undefined);
+        console.log('and here');
+      }).catch((error)=>{
+        console.log(error);
+      });
+    });
   });
 
   describe('version validation', function() {

@@ -224,6 +224,7 @@ describe('Downloader', function() {
       sandbox.stub(request, 'get').returns(response);
 
       let stream = new Writable();
+      stream.close = function() {};
       downloader.setWriteStream(stream);
       sandbox.spy(downloader, 'success');
 
@@ -242,6 +243,7 @@ describe('Downloader', function() {
       let error = new Error('something bad happened');
 
       let stream = new Writable();
+      stream.close = function() {};
       downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
       downloader.setWriteStream(stream);
       let errorHandler = sandbox.stub(downloader, 'errorHandler');
@@ -260,6 +262,7 @@ describe('Downloader', function() {
       sandbox.stub(request, 'get').returns(response);
 
       let stream = new Writable();
+      stream.close = function() {};
       downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
       downloader.setWriteStream(stream);
       let successHandler = sandbox.stub(downloader, 'success');

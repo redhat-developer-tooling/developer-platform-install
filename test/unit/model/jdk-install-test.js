@@ -16,6 +16,7 @@ import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 import mockfs from 'mock-fs';
+import 'sinon-as-promised';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
@@ -184,10 +185,24 @@ describe('JDK installer', function() {
             'powershell', jdk.getMsiSearchScriptPowershellArgs(jdk.getMsiSearchScriptLocation()));
         });
       });
+
+      it('should remove detected option and mark for installation in case detection ran agian an nothing detected', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        mockDetectedJvm('1.9.0_1');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
+        return jdk.detectExistingInstall().then(()=>{
+          expect(jdk.selectedOption).to.be.equal('detected');
+          Util.executeCommand.rejects();
+          return jdk.detectExistingInstall();
+        }).then(()=>{
+          expect(jdk.selectedOption).equals('install');
+          expect(jdk.option['detected']).to.equal(undefined);
+        });
+      });
     });
 
     describe('on macos', function() {
-      beforeEach(function(){
+      beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
 
@@ -222,6 +237,20 @@ describe('JDK installer', function() {
         return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).to.have.not.been.called;
           expect(Util.writeFile).to.have.not.been.called;
+        });
+      });
+
+      it('should remove detected option and mark as detected in case detection ran agian an nothing detected', function() {
+        mockDetectedJvm('1.9.0_1');
+        let jdk = new JdkInstall(installerDataSvc, 'url', 'jdk8.msi', 'jdk8', 'sha');
+        return jdk.detectExistingInstall().then(()=>{
+          expect(jdk.selectedOption).to.be.equal('detected');
+          expect(jdk.option.detected.version).to.be.equal('1.9.0');
+          Util.executeCommand.rejects();
+          return jdk.detectExistingInstall();
+        }).then(()=>{
+          expect(jdk.option['detected']).to.be.equal(undefined);
+          expect(jdk.selectedOption).to.be.equal('detected');
         });
       });
     });
