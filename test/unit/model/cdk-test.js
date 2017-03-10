@@ -76,7 +76,7 @@ describe('CDK installer', function() {
     virtualbox.addOption('install', '1.0.0', 'virtualbox', true);
     let cygwin = svc.getInstallable('cygwin');
     cygwin.addOption('install', '1.0.0', 'cygwin', true);
-    let cdk = new CDKInstall(svc, 900, cdkUrl, 'file.exe', 'folderName', 'sha1');
+    let cdk = new CDKInstall(svc, cdkUrl, 'file.exe', 'folderName', 'sha1');
     return {
       svc,
       virtualbox,
@@ -113,7 +113,7 @@ describe('CDK installer', function() {
       createCwd: false,
       createTmp: false
     });
-    installer = new CDKInstall(installerDataSvc, 900, cdkUrl, 'installFile.zip', 'folderName', 'sha1');
+    installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile.zip', 'folderName', 'sha1');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -126,18 +126,18 @@ describe('CDK installer', function() {
 
   it('should fail when some download url is not set and installed file not defined', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'installFile', 'folderName', 'sha1');
+      new CDKInstall(installerDataSvc, null, 'installFile', 'folderName', 'sha1');
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, 900, null, 'installFile', 'folderName', 'sha1');
+      new CDKInstall(installerDataSvc, null, 'installFile', 'folderName', 'sha1');
     }).to.throw('No download URL set');
   });
 
   it('should download files when no installation is found', function() {
-    expect(new CDKInstall(installerDataSvc, 900, 'cdkUrl', 'installFile', 'folderName', 'sha1').useDownload).to.be.true;
+    expect(new CDKInstall(installerDataSvc, 'cdkUrl', 'installFile', 'folderName', 'sha1').useDownload).to.be.true;
   });
 
   describe('files download', function() {
@@ -166,7 +166,7 @@ describe('CDK installer', function() {
     });
 
     it('should call a correct downloader request for cdk file', function() {
-      installer = new CDKInstall(installerDataSvc, 900, cdkUrl, 'installFile', 'folderName',  'sha1');
+      installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile', 'folderName',  'sha1');
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(authStub.callCount).to.equal(1);
@@ -194,7 +194,7 @@ describe('CDK installer', function() {
     });
 
     it('should fail for cdk file without known extension', function() {
-      installer = new CDKInstall(installerDataSvc, 900, cdkUrl, 'installFile.aaa', 'folderName', 'sha1');
+      installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile.aaa', 'folderName', 'sha1');
       sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve('home'));
       let stubCopy = sandbox.stub(Installer.prototype, 'copyFile');
       let stubUnzip = sandbox.stub(Installer.prototype, 'unzip');

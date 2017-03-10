@@ -8,10 +8,9 @@ import Installer from './helpers/installer';
 import globby from 'globby';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, $timeout, minishiftUrl, fileName, targetFolderName, minishiftSha256) {
+  constructor(installerDataSvc, minishiftUrl, fileName, targetFolderName, minishiftSha256) {
     super(CDKInstall.KEY, 900, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
-    this.$timeout = $timeout;
     this.sha256 = minishiftSha256;
     this.addOption('install', '3.0.0', '', true);
     this.selected = false;
