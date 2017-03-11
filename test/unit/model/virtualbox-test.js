@@ -278,7 +278,7 @@ describe('Virtualbox installer', function() {
       stub = sandbox.stub(Util, 'executeCommand');
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'isVirtualizationEnabled').resolves(true);
-      stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
+      stub.onCall(0).resolves('%VBOX_MSI_INSTALL_PATH%');
       stub.onCall(1).resolves(LOCATION);
       stub.onCall(2).resolves(VERSION);
 
@@ -323,6 +323,14 @@ describe('Virtualbox installer', function() {
         console.log('and here');
       }).catch((error)=>{
         console.log(error);
+      });
+    });
+
+    it('should detect old non msi installed virtualbox', function() {
+      stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
+      return installer.detectExistingInstall().then(()=> {
+        expect(installer.option['detected'].location).to.equal(LOCATION);
+        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
       });
     });
   });
