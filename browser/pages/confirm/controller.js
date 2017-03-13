@@ -64,15 +64,29 @@ class ConfirmController {
     });
 
     $scope.$watch('$viewContentLoaded', ()=>{
-      let detectors = [];
-      for (var installer of this.installerDataSvc.allInstallables().values()) {
-        detectors.push(installer.detectExistingInstall());
-      }
-      Promise.all(detectors).then(()=> {
-        this.setIsDisabled();
-      }).catch(()=> {
-        this.setIsDisabled();
+      this.detectInstalledComponents();
+    });
+
+    this.electron.remote.getCurrentWindow().addListener('focus', ()=> {
+      console.log('detecting');
+      this.timeout( () => {
+        this.detectInstalledComponents();
+        this.sc.$apply();
       });
+    });
+  }
+
+  detectInstalledComponents() {
+    this.isDisabled = true;
+    this.installedSearchNote = '  The system is checking if you have any installed components';
+    let detectors = [];
+    for (var installer of this.installerDataSvc.allInstallables().values()) {
+      detectors.push(installer.detectExistingInstall());
+    }
+    Promise.all(detectors).then(()=> {
+      this.setIsDisabled();
+    }).catch(()=> {
+      this.setIsDisabled();
     });
   }
 
@@ -82,6 +96,7 @@ class ConfirmController {
 
   // Prep the install location path for each product, then go to the next page.
   install() {
+    this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.installerDataSvc.setup(
       this.installerDataSvc.getInstallable('virtualbox').getLocation(),
       this.installerDataSvc.getInstallable('jdk').getLocation(),
@@ -97,7 +112,7 @@ class ConfirmController {
     this.timeout( () => {
       // Switch this boolean flag when the app is done looking for existing installations.
       this.isDisabled = !this.isDisabled;
-
+      this.numberOfExistingInstallations = 0;
       // Count the number of existing installations.
       for (var [, value] of this.installerDataSvc.allInstallables()) {
         if (value.hasOption('detected')) {
@@ -173,6 +188,7 @@ class ConfirmController {
 
   back() {
     Logger.info('Going back a page');
+    this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.router.go('location');
   }
 }
