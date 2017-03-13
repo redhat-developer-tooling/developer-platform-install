@@ -13,7 +13,7 @@ class ConfirmController {
     this.electron = electron;
 
     this.installedSearchNote = ' The system is checking if you have any installed components.';
-    this.isDisabled = true;
+    this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
 
     this.installables = {};
@@ -68,7 +68,6 @@ class ConfirmController {
     });
 
     this.electron.remote.getCurrentWindow().addListener('focus', ()=> {
-      console.log('detecting');
       this.timeout( () => {
         this.detectInstalledComponents();
         this.sc.$apply();
@@ -77,17 +76,19 @@ class ConfirmController {
   }
 
   detectInstalledComponents() {
-    this.isDisabled = true;
-    this.installedSearchNote = '  The system is checking if you have any installed components';
-    let detectors = [];
-    for (var installer of this.installerDataSvc.allInstallables().values()) {
-      detectors.push(installer.detectExistingInstall());
+    if(!this.isDisabled) {
+      this.isDisabled = true;
+      this.installedSearchNote = '  The system is checking if you have any installed components';
+      let detectors = [];
+      for (var installer of this.installerDataSvc.allInstallables().values()) {
+        detectors.push(installer.detectExistingInstall());
+      }
+      Promise.all(detectors).then(()=> {
+        this.setIsDisabled();
+      }).catch(()=> {
+        this.setIsDisabled();
+      });
     }
-    Promise.all(detectors).then(()=> {
-      this.setIsDisabled();
-    }).catch(()=> {
-      this.setIsDisabled();
-    });
   }
 
   download(url) {
