@@ -3,7 +3,8 @@
 function electron() {
   let electronWindow = {
     close() {},
-    removeAllListeners() {}
+    removeAllListeners() {},
+    addListener() {}
   };
   let remote = {
     getCurrentWindow () {
