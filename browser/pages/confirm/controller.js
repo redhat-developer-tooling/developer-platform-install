@@ -12,7 +12,7 @@ class ConfirmController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
 
-    this.installedSearchNote = ' The system is checking if you have any installed components.';
+    this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
 
@@ -78,7 +78,7 @@ class ConfirmController {
   detectInstalledComponents() {
     if(!this.isDisabled) {
       this.isDisabled = true;
-      this.installedSearchNote = '  The system is checking if you have any installed components';
+      this.installedSearchNote = ' The system is checking if you have any installed components.';
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
