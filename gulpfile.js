@@ -8,7 +8,7 @@ var gulp = require('gulp'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
-  reqs = require('./requirements-' + process.platform + '.json'),
+  reqs = require('./requirements.json'),
   path = require('path'),
   mkdirp = require('mkdirp'),
   merge = require('merge-stream'),
@@ -35,7 +35,7 @@ gulp.task('transpile:app', function() {
     .pipe(gulp.dest('transpiled'));
 
   var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
-    'uninstaller/*.ps1', 'requirements-' + process.platform + '.json'], {base: '.'}
+    'uninstaller/*.ps1', 'requirements.json'], {base: '.'}
 	).pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
@@ -58,7 +58,9 @@ gulp.task('clean-all', ['clean'], function() {
 gulp.task('clean', function() {
   var files = ['dist', 'transpiled', config.prefetchFolder + '/*'];
   for (var key in reqs) {
-    files.push('!' + config.prefetchFolder + '/' + reqs[key].filename);
+    if (reqs[key].platform[process.platform]) {
+      files.push('!' + config.prefetchFolder + '/' + reqs[key].platform[process.platform].filename);
+    }
   }
 
   return del(files, { force: true });
@@ -95,7 +97,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
+      let url = reqs['devstudio'].platform[process.platform].url.substring(0, reqs['devstudio'].platform[process.platform].url.lastIndexOf('/')) + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
@@ -103,8 +105,8 @@ gulp.task('update-requirements', ['transpile:app'], function() {
           let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
           let finalVersion = versionRegex.exec(body)[1];
 
-          if (reqs['devstudio'].version != finalVersion) {
-            reqs['devstudio'].version = finalVersion;
+          if (reqs['devstudio'].platform[process.platform].version != finalVersion) {
+            reqs['devstudio'].platform[process.platform].version = finalVersion;
           }
           resolve();
         }
@@ -114,12 +116,12 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioSha = ()=>{
     return new Promise((resolve) => {
-      let url = reqs['devstudio'].sha256sum;
+      let url = reqs['devstudio'].platform[process.platform].sha256sum;
       if (url.length == 64 && url.indexOf('http')<0 && url.indexOf('ftp')<0) {
         resolve();
       } else {
         request(url, (err, response, body) => {
-          reqs['devstudio'].sha256sum = body;
+          reqs['devstudio'].platform[process.platform].sha256sum = body;
           resolve();
         });
       }
@@ -130,7 +132,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     .then(updateDevStudioVersion)
     .then(updateDevStudioSha)
     .then(()=>{
-      fs.writeFile('./transpiled/requirements-'  + process.platform + '.json', JSON.stringify(reqs, null, 2));
+      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
     }).catch((err)=>{
       console.log(err);
     });

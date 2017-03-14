@@ -54,10 +54,9 @@ describe('CDK installer', function() {
     sha256Stub.restore();
   });
 
-  let reqs = require('../../../requirements-win32.json');
-  require('../../../requirements-darwin.json');
+  let reqs = require('../../../requirements.json');
 
-  let cdkUrl = reqs['cdk'].url;
+  let cdkUrl = reqs['cdk'].platform[process.platform].url;
 
   let success = () => {};
   let failure = () => {};

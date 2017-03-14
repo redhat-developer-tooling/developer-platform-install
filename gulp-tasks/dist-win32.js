@@ -9,7 +9,7 @@ let path = require('path'),
   pjson = require('../package.json'),
   runSequence = require('run-sequence'),
   fs = require('fs-extra'),
-  reqs = require('../requirements-win32.json'),
+  reqs = require('../requirements.json'),
   exec = require('child_process').exec,
   rcedit = require('rcedit'),
   del = require('del'),
@@ -54,7 +54,7 @@ module.exports = function(gulp) {
     if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf('-bundle') > 0) {
       packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
     } else {
-      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].filename;
+      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].platform[process.platform].filename;
     }
     //console.log('[DEBUG]' + packCmd);
     exec(packCmd, common.createExecCallback(cb, true));
