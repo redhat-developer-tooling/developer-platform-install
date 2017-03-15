@@ -8,7 +8,7 @@
     <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
     <span class="pficon-info" ng-show="!confCtrl.isDisabled && confCtrl.numberOfExistingInstallations>0"></span>
       {{confCtrl.installedSearchNote}}
-    <br>
+    <br ng-show="!confCtrl.isDisabled && confCtrl.numberOfExistingInstallations>0">
     <span id="instructions" class="installation-instruction" ng-show="!confCtrl.isDisabled">
       Select the components to install
     </span>
