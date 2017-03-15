@@ -53,9 +53,9 @@ class CygwinInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
+    let originalExecFile = path.join(this.installerDataSvc.cygwinDir(), 'setup-x86_64.exe');
     let installer = new Installer(CygwinInstall.KEY, progress, success, failure);
-
-    let opts = [
+    let cygwinArgs = [
       '--no-admin',
       '--quiet-mode',
       '--only-site',
@@ -69,16 +69,35 @@ class CygwinInstall extends InstallableItem {
       'Base',
       '--packages',
       'openssh,rsync'
-    ];
+    ].join(' ');
+
+    let startProcessArgs = [
+      '-WindowStyle',
+      'hidden',
+      '-wait',
+      '-FilePath',
+      originalExecFile,
+      '-ArgumentList',
+      `""${cygwinArgs}""`
+    ].join(' ');
+
+    let startProcess = [
+      'Start-Process',
+      `${startProcessArgs}`
+    ].join(' ');
+    let opts = [
+      '-Command',
+      `"${startProcess}"`,
+    ].join(' ');
     let data = [
       '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
       '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
       '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
       '[Environment]::Exit(0)'
     ].join('\r\n');
-    let originalExecFile = path.join(this.installerDataSvc.cygwinDir(), 'setup-x86_64.exe');
-    installer.execFile(
-      this.downloadedFile, opts
+
+    installer.exec(
+      ['powershell', opts].join(' ')
     ).then(() => {
       return installer.copyFile(
         this.downloadedFile, originalExecFile, true);
