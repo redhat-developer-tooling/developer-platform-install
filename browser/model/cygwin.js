@@ -55,40 +55,13 @@ class CygwinInstall extends InstallableItem {
     progress.setStatus('Installing');
     let originalExecFile = path.join(this.installerDataSvc.cygwinDir(), 'setup-x86_64.exe');
     let installer = new Installer(CygwinInstall.KEY, progress, success, failure);
-    let cygwinArgs = [
-      '--no-admin',
-      '--quiet-mode',
-      '--only-site',
-      '-l',
-      path.join(this.installerDataSvc.cygwinDir(), 'packages'),
-      '--site',
-      'http://mirrors.xmission.com/cygwin',
-      '--root',
-      this.installerDataSvc.cygwinDir(),
-      '--categories',
-      'Base',
-      '--packages',
-      'openssh,rsync'
-    ].join(' ');
+    let packagesFolder = path.join(this.installerDataSvc.cygwinDir(), 'packages');
+    let rootFolder = this.installerDataSvc.cygwinDir();
 
-    let startProcessArgs = [
-      '-WindowStyle',
-      'hidden',
-      '-wait',
-      '-FilePath',
-      originalExecFile,
-      '-ArgumentList',
-      `""${cygwinArgs}""`
-    ].join(' ');
+    let cygwinArgs = `--no-admin --quiet-mode --only-site -l ${packagesFolder} --site http://mirrors.xmission.com/cygwin --root ${rootFolder} --categories Base --packages openssh,rsync`;
+    let startProcess = `$p = Start-Process -WindowStyle hidden -PassThru -wait -FilePath ${originalExecFile} -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
+    let powershellCommand = `powershell -Command "${startProcess}"`;
 
-    let startProcess = [
-      'Start-Process',
-      `${startProcessArgs}`
-    ].join(' ');
-    let opts = [
-      '-Command',
-      `"${startProcess}"`,
-    ].join(' ');
     let data = [
       '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
       '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
@@ -96,20 +69,20 @@ class CygwinInstall extends InstallableItem {
       '[Environment]::Exit(0)'
     ].join('\r\n');
 
-    installer.exec(
-      ['powershell', opts].join(' ')
-    ).then(() => {
-      return installer.copyFile(
-        this.downloadedFile, originalExecFile, true);
+    return installer.copyFile(
+      this.downloadedFile, originalExecFile, true
+    ).then(()=>{
+      return installer.exec(powershellCommand);
     }).then((result) => {
       return installer.writeFile(this.cygwinPathScript, data, result);
     }).then((result) => {
       return installer.execFile('powershell',
         ['-ExecutionPolicy', 'ByPass', '-File', this.cygwinPathScript], result);
     }).then((result) => {
-      return installer.succeed(result);
+      installer.succeed(result);
     }).catch((error) => {
-      return installer.fail(error);
+      installer.fail(error);
+      return Promise.reject();
     });
   }
 }
