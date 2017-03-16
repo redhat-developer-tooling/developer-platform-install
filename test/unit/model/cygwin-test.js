@@ -168,35 +168,29 @@ describe('Cygwin installer', function() {
     });
 
     it('should run the cygwin.exe installer with correct parameters', function() {
-      sandbox.stub(child_process, 'execFile').yields();
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
-
-      installer.installAfterRequirements(fakeProgress, success, failure);
-
-      expect(spy).to.have.been.calledWith(installer.downloadedFile,
-        ['--no-admin', '--quiet-mode', '--only-site', '-l',
-          path.join(installerDataSvc.cygwinDir(), 'packages'),
-          '--site', 'http://mirrors.xmission.com/cygwin',
-          '--root', 'install/Cygwin', '--categories', 'Base',
-          '--packages', 'openssh,rsync']);
+      sandbox.stub(Installer.prototype, 'exec').resolves(true);
+      sandbox.stub(Installer.prototype, 'execFile').resolves(true);
+      sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Installer.prototype, 'writeFile').resolves(true);
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        expect(Installer.prototype.exec).to.have.been.calledWithMatch('powershell');
+      });
     });
 
-    it('should catch errors thrown during the installation', function(done) {
+    it('should catch errors thrown during the installation', function() {
       let err = new Error('critical error');
       sandbox.stub(child_process, 'execFile').yields(err);
-
-      try {
-        installer.installAfterRequirements(fakeProgress, success, failure);
-        done();
-      } catch (error) {
-        expect.fail('It did not catch the error');
-      }
+      let failure = sandbox.stub();
+      return installer.installAfterRequirements(fakeProgress, success, failure).catch(()=>{
+        expect(failure).to.be.calledOnce;
+      });
     });
 
     it('should copy cygwin.exe installer in target directory', function(done) {
-      sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
-      sandbox.stub(Installer.prototype, 'copyFile').returns(Promise.resolve(true));
-      sandbox.stub(Installer.prototype, 'writeFile').returns(Promise.resolve(true));
+      sandbox.stub(Installer.prototype, 'exec').resolves(true);
+      sandbox.stub(Installer.prototype, 'execFile').resolves(true);
+      sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Installer.prototype, 'writeFile').resolves(true);
       installer.installAfterRequirements(fakeProgress, function() {
         expect(Installer.prototype.copyFile).to.be.calledWith(
           installer.downloadedFile,
