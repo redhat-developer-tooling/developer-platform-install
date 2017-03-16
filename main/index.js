@@ -53,7 +53,8 @@ app.on('ready', function() {
     width: 1000,
     height: 650,
     'autoHideMenuBar': true,
-    resizable: false
+    resizable: false,
+    show: false
   });
 
   // Some processing is required to make sure local file can be opened in browser
@@ -63,6 +64,9 @@ app.on('ready', function() {
   // Load the index.html of the app
   mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
