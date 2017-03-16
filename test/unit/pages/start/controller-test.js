@@ -8,6 +8,7 @@ import ElectronMock from '../../../mock/electron';
 import StartController from 'browser/pages/start/controller';
 import InstallerDataService from 'browser/services/data';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 
 require('../../../angular-test-helper');
 require('browser/main');
@@ -58,17 +59,38 @@ describe('StartController', function() {
       let ctrl = $controller('StartController', { installerDataSvc, electron });
       return ctrl;
     }
-    it('calls exit from installer if DevStudio is not installed' + StartController.LEARN_CDK_URL, function() {
+    it('calls exit from installer if DevStudio is not installed', function() {
       let ctrl = createController(true);
       sandbox.stub(ctrl, 'exit');
       ctrl.start();
       expect(ctrl.exit).calledOnce;
     });
-    it('calls exit from installer if DevStudio is not installed' + StartController.LEARN_CDK_URL, function() {
+    it('calls DevStudio launch method and exits from installer if DevStudio is installed', function() {
       let ctrl = createController(false);
       sandbox.stub(ctrl, 'launchDevstudio');
       ctrl.start();
       expect(ctrl.launchDevstudio).calledOnce;
+    });
+    describe('on windows',function(){
+      it('calls specific launch method', function(){
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        StartController
+        let stubLaunchWin32 = sandbox.stub(StartController.prototype, 'launchDevstudio_win32');
+        let ctrl = createController(false);
+        sandbox.stub(ctrl, 'exit');
+        ctrl.start();
+        expect(stubLaunchWin32).calledOnce;
+      })
+    });
+    describe('on macos',function(){
+      it('calls specific launch method', function(){
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        let stubLaunchDarwin = sandbox.stub(StartController.prototype, 'launchDevstudio_darwin');
+        let ctrl = createController(false);
+        sandbox.stub(ctrl, 'exit');
+        ctrl.start();
+        expect(stubLaunchDarwin).calledOnce;
+      })
     });
   });
   describe('exit', function() {
