@@ -62,22 +62,12 @@ class CygwinInstall extends InstallableItem {
     let startProcess = `$p = Start-Process -WindowStyle hidden -PassThru -wait -FilePath ${originalExecFile} -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
     let powershellCommand = `powershell -Command "${startProcess}"`;
 
-    let data = [
-      '$cygwinPath = "' + path.join(this.installerDataSvc.cygwinDir(), 'bin') + '"',
-      '$oldPath = [Environment]::GetEnvironmentVariable("path", "User");',
-      '[Environment]::SetEnvironmentVariable("Path", "$cygwinPath;$oldPath", "User");',
-      '[Environment]::Exit(0)'
-    ].join('\r\n');
-
     return installer.copyFile(
       this.downloadedFile, originalExecFile, true
     ).then(()=>{
       return installer.exec(powershellCommand);
     }).then((result) => {
-      return installer.writeFile(this.cygwinPathScript, data, result);
-    }).then((result) => {
-      return installer.execFile('powershell',
-        ['-ExecutionPolicy', 'ByPass', '-File', this.cygwinPathScript], result);
+      return Platform.addToUserPath([path.join(this.installerDataSvc.cygwinDir(), 'bin')]);
     }).then((result) => {
       installer.succeed(result);
     }).catch((error) => {
