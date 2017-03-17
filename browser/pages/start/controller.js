@@ -39,12 +39,13 @@ class StartController {
       env : Object.assign({}, Platform.ENV)
     };
     options.env['rhel.subscription.password'] = this.installerDataSvc.password;
-    Util.executeCommand(`open ${devStudioAppPath}`, 1, options).then(()=>{
+    return Util.executeCommand(`open ${devStudioAppPath}`, 1, options).then(()=>{
       Logger.info('devstudio started sucessfully');
       this.exit();
     }).catch((error)=>{
-      Logger.info(`devstudio start failed with error code '${error}'`);
+      Logger.error(`devstudio start failed with error code '${error}'`);
       this.exit();
+      return Promise.reject(error);
     });
   }
 
