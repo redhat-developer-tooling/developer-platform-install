@@ -10,6 +10,8 @@ import InstallerDataService from 'browser/services/data';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import Util from 'browser/model/helpers/util';
+import child_process from 'child_process';
+import fs from 'fs-extra';
 require('../../../angular-test-helper');
 require('browser/main');
 
@@ -55,9 +57,13 @@ describe('StartController', function() {
     function createController(devstudioInstalled) {
       let electron = new ElectronMock();
       let installerDataSvc = new InstallerDataService();
+      installerDataSvc.devstudioRoot = 'developer-studio'
       installerDataSvc.password = '12345678';
       sandbox.stub(installerDataSvc,'devstudioDir').returns('developer-studio');
-      sandbox.stub(installerDataSvc, 'getInstallable').returns({isSkipped() { return devstudioInstalled; }});
+      sandbox.stub(installerDataSvc, 'getInstallable').returns({
+        isSkipped() { return devstudioInstalled; },
+        selected: true
+      });
       sandbox.stub(Logger, 'getIpcRenderer').returns({send: function() {}});
       sandbox.stub(Logger, 'error');
       let ctrl = $controller('StartController', { installerDataSvc, electron });
@@ -84,6 +90,28 @@ describe('StartController', function() {
         sandbox.stub(ctrl, 'exit');
         ctrl.start();
         expect(stubLaunchWin32).calledOnce;
+      });
+      it('should spawn new process and exit', function(){
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(fs,'writeFileSync');
+        let messageEmmitterFactory = function(message){
+          return {
+            on: sinon.stub().yields(message)
+          };
+        };
+        let bat = messageEmmitterFactory('errorCode');
+        bat.stdout = messageEmmitterFactory('stdout message');
+        bat.stderr = messageEmmitterFactory('stderr message');
+        sandbox.stub(child_process,'spawn').returns(bat);
+        let ctrl = createController(false);
+        sandbox.stub(ctrl, 'exit');
+
+        ctrl.start();
+
+        expect(child_process.spawn).to.be.calledOnce;
+        expect(child_process.spawn).to.be.calledWith('cmd.exe')
+        expect(fs.writeFileSync).to.be.calledTwice;
+        expect(ctrl.exit).to.be.calledOnce;
       })
     });
     describe('on macos',function(){

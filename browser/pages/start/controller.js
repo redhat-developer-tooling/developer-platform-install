@@ -97,7 +97,7 @@ class StartController {
     let env = Platform.ENV;
     env['rhel.subscription.password'] = this.installerDataSvc.password;
     let runDevstudioBat = require('child_process').spawn(
-      'cmd.exe', ['/c', runDevstudioFile], { env: env, timeout: 2000 });
+      'cmd.exe', ['/c', runDevstudioFile], { env, timeout: 2000 });
 
     runDevstudioBat.stdout.on('data',
       (data) => {
