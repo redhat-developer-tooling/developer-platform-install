@@ -9,7 +9,7 @@ import StartController from 'browser/pages/start/controller';
 import InstallerDataService from 'browser/services/data';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
-
+import Util from 'browser/model/helpers/util';
 require('../../../angular-test-helper');
 require('browser/main');
 
@@ -55,7 +55,11 @@ describe('StartController', function() {
     function createController(devstudioInstalled) {
       let electron = new ElectronMock();
       let installerDataSvc = new InstallerDataService();
+      installerDataSvc.password = '12345678';
+      sandbox.stub(installerDataSvc,'devstudioDir').returns('developer-studio');
       sandbox.stub(installerDataSvc, 'getInstallable').returns({isSkipped() { return devstudioInstalled; }});
+      sandbox.stub(Logger, 'getIpcRenderer').returns({send: function() {}});
+      sandbox.stub(Logger, 'error');
       let ctrl = $controller('StartController', { installerDataSvc, electron });
       return ctrl;
     }
@@ -83,14 +87,38 @@ describe('StartController', function() {
       })
     });
     describe('on macos',function(){
-      it('calls specific launch method', function(){
+      beforeEach(function(){
         sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('calls specific launch method', function(){
         let stubLaunchDarwin = sandbox.stub(StartController.prototype, 'launchDevstudio_darwin');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
         ctrl.start();
         expect(stubLaunchDarwin).calledOnce;
-      })
+      });
+      it('starts devstudio with rhel.subscription.password environment variable', function() {
+        sandbox.stub(Util,'executeCommand').resolves();
+        let ctrl = createController(false);
+        sandbox.stub(ctrl,'exit').returns();
+        return ctrl.launchDevstudio().then(()=>{
+          expect(Util.executeCommand).calledWith('open developer-studio/Devstudio.app');
+          expect(Util.executeCommand.args[0][2]['env']['rhel.subscription.password']).to.be.equal('12345678');
+          expect(ctrl.exit).calledOnce;
+        });
+      });
+      it('should log error and exits if devstudio start failed',function(){
+        sandbox.stub(Util,'executeCommand').rejects('reason');
+        let ctrl = createController(false);
+        sandbox.stub(ctrl,'exit').returns();
+        return ctrl.launchDevstudio().then(()=>{
+          expect.fail();
+        }).catch(()=> {
+          expect(Util.executeCommand).calledWith('open developer-studio/Devstudio.app');
+          expect(ctrl.exit).calledOnce;
+          expect(Logger.error).calledWithMatch('reason');
+        });
+      });
     });
   });
   describe('exit', function() {
