@@ -51,8 +51,7 @@ class StartController {
 
   launchDevstudio_win32() {
     Logger.info('devstudio Start - Write temp files...');
-    let devstudioBat = path.join(this.devstudioInstall.selected ? this.installerDataSvc.devstudioDir()
-        :  this.devstudioInstall.existingInstallLocation, 'devstudio.bat');
+    let devstudioBat = path.join(this.installerDataSvc.devstudioDir());
 
     let resetvarsBatFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.bat');
     let resetvarsVbsFile = path.join(this.installerDataSvc.tempDir(), 'resetvars.vbs');
