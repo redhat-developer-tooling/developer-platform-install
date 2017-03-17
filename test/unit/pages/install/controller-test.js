@@ -4,6 +4,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import InstallController from 'browser/pages/install/controller';
+import { ProgressState } from 'browser/pages/install/controller';
 import InstallerDataService from 'browser/services/data';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallableItem from 'browser/model/installable-item';
@@ -150,6 +151,13 @@ describe('Install controller', function() {
       doneStub = sandbox.stub(installerDataSvc, 'installDone').returns();
     });
 
+    it('logs error in case of install failed', function() {
+      vbox.install.restore();
+      sandbox.stub(vbox,'install').callsArgWith(2,'Error');
+      new InstallController({}, timeoutStub, installerDataSvc);
+      expect(errorStub).calledTwice;
+    });
+
     it('data service should register the new install', function() {
       let spy = sandbox.spy(installerDataSvc, 'startInstall');
       new InstallController({}, timeoutStub, installerDataSvc);
@@ -175,6 +183,104 @@ describe('Install controller', function() {
 
       expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
+    });
+  });
+
+  describe('ProgressState',function(){
+    it('should set default min/max values when passed to constructor', function() {
+      let progress = new ProgressState('key','prodName','prodVersion','productDesc',{},sinon.stub(),100,1000);
+      expect(progress.min).equals(100);
+      expect(progress.max).equals(1000);
+    });
+    describe('setTotalDownloadSize', function() {
+      it('should set totalSize property value', function() {
+        let progress = new ProgressState();
+        progress.setTotalDownloadSize(1000);
+        expect(progress.totalSize).to.be.equal(1000);
+      });
+    });
+    describe('setCurrent', function() {
+      it('should do nothing if new current progress value is the same', function(){
+        let progress = new ProgressState();
+        progress.$timeout = sandbox.stub().yields();
+        progress.setCurrent(0);
+        expect(progress.$timeout).to.be.not.called;
+      });
+      describe('should update', function(){
+        let progress;
+        before(function() {
+          progress = new ProgressState();
+          progress.$timeout = sinon.stub().yields();
+          progress.$scope = {$apply:sinon.stub()};
+          progress.setTotalDownloadSize(1000);
+          progress.setCurrent(100);
+        });
+        it('current progress amount value', function(){
+          expect(progress.currentAmount).equals(100);
+        });
+        it('current prcentage', function(){
+          expect(progress.current).equals(10);
+        });
+        it('lable value', function() {
+          expect(progress.label).equals(
+            progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' KB (' + progress.current + '%)'
+          );
+        })
+        it('calls angular async update', function() {
+          expect(progress.$scope.$apply).calledOnce;
+        })
+      })
+    });
+    describe('setStatus', function() {
+      let progress;
+      before(function() {
+        progress = new ProgressState();
+        progress.$timeout = sinon.stub().yields();
+        progress.$scope = {$apply:sinon.stub()};
+      });
+      it('does nothing if status is the same', function() {
+        progress.current = 1;
+        progress.setStatus('');
+        expect(progress.current).equals(1);
+      });
+      it('sets prcentage to 100 and clear lable if status is not "Downloading"', function() {
+        progress.$timeout.reset();
+        progress.$scope.$apply.reset();
+        progress.setStatus('Verifying something');
+        expect(progress.$scope.$apply).have.been.calledOnce;
+        expect(progress.label).equals('');
+        expect(progress.current).equals(100);
+      });
+      it('resets downloading stats if status is "Downloading"', function() {
+        progress.$timeout.reset();
+        progress.$scope.$apply.reset();
+        progress.setStatus('Downloading');
+        expect(progress.$scope.$apply).have.been.calledOnce;
+        expect(progress.current).equals(0);
+        expect(progress.label).equals(0 + '%');
+        expect(progress.currentAmount).equals(0);
+        expect(progress.totalSize).equals(0);
+      });
+    });
+    describe('setComplete', function() {
+      let progress;
+      before(function() {
+        progress = new ProgressState();
+        progress.$timeout = sinon.stub().yields();
+        progress.$scope = {$apply:sinon.stub()};
+        progress.setTotalDownloadSize(1000);
+        progress.setCurrent(100);
+        progress.setComplete();
+      });
+      it('sets status to "Complete"', function() {
+        expect(progress.status).equals('Complete');
+      });
+      it('sets label to 100%', function() {
+        expect(progress.label).equals('');
+      });
+      it('sets current prcentage to 100',  function() {
+        expect(progress.current).equals(100);
+      });
     });
   });
 
