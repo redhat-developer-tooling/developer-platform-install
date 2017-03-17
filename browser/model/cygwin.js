@@ -8,7 +8,7 @@ import Util from './helpers/util';
 import Platform from '../services/platform';
 
 class CygwinInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256) {
     super(CygwinInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install', this.version, '', true);

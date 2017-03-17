@@ -75,7 +75,7 @@ describe('devstudio installer', function() {
   });
 
   beforeEach(function () {
-    installer = new DevstudioInstall(installerDataSvc, downloadUrl, 'devstudio.jar', 'dev-studio', 'sha' );
+    installer = new DevstudioInstall(installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -87,18 +87,18 @@ describe('devstudio installer', function() {
 
   it('should fail when no url is set and installed file not defined', function() {
     expect(function() {
-      new DevstudioInstall(installerDataSvc, null, null);
+      new DevstudioInstall(installerDataSvc, null, null, null);
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new DevstudioInstall(installerDataSvc, null, '');
+      new DevstudioInstall(installerDataSvc, null, null, '');
     }).to.throw('No download URL set');
   });
 
   it('should download devstudio installer to temporary folder with configured filename', function() {
-    expect(new DevstudioInstall(installerDataSvc, 'url', 'devstudio.jar').downloadedFile).to.equal(
+    expect(new DevstudioInstall(installerDataSvc, 'dev-studio', 'url', 'devstudio.jar').downloadedFile).to.equal(
       path.join('tempDirectory', 'devstudio.jar'));
   });
 

@@ -15,7 +15,7 @@ import Util from './helpers/util';
 import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, fileName, targetFolderName, devstudioSha256, additionalLocations, additionalIus) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, devstudioSha256, additionalLocations, additionalIus) {
     super(DevstudioInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = devstudioSha256;

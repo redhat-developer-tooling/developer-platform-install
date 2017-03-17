@@ -42,7 +42,7 @@ describe('StartController', function() {
     });
   });
 
-  describe('lernCDK', function() {
+  describe('learnCDK', function() {
     it('opens external url ' + StartController.LEARN_CDK_URL, function() {
       let electron = new ElectronMock();
       sandbox.stub(electron.shell, 'openExternal');

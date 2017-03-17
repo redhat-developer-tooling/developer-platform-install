@@ -28,8 +28,8 @@ describe('InstallerDataService', function() {
     };
     sandbox = sinon.sandbox.create();
     jdk = new InstallableItem('jdk', 'https://domain.com/jdk.msi', 'jdk.msi', 'jdk', svc);
-    vbox = new VirtualBoxInstall('5.0.8', '103449', svc,
-      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'virtualbox', 'sha');
+    vbox = new VirtualBoxInstall(svc, 'virtualbox',
+      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
   });
 
   afterEach(function() {
@@ -85,7 +85,8 @@ describe('InstallerDataService', function() {
     it('should set requirements to provided in requirements parameter', function() {
       let requirements = {'cdk.zip':{'url':'http.redhat.com'}};
       let svc = new InstallerDataService(undefined, requirements);
-      expect(svc.requirements).to.be.equal(requirements);
+
+      expect(svc.requirements).to.deep.equal(requirements);
     });
 
     it('should set default values correctly', function() {

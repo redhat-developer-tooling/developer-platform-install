@@ -1,17 +1,19 @@
 'use strict';
 
 function loadMetadata(requirements, platform) {
+  let reqs = {}
+  Object.assign(reqs, requirements);
   for(var object in requirements) {
-    if(requirements[object].platform) {
-      if(requirements[object].platform[platform]) {
-        Object.assign(requirements[object], requirements[object].platform[platform]);
-        delete requirements[object].platform;
+    if(reqs[object].platform) {
+      if(reqs[object].platform[platform]) {
+        Object.assign(reqs[object], reqs[object].platform[platform]);
+        delete reqs[object].platform;
       } else {
-        delete requirements[object];
+        delete reqs[object];
       }
     }
   }
-  return requirements;
+  return reqs;
 }
 
 module.exports = loadMetadata;

@@ -75,24 +75,6 @@ describe('ConfirmController', function() {
         });
       });
     });
-
-
-    describe('on macos', function() {
-      beforeEach(function() {
-        sandbox.stub(Platform, 'getOS').returns('darwin');
-      });
-      beforeEach(inject(context));
-      it('does not count cygwin as detected component', function() {
-        return new Promise(function(resolve) {
-          confirmController.sc.$apply = function() {
-            resolve();
-          };
-          $scope.$digest();
-        }).then(function() {
-          expect(confirmController.numberOfExistingInstallations).to.be.equal(0);
-        });
-      });
-    });
   });
 
   beforeEach(function() {
