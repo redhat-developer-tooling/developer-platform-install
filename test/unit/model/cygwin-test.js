@@ -190,7 +190,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'execFile').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
-      sandbox.stub(Installer.prototype, 'writeFile').resolves(true);
+      sandbox.stub(Platform, 'addToUserPath').resolves(true);
       installer.installAfterRequirements(fakeProgress, function() {
         expect(Installer.prototype.copyFile).to.be.calledWith(
           installer.downloadedFile,
