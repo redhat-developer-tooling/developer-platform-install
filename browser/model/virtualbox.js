@@ -11,7 +11,7 @@ import Version from './helpers/version';
 import del from 'del';
 
 class VirtualBoxInstall extends InstallableItem {
-  constructor(version, revision, installerDataSvc, downloadUrl, fileName, targetFolderName, sha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256, version, revision) {
     super(VirtualBoxInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = version;

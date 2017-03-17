@@ -2,6 +2,12 @@
 
 import Logger from '../../services/logger';
 import Platform from '../../services/platform';
+import ComponentLoader from '../../services/componentLoader';
+
+const baseDependencies = {
+  'cdk': ['virtualbox', 'cygwin'],
+  'devstudio': ['jdk']
+};
 
 class ConfirmController {
 
@@ -11,6 +17,7 @@ class ConfirmController {
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
+    this.loader = new ComponentLoader(installerDataSvc);
 
     this.installedSearchNote = '';
     this.isDisabled = false;
@@ -31,37 +38,37 @@ class ConfirmController {
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
-    // IF the JDK is not Configured then you can't install devstudio
-    $scope.$watch('checkboxModel.cdk.selectedOption', function watchCdkSelectionChange(nVal) {
-      if(nVal=='install') {
-        if($scope.checkboxModel.virtualbox.selectedOption == 'detected'
-          && !$scope.checkboxModel.virtualbox.hasOption('detected')) {
-          $scope.checkboxModel.virtualbox.selectedOption = 'install';
-        }
-        if($scope.checkboxModel.cygwin.selectedOption == 'detected'
-          && !$scope.checkboxModel.cygwin.hasOption('detected')) {
-          $scope.checkboxModel.cygwin.selectedOption = 'install';
-        }
-      } else if (nVal=='detected') {
-        $scope.checkboxModel.virtualbox.selectedOption = 'detected';
-        $scope.checkboxModel.cygwin.selectedOption = 'detected';
-      }
-    });
+    let watchedComponents = {};
+    for (let key in baseDependencies) {
+      if ($scope.checkboxModel[key]) {
+        watchedComponents[key] = [];
+        let installAfter = this.installerDataSvc.getInstallable(key).getInstallAfter();
+        let keyName;
 
-    $scope.$watch('checkboxModel.devstudio.selectedOption', function watchDevStudioSelectionChange(nVal) {
-      if(nVal=='install') {
-        let jdk = $scope.checkboxModel.jdk;
-        // if jdk is not selected for install and there is no detected version
-        if(jdk.selectedOption == 'detected' && !jdk.hasOption('detected') && $scope.platform === 'win32'
-          // or java detected but not valid
-          || jdk.hasOption('detected') && !jdk.option.detected.valid && $scope.platform === 'win32' ) {
-          // force to install included version
-          jdk.selectedOption = 'install';
+        while (installAfter) {
+          keyName = installAfter.keyName;
+          if (baseDependencies[key].indexOf(keyName) > -1) {
+            watchedComponents[key].push(keyName);
+          }
+          installAfter = installAfter.getInstallAfter();
         }
-      } else if (nVal=='detected') {
-        $scope.checkboxModel.jdk.selectedOption = 'detected';
       }
-    });
+    }
+
+    for (let key in watchedComponents) {
+      $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
+        for (let keyName of watchedComponents[key]) {
+          if(nVal=='install') {
+            if($scope.checkboxModel[keyName].selectedOption == 'detected'
+              && !$scope.checkboxModel[keyName].hasOption('detected')) {
+              $scope.checkboxModel[keyName].selectedOption = 'install';
+            }
+          } else if (nVal=='detected') {
+            $scope.checkboxModel[keyName].selectedOption = 'detected';
+          }
+        }
+      });
+    }
 
     $scope.$watch('$viewContentLoaded', ()=>{
       this.detectInstalledComponents();
@@ -97,14 +104,24 @@ class ConfirmController {
 
   // Prep the install location path for each product, then go to the next page.
   install() {
+    if (this.sc.checkboxModel.hyperv && this.sc.checkboxModel.hyperv.isConfigured()) {
+      this.loader.removeComponent('virtualbox');
+    } else {
+      this.loader.removeComponent('hyperv');
+    }
+
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk'];
+    for (let i = 0; i < possibleComponents.length; i++) {
+      let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
+      if (component) {
+        possibleComponents[i] = component.getLocation();
+      } else {
+        possibleComponents[i] = undefined;
+      }
+    }
+
     this.electron.remote.getCurrentWindow().removeAllListeners('focus');
-    this.installerDataSvc.setup(
-      this.installerDataSvc.getInstallable('virtualbox').getLocation(),
-      this.installerDataSvc.getInstallable('jdk').getLocation(),
-      this.installerDataSvc.getInstallable('devstudio').getLocation(),
-      this.installerDataSvc.getInstallable('cygwin').getLocation(),
-      this.installerDataSvc.getInstallable('cdk').getLocation()
-    );
+    this.installerDataSvc.setup(...possibleComponents);
     this.router.go('install');
   }
 
@@ -120,13 +137,6 @@ class ConfirmController {
           ++this.numberOfExistingInstallations;
         }
       }
-
-      // temp solution to skip cygwin from counting on macOS
-      Platform.identify({
-        darwin: ()=>{
-          this.numberOfExistingInstallations--;
-        }
-      });
 
       // Set the message depending on if the view is disabled or not.
       if (this.isDisabled) {
@@ -162,14 +172,15 @@ class ConfirmController {
   cdkIsConfigured() {
     return this.sc.checkboxModel.cdk.isConfigured()
       && this.virtualizationIsConfigured()
-      && this.sc.checkboxModel.cygwin.isConfigured()
+      && (!this.sc.checkboxModel.cygwin || this.sc.checkboxModel.cygwin.isConfigured())
       || this.sc.checkboxModel.cdk.isSkipped();
   }
 
   virtualizationIsConfigured() {
-    return this.sc.checkboxModel.virtualbox
-      && this.sc.checkboxModel.virtualbox.isConfigured()
-      || this.sc.checkboxModel.hyperv.isConfigured();
+    return (this.sc.checkboxModel.virtualbox
+      && this.sc.checkboxModel.virtualbox.isConfigured())
+      || (this.sc.checkboxModel.hyperv
+      && this.sc.checkboxModel.hyperv.isConfigured());
   }
 
   isConfigurationValid() {

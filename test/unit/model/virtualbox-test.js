@@ -67,7 +67,7 @@ describe('Virtualbox installer', function() {
   });
 
   beforeEach(function () {
-    installer = new VirtualBoxInstall(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+    installer = new VirtualBoxInstall(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -79,18 +79,18 @@ describe('Virtualbox installer', function() {
 
   it('should fail when no url is set and installed file not defined', function() {
     expect(function() {
-      new VirtualBoxInstall('ver', 'rev', installerDataSvc, null, null);
+      new VirtualBoxInstall(installerDataSvc, null, null, null, null, 'ver', 'rev');
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new VirtualBoxInstall('ver', 'rev', installerDataSvc, null, '');
+      new VirtualBoxInstall(installerDataSvc, null, null, '', null, 'ver', 'rev');
     }).to.throw('No download URL set');
   });
 
   it('should download virtualbox installer to temporary folder with name configured file name', function() {
-    expect(new VirtualBoxInstall('ver', 'rev', installerDataSvc, 'url', 'virtualbox.exe', 'virtualbox', 'sha').downloadedFile).to.equal(
+    expect(new VirtualBoxInstall(installerDataSvc, 'virtualbox', 'url', 'virtualbox.exe', 'sha', 'ver', 'rev').downloadedFile).to.equal(
       path.join(installerDataSvc.tempDir(), 'virtualbox.exe'));
   });
 
@@ -141,7 +141,7 @@ describe('Virtualbox installer', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('macOS');
-        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer = new VirtualBoxInstallDarwin(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
     });
@@ -150,7 +150,7 @@ describe('Virtualbox installer', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
-        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer = new VirtualBoxInstallWindows(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
 
@@ -325,7 +325,7 @@ describe('Virtualbox installer', function() {
         stub.onCall(1).resolves(VERSION);
 
         sandbox.stub(Util, 'folderContains').resolves(LOCATION);
-        installer = new VirtualBoxInstallDarwin(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer = new VirtualBoxInstallDarwin(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         validateStub = sandbox.stub(installer, 'validateVersion').returns();
       });
 
@@ -349,7 +349,7 @@ describe('Virtualbox installer', function() {
         stub.onCall(2).resolves(VERSION);
 
         sandbox.stub(Util, 'folderContains').resolves(LOCATION);
-        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer = new VirtualBoxInstallWindows(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         validateStub = sandbox.stub(installer, 'validateVersion').returns();
       });
 

@@ -68,15 +68,23 @@ describe('CDK installer', function() {
     svc.ocBinRoot = 'ocBinRoot';
     svc.vboxRoot = 'virtualboxLocation';
     svc.cygwinRoot = 'cygwinLocation';
+    let cygwin;
+    if (process.platform === 'win32') {
+      svc.addItemsToInstall(
+        new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false)
+      );
+      cygwin = svc.getInstallable('cygwin');
+      cygwin.addOption('install', '1.0.0', 'cygwin', true);
+    } else {
+      svc.requirements['hyperv'] = {};
+    }
     svc.addItemsToInstall(
-      new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false),
       new InstallableItem('virtualbox', 'url', 'virtualbox.exe', 'virtualbox', svc, false)
     );
     let virtualbox = svc.getInstallable('virtualbox');
     virtualbox.addOption('install', '1.0.0', 'virtualbox', true);
-    let cygwin = svc.getInstallable('cygwin');
-    cygwin.addOption('install', '1.0.0', 'cygwin', true);
-    let cdk = new CDKInstall(svc, cdkUrl, 'file.exe', 'folderName', 'sha1');
+
+    let cdk = new CDKInstall(svc, 'folderName', cdkUrl, 'file.exe', 'sha1');
     return {
       svc,
       virtualbox,
@@ -113,7 +121,7 @@ describe('CDK installer', function() {
       createCwd: false,
       createTmp: false
     });
-    installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile.zip', 'folderName', 'sha1');
+    installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile.zip', 'sha1');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -126,18 +134,12 @@ describe('CDK installer', function() {
 
   it('should fail when some download url is not set and installed file not defined', function() {
     expect(function() {
-      new CDKInstall(installerDataSvc, null, 'installFile', 'folderName', 'sha1');
-    }).to.throw('No download URL set');
-  });
-
-  it('should fail when no url is set and installed file is empty', function() {
-    expect(function() {
-      new CDKInstall(installerDataSvc, null, 'installFile', 'folderName', 'sha1');
+      new CDKInstall(installerDataSvc, 'folderName', null, 'installFile', 'sha1');
     }).to.throw('No download URL set');
   });
 
   it('should download files when no installation is found', function() {
-    expect(new CDKInstall(installerDataSvc, 'cdkUrl', 'installFile', 'folderName', 'sha1').useDownload).to.be.true;
+    expect(new CDKInstall(installerDataSvc, 'folderName', 'cdkUrl', 'installFile', 'sha1').useDownload).to.be.true;
   });
 
   describe('files download', function() {
@@ -166,7 +168,7 @@ describe('CDK installer', function() {
     });
 
     it('should call a correct downloader request for cdk file', function() {
-      installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile', 'folderName',  'sha1');
+      installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile', 'sha1');
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(authStub.callCount).to.equal(1);
@@ -194,7 +196,7 @@ describe('CDK installer', function() {
     });
 
     it('should fail for cdk file without known extension', function() {
-      installer = new CDKInstall(installerDataSvc, cdkUrl, 'installFile.aaa', 'folderName', 'sha1');
+      installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile.aaa', 'sha1');
       sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve('home'));
       let stubCopy = sandbox.stub(Installer.prototype, 'copyFile');
       let stubUnzip = sandbox.stub(Installer.prototype, 'unzip');
@@ -335,11 +337,19 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox location added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':'path'});
-        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(['virtualbox', 'path'].join(path.delimiter));
+        let pathArray = ['virtualbox', 'path'];
+        if (process.platform === 'win32') {
+          pathArray.splice(1, 0, 'cygwin');
+        }
+        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':''});
-        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(['virtualbox'].join(path.delimiter));
+        let pathArray = ['virtualbox'];
+        if (process.platform === 'win32') {
+          pathArray.push('cygwin');
+        }
+        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
 
@@ -350,11 +360,19 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
-        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(['virtualbox', 'cygwin', 'path'].join(path.delimiter));
+        let pathArray = ['virtualbox', 'path'];
+        if (process.platform === 'win32') {
+          pathArray.splice(1, 0, 'cygwin');
+        }
+        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':''});
-        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(['virtualbox', 'cygwin'].join(path.delimiter));
+        let pathArray = ['virtualbox'];
+        if (process.platform === 'win32') {
+          pathArray.push('cygwin');
+        }
+        expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
   });

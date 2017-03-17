@@ -17,7 +17,7 @@
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
 
     <!-- devstudio -->
-    <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.devstudio.hasOption('detected')}">
+    <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.devstudio === undefined" ng-class="{'zero-border':checkboxModel.devstudio.hasOption('detected')}">
       <div id="devstudio-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.devstudio.hasOption('detected')}">
            <!--ng-click="checkboxModel.devstudio.changeIsCollapsed()">-->
@@ -84,7 +84,7 @@
     </div>
 
     <!-- JDK -->
-    <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
+    <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.jdk === undefined" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
       <div id="jdk-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
@@ -184,7 +184,7 @@
     </div>
 
     <!-- CDK -->
-    <div id="cdk-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
+    <div id="cdk-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.cdk === undefined" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
       <div id="cdk-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cdk.hasOption('detected')}">
            <!--ng-click="checkboxModel.cdk.changeIsCollapsed()">-->
@@ -249,7 +249,7 @@
     </div>
 
     <!-- hyper-v -->
-    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
+    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv !== undefined && checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
       <div id="hyperv-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.hyperv.hasOption('detected')}">
         <div class="checkbox-container verticalLine">
@@ -268,7 +268,7 @@
     </div>
 
     <!-- VirtualBox -->
-    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
+    <div id="virtualbox-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.virtualbox === undefined || checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.virtualbox.hasOption('detected')}">
       <div id="virtualbox-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.virtualbox.hasOption('detected')}">
            <!--ng-click="checkboxModel.virtualbox.changeIsCollapsed()">-->
@@ -385,7 +385,7 @@
     </div>
 
     <!-- Cygwin -->
-    <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-show="platform==='win32'" ng-class="{'zero-border': checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
+    <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.cygwin === undefined" ng-class="{'zero-border': checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
       <div id="cygwin-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->

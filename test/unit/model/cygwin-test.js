@@ -18,7 +18,10 @@ import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
 import {ProgressState} from 'browser/pages/install/controller';
 import 'sinon-as-promised';
+import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
+
+let reqs = loadMetadata(require('../../../requirements.json'), 'win32');
 
 describe('Cygwin installer', function() {
   let installerDataSvc, sandbox, installer;
@@ -29,7 +32,7 @@ describe('Cygwin installer', function() {
   };
 
   installerDataSvc = sinon.stub(new InstallerDataService());
-  installerDataSvc.getRequirementByName.restore();
+  installerDataSvc.getRequirementByName.returns(reqs.cygwin);
   installerDataSvc.getInstallable.returns(fakeInstallable);
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
@@ -65,7 +68,7 @@ describe('Cygwin installer', function() {
   });
 
   beforeEach(function () {
-    installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+    installer = new CygwinInstall(installerDataSvc, 'cygwin', downloadUrl, 'cygwin.exe', 'sha');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -77,18 +80,18 @@ describe('Cygwin installer', function() {
 
   it('should fail when no url is set and installed file not defined', function() {
     expect(function() {
-      new CygwinInstall(installerDataSvc, null, null);
+      new CygwinInstall(installerDataSvc, null, null, null);
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new CygwinInstall(installerDataSvc, null, '');
+      new CygwinInstall(installerDataSvc, null, null, '');
     }).to.throw('No download URL set');
   });
 
   it('should download cygwin installer to temporary folder as ssh-rsync.zip', function() {
-    expect(new CygwinInstall(installerDataSvc, 'url', 'cygwin.exe', 'cygwin', 'sha').downloadedFile).to.equal(
+    expect(new CygwinInstall(installerDataSvc, 'cygwin', 'url', 'cygwin.exe', 'sha').downloadedFile).to.equal(
       path.join('tempDirectory', 'cygwin.exe'));
   });
 
@@ -134,6 +137,13 @@ describe('Cygwin installer', function() {
   });
 
   describe('installation', function() {
+    before(function() {
+      installerDataSvc.getRequirementByName.returns(reqs.virtualbox);
+    });
+
+    after(function() {
+      installerDataSvc.getRequirementByName.returns(reqs.cygwin);
+    });
 
     it('should not start until virtualbox has finished installing', function() {
       let installSpy = sandbox.spy(installer, 'installAfterRequirements');
@@ -159,20 +169,21 @@ describe('Cygwin installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      sandbox.stub(Installer.prototype, 'execFile').rejects('done');
+      sandbox.stub(Installer.prototype, 'exec').resolves(true);
+      sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Platform, 'addToUserPath').resolves(true);
 
-      installer.installAfterRequirements(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(() => {
+        expect(fakeProgress.setStatus).to.have.been.calledOnce;
+        expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
+      });
     });
 
     it('should run the cygwin.exe installer with correct parameters', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
-      sandbox.stub(Installer.prototype, 'execFile').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
-      sandbox.stub(Installer.prototype, 'writeFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
+      
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(Installer.prototype.exec).to.have.been.calledWithMatch('powershell');
       });
@@ -205,7 +216,7 @@ describe('Cygwin installer', function() {
     describe('on macOS', function() {
       it('should mark cygwin as detected', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
-        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer = new CygwinInstall(installerDataSvc, 'cygwin', downloadUrl, 'cygwin.exe', 'sha');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
@@ -214,7 +225,7 @@ describe('Cygwin installer', function() {
     describe('on Linux', function() {
       it('should mark cygwin as detected', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
-        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer = new CygwinInstall(installerDataSvc, 'cygwin', downloadUrl, 'cygwin.exe', 'sha');
         installer.detectExistingInstall();
         expect(installer.selectedOption).to.be.equal('detected');
         expect(installer.hasOption('detected')).to.be.equal(true);
@@ -224,7 +235,7 @@ describe('Cygwin installer', function() {
       it('should mark cygwin for installation cygwin is not installed', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Util, 'executeCommand').onFirstCall().returns(Promise.reject('cygcheck is not available'));
-        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer = new CygwinInstall(installerDataSvc, 'cygwin', downloadUrl, 'cygwin.exe', 'sha');
         installer.ipcRenderer = { on: function() {} };
         installer.detectExistingInstall().then(()=> {
           expect(installer.selectedOption).to.be.equal('install');
@@ -257,7 +268,7 @@ describe('Cygwin installer', function() {
             'openssh              7.3p1-2        OK'
           ].join('\n')));
         Util.executeCommand.onSecondCall().returns('/path/to/cygwin');
-        installer = new CygwinInstall(installerDataSvc, downloadUrl, 'cygwin.exe', 'cygwin', 'sha');
+        installer = new CygwinInstall(installerDataSvc, 'cygwin', downloadUrl, 'cygwin.exe', 'sha');
         installer.ipcRenderer = { on: function() {} };
         installer.detectExistingInstall().then(()=> {
           expect(installer.selectedOption).to.be.equal('install');

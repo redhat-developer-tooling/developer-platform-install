@@ -8,7 +8,7 @@ import Installer from './helpers/installer';
 import globby from 'globby';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, minishiftUrl, fileName, targetFolderName, minishiftSha256) {
+  constructor(installerDataSvc, targetFolderName, minishiftUrl, fileName, minishiftSha256) {
     super(CDKInstall.KEY, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = minishiftSha256;
@@ -66,7 +66,7 @@ class CDKInstall extends InstallableItem {
     let newPath = [vboxInstall.getLocation()];
     let oldPath = Platform.ENV[Platform.PATH];
 
-    if (Platform.OS === 'win32') {
+    if (cygwinInstall) {
       newPath.push(cygwinInstall.getLocation());
     }
 

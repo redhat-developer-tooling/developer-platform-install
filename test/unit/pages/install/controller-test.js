@@ -39,8 +39,8 @@ describe('Install controller', function() {
     sandbox.stub(InstallerDataService.prototype, 'copyUninstaller').returns();
     installerDataSvc = new InstallerDataService();
     installerDataSvc.setup('installRoot');
-    vbox = new VirtualBoxInstall('5.0.8', '103449', installerDataSvc,
-      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'virtualbox', 'sha');
+    vbox = new VirtualBoxInstall(installerDataSvc, 'virtualbox',
+      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
 
     installerDataSvc.addItemToInstall(VirtualBoxInstall.KEY, vbox);
   });
