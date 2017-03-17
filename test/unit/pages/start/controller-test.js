@@ -84,7 +84,6 @@ describe('StartController', function() {
     describe('on windows',function(){
       it('calls specific launch method', function(){
         sandbox.stub(Platform, 'getOS').returns('win32');
-        StartController
         let stubLaunchWin32 = sandbox.stub(StartController.prototype, 'launchDevstudio_win32');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
@@ -148,6 +147,15 @@ describe('StartController', function() {
         });
       });
     });
+    describe('on linux', function() {
+      it('calls launchDevstudio_linux', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        sandbox.spy(StartController.prototype,'launchDevstudio_linux');
+        let ctrl = createController(false);
+        ctrl.start();
+        expect(ctrl.launchDevstudio_linux).has.been.calledOnce;
+      })
+    })
   });
   describe('exit', function() {
     it('calls close for current electron window', function() {
