@@ -125,8 +125,8 @@ class ProgressState {
       this.currentAmount = newVal;
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
       this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
+      this.$timeout(()=>this.$scope.$apply());
     }
-    this.$timeout(()=>this.$scope.$apply());
   }
 
   setStatus(newStatus) {
@@ -147,8 +147,6 @@ class ProgressState {
   }
 
   setComplete() {
-    this.current = 100;
-    this.label = '100%';
     this.setStatus('Complete');
   }
 
