@@ -110,7 +110,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk', 'kompose'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {

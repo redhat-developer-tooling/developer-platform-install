@@ -27,6 +27,7 @@ function checkRequirements() {
   fileNames['virtualbox'] = 'virtualbox';
   fileNames['7zip'] = '7-Zip';
   fileNames['7zip-extra'] = '7-Zip';
+  fileNames['kompose'] = 'kompose';
 
   //to check if the files are rougly the size they should be
   minSizes['cdk'] = 50 * 1024;
@@ -38,6 +39,7 @@ function checkRequirements() {
   minSizes['virtualbox'] = 85 * 1024 * 1024;
   minSizes['7zip'] = 200 * 1024;
   minSizes['7zip-extra'] = 400 * 1024;
+  minSizes['kompose'] = 400 * 1024;
 
   console.log('-------------------------------');
   console.log('Checking download URLs');

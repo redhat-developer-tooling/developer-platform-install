@@ -453,6 +453,22 @@
       </div>
     </div>
 
+    <!-- Kompose -->
+    <div id="kompose-panel" class="panel panel-default panel2pxborder">
+      <div id="kompose-panel-heading" class="panel-heading panel-normal">
+           <div class="checkbox-container verticalLine">
+             <input id="kompose-checkbox" type="checkbox" ng-model="checkboxModel.kompose.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
+        <div class="checkbox-container" ng-show="false">
+          <div id="arrow-kompose" class="arrow" ng-class="{'arrow-down':!checkboxModel.kompose.isCollapsed}" aria-label="Toggle ngHide"></div>
+        </div>
+        <div class="product-container">
+          <span id="kompose-name" class="product-name">{{checkboxModel.kompose.productName}}</span>
+          <span id="kompose-version" class="product-version">{{checkboxModel.kompose.version}}</span>
+          <div id="kompose-description">{{checkboxModel.kompose.productDesc}}</div>
+        </div>
+      </div>
+    </div>
   </form>
 </main>
 
