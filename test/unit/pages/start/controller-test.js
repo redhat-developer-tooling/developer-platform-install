@@ -57,9 +57,9 @@ describe('StartController', function() {
     function createController(devstudioInstalled) {
       let electron = new ElectronMock();
       let installerDataSvc = new InstallerDataService();
-      installerDataSvc.devstudioRoot = 'developer-studio'
+      installerDataSvc.devstudioRoot = 'developer-studio';
       installerDataSvc.password = '12345678';
-      sandbox.stub(installerDataSvc,'devstudioDir').returns('developer-studio');
+      sandbox.stub(installerDataSvc, 'devstudioDir').returns('developer-studio');
       sandbox.stub(installerDataSvc, 'getInstallable').returns({
         isSkipped() { return devstudioInstalled; },
         selected: true
@@ -81,8 +81,8 @@ describe('StartController', function() {
       ctrl.start();
       expect(ctrl.launchDevstudio).calledOnce;
     });
-    describe('on windows',function(){
-      it('calls specific launch method', function(){
+    describe('on windows', function() {
+      it('calls specific launch method', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let stubLaunchWin32 = sandbox.stub(StartController.prototype, 'launchDevstudio_win32');
         let ctrl = createController(false);
@@ -90,10 +90,10 @@ describe('StartController', function() {
         ctrl.start();
         expect(stubLaunchWin32).calledOnce;
       });
-      it('should spawn new process and exit', function(){
+      it('should spawn new process and exit', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        sandbox.stub(fs,'writeFileSync');
-        let messageEmmitterFactory = function(message){
+        sandbox.stub(fs, 'writeFileSync');
+        let messageEmmitterFactory = function(message) {
           return {
             on: sinon.stub().yields(message)
           };
@@ -101,23 +101,23 @@ describe('StartController', function() {
         let bat = messageEmmitterFactory('errorCode');
         bat.stdout = messageEmmitterFactory('stdout message');
         bat.stderr = messageEmmitterFactory('stderr message');
-        sandbox.stub(child_process,'spawn').returns(bat);
+        sandbox.stub(child_process, 'spawn').returns(bat);
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
 
         ctrl.start();
 
         expect(child_process.spawn).to.be.calledOnce;
-        expect(child_process.spawn).to.be.calledWith('cmd.exe')
+        expect(child_process.spawn).to.be.calledWith('cmd.exe');
         expect(fs.writeFileSync).to.be.calledTwice;
         expect(ctrl.exit).to.be.calledOnce;
-      })
+      });
     });
-    describe('on macos',function(){
-      beforeEach(function(){
+    describe('on macos', function() {
+      beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
-      it('calls specific launch method', function(){
+      it('calls specific launch method', function() {
         let stubLaunchDarwin = sandbox.stub(StartController.prototype, 'launchDevstudio_darwin');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
@@ -125,19 +125,19 @@ describe('StartController', function() {
         expect(stubLaunchDarwin).calledOnce;
       });
       it('starts devstudio with rhel.subscription.password environment variable', function() {
-        sandbox.stub(Util,'executeCommand').resolves();
+        sandbox.stub(Util, 'executeCommand').resolves();
         let ctrl = createController(false);
-        sandbox.stub(ctrl,'exit').returns();
+        sandbox.stub(ctrl, 'exit').returns();
         return ctrl.launchDevstudio().then(()=>{
           expect(Util.executeCommand).calledWith('open developer-studio/Devstudio.app');
           expect(Util.executeCommand.args[0][2]['env']['rhel.subscription.password']).to.be.equal('12345678');
           expect(ctrl.exit).calledOnce;
         });
       });
-      it('should log error and exits if devstudio start failed',function(){
-        sandbox.stub(Util,'executeCommand').rejects('reason');
+      it('should log error and exits if devstudio start failed', function() {
+        sandbox.stub(Util, 'executeCommand').rejects('reason');
         let ctrl = createController(false);
-        sandbox.stub(ctrl,'exit').returns();
+        sandbox.stub(ctrl, 'exit').returns();
         return ctrl.launchDevstudio().then(()=>{
           expect.fail();
         }).catch(()=> {
@@ -150,12 +150,12 @@ describe('StartController', function() {
     describe('on linux', function() {
       it('calls launchDevstudio_linux', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
-        sandbox.spy(StartController.prototype,'launchDevstudio_linux');
+        sandbox.spy(StartController.prototype, 'launchDevstudio_linux');
         let ctrl = createController(false);
         ctrl.start();
         expect(ctrl.launchDevstudio_linux).has.been.calledOnce;
-      })
-    })
+      });
+    });
   });
   describe('exit', function() {
     it('calls close for current electron window', function() {

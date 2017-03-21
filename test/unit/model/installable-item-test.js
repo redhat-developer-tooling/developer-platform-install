@@ -245,12 +245,12 @@ describe('InstallableItem', function() {
   });
 
   describe('restartDownload', function() {
-    it('delegatest to downloader instance', function(){
+    it('delegatest to downloader instance', function() {
       let installItem = new InstallableItem('jdk', 'downloadUrl', 'fileName', 'targetLocation', new InstallerDataService(), false);
       installItem.downloader = new Downloader(null, function() {});
-      let rdStub = sandbox.stub(Downloader.prototype,'restartDownload').returns();
-      installItem.restartDownload()
+      let rdStub = sandbox.stub(Downloader.prototype, 'restartDownload').returns();
+      installItem.restartDownload();
       expect(rdStub).calledOnce;
-    })
-  })
+    });
+  });
 });

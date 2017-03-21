@@ -153,7 +153,7 @@ describe('Install controller', function() {
 
     it('logs error in case of install failed', function() {
       vbox.install.restore();
-      sandbox.stub(vbox,'install').callsArgWith(2,'Error');
+      sandbox.stub(vbox, 'install').callsArgWith(2, 'Error');
       new InstallController({}, timeoutStub, installerDataSvc);
       expect(errorStub).calledTwice;
     });
@@ -186,9 +186,9 @@ describe('Install controller', function() {
     });
   });
 
-  describe('ProgressState',function(){
+  describe('ProgressState', function() {
     it('should set default min/max values when passed to constructor', function() {
-      let progress = new ProgressState('key','prodName','prodVersion','productDesc',{},sinon.stub(),100,1000);
+      let progress = new ProgressState('key', 'prodName', 'prodVersion', 'productDesc', {}, sinon.stub(), 100, 1000);
       expect(progress.min).equals(100);
       expect(progress.max).equals(1000);
     });
@@ -200,13 +200,13 @@ describe('Install controller', function() {
       });
     });
     describe('setCurrent', function() {
-      it('should do nothing if new current progress value is the same', function(){
+      it('should do nothing if new current progress value is the same', function() {
         let progress = new ProgressState();
         progress.$timeout = sandbox.stub().yields();
         progress.setCurrent(0);
         expect(progress.$timeout).to.be.not.called;
       });
-      describe('should update', function(){
+      describe('should update', function() {
         let progress;
         before(function() {
           progress = new ProgressState();
@@ -215,21 +215,21 @@ describe('Install controller', function() {
           progress.setTotalDownloadSize(1000);
           progress.setCurrent(100);
         });
-        it('current progress amount value', function(){
+        it('current progress amount value', function() {
           expect(progress.currentAmount).equals(100);
         });
-        it('current prcentage', function(){
+        it('current prcentage', function() {
           expect(progress.current).equals(10);
         });
         it('lable value', function() {
           expect(progress.label).equals(
             progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' KB (' + progress.current + '%)'
           );
-        })
+        });
         it('calls angular async update', function() {
           expect(progress.$scope.$apply).calledOnce;
-        })
-      })
+        });
+      });
     });
     describe('setStatus', function() {
       let progress;

@@ -20,11 +20,11 @@ describe('PathValidatorDirective', function() {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
   }));
-  afterEach(function(){
+  afterEach(function() {
     sandbox.restore();
-  })
+  });
   it('shows only notSelected error for empty folder field', function() {
-    sandbox.stub(Platform,'getOS').returns('win32');
+    sandbox.stub(Platform, 'getOS').returns('win32');
       // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
     scope.folder = '';
@@ -41,9 +41,9 @@ describe('PathValidatorDirective', function() {
     expect(compiledDirective.html()).to.not.contain('notAbsolute-message');
   });
 
-  describe('on macos', function(){
-    it('does not use windows path format validator', function(){
-      sandbox.stub(Platform,'getOS').returns('darwin');
+  describe('on macos', function() {
+    it('does not use windows path format validator', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
         // Compile a piece of HTML containing the directive
       scope = $rootScope.$new();
       scope.folder = '/home/user';
@@ -56,11 +56,11 @@ describe('PathValidatorDirective', function() {
       scope.$digest();
         // Check that the compiled element contains the templated content
       expect(compiledDirective.html()).to.not.contain('invalidFormat-message');
-    })
-  })
-  describe('on windows', function(){
-    it('run windows path format validator', function(){
-      sandbox.stub(Platform,'getOS').returns('win32');
+    });
+  });
+  describe('on windows', function() {
+    it('run windows path format validator', function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
         // Compile a piece of HTML containing the directive
       scope = $rootScope.$new();
       scope.folder = '/home/user';
@@ -73,7 +73,7 @@ describe('PathValidatorDirective', function() {
       scope.$digest();
         // Check that the compiled element contains the templated content
       expect(compiledDirective.html()).to.contain('invalidFormat-message');
-    })
-  })
+    });
+  });
 
 });

@@ -21,13 +21,13 @@ describe('ProgressBarDirective', function() {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     let templatePath = path.resolve('./browser/directives/progressBar.html');
-    let templateContent = console.log(fs.readFileSync(templatePath,'utf8'));
+    let templateContent = console.log(fs.readFileSync(templatePath, 'utf8'));
     // FIXME figure out how to test real template with templateUrl
-    _$templateCache_.put('directives/progressBar.html','<a>template</a>');
+    _$templateCache_.put('directives/progressBar.html', '<a>template</a>');
   }));
-  afterEach(function(){
+  afterEach(function() {
     sandbox.restore();
-  })
+  });
   it('shows directive', function() {
       // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
@@ -36,7 +36,7 @@ describe('ProgressBarDirective', function() {
       return $sce.trustAsResourceUrl(src);
     };
     var compiledDirective = $compile(angular.element(
-        `<progress-bar></progress-bar>`))(scope);
+        '<progress-bar></progress-bar>'))(scope);
     scope.$digest();
       // Check that the compiled element contains the templated content
     // expect(compiledDirective.html()).to.contain('notSelected-message');
