@@ -21,13 +21,13 @@ describe('BreadcrumbDirective', function() {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     let templatePath = path.resolve('./browser/directives/breadcrumbs.html');
-    let templateContent = console.log(fs.readFileSync(templatePath,'utf8'));
+    let templateContent = console.log(fs.readFileSync(templatePath, 'utf8'));
     // FIXME figure out how to test real template with templateUrl
-    _$templateCache_.put('directives/breadcrumbs.html','<a>template</a>');
+    _$templateCache_.put('directives/breadcrumbs.html', '<a>template</a>');
   }));
-  afterEach(function(){
+  afterEach(function() {
     sandbox.restore();
-  })
+  });
   it('shows directive', function() {
       // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
@@ -36,7 +36,7 @@ describe('BreadcrumbDirective', function() {
       return $sce.trustAsResourceUrl(src);
     };
     var compiledDirective = $compile(angular.element(
-        `<breadcrumb></breadcrumb>`))(scope);
+        '<breadcrumb></breadcrumb>'))(scope);
     scope.$digest();
       // Check that the compiled element contains the templated content
     // expect(compiledDirective.html()).to.contain('notSelected-message');
