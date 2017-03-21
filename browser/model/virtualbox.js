@@ -175,36 +175,33 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   detectExistingInstall() {
-    return new Promise((resolve, reject)=> {
-      let tempDetectedLocation = '';
-      Util.executeCommand('which virtualbox', 1).then((output) => {
-        return new Promise((resolve) => {
-          return Util.findText(output, 'INSTALL_DIR=').then((result) => {
-            return resolve(result.split('=')[1]);
-          }).catch(()=>{
-            return resolve(path.parse(output).dir);
-          });
+    let tempDetectedLocation = '';
+    return Util.executeCommand('which virtualbox', 1).then((output) => {
+      return new Promise((resolve) => {
+        return Util.findText(output, 'INSTALL_DIR=').then((result) => {
+          return resolve(result.split('=')[1]);
+        }).catch(()=>{
+          return resolve(path.parse(output).dir);
         });
-      }).then((output) => {
-        return Util.folderContains(output, ['VirtualBox', 'VBoxManage']);
-      }).then((output) => {
-        tempDetectedLocation = output;
-        var command = '"' + path.join(output, 'VBoxManage') +'"' + ' --version';
-        return Util.executeCommand(command, 1);
-      }).then((output) => {
-        let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
-        let version = versionRegex.exec(output)[1];
-        this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
-        this.selectedOption = 'detected';
-        this.validateVersion();
-        resolve();
-      }).catch(() => {
-        if(this.option.detected) {
-          delete this.option.detected;
-        }
-        this.addOption('install', this.version, '/usr/local/bin', true);
-        reject();
       });
+    }).then((output) => {
+      return Util.folderContains(output, ['VirtualBox', 'VBoxManage']);
+    }).then((output) => {
+      tempDetectedLocation = output;
+      var command = '"' + path.join(output, 'VBoxManage') +'"' + ' --version';
+      return Util.executeCommand(command, 1);
+    }).then((output) => {
+      let versionRegex = /(\d+\.\d+\.\d+)r\d+/;
+      let version = versionRegex.exec(output)[1];
+      this.addOption('detected', version, tempDetectedLocation, Version.GE(version, this.minimumVersion));
+      this.selectedOption = 'detected';
+      this.validateVersion();
+    }).catch(() => {
+      if(this.option.detected) {
+        delete this.option.detected;
+      }
+      this.addOption('install', this.version, '/usr/local/bin', true);
+      return Promise.resolve();
     });
   }
 
