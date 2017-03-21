@@ -8,6 +8,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import {VirtualBoxInstallWindows} from 'browser/model/virtualbox';
+import {VirtualBoxInstallDarwin} from 'browser/model/virtualbox';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
@@ -134,9 +135,18 @@ describe('Virtualbox installer', function() {
 
   describe('installation', function() {
     let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
+    let helper;
+
+    describe('on macos', function() {
+      beforeEach(function() {
+        helper = new Installer('virtualbox', fakeProgress);
+        sandbox.stub(Platform, 'getOS').returns('macOS');
+        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        installer.ipcRenderer = {on: function() {}};
+      });
+    });
 
     describe('on windows', function() {
-      let helper;
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
@@ -273,61 +283,91 @@ describe('Virtualbox installer', function() {
     const VERSION_PARSED = '5.0.26';
     const LOCATION = 'folder/vbox';
 
+    function addCommonDetectionTests() {
+      it('should add option \'detected\' with detected version and location', function() {
+        return installer.detectExistingInstall().then(()=> {
+          expect(installer.option['detected'].location).to.equal(LOCATION);
+          expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+        });
+      });
 
-    beforeEach(function() {
-      stub = sandbox.stub(Util, 'executeCommand');
-      sandbox.stub(Platform, 'getOS').returns('win32');
-      sandbox.stub(Platform, 'isVirtualizationEnabled').resolves(true);
-      stub.onCall(0).resolves('%VBOX_MSI_INSTALL_PATH%');
-      stub.onCall(1).resolves(LOCATION);
-      stub.onCall(2).resolves(VERSION);
+      it('should check the detected version', function() {
+        return installer.detectExistingInstall().then(()=>{
+          expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+        });
+      });
 
-      sandbox.stub(Util, 'folderContains').resolves(LOCATION);
-      installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
-      validateStub = sandbox.stub(installer, 'validateVersion').returns();
-    });
+      it('should validate the detected version against the required one', function() {
+        return installer.detectExistingInstall().then(()=>{
+          expect(validateStub).calledOnce;
+        });
+      });
 
-    it('should add option \'detected\' with detected version and location', function() {
-      return installer.detectExistingInstall().then(()=> {
-        expect(installer.option['detected'].location).to.equal(LOCATION);
-        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+      it('should remove detected option in case detection ran agian an nothing detected', function() {
+        return installer.detectExistingInstall().then(()=>{
+          stub.rejects();
+          return installer.detectExistingInstall();
+        }).then(()=>{
+          expect(installer.option['install']).to.not.equal(undefined);
+          expect(installer.option['detected']).to.equal(undefined);
+        }).catch((error)=>{
+          console.log(error);
+        });
+      });
+    }
+
+    describe('on macos', function() {
+      beforeEach(function() {
+        stub = sandbox.stub(Util, 'executeCommand');
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(Platform, 'isVirtualizationEnabled').resolves(true);
+        stub.onCall(0).resolves(LOCATION);
+        stub.onCall(1).resolves(VERSION);
+
+        sandbox.stub(Util, 'folderContains').resolves(LOCATION);
+        installer = new VirtualBoxInstallDarwin(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        validateStub = sandbox.stub(installer, 'validateVersion').returns();
+      });
+
+      addCommonDetectionTests();
+
+      it('should add option \'install\' when nothing detected', function() {
+        stub.onCall(1).rejects();
+        return installer.detectExistingInstall().then(()=> {
+          expect(installer.option['install']).is.not.undefined;
+        });
       });
     });
 
-    it('should add option \'install\' when nothing detected', function() {
-      stub.onCall(2).rejects();
-      return installer.detectExistingInstall().then(()=> {
-        expect(installer.option['install']).is.not.undefined;
-      });
-    });
+    describe('on windows', function() {
+      beforeEach(function() {
+        stub = sandbox.stub(Util, 'executeCommand');
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'isVirtualizationEnabled').resolves(true);
+        stub.onCall(0).resolves('%VBOX_MSI_INSTALL_PATH%');
+        stub.onCall(1).resolves(LOCATION);
+        stub.onCall(2).resolves(VERSION);
 
-    it('should check the detected version', function() {
-      return installer.detectExistingInstall().then(()=>{
-        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+        sandbox.stub(Util, 'folderContains').resolves(LOCATION);
+        installer = new VirtualBoxInstallWindows(version, revision, installerDataSvc, downloadUrl, 'virtualbox.exe', 'virtualbox', 'sha');
+        validateStub = sandbox.stub(installer, 'validateVersion').returns();
       });
-    });
 
-    it('should validate the detected version against the required one', function() {
-      return installer.detectExistingInstall().then(()=>{
-        expect(validateStub).calledOnce;
+      addCommonDetectionTests();
+
+      it('should add option \'install\' when nothing detected', function() {
+        stub.onCall(2).rejects();
+        return installer.detectExistingInstall().then(()=> {
+          expect(installer.option['install']).is.not.undefined;
+        });
       });
-    });
 
-    it('should remove detected option in case detection ran agian an nothing detected', function() {
-      return installer.detectExistingInstall().then(()=>{
-        stub.rejects();
-        return installer.detectExistingInstall();
-      }).then(()=>{
-        expect(installer.option['install']).to.not.equal(undefined);
-        expect(installer.option['detected']).to.equal(undefined);
-      });
-    });
-
-    it('should detect old non msi installed virtualbox', function() {
-      stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
-      return installer.detectExistingInstall().then(()=> {
-        expect(installer.option['detected'].location).to.equal(LOCATION);
-        expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+      it('should detect old non msi installed virtualbox', function() {
+        stub.onCall(0).resolves('%VBOX_INSTALL_PATH%');
+        return installer.detectExistingInstall().then(()=> {
+          expect(installer.option['detected'].location).to.equal(LOCATION);
+          expect(installer.option['detected'].version).to.equal(VERSION_PARSED);
+        });
       });
     });
   });
