@@ -93,5 +93,70 @@ describe('Hyper-V Installer', function() {
       });
     });
   });
-
+  describe('isSkipped', function() {
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+      it('should return true if hyper-v is detectd', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+        let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+        return hvInstall.detectExistingInstall().then(function() {
+          expect(hvInstall.isSkipped()).to.be.equal(true);
+        });
+      });
+      it('should return true if hyper-v is not detectd', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
+        let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+        return hvInstall.detectExistingInstall().then(function() {
+          expect(hvInstall.isSkipped()).to.be.equal(true);
+        });
+      });
+    });
+    describe('on macos', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('should return true', function() {
+        let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+        return hvInstall.detectExistingInstall().then(function() {
+          expect(hvInstall.isSkipped()).to.be.equal(true);
+        });
+      });
+    });
+  });
+  describe('isConfigured', function() {
+    it('on windows returns true if hyper-v is detected', function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+      let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+      return hvInstall.detectExistingInstall().then(function() {
+        expect(hvInstall.isConfigured()).to.be.equal(true);
+      });
+    });
+    it('on macos returns false', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
+      let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+      return hvInstall.detectExistingInstall().then(function() {
+        expect(hvInstall.isConfigured()).to.be.equal(false);
+      });
+    });
+    it('on linux returns false', function() {
+      sandbox.stub(Platform, 'getOS').returns('linux');
+      let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+      return hvInstall.detectExistingInstall().then(function() {
+        expect(hvInstall.isConfigured()).to.be.equal(false);
+      });
+    });
+  });
+  describe('installAfterRequirements', function() {
+    it('should always return resolved Promise', function() {
+      let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+      return hvInstall.installAfterRequirements().then(function() {
+        // promise was resolved
+      }).catch(()=>{
+        expect.fail();
+      });
+    });
+  });
 });

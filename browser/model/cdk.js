@@ -27,7 +27,7 @@ class CDKInstall extends InstallableItem {
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
-    Promise.resolve().then(()=> {
+    return Promise.resolve().then(()=> {
       if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
         return installer.copyFile(this.downloadedFile, minishiftExe);
       }

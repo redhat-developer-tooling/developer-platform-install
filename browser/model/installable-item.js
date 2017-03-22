@@ -2,7 +2,6 @@
 
 import Hash from './helpers/hash';
 import Logger from '../services/logger';
-import Platform from '../services/platform';
 import path from 'path';
 import fs from 'fs-extra';
 import Downloader from './helpers/downloader';

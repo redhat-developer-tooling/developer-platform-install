@@ -272,7 +272,7 @@ describe('Virtualbox installer', function() {
         installer.install(fakeProgress, success, failure);
         done();
       } catch (error) {
-        expect.fail('it did not catch the error');
+        expect.fail();
       }
     });
   });

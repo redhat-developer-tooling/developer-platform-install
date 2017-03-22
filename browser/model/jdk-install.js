@@ -147,11 +147,11 @@ class JdkInstall extends InstallableItem {
     if(fs.existsSync(this.installerDataSvc.jdkDir())) {
       rimraf.sync(this.installerDataSvc.jdkDir());
     }
-    installer.execFile(
+    return installer.execFile(
       'msiexec', this.createMsiExecParameters()
-    ).then((result) => {
+    ).then(() => {
       // msiexec logs are in UCS-2
-      Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
+      return Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
         let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
         let targetDir = regexTargetDir.exec(line)[1];
         if(targetDir !== this.getLocation()) {
@@ -161,7 +161,7 @@ class JdkInstall extends InstallableItem {
         installer.succeed(true);
       }).catch(()=>{
         // location doesn't parsed correctly, nothing to verify just resolve and keep going
-        installer.succeed(result);
+        installer.succeed(true);
       });
     }).catch((error) => {
       installer.fail(error);

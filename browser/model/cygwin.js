@@ -72,7 +72,6 @@ class CygwinInstall extends InstallableItem {
       installer.succeed(true);
     }).catch((error) => {
       installer.fail(error);
-      return Promise.reject(error);
     });
   }
 }
