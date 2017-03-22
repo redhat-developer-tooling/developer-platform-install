@@ -68,8 +68,8 @@ class CygwinInstall extends InstallableItem {
       return installer.exec(powershellCommand);
     }).then(() => {
       return Platform.addToUserPath([path.join(this.installerDataSvc.cygwinDir(), 'bin')]);
-    }).then((result) => {
-      installer.succeed(result);
+    }).then(() => {
+      installer.succeed(true);
     }).catch((error) => {
       installer.fail(error);
       return Promise.reject(error);
