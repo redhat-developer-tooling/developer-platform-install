@@ -30,6 +30,8 @@ class HypervInstall extends InstallableItem {
           this.option.detected.version = version;
         }
       });
+    } else {
+      this.selectedOption = 'detected';
     }
     return Promise.resolve();
   }
