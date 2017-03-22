@@ -61,14 +61,22 @@ describe('Hyper-V Installer', function() {
       });
     });
     describe('on macos', function() {
+      let hvInstall;
+      let hvInstallPromise;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+        hvInstall = new HypervInstall(new InstallerDataService(), 'url');
+        hvInstallPromise = hvInstall.detectExistingInstall();
       });
       it('does not add option \'detected\'', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
-        let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
-        return hvInstall.detectExistingInstall().then(function() {
+        return hvInstallPromise.then(function() {
           expect(hvInstall.hasOption('detected')).to.be.equal(false);
+        });
+      });
+      it('is marked as detected', function() {
+        return hvInstallPromise.then(function() {
+          expect(hvInstall.selectedOption).to.be.equal('detected');
         });
       });
     });
