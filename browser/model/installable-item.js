@@ -200,7 +200,7 @@ class InstallableItem {
     let t =
       this.selectedOption == 'install'
         || this.selectedOption == 'detected' && this.hasOption('detected') && this.option['detected'].valid
-        || this.selectedOption == 'detected' && !this.hasOption('detected') && Platform.OS === 'win32';
+        || this.selectedOption == 'detected' && !this.hasOption('detected');
     return t;
   }
 
