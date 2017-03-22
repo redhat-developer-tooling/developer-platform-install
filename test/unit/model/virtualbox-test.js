@@ -320,9 +320,6 @@ describe('Virtualbox installer', function() {
       }).then(()=>{
         expect(installer.option['install']).to.not.equal(undefined);
         expect(installer.option['detected']).to.equal(undefined);
-        console.log('and here');
-      }).catch((error)=>{
-        console.log(error);
       });
     });
 

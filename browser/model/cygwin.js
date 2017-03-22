@@ -59,20 +59,20 @@ class CygwinInstall extends InstallableItem {
     let rootFolder = this.installerDataSvc.cygwinDir();
 
     let cygwinArgs = `--no-admin --quiet-mode --only-site -l ${packagesFolder} --site http://mirrors.xmission.com/cygwin --root ${rootFolder} --categories Base --packages openssh,rsync`;
-    let startProcess = `$p = Start-Process -WindowStyle hidden -PassThru -wait -FilePath ${originalExecFile} -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
+    let startProcess = `$p = Start-Process -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFile}' -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
     let powershellCommand = `powershell -Command "${startProcess}"`;
 
     return installer.copyFile(
       this.downloadedFile, originalExecFile, true
     ).then(()=>{
       return installer.exec(powershellCommand);
-    }).then((result) => {
+    }).then(() => {
       return Platform.addToUserPath([path.join(this.installerDataSvc.cygwinDir(), 'bin')]);
     }).then((result) => {
       installer.succeed(result);
     }).catch((error) => {
       installer.fail(error);
-      return Promise.reject();
+      return Promise.reject(error);
     });
   }
 }

@@ -172,6 +172,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(Installer.prototype, 'execFile').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
       sandbox.stub(Installer.prototype, 'writeFile').resolves(true);
+      sandbox.stub(Platform, 'addToUserPath').resolves(true);
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(Installer.prototype.exec).to.have.been.calledWithMatch('powershell');
       });
