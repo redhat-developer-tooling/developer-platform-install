@@ -16,7 +16,6 @@ import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 import mockfs from 'mock-fs';
-import 'sinon-as-promised';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
@@ -287,6 +286,9 @@ describe('JDK installer', function() {
   describe('when installing jdk', function() {
 
     it('should set progress to "Installing"', function() {
+      sandbox.stub(Installer.prototype, 'execFile').resolves();
+      sandbox.stub(Util, 'findText').rejects();
+      sandbox.stub(fs, 'existsSync').returns(true);
       installer.install(fakeProgress, success, failure);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
@@ -294,6 +296,8 @@ describe('JDK installer', function() {
     });
 
     it('should remove an existing folder with the same name', function() {
+      sandbox.stub(Installer.prototype, 'execFile').resolves();
+      sandbox.stub(Util, 'findText').rejects();
       sandbox.stub(fs, 'existsSync').returns(true);
       let stub = sandbox.stub(rimraf, 'sync').returns();
 
@@ -303,38 +307,39 @@ describe('JDK installer', function() {
     });
 
     it('should call the installer with appropriate parameters', function() {
-      let spy = sandbox.spy(Installer.prototype, 'execFile');
+      let spy =   sandbox.stub(Installer.prototype, 'execFile').resolves();
+      sandbox.stub(Util, 'findText').rejects();
       installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
       expect(spy).calledWith('msiexec', installer.createMsiExecParameters());
     });
 
-    it('should catch errors during the installation', function(done) {
-      sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
-
-      try {
-        installer.install(fakeProgress, success, failure);
-        done();
-      } catch (error) {
-        expect.fail('it did not catch the error');
-      }
+    it('should catch errors during the installation', function() {
+      sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'), 'stdout', 'stderr');
+      sandbox.spy(installer, 'installAfterRequirements');
+      return new Promise((resolve, reject)=> {
+        installer.installAfterRequirements(fakeProgress, resolve, reject);
+      }).then(()=>{
+        expect.fail();
+      }).catch((error)=>{
+        expect(installer.installAfterRequirements).has.been.called;
+        expect(error.message).equals('critical error');
+      });
     });
 
-    it('should call success callback if install was sucessful but redirected to different location', function(done) {
-      sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
+    it('should call success callback if install was sucessful but redirected to different location', function() {
       sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
       sandbox.stub(Util, 'findText').returns(Promise.resolve('Dir (target): Key: INSTALLDIR	, Object: target/install'));
       installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk8.msi', 'sha');
-      return installer.install(fakeProgress, function() {
-        done();
-      }, function() {
-        expect.fail('it should not fail');
+      return new Promise((resolve, reject)=> {
+        installer.install(fakeProgress, resolve, reject);
+      }).catch((error)=>{
+        expect(error).is.not.undefined;
       });
     });
 
     it('should call success callback if install was sucessful but search for actual location failed', function(done) {
-      sandbox.stub(require('child_process'), 'execFile').yields(new Error('critical error'));
       sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
       sandbox.stub(Util, 'findText').returns(Promise.reject('failure'));
       installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk8.msi', 'sha');

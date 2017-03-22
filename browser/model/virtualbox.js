@@ -109,13 +109,13 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
-    installer.execFile(
+    return installer.execFile(
       this.downloadedFile, ['--extract', '-path', this.installerDataSvc.virtualBoxDir(), '--silent']
     ).then(() => {
       return this.configure(installer);
-    }).then((result) => {
+    }).then(() => {
       Platform.addToUserPath([this.option['install'].location]);
-      installer.succeed(result);
+      installer.succeed(true);
     }).catch((error) => {
       installer.fail(error);
     });
@@ -222,10 +222,10 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     ].join(' ');
 
     let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
-    installer.exec(osaScript).then((result) => {
-      return installer.succeed(result);
+    return installer.exec(osaScript).then((result) => {
+      installer.succeed(result);
     }).catch((error) => {
-      return installer.fail(error);
+      installer.fail(error);
     });
   }
 

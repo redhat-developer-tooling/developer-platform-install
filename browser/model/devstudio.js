@@ -112,12 +112,12 @@ class DevstudioInstall extends InstallableItem {
     let data = this.installGenerator.fileContent();
     Logger.info(DevstudioInstall.KEY + ' - Generate devstudio auto install file content SUCCESS');
 
-    installer.writeFile(this.installConfigFile, data)
+    return installer.writeFile(this.installConfigFile, data)
       .then((result) => {
         return this.postJDKInstall(installer, result);
       })
-      .then((result) => {
-        installer.succeed(result);
+      .then(() => {
+        installer.succeed(true);
       })
       .catch((error) => {
         installer.fail(error);
