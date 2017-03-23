@@ -16,6 +16,7 @@ import InstallerDataService from './services/data';
 import Request from './services/request';
 import ComponentLoader from './services/componentLoader';
 import Electron from 'electron';
+import request from 'request';
 
 let mainModule =
   angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
@@ -24,6 +25,7 @@ let mainModule =
     .controller(confCtrl.name, confCtrl)
     .controller(instCtrl.name, instCtrl)
     .controller(startCtrl.name, startCtrl)
+    .value('requestMod', request)
     .factory('installerDataSvc', InstallerDataService.factory)
     .factory('request', Request.factory)
     .value('electron', Electron)
@@ -32,7 +34,6 @@ let mainModule =
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
       $urlRouterProvider.otherwise('/account');
-
       $stateProvider
         .state('account', {
           url: '/account',
