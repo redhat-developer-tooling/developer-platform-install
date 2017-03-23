@@ -1,14 +1,13 @@
 'use strict';
 
-let request = require('request');
-
 class Request {
-  constructor() {
+  constructor(requestMod) {
+    this.request = requestMod;
   }
 
   get(req) {
     return new Promise((resolve, reject)=>{
-      request(req, (error, response, data) => {
+      this.request(req, (error, response, data) => {
         if (error) {
           reject(error);
         } else if(response.statusCode == 200) {
@@ -30,13 +29,13 @@ class Request {
     });
   }
 
-  static factory() {
+  static factory(requestMod) {
     return function(req) {
-      return new Request().get(req);
+      return new Request(requestMod).get(req);
     };
   }
 }
 
-Request.factory.$inject=[];
+Request.factory.$inject=['requestMod'];
 
 export default Request;
