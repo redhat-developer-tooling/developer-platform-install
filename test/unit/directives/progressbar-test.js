@@ -3,10 +3,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import fs from 'fs-extra';
 import 'mock-fs';
-import Platform from 'browser/services/platform';
-import path from 'path';
 require('../../angular-test-helper');
 require('browser/main');
 
@@ -20,9 +17,9 @@ describe('ProgressBarDirective', function() {
     // The injector unwraps the underscores (_) from around the parameter names when matching
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    let templatePath = path.resolve('./browser/directives/progressBar.html');
-    let templateContent = console.log(fs.readFileSync(templatePath, 'utf8'));
     // FIXME figure out how to test real template with templateUrl
+    // let templatePath = path.resolve('./browser/directives/progressBar.html');
+    // let templateContent = fs.readFileSync(templatePath, 'utf8');
     _$templateCache_.put('directives/progressBar.html', '<a>template</a>');
   }));
   afterEach(function() {
@@ -31,11 +28,7 @@ describe('ProgressBarDirective', function() {
   it('shows directive', function() {
       // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
-    scope.folder = '';
-    scope.trustSrc = function(src) {
-      return $sce.trustAsResourceUrl(src);
-    };
-    var compiledDirective = $compile(angular.element(
+    $compile(angular.element(
         '<progress-bar></progress-bar>'))(scope);
     scope.$digest();
       // Check that the compiled element contains the templated content
