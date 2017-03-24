@@ -180,7 +180,7 @@
   },
   "kompose": {
     "name": "Kompose",
-    "description": "Kompose takes a Docker Compose file and translates it into Kubernetes or OpenShift resources",
+    "description": "A tool to translate a Docker Compose file into Kubernetes or OpenShift resources",
     "vendor": "Kubernetes Incubator",
     "modulePath": "model/kompose",
     "targetFolderName": "kompose",
