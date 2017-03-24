@@ -32,6 +32,8 @@ class ComponentLoader {
 
   removeComponent(key) {
     this.installerDataSvc.allInstallables().delete(key);
+    this.installerDataSvc.toDownload.delete(key);
+    this.installerDataSvc.toInstall.delete(key);
     this.orderInstallation();
   }
 

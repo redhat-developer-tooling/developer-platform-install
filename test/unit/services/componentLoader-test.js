@@ -164,6 +164,12 @@ describe('Component Loader', function() {
       expect(svc.getInstallable('cdk')).to.be.undefined;
     });
 
+    it('should purge the planned installation/download of the component', function() {
+      loader.removeComponent('cdk');
+      expect(svc.toDownload.has('cdk')).to.be.false;
+      expect(svc.toInstall.has('cdk')).to.be.false;
+    });
+
     it('should rearange the installation sequence', function() {
       loader.removeComponent('cygwin');
 
