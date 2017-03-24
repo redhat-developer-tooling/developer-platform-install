@@ -33,6 +33,17 @@ class InstallerDataService {
     this.downloading = false;
     this.installing = false;
     this.requirements = loadMetadata(requirements, Platform.OS);
+    // filter download-manager urls and replace host name with stage
+    // host name provided in environment variable
+    let stageHost = Platform.ENV['DM_STAGE_HOST'];
+    if(stageHost) {
+      for (let variable in this.requirements) {
+        let dmUrl = this.requirements[variable].dmUrl;
+        if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
+          this.requirements[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
+        }
+      }
+    }
   }
 
   setup(vboxRoot, jdkRoot, devstudioRoot, cygwinRoot, cdkRoot) {

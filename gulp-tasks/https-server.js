@@ -6,7 +6,7 @@ var qs = require('querystring');
 var pem = require('pem');
 var path = require('path');
 var loadMetadata = require('../browser/services/metadata');
-var requirements = loadMetadadta(require('../requirements.json'), process.platform);
+var requirements = loadMetadata(require('../requirements.json'), process.platform);
 
 var PORT = 443;
 
