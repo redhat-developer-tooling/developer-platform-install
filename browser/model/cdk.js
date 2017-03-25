@@ -71,10 +71,14 @@ class CDKInstall extends InstallableItem {
     let vboxInstall = this.installerDataSvc.getInstallable('virtualbox');
     let cygwinInstall = this.installerDataSvc.getInstallable('cygwin');
     let env = Object.assign({}, Platform.ENV);
-    let newPath = [vboxInstall.getLocation()];
+    let newPath = [];
     let oldPath = Platform.ENV[Platform.PATH];
 
-    if (cygwinInstall) {
+    if(vboxInstall) {
+      newPath.push(vboxInstall.getLocation());
+    }
+
+    if(cygwinInstall) {
       newPath.push(cygwinInstall.getLocation());
     }
 
