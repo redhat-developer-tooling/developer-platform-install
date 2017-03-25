@@ -6,6 +6,8 @@ import InstallableItem from './installable-item';
 import Platform from '../services/platform';
 import Installer from './helpers/installer';
 import globby from 'globby';
+import fs from 'fs-extra';
+import pify from 'pify';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, minishiftUrl, fileName, minishiftSha256) {
@@ -27,6 +29,7 @@ class CDKInstall extends InstallableItem {
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
+    let home;
     return Promise.resolve().then(()=> {
       if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
         return installer.copyFile(this.downloadedFile, minishiftExe);
@@ -43,7 +46,8 @@ class CDKInstall extends InstallableItem {
       return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=${driverName}`, this.createEnvironment());
     }).then(()=> {
       return Platform.getUserHomePath();
-    }).then((home)=> {
+    }).then((result)=> {
+      home = result;
       return globby(ocExePattern, {root: path.join(home, '.minishift', 'cache', 'oc')});
     }).then((files)=> {
       ocExe = files[0].replace(/\//g, path.sep);
@@ -52,6 +56,10 @@ class CDKInstall extends InstallableItem {
       return Platform.makeFileExecutable(ocExe);
     }).then(()=> {
       return Platform.addToUserPath([ocExe, minishiftExe]);
+    }).then(()=> {
+      return pify(fs.appendFile)(
+        path.join(home, '.minishift', 'cdk'),
+        `rhel.subscription.username=${this.installerDataSvc.username}`);
     }).then(()=> {
       installer.succeed(true);
     }).catch((error)=> {
