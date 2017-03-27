@@ -25,7 +25,8 @@ describe('devstudio installer', function() {
   let infoStub, errorStub, sandbox, installer, sha256Stub;
   let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
   let fakeInstall = {
-    isInstalled: function() { return false; }
+    isInstalled: function() { return false; },
+    isSkipped: function() { return true; }
   };
   let success = () => {};
   let failure = () => {};
@@ -48,8 +49,6 @@ describe('devstudio installer', function() {
     ds.getPassword.returns('passwd');
     return ds;
   }
-
-  installerDataSvc = stubDataService();
 
   let fakeProgress;
 
@@ -75,8 +74,9 @@ describe('devstudio installer', function() {
   });
 
   beforeEach(function () {
+    installerDataSvc = stubDataService();
     installer = new DevstudioInstall(installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha');
-    installer.ipcRenderer = { on: function() {} };
+    installer.ipcRenderer = { on: sinon.stub().yields(undefined, JdkInstall.KEY) };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
   });
@@ -145,7 +145,7 @@ describe('devstudio installer', function() {
   });
 
   describe('installation', function() {
-    let downloadedFile = path.join(installerDataSvc.tempDir(), 'devstudio.jar');
+
     let fsextra = require('fs-extra');
 
     describe('on windows', function() {
@@ -218,16 +218,25 @@ describe('devstudio installer', function() {
       }
     });
 
+    it('should call success callback when installation is finished successfully', function() {
+      sandbox.stub(Installer.prototype, 'writeFile').resolves();
+      sandbox.stub(installer, 'postJDKInstall').resolves();
+      sandbox.stub(Installer.prototype, 'succeed');
+
+      return installer.installAfterRequirements(
+        fakeProgress, function() {}, function() {}
+      ).then(()=>{
+        expect(Installer.prototype.succeed).to.be.calledWith(true);
+      });
+    });
+
     describe('postJDKInstall', function() {
       let helper, stubInstall, eventSpy;
 
       beforeEach(function() {
         helper = new Installer('devstudio', fakeProgress, success, failure);
-        installer.ipcRenderer.on = function(message, cb) {
-          return cb({}, JdkInstall.KEY);
-        };
         stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
-        eventSpy = sandbox.spy(installer.ipcRenderer, 'on');
+        eventSpy = installer.ipcRenderer.on;
       });
 
       it('should wait for JDK install to complete', function() {
@@ -237,13 +246,38 @@ describe('devstudio installer', function() {
         });
       });
 
+      it('should wait for JDK install to complete and ignore other installed components', function() {
+        installer.ipcRenderer.on = sinon.stub();
+        installer.ipcRenderer.on.onFirstCall().yields({}, 'cdk');
+        sandbox.stub(fakeInstall, 'isInstalled').returns(false);
+        installer.postJDKInstall(helper, true);
+        expect(installer.ipcRenderer.on).has.been.called;
+        expect(stubInstall).has.not.been.called;
+      });
+
       it('should call headlessInstall if JDK is installed', function() {
         sandbox.stub(fakeInstall, 'isInstalled').returns(true);
 
-        return installer.postJDKInstall(helper)
-        .then(() => {
+        return installer.postJDKInstall(
+          helper
+        ).then(() => {
           expect(eventSpy).not.called;
           expect(stubInstall).calledOnce;
+        });
+      });
+
+      it('should reject promise if headlessInstall fails', function() {
+        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
+        installer.headlessInstall.restore();
+        stubInstall = sandbox.stub(installer, 'headlessInstall').rejects('Error');
+        return installer.postJDKInstall(
+          helper
+        ).then(() => {
+          expect.fail();
+        }).catch((error)=> {
+          expect(eventSpy).not.called;
+          expect(stubInstall).calledOnce;
+          expect(error.message).to.be.equal('Error');
         });
       });
     });
@@ -260,7 +294,7 @@ describe('devstudio installer', function() {
 
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
-
+        let downloadedFile = path.join(installerDataSvc.tempDir(), 'devstudio.jar');
         let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',
@@ -274,73 +308,6 @@ describe('devstudio installer', function() {
           expect(spy).calledOnce;
           expect(spy).calledWith(javaPath, javaOpts);
         });
-      });
-
-      it('should trigger CDK setup when done', function() {
-        sandbox.spy(installer, 'setupCdk');
-
-        return installer.headlessInstall(helper)
-        .then(() => {
-          expect(installer.setupCdk).calledOnce;
-        });
-      });
-    });
-
-    describe('setupCdk', function() {
-      let helper;
-
-      beforeEach(function() {
-        helper = new Installer('devstudio', fakeProgress, success, failure);
-      });
-
-      it('should append CDK info to runtime locations', function() {
-        let fsStub = sandbox.stub(fs, 'appendFile').yields();
-
-        let runtimePath = path.join(installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties');
-        let escapedPath = installerDataSvc.cdkDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
-        let data = 'CDKServer=' + escapedPath + ',true\r\n';
-
-        return installer.setupCdk(helper)
-        .then((result) => {
-          expect(result).to.be.true;
-          expect(fsStub).calledOnce;
-          expect(fsStub).calledWith(runtimePath, data);
-        });
-      });
-
-      it('should resolve as true if no error occurs', function() {
-        sandbox.stub(fs, 'appendFile').yields();
-
-        return installer.setupCdk(helper)
-        .then((result) => {
-          expect(result).to.be.true;
-        });
-      });
-
-      it('should reject if an error occurs', function() {
-        sandbox.stub(fs, 'appendFile').yields('error');
-
-        return installer.setupCdk(helper)
-        .then(() => {
-          expect.fail('it did not reject');
-        })
-        .catch((err) => {
-          expect(err).to.equal('error');
-        });
-      });
-    });
-
-    describe('setup', function() {
-      it('should not do anything on a fresh installation', function() {
-        sandbox.stub(installer, 'hasExistingInstall').returns(false);
-        let spy = sandbox.spy(installer, 'setupCdk');
-        let calls = 0;
-        let succ = function() { calls++; };
-
-        installer.setup(fakeProgress, succ, failure);
-
-        expect(spy).not.called;
-        expect(calls).to.equal(1);
       });
     });
   });
