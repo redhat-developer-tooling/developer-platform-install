@@ -77,36 +77,9 @@ class DevstudioInstall extends InstallableItem {
     ];
     let res = installer.execFile(
       path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts
-    ).then(()=> {
-      this.setupCdk();
-    });
+    );
 
     return res;
-  }
-
-  setupCdk() {
-    let cdkInstall = this.installerDataSvc.getInstallable(CDKInstall.KEY);
-    let escapedPath = this.installerDataSvc.cdkDir().replace(/\\/g, '\\\\').replace(/:/g, '\\:');
-    Logger.info(DevstudioInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location');
-    return new Promise((resolve, reject) => {
-      if(cdkInstall.isSkipped) {
-        resolve(true);
-      } else {
-        fs.appendFile(
-          path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties'),
-          'CDKServer=' + escapedPath + ',true\r\n',
-          (err) => {
-            if (err) {
-              Logger.error(DevstudioInstall.KEY + ' - ' + err);
-              reject(err);
-            } else {
-              Logger.info(DevstudioInstall.KEY + ' - Append CDKServer runtime information to devstudio runtime location SUCCESS');
-              resolve(true);
-            }
-          }
-        );
-      }
-    });
   }
 }
 
