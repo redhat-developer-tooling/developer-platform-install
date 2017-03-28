@@ -180,46 +180,6 @@ class JdkInstall extends InstallableItem {
       path.join(this.installerDataSvc.installDir(), 'openjdk.log')
     ];
   }
-
-  getFolderContents(parentFolder) {
-    return new Promise(function (resolve, reject) {
-      fs.readdir(parentFolder, function(err, fileList) {
-        if (err) {
-          Logger.error(JdkInstall.KEY + ' - ' + err);
-          reject(err);
-        } else {
-          resolve(fileList);
-        }
-      });
-    });
-  }
-
-  getFileByName(name, files) {
-    return new Promise(function (resolve) {
-      for (let fileName of files) {
-        if (fileName.startsWith(name)) {
-          resolve(fileName);
-          break;
-        }
-      }
-    });
-  }
-
-  renameFile(folder, oldName, newName) {
-    let filePath = path.join(folder, oldName);
-    Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName);
-    return new Promise(function (resolve, reject) {
-      fs.rename(filePath, newName, function(err) {
-        if (err) {
-          Logger.error(JdkInstall.KEY + ' - ' + err);
-          reject(err);
-        } else {
-          Logger.info(JdkInstall.KEY + ' - Rename ' + filePath + 'to ' + newName + ' SUCCESS');
-          resolve(true);
-        }
-      });
-    });
-  }
 }
 
 export default JdkInstall;
