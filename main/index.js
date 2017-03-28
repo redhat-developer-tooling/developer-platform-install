@@ -1,6 +1,7 @@
 'use strict';
-import { app, ipcMain, BrowserWindow, dialog } from 'electron';
+import { app, ipcMain, BrowserWindow, dialog, Menu } from 'electron';
 import * as logger from './logging';
+import template from './menu';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -56,6 +57,12 @@ app.on('ready', function() {
     resizable: false,
     show: false
   });
+
+  if (process.platform === 'darwin') {
+    template[0].label = app.getName();
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+  }
 
   // Some processing is required to make sure local file can be opened in browser
   // windows allows # in names and it should be replaced with ASCII encoding.
