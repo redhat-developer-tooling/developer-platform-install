@@ -55,11 +55,11 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "dmUrl": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM1-build-product/latest/all/devstudio-10.4.0.AM1-v20170309-1919-B213-installer-standalone.jar",
-    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM1-build-product/latest/all/devstudio-10.4.0.AM1-v20170309-1919-B213-installer-standalone.jar",
-    "filename": "devstudio-10.4.0.AM1-v20170309-1919-B213-installer-standalone.jar",
-    "sha256sum": "bd111c8a7d73a87fc35523b95b37d75147be562a6226c242b613cb639a1a27eb",
-    "version": "10.4.0.AM1"
+    "dmUrl": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-03-28_16-26-42-B329/all/devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
+    "url": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-03-28_16-26-42-B329/all/devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
+    "filename": "devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
+    "sha256sum": "1a38c7abf432f6a0ee3ad68ecac1f5aece54b80bfcb0f773a27a36eeeb9dd0f6",
+    "version": "10.4.0.AM2"
   },
   "jdk": {
     "name": "OpenJDK",
