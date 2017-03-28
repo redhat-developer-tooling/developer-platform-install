@@ -1,6 +1,7 @@
 'use strict';
 
 import Logger from '../../services/logger';
+import duration from 'duration';
 
 class InstallController {
   constructor($scope, $timeout, installerDataSvc) {
@@ -99,6 +100,8 @@ class InstallController {
   }
 }
 
+const smoothFactor =  0.05;
+
 class ProgressState {
   constructor(key, productName, productVersion, productDesc, $scope, $timeout, minValue=0, maxValue=100) {
     this.key = key;
@@ -111,9 +114,12 @@ class ProgressState {
     this.label = '';
     this.status = '';
     this.currentAmount = 0;
+    this.lastAmount = 0;
     this.totalSize = 0;
     this.min = minValue;
     this.max = maxValue;
+    this.lastTime = Date.now();
+    this.averageSpeed = 0;
   }
 
   setTotalDownloadSize(size) {
@@ -122,11 +128,27 @@ class ProgressState {
 
   setCurrent(newVal) {
     if (newVal > this.currentAmount && newVal <= this.totalSize) {
+      this.lastAmount = this.currentAmount;
       this.currentAmount = newVal;
+
+      let remaining = this.calculateTime();
+      let labelLevel = remaining.seconds > 59 ? 2 : 1;
+      let remainingLabel = (remaining.seconds > 0) ? remaining.toString(1, labelLevel) + ' left  --  ' : '';
+
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
-      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
+      this.label = remainingLabel + this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
       this.$timeout(()=>this.$scope.$apply());
     }
+  }
+
+  calculateTime() {
+    let currentTime = new Date();
+    this.lastSpeed = (this.currentAmount - this.lastAmount) / (currentTime.getTime() - this.lastTime);
+    this.lastTime = currentTime;
+    this.averageSpeed = this.averageSpeed === 0 ? this.lastSpeed : smoothFactor * this.lastSpeed + (1 - smoothFactor) * this.averageSpeed;
+
+    let end = new Date(currentTime.getTime() + (this.totalSize - this.currentAmount) / this.averageSpeed);
+    return duration(currentTime, end);
   }
 
   setStatus(newStatus) {
