@@ -374,9 +374,14 @@
       <span>Red Hat Container Development Kit requires Oracle VirtualBox {{checkboxModel.virtualbox.minimumVersion}} or newer 5.1.x release. Please uninstall detected Oracle VirtualBox and restart Installer to continue.</span>
     </div>
 
-    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install')">
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install') && platform === 'win32'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>Please enable hardware virtualization support in BIOS for your platform.</span>
+    </div>
+
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install') && platform === 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Please enable hardware virtualization for your platform.</span>
     </div>
 
     <div class="message-container warning-message" ng-show="!confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === undefined && checkboxModel.cdk.selectedOption == 'install'">

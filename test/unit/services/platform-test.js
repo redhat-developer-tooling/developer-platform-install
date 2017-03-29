@@ -104,7 +104,45 @@ describe('Platform', function() {
   describe('isVirtualizationEnabled', function() {
 
     describe('on mac', function() {
-      it('should return true if virtualization check shell script returns true');
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+
+      it('should return promise resolved to true if script returns `VMX` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'VMX');
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if script returns nothing in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if script returns unexpected value in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Unexpected', undefined);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+
+      it('should return promise resolved to undefined if script returns null in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, null);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+
+      it('should return promise resolved to undefined if script returns true in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, true);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
     });
 
     describe('on linux', function() {

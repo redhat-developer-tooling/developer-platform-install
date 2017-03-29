@@ -53,6 +53,22 @@ class Platform {
           return Promise.resolve();
         });
       },
+      darwin: function() {
+        return pify(child_process.exec)('sysctl -a | grep -o VMX').then((stdout)=>{
+          let result = Promise.resolve();
+          if(stdout) {
+            stdout = stdout.replace(/\s/g, '');
+            if(stdout == 'VMX') {
+              result = Promise.resolve();
+            } else {
+              result = Promise.resolve(false);
+            }
+          }
+          return result;
+        }).catch(()=>{
+          return Promise.resolve();
+        });
+      },
       default: function() {
         return Promise.resolve(true);
       }

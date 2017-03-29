@@ -202,7 +202,15 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
       }
       this.addOption('install', this.version, '/usr/local/bin', true);
       return Promise.resolve();
+    }).then(() => {
+      return Platform.isVirtualizationEnabled();
+    }).then((result) => {
+      this.virtualizationEnabled=result;
     });
+  }
+
+  isConfigured() {
+    return super.isConfigured() && (this.virtualizationEnabled || this.virtualizationEnabled == undefined);
   }
 
   installAfterRequirements(progress, success, failure) {
