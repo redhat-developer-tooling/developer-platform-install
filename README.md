@@ -344,8 +344,3 @@ reproducible build results. To move declared dependencies to latest available
 versions run command below and then send regular github.com pull request.
 
     npm run update-deps
-
-Releasing the installer
------------------------
-
-TODO
