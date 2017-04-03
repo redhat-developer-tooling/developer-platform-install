@@ -6,7 +6,7 @@ let conditions = protractor.ExpectedConditions;
 let webdriver = browser.driver;
 const user = 'devsuite.test@gmail.com';
 const pass = 'Devsuite';
-loadMetadata = require('./browser/services/metadata'),
+let loadMetadata = require('./browser/services/metadata');
 let reqs = loadMetadata(require(path.join(rootPath, './requirements.json')), proess.platform);
 
 let expectedComponents = {
