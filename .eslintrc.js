@@ -13,10 +13,6 @@ module.exports = {
         2,
         { "SwitchCase": 1 }
     ],
-    "linebreak-style": [
-        "error",
-        "windows"
-    ],
     "quotes": [
         "error",
         "single"
