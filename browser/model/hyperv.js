@@ -22,7 +22,7 @@ class HypervInstall extends InstallableItem {
         return Promise.resolve(detected);
       }).then((detected)=> {
         if (detected) {
-          return Promise.resolve(Platform.isHyperversion());
+          return Platform.getHypervisorVersion();
         }
         return Promise.resolve();
       }).then((version)=>{
