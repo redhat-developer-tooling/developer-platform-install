@@ -64,19 +64,20 @@ class Platform {
     return Platform.identify({
       win32: function() {
         return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(get-item c:\\windows\\system32\\vmms.exe).VersionInfo.ProductVersion"').then((stdout) => {
-          let result = Promise.resolve();
+          let result = Promise.resolve('Unknown');
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
             if(stdout) {
               result = Promise.resolve(stdout);
-            } else {
-              result = Promise.resolve('Unknown');
             }
           }
           return result;
         }).catch(()=>{
           return Promise.resolve('Unknown');
         });
+      },
+      default: function() {
+        return Promise.resolve('Unknown');
       }
     });
   }
