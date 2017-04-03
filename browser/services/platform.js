@@ -60,6 +60,27 @@ class Platform {
     });
   }
 
+  static isHyperversion() {
+    return Platform.identify({
+      win32: function() {
+        return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(get-item c:\\windows\\system32\\vmms.exe).VersionInfo.ProductVersion"').then((stdout) => {
+          let result = Promise.resolve();
+          if(stdout) {
+            stdout = stdout.replace(/\s/g, '');
+            if(stdout) {
+              result = Promise.resolve(stdout);
+            } else {
+              result = Promise.resolve('undefined');
+            }
+          }
+          return result;
+        }).catch(()=>{
+          return Promise.resolve('undefined');
+        });
+      }
+    });
+  }
+
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
