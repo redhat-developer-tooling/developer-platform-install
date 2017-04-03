@@ -33,7 +33,7 @@ let mainModule =
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
-      $urlRouterProvider.otherwise('/confirm');
+      $urlRouterProvider.otherwise('/account');
       $stateProvider
         .state('account', {
           url: '/account',
