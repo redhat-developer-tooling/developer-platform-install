@@ -207,6 +207,66 @@ describe('Platform', function() {
     });
   });
 
+  describe('getHypervisorVersion', function() {
+
+    describe('on mac', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+      it('should return Unknown as version', function() {
+        return Platform.getHypervisorVersion  ().then((result) => {
+          expect(result).to.be.equal('Unknown');
+        });
+      });
+    });
+
+    describe('on linux', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+      });
+      it('should return Unknown as version', function() {
+        return Platform.getHypervisorVersion  ().then((result) => {
+          expect(result).to.be.equal('Unknown');
+        });
+      });
+    });
+
+    describe('on windows', function() {
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should return promise resolved to true if powershell script returns `Enabled` in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '10.0.123.1345');
+        return Platform.getHypervisorVersion  ().then((result) => {
+          expect(result).to.be.equal('10.0.123.1345');
+        });
+      });
+
+      it('should return promise resolved to \'Unknown\' if powershell script returns no output', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.getHypervisorVersion().then((result) => {
+          expect(result).to.be.equals('Unknown');
+        });
+      });
+
+      it('should return promise resolved to \'Unknown\' if powershell script returns empty output', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, ' ');
+        return Platform.getHypervisorVersion().then((result) => {
+          expect(result).to.be.equals('Unknown');
+        });
+      });
+
+      it('should return promise resolved to \'Unknown\' if powershell script throws an exception', function() {
+        sandbox.stub(child_process, 'exec').yields('error');
+        return Platform.getHypervisorVersion().then((result) => {
+          expect(result).to.be.equals('Unknown');
+        });
+      });
+    });
+  });
+
   describe('getUserPath', function() {
     describe('on windows', function() {
       beforeEach(function() {
