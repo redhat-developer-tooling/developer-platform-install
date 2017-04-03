@@ -1,4 +1,5 @@
 'use strict';
+
 const child_process = require('child_process');
 const pify = require('pify');
 const path = require('path');
@@ -86,14 +87,10 @@ class Platform {
   static getUserHomePath() {
     return Platform.identify({
       win32: ()=> {
-        return pify(child_process.exec)('echo %USERPROFILE%').then((profilePath)=>{
-          return Promise.resolve(profilePath.replace(/\r?\n/g, ''));
-        });
+        return Promise.resolve(process.env.USERPROFILE);
       },
       darwin: ()=> {
-        return pify(child_process.exec)('echo $HOME').then((homePath)=>{
-          return Promise.resolve(homePath.replace(/\r?\n/g, ''));
-        });
+        return Promise.resolve(process.env.HOME);
       }
     });
   }
