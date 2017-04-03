@@ -60,7 +60,7 @@ class Platform {
     });
   }
 
-  static isHyperversion() {
+  static getHypervisorVersion() {
     return Platform.identify({
       win32: function() {
         return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(get-item c:\\windows\\system32\\vmms.exe).VersionInfo.ProductVersion"').then((stdout) => {
@@ -70,12 +70,12 @@ class Platform {
             if(stdout) {
               result = Promise.resolve(stdout);
             } else {
-              result = Promise.resolve('undefined');
+              result = Promise.resolve('Unknown');
             }
           }
           return result;
         }).catch(()=>{
-          return Promise.resolve('undefined');
+          return Promise.resolve('Unknown');
         });
       }
     });
