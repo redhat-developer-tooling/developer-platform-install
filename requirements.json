@@ -55,10 +55,10 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "dmUrl": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-03-28_16-26-42-B329/all/devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
-    "url": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-03-28_16-26-42-B329/all/devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
+    "dmUrl": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-04-03_09-35-52-B368/all/devstudio-10.4.0.AM2-v20170403-0841-B368-installer-standalone.jar",
+    "url": "https://devstudio.redhat.com/10.0/snapshots/builds/devstudio.product_10.0.neon/2017-04-03_09-35-52-B368/all/devstudio-10.4.0.AM2-v20170403-0841-B368-installer-standalone.jar",
     "filename": "devstudio-10.4.0.AM2-v20170328-1540-B329-installer-standalone.jar",
-    "sha256sum": "1a38c7abf432f6a0ee3ad68ecac1f5aece54b80bfcb0f773a27a36eeeb9dd0f6",
+    "sha256sum": "0c6d4701218e5eb0ef4c97257cadac8144130197631654dae8e41e302838f95d",
     "version": "10.4.0.AM2"
   },
   "jdk": {
