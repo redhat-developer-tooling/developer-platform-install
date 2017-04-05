@@ -184,22 +184,22 @@
     "vendor": "Kubernetes Incubator",
     "modulePath": "model/kompose",
     "targetFolderName": "kompose",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "platform": {
       "win32": {
-        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.4.0/kompose-windows-amd64.exe",
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-windows-amd64.exe",
         "filename": "kompose-windows-amd64.exe",
-        "sha256sum": "b50a756655a846f8f59f9e4a69bc5cc361aa82f6c094098efed9f567db7deedf"
+        "sha256sum": "134c7218706066de1b496ea103cdd916731f5aaed105fff319dad77221422de3"
       },
       "darwin": {
-        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.4.0/kompose-darwin-amd64",
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-darwin-amd64",
         "filename": "kompose-darwin-amd64",
-        "sha256sum": "4c5452db453e44710411aab194b6473f1e6181553e4ea2d669fb5582e6611c79"
+        "sha256sum": "03a302456c1f5374df155f450d42dab86a876a5f6b40321c59df7f05cc1497ef"
       },
       "linux": {
-        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.4.0/kompose-linux-amd64",
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-linux-amd64",
         "filename": "kompose-linux-amd64",
-        "sha256sum": "5adaf2aad495af638314c5388088550eb0ea0c70595a33c2b0e9dbc94a841ce7"
+        "sha256sum": "9b9cd0f5ad5f14a2a4d03293d4d6b9752bac196e958ac9238017a76d21f5d789"
       }
     }
   }
