@@ -15,6 +15,7 @@ let expectedComponents = {
 };
 if (process.platform === 'win32') {
   expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin'].version };
+  expectedComponents.hyperv = { installedVersion: process.env.PDKI_TEST_INSTALLED_HYPERV, recommendedVersion: '0' };
 }
 
 let detectComponents = false;
@@ -31,20 +32,31 @@ if (target && target.length > 0) {
   name += ' with Custom Target Folder';
 }
 
+let hypervisor = 'Virtualbox';
+if (expectedComponents.hyperv && expectedComponents.hyperv.installedVersion) {
+  hypervisor = 'Hyper-v';
+}
+
 function systemTest() {
-  describe('System Tests', function() {
+  describe('System Tests on ' + hypervisor, function() {
     let timeout = 45*60*1000;
     let usernameField, passwordField, loginButton;
     let error = false;
 
     let components = {
-      virtualbox: {},
       cdk: {},
       jdk: {},
       devstudio: {}
     };
     if (process.platform === 'win32') {
       components.cygwin = {};
+    }
+    if (hypervisor === 'Virtualbox') {
+      components.virtualbox = {};
+      delete expectedComponents.hyperv;
+    } else {
+      components.hyperv = {};
+      delete expectedComponents.virtualbox;
     }
 
     let progress = {};
@@ -107,8 +119,10 @@ function systemTest() {
               components[key].panel = element(By.id(key + '-panel-heading'));
               components[key].checkbox = element(By.id(key + '-checkbox'));
             }
-            components['virtualbox'].newerWarning = element(By.id('virtualbox-newer-warning'));
-            components['virtualbox'].olderError = element(By.id('virtualbox-older-error'));
+            if (components.virtualbox) {
+              components['virtualbox'].newerWarning = element(By.id('virtualbox-newer-warning'));
+              components['virtualbox'].olderError = element(By.id('virtualbox-older-error'));
+            }
             components['jdk'].olderError = element(By.id('jdk-older-warning'));
           }
         });
@@ -119,6 +133,7 @@ function systemTest() {
               if (expectedComponents[key] && expectedComponents[key].installedVersion) {
                 expect(components[key].installedNote.isDisplayed()).toBe(true);
                 expect(components[key].panel.getAttribute('class')).toMatch('dotted-panel');
+                expect(components[key].installedNote.getText()).toMatch(expectedComponents[key].installedVersion);
               }
             }
           });
@@ -134,7 +149,7 @@ function systemTest() {
 
           it('should allow reinstallation of non-msi software', function() {
             for (var key in expectedComponents) {
-              if (expectedComponents[key].installedVersion && !(key === 'virtualbox' || key === 'jdk')) {
+              if (expectedComponents[key].installedVersion && !(key === 'virtualbox' || key === 'jdk' || key === 'hyperv')) {
                 expect(components[key].checkbox.isEnabled()).toBe(true);
               }
             }
@@ -142,7 +157,7 @@ function systemTest() {
 
           it('should not allow reinstallation of msi packages', function() {
             for (var key in expectedComponents) {
-              if (expectedComponents[key].installedVersion && (key === 'virtualbox' || key === 'jdk')) {
+              if (expectedComponents[key].installedVersion && (key === 'virtualbox' || key === 'jdk' || key === 'hyperv')) {
                 expect(components[key].checkbox.isEnabled()).toBe(false);
               }
             }
@@ -156,14 +171,16 @@ function systemTest() {
             }
           });
 
-          it('should display an error when virtualbox is older than recommended', function() {
-            for (var key in expectedComponents) {
-              if (components[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
-                error = true;
-                expect(components[key].olderError.isDisplayed()).toBe(true);
+          if (components.virtualbox) {
+            it('should display an error when virtualbox is older than recommended', function() {
+              for (var key in expectedComponents) {
+                if (components[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
+                  error = true;
+                  expect(components[key].olderError.isDisplayed()).toBe(true);
+                }
               }
-            }
-          });
+            });
+          }
 
           it('should display a warning when jdk is older than recommended', function() {
             if(expectedComponents['jdk'].installedVersion < expectedComponents['jdk'].recommendedVersion) {
