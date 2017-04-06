@@ -187,8 +187,11 @@ class Platform {
   }
 
   static setUserPath_win32(newPath) {
+    newPath = newPath.replace(/'/g, '\'\'');
+    let powershellCommand = `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable(\'Path\', \'${newPath}\', \'User\');[Environment]::Exit(0);"`
+      .replace(/`/g, '``');
     return pify(child_process.exec)(
-      `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable(\'Path\', \'${newPath}\', \'User\');[Environment]::Exit(0);"`
+      powershellCommand
     );
   }
 

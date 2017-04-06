@@ -147,8 +147,8 @@ class JdkInstall extends InstallableItem {
     if(fs.existsSync(this.installerDataSvc.jdkDir())) {
       rimraf.sync(this.installerDataSvc.jdkDir());
     }
-    return installer.execFile(
-      'msiexec', this.createMsiExecParameters()
+    return installer.exec(
+      this.createMsiExecParameters().join(' ')
     ).then(() => {
       // msiexec logs are in UCS-2
       return Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
@@ -170,14 +170,15 @@ class JdkInstall extends InstallableItem {
 
   createMsiExecParameters() {
     return [
+      'msiexec',
       '/i',
       this.downloadedFile,
-      'INSTALLDIR=' + this.installerDataSvc.jdkDir(),
+      `INSTALLDIR=${this.installerDataSvc.jdkDir().replace(/\^/g, '^^').replace(/&/g, '^&')}`,
       'ADDLOCAL=jdk,update_notifier',
       '/qn',
       '/norestart',
       '/Lviwe',
-      path.join(this.installerDataSvc.installDir(), 'openjdk.log')
+      path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
     ];
   }
 }
