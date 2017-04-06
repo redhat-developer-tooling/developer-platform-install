@@ -112,7 +112,7 @@ describe('Platform', function() {
       it('should return promise resolved to true if script returns `VMX` in stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'VMX');
         return Platform.isVirtualizationEnabled().then((result) => {
-          expect(result).to.be.undefined;
+          expect(result).to.be.true;
         });
       });
 

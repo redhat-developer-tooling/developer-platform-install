@@ -60,7 +60,7 @@ class Platform {
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
             if(stdout == 'VMX') {
-              result = Promise.resolve();
+              result = Promise.resolve(true);
             } else {
               result = Promise.resolve(false);
             }
