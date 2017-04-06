@@ -44,12 +44,6 @@ Pick the MSI installer.
 
         nvm install 6.9.1
 
-3. Download and install MS Visual Studio Express 2015 from
-<https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx>
-(pick the Express for Desktop installer) or Microsoft Visual C++ 2010 SP1
-Redistributable Package from
-<http://www.microsoft.com/en-us/download/details.aspx?id=8328>
-
 3. Download and install Python 2.7.x for Windows from
 <https://www.python.org/downloads/release/>
 
