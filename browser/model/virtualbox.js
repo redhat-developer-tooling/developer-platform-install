@@ -99,7 +99,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   }
 
   isConfigured() {
-    return super.isConfigured() && (this.virtualizationEnabled || this.virtualizationEnabled == undefined);
+    return super.isConfigured() && (this.virtualizationEnabled || this.virtualizationEnabled == undefined) ||  (this.selectedOption == 'detected' && !this.hasOption('detected'));
   }
 
   isSkipped() {
