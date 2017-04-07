@@ -101,11 +101,19 @@ gulp.task('update-requirements', ['transpile:app'], function() {
         if (err) {
           reject(err);
         } else {
+          let meta = JSON.parse(body);
           let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
-          let finalVersion = versionRegex.exec(body)[1];
+          let finalVersion = versionRegex.exec(meta.fullVersion)[1];
 
-          if (reqs['devstudio'].version != finalVersion) {
-            reqs['devstudio'].version = finalVersion;
+          if (reqs.devstudio.version != finalVersion) {
+            reqs.devstudio.version = finalVersion;
+          }
+          console.log(meta);
+          if(reqs.devstudio.sha256sum == '') {
+            reqs.devstudio.url = meta.installer;
+            reqs.devstudio.dmUrl = meta.installer;
+            reqs.devstudio.filename = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/'));
+            reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
           }
           resolve();
         }
