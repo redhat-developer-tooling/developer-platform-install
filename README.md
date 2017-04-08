@@ -335,6 +335,6 @@ Updating dependencies to latest
 
 Most of dependencies declared with exact version. That is required to get
 reproducible build results. To move declared dependencies to latest available
-versions run command below and then send regular github.com pull request.
+versions run command below, unit tests, UI tests, dist build and then send regular github.com pull request.
 
     npm run update-deps
