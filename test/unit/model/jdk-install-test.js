@@ -307,12 +307,12 @@ describe('JDK installer', function() {
     });
 
     it('should call the installer with appropriate parameters', function() {
-      let spy =   sandbox.stub(Installer.prototype, 'execFile').resolves();
+      let spy =   sandbox.stub(Installer.prototype, 'exec').resolves();
       sandbox.stub(Util, 'findText').rejects();
       installer.install(fakeProgress, success, failure);
 
       expect(spy).to.have.been.called;
-      expect(spy).calledWith('msiexec', installer.createMsiExecParameters());
+      expect(spy).calledWith(installer.createMsiExecParameters().join(' '));
     });
 
     it('should catch errors during the installation', function() {
@@ -340,7 +340,7 @@ describe('JDK installer', function() {
     });
 
     it('should call success callback if install was sucessful but search for actual location failed', function(done) {
-      sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
+      sandbox.stub(Installer.prototype, 'exec').returns(Promise.resolve(true));
       sandbox.stub(Util, 'findText').returns(Promise.reject('failure'));
       installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk8.msi', 'sha');
       return installer.install(fakeProgress, function() {
