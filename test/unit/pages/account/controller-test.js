@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import 'sinon-as-promised';
 import ElectronMock from '../../../mock/electron';
-import AccountController from 'browser/pages/account/controller.js';
+import AccountController from 'browser/pages/account/controller';
 chai.use(sinonChai);
 
 describe('Account controller', function() {
@@ -129,9 +129,7 @@ describe('Account controller', function() {
 
   describe('handleHttpFailure', function() {
     it('should set authFailed after failure', function() {
-      controller = new AccountController({}, timeout, scope);
       controller.handleHttpFailure('some error');
-
       expect(controller.authFailed).to.be.false;
       expect(controller.tandcNotSigned).to.be.false;
       expect(controller.httpError).to.be.not.undefined;
@@ -155,6 +153,15 @@ describe('Account controller', function() {
     });
   });
 
+  describe('resetLoginErrors', function() {
+    it('should able to reset login error', function() {
+      controller.resetLoginErrors();
+      expect(controller.tandcNotSigned).to.be.false;
+      expect(controller.httpError).to.be.undefined;
+      expect(controller.authFailed).to.be.false;
+    });
+  });
+
   describe('gotoDRH', function() {
     it('should open DRH url in browser using electron.shell.openExternal', function() {
       controller.gotoDRH();
@@ -165,17 +172,13 @@ describe('Account controller', function() {
 
   describe('handleHttpSuccess', function() {
     it('should set authFailed when return code of HTTP request is not 200', function() {
-      controller = new AccountController({}, timeout, scope);
       controller.handleHttpSuccess({ status: 404 });
-
       expect(controller.authFailed).to.be.true;
       expect(controller.tandcNotSigned).to.be.false;
     });
 
     it('should set tandcNotSigned when data is false', function() {
-      controller = new AccountController({}, timeout, scope);
       controller.handleHttpSuccess({ status: 200, data: false });
-
       expect(controller.authFailed).to.be.false;
       expect(controller.tandcNotSigned).to.be.true;
     });
