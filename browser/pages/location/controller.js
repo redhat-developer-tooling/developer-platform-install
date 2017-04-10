@@ -2,8 +2,9 @@
 
 let fs = require('fs');
 let path = require('path');
-
+import Util from '../../model/helpers/util';
 import Logger from '../../services/logger';
+import Platform from '../../services/platform';
 
 class LocationController {
   constructor($scope, $state, $timeout, installerDataSvc, electron) {
@@ -13,6 +14,7 @@ class LocationController {
     this.installerDataSvc = installerDataSvc;
     this.folder = installerDataSvc.installDir();
     this.folderExists = false;
+    this.nonasciichars = false;
     this.installables = {};
     $scope.checkboxModel = {};
     this.electron = electron;
@@ -38,6 +40,23 @@ class LocationController {
     }
 
     this.checkFolder();
+  }
+
+  checkUserProfilestatus() {
+    return new Promise((resolve, reject)=> {
+      if (Platform.OS === 'win32') {
+        Util.executeCommand('echo %USERPROFILE%',1).then((path)=>{
+          let nonAsciiRegex = /[^\x00-\x7F]+/;
+          if(nonAsciiRegex.test(path)) {
+            this.nonasciichars = true;
+          } else {
+            this.nonasciichars = false;
+          }
+        });
+      } else {
+        resolve();
+      }
+    });
   }
 
   checkFolder() {
