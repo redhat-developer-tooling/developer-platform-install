@@ -162,6 +162,28 @@ describe('Account controller', function() {
     });
   });
 
+  describe('isValid', function() {
+    it('should return false if $invalid is true and $dirty is true', function() {
+      expect(controller.isValid({$invalid: true, $dirty: true})).to.be.false;
+    });
+
+    it('should return false if $dirty is false', function() {
+      expect(controller.isValid({$invalid: true, $dirty: false, $touched: true})).to.be.false;
+    });
+
+    it('should return false if $touched is false', function() {
+      expect(controller.isValid({$invalid: true, $dirty: true, $touched: false})).to.be.false;
+    });
+
+    it('should return false if $invalid, $dirty and $touched are true', function() {
+      expect(controller.isValid({$invalid: true, $dirty: true, $touched: true})).to.be.false;
+    });
+
+    it('should return true if $invalid is false', function() {
+      expect(controller.isValid({$invalid: false})).to.be.true;
+    });
+  });
+
   describe('gotoDRH', function() {
     it('should open DRH url in browser using electron.shell.openExternal', function() {
       controller.gotoDRH();
