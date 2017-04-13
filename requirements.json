@@ -184,7 +184,7 @@
     "vendor": "Kubernetes Incubator",
     "modulePath": "model/kompose",
     "targetFolderName": "kompose",
-    "version": "0.5.0",
+    "version": "0.5.0 Technology Preview",
     "platform": {
       "win32": {
         "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-windows-amd64.exe",
