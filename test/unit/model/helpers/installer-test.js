@@ -206,7 +206,7 @@ describe('Installer', function() {
         });
       });
       it('should strip specified prefix from entry\'s path', function() {
-        sandbox.stub(targz, 'decompress', function(options, callback) {
+        sandbox.stub(targz, 'decompress').callsFake(function(options, callback) {
           let result = options.tar.map({name : 'prefix/filename.ext' }).name;
           expect(result).to.be.equal('filename.ext');
           callback();
@@ -214,7 +214,7 @@ describe('Installer', function() {
         installer.unzip('testfile.tar.gz', 'destination', 'prefix/');
       });
       it('should not change file names without prefix', function() {
-        sandbox.stub(targz, 'decompress', function(options, callback) {
+        sandbox.stub(targz, 'decompress').callsFake(function(options, callback) {
           let result = options.tar.map({name : 'folder/name/filename.ext' }).name;
           expect(result).to.be.equal('folder/name/filename.ext');
           callback();
