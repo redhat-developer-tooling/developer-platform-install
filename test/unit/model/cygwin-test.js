@@ -46,7 +46,7 @@ describe('Cygwin installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) {
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) {
       cb('hash');
     });
 

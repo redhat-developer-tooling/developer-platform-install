@@ -39,7 +39,7 @@ describe('JDK installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
 
     mockfs({
       'tempDirectory' : {
@@ -66,6 +66,8 @@ describe('JDK installer', function() {
     sandbox = sinon.sandbox.create();
     installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk.msi', 'sha');
     fakeProgress = sandbox.stub(new ProgressState());
+    fakeProgress.$timeout = sinon.stub().yields();
+    fakeProgress.$scope = {$apply: function () {}};
   });
 
   afterEach(function () {
