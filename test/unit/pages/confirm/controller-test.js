@@ -3,9 +3,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import 'sinon-as-promised';
 import Logger from 'browser/services/logger';
-import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
 import ConfirmController from 'browser/pages/confirm/controller';
 

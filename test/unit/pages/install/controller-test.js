@@ -233,7 +233,7 @@ describe('Install controller', function() {
     });
     describe('setStatus', function() {
       let progress;
-      before(function() {
+      beforeEach(function() {
         progress = new ProgressState();
         progress.$timeout = sinon.stub().yields();
         progress.$scope = {$apply:sinon.stub()};
@@ -244,16 +244,12 @@ describe('Install controller', function() {
         expect(progress.current).equals(1);
       });
       it('sets prcentage to 100 and clear lable if status is not "Downloading"', function() {
-        progress.$timeout.reset();
-        progress.$scope.$apply.reset();
         progress.setStatus('Verifying something');
         expect(progress.$scope.$apply).have.been.calledOnce;
         expect(progress.label).equals('');
         expect(progress.current).equals(100);
       });
       it('resets downloading stats if status is "Downloading"', function() {
-        progress.$timeout.reset();
-        progress.$scope.$apply.reset();
         progress.setStatus('Downloading');
         expect(progress.$scope.$apply).have.been.calledOnce;
         expect(progress.current).equals(0);
