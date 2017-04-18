@@ -141,12 +141,12 @@ gulp.task('test', ['unit-test']);
 
 gulp.task('ui-test', function(cb) {
   process.env.PTOR_TEST_RUN = 'ui';
-  return runSequence(['generate', 'protractor-install'], 'protractor-run', cb);
+  return runSequence(['generate'], 'protractor-run', cb);
 });
 
 gulp.task('system-test', function(cb) {
   process.env.PTOR_TEST_RUN = 'system';
-  let tasks = ['protractor-install'];
+  let tasks = [];
   if (process.platform === 'win32') {
     tasks.push('prepare-tools');
   }
