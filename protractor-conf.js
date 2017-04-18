@@ -1,4 +1,5 @@
 var path = require('path');
+var ScreenshotReporter = require('./test/screenshotReporter');
 
 var files;
 var report;
@@ -44,5 +45,6 @@ exports.config = {
       consolidateAll: true,
       filePrefix: report
     }));
+    jasmine.getEnv().addReporter(new ScreenshotReporter(path.join(rootPath, 'screenshots'), true));
   }
 }

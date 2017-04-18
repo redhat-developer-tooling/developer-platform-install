@@ -25,18 +25,6 @@ module.exports = function(gulp) {
     }));
   });
 
-  gulp.task('protractor-install', function(cb) {
-    var cmd = path.join('node_modules', 'gulp-angular-protractor',
-      'node_modules', '.bin', 'webdriver-manager');
-    cmd += ' update';
-
-    exec(cmd, function(err, stdout, stderr) {
-      console.log(stdout);
-      console.log(stderr);
-      cb(err);
-    });
-  });
-
   gulp.task('protractor-run', function() {
     yargs.string(['virtualbox', 'hyperv', 'cygwin', 'jdk', 'targetFolder']);
     assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VBOX');
@@ -45,11 +33,25 @@ module.exports = function(gulp) {
     assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
     assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');
 
+    //Use hardcoded chromedriver version until gulp-angular-protractor gets updated
+    let webdriverPath = '../webdriver-manager/selenium/chromedriver_2.29';
+    if (process.platform === 'win32') {
+      webdriverPath += '.exe';
+    }
+
     return gulp.src(['../test/ui/**/*.js'])
       .pipe(angularProtractor({
         'configFile': 'protractor-conf.js',
-        'autoStartStopServer': false,
-        'debug': false
+        'autoStartStopServer': true,
+        'debug': false,
+        'webDriverUpdate': {
+          'browsers': ['chrome'],
+          'args': ['--versions.chrome', '2.29']
+        },
+        'webDriverStart': {
+          'args': ['--versions.chrome', '2.29']
+        },
+        'args': ['--chromeDriver', webdriverPath]
       }))
       .on('error', function(e) {
         throw e;
