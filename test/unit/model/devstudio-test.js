@@ -17,7 +17,6 @@ import InstallableItem from 'browser/model/installable-item';
 import DevstudioAutoInstallGenerator from 'browser/model/devstudio-autoinstall';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
-import 'sinon-as-promised';
 chai.use(sinonChai);
 
 describe('devstudio installer', function() {
@@ -277,7 +276,7 @@ describe('devstudio installer', function() {
         }).catch((error)=> {
           expect(eventSpy).not.called;
           expect(stubInstall).calledOnce;
-          expect(error.message).to.be.equal('Error');
+          expect(error.name).to.be.equal('Error');
         });
       });
     });

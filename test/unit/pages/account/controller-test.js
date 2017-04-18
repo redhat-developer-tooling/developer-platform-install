@@ -3,7 +3,6 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
-import 'sinon-as-promised';
 import ElectronMock from '../../../mock/electron';
 import AccountController from 'browser/pages/account/controller';
 chai.use(sinonChai);

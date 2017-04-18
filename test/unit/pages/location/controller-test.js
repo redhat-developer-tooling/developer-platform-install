@@ -5,7 +5,6 @@ import fs from 'fs';
 import sinon from 'sinon';
 import Logger from 'browser/services/logger';
 import { default as sinonChai } from 'sinon-chai';
-import 'sinon-as-promised';
 import ElectronMock from '../../../mock/electron';
 import InstallerDataService from 'browser/services/data';
 import InstallableItem from 'browser/model/installable-item';
