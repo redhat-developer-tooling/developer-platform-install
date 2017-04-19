@@ -177,5 +177,30 @@
         "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757"
       }
     }
+  },
+  "kompose": {
+    "name": "Kompose",
+    "description": "A tool to translate a Docker Compose file into Kubernetes or OpenShift resources",
+    "vendor": "Kubernetes Incubator",
+    "modulePath": "model/kompose",
+    "targetFolderName": "kompose",
+    "version": "0.5.0 Technology Preview",
+    "platform": {
+      "win32": {
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-windows-amd64.exe",
+        "filename": "kompose-windows-amd64.exe",
+        "sha256sum": "134c7218706066de1b496ea103cdd916731f5aaed105fff319dad77221422de3"
+      },
+      "darwin": {
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-darwin-amd64",
+        "filename": "kompose-darwin-amd64",
+        "sha256sum": "03a302456c1f5374df155f450d42dab86a876a5f6b40321c59df7f05cc1497ef"
+      },
+      "linux": {
+        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.5.0/kompose-linux-amd64",
+        "filename": "kompose-linux-amd64",
+        "sha256sum": "9b9cd0f5ad5f14a2a4d03293d4d6b9752bac196e958ac9238017a76d21f5d789"
+      }
+    }
   }
 }
