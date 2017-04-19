@@ -32,7 +32,7 @@ class KomposeInstall extends InstallableItem {
     }).then(()=> {
       return Platform.addToUserPath([komposeExe]);
     }).then(()=> {
-      installer.success(true);
+      installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);
     });
