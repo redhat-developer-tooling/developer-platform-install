@@ -12,6 +12,7 @@ import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 import Platform from 'browser/services/platform';
 import loadMetadata from 'browser/services/metadata';
+import Logger from 'browser/services/logger';
 chai.use(sinonChai);
 
 let sinon  = require('sinon');
@@ -20,7 +21,7 @@ let sinon  = require('sinon');
 describe('kompose installer', function() {
 
   let sandbox, installerDataSvc;
-  let sha256Stub;
+  let infoStub, errorStub, sha256Stub;
   let fakeProgress;
 
   installerDataSvc = sinon.stub(new InstallerDataService());
@@ -34,10 +35,14 @@ describe('kompose installer', function() {
   let installer;
 
   before(function() {
+    infoStub = sinon.stub(Logger, 'info');
+    errorStub = sinon.stub(Logger, 'error');
     sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
   });
 
   after(function() {
+    infoStub.restore();
+    errorStub.restore();
     sha256Stub.restore();
   });
 
@@ -129,16 +134,14 @@ describe('kompose installer', function() {
         sandbox.stub(Platform, 'addToUserPath').resolves();
       });
 
-      afterEach(function() {
-        sandbox.restore();
-      });
-
       it('should copy kompose exe file to install folder', function() {
-        installer.installAfterRequirements(fakeProgress, function success() {
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
           expect(Installer.prototype.copyFile).to.have.been.called;
           expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installer.installerDataSvc.komposeDir(), 'kompose.exe'));
-        }, function failure(e) {
-          expect.fail();
+        }).catch((error) => {
+          throw error;
         });
       });
     });
@@ -148,19 +151,17 @@ describe('kompose installer', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         sandbox.stub(Installer.prototype, 'copyFile').resolves();
         sandbox.stub(Platform, 'addToUserPath').resolves();
+        sandbox.stub(Platform, 'makeFileExecutable').resolves();
       });
 
-      afterEach(function() {
-        sandbox.restore();
-      });
-
-      it('should copy kompose file without extension to install folder', function(done) {
+      it('should copy kompose file without extension to install folder', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
-          done();
-        }).catch(()=> {
+        }).then(()=> {
           expect(Installer.prototype.copyFile).to.have.been.called;
           expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installerDataSvc.komposeDir(), 'kompose'));
+        }).catch((error) => {
+          throw error;
         });
       });
     });
