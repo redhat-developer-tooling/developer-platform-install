@@ -10,10 +10,7 @@ import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
-import 'sinon-as-promised';
 import Platform from 'browser/services/platform';
-import InstallableItem from 'browser/model/installable-item';
-import child_process from 'child_process';
 import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
 
@@ -37,7 +34,7 @@ describe('kompose installer', function() {
   let installer;
 
   before(function() {
-    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
   });
 
   after(function() {
