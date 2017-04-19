@@ -10,25 +10,25 @@
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/windows-amd64/minishift.exe",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/windows-amd64/minishift.exe",
-        "filename": "minishift.exe",
+        "filename": "minishift-3.0.0.Beta3.exe",
         "sha256sum": "f029b407bd8ced00330fb0ec09c6e5e34fecc277ed5106d39a2acb505297beae",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.Beta3"
       },
       "darwin": {
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/darwin-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/darwin-amd64/minishift",
-        "filename": "minishift",
+        "filename": "minishift-3.0.0.Beta3",
         "sha256sum": "72df7aadd8f8260c313dc0f8c540d68f39db67c8a46027434a4986fe28d2dcd0",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.Beta3"
       },
       "linux": {
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/linux-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/linux-amd64/minishift",
-        "filename": "linux-amd64.tar.gz",
+        "filename": "minishift-3.0.0.Beta3",
         "sha256sum": "cfe8cd24c4699a7d1cd7c863a403437754ce2220478e2058ae4058be52391ff9",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.Beta3"
       }
     }
   },
@@ -82,9 +82,9 @@
         "prefix": "java-1.8.0-openjdk-1.8.0",
         "dmUrl": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",
         "url": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",
-        "filename": "jdk-8u111-macosx-x64.dmg",
+        "filename": "",
         "sha256sum": "",
-        "version": "1.8.0_111",
+        "version": "1.8.0",
         "virusTotalReport": ""
       },
       "linux": {
