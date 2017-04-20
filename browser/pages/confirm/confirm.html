@@ -249,7 +249,7 @@
     </div>
 
     <!-- hyper-v -->
-    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv !== undefined && checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
+    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv !== undefined" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
       <div id="hyperv-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.hyperv.hasOption('detected')}">
         <div class="checkbox-container verticalLine">
@@ -257,10 +257,10 @@
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
-            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected') && checkboxModel.hyperv.hypervdetection">
+            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected')">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.hyperv.option.detected.version}}
             </span>
-            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected') && !checkboxModel.hyperv.hypervdetection">
+            <span id="hyperv-installed-note" class="installed-note" ng-show="!checkboxModel.hyperv.hasOption('detected')">
               <i class="fa fa-check"></i>Not installed
             </span>
           </div>
@@ -271,7 +271,7 @@
       </div>
     </div>
 
-    <div class="help-block" ng-show="checkboxModel.hyperv.hasOption('detected') && !checkboxModel.hyperv.hypervdetection">
+    <div class="help-block" ng-show="checkboxModel.hyperv !== undefined && !checkboxModel.hyperv.hasOption('detected')">
       <span class="pficon pficon-info"></span>
       <span>Follow
         <a type="button" class="pointer" ng-click="confCtrl.download('https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw')">this steps</a>

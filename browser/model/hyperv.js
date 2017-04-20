@@ -15,11 +15,10 @@ class HypervInstall extends InstallableItem {
   detectExistingInstall() {
     if (Platform.OS == 'win32') {
       return Platform.isHypervisorEnabled().then((detected)=>{
-        if(detected || detected === false) {
+        if(detected) {
           this.addOption('detected', '', '', detected);
         }
         this.selectedOption = 'detected';
-        this.hypervdetection = detected;
         return Promise.resolve(detected);
       }).then((detected)=> {
         if (detected) {
