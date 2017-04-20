@@ -257,14 +257,26 @@
         </div>
         <div class="product-container">
           <div class="warnings-in-panel">
-            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected')">
+            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected') && checkboxModel.hyperv.hypervdetection">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.hyperv.option.detected.version}}
             </span>
+            <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected') && !checkboxModel.hyperv.hypervdetection">
+              <i class="fa fa-check"></i>Not installed
+            </span>
           </div>
-          <span id="hyperv-name" class="product-name">{{checkboxModel.hyperv.productName}}</span><span id="hyperv-version" class="product-version">{{checkboxModel.hyperv.option['detected'].version}}</span>
+          <span id="hyperv-name" class="product-name">{{checkboxModel.hyperv.productName}}</span>
+          <span id="hyperv-version" class="product-version">{{checkboxModel.hyperv.option['detected'].version}}</span>
           <div id="hyperv-description">{{checkboxModel.hyperv.productDesc}}</div>
         </div>
       </div>
+    </div>
+
+    <div class="help-block" ng-show="checkboxModel.hyperv.hasOption('detected') && !checkboxModel.hyperv.hypervdetection">
+      <span class="pficon pficon-info"></span>
+      <span>Follow
+        <a type="button" class="pointer" ng-click="confCtrl.download('https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw')">this steps</a>
+         to install and enable Microsoft Hyper-V on Windows 10
+      </span>
     </div>
 
     <!-- VirtualBox -->

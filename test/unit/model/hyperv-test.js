@@ -42,21 +42,21 @@ describe('Hyper-V Installer', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
         let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
         return hvInstall.detectExistingInstall().then(function() {
-          expect(hvInstall.hasOption('detected')).to.be.equal(false);
+          expect(hvInstall.hasOption('detected')).to.be.equal(true);
         });
       });
       it('does not add option \'detected\' if hypervisor detection script prints nothing to stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
         let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
         return hvInstall.detectExistingInstall().then(function() {
-          expect(hvInstall.hasOption('detected')).to.be.equal(false);
+          expect(hvInstall.hasOption('detected')).to.be.equal(true);
         });
       });
       it('does not add option \'detected\' if hypervisor detection script prints unexpected string to stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
         let hvInstall = new HypervInstall(new InstallerDataService(), 'url');
         return hvInstall.detectExistingInstall().then(function() {
-          expect(hvInstall.hasOption('detected')).to.be.equal(false);
+          expect(hvInstall.hasOption('detected')).to.be.equal(true);
         });
       });
     });
