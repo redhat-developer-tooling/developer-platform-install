@@ -81,7 +81,7 @@ describe('kompose installer', function() {
     let authStub;
 
     beforeEach(function() {
-      authStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
+      authStub = sandbox.stub(Downloader.prototype, 'download').returns();
     });
 
     it('should set progress to "Downloading"', function() {
@@ -110,6 +110,14 @@ describe('kompose installer', function() {
   });
 
   describe('installAfterRequirements', function() {
+    let stubCopy;
+
+    beforeEach(function() {
+      stubCopy = sandbox.stub(Installer.prototype, 'copyFile').resolves();
+      sandbox.stub(Platform, 'addToUserPath').resolves();
+      sandbox.stub(Platform, 'makeFileExecutable').resolves();
+    });
+
     it('should set progress to "Installing"', function() {
       installer.installAfterRequirements(fakeProgress, success, failure);
       expect(fakeProgress.setStatus).calledOnce;
@@ -119,7 +127,6 @@ describe('kompose installer', function() {
     it('should fail for kompose file without known extension', function() {
       installer = new KomposeInstall(installerDataSvc, 'folderName', '0.4.0', komposeUrl, 'kompose.aaa', 'sha1');
       sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve('home'));
-      let stubCopy = sandbox.stub(Installer.prototype, 'copyFile');
       return new Promise((resolve, reject)=> {
         installer.installAfterRequirements(fakeProgress, resolve, reject);
       }).catch(()=> {
@@ -130,16 +137,14 @@ describe('kompose installer', function() {
     describe('on windows', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        sandbox.stub(Installer.prototype, 'copyFile').resolves();
-        sandbox.stub(Platform, 'addToUserPath').resolves();
       });
 
       it('should copy kompose exe file to install folder', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
-          expect(Installer.prototype.copyFile).to.have.been.called;
-          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installer.installerDataSvc.komposeDir(), 'kompose.exe'));
+          expect(stubCopy).to.have.been.called;
+          expect(stubCopy).calledWith(installer.downloadedFile, path.join(installer.installerDataSvc.komposeDir(), 'kompose.exe'));
         }).catch((error) => {
           throw error;
         });
@@ -149,17 +154,14 @@ describe('kompose installer', function() {
     describe('on macos', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
-        sandbox.stub(Installer.prototype, 'copyFile').resolves();
-        sandbox.stub(Platform, 'addToUserPath').resolves();
-        sandbox.stub(Platform, 'makeFileExecutable').resolves();
       });
 
       it('should copy kompose file without extension to install folder', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
-          expect(Installer.prototype.copyFile).to.have.been.called;
-          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installerDataSvc.komposeDir(), 'kompose'));
+          expect(stubCopy).to.have.been.called;
+          expect(stubCopy).calledWith(installer.downloadedFile, path.join(installerDataSvc.komposeDir(), 'kompose'));
         }).catch((error) => {
           throw error;
         });
