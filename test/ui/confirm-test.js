@@ -37,7 +37,8 @@ describe('Confirm page', function() {
       cygwin: requirements['cygwin'],
       cdk: requirements['cdk'],
       jdk: requirements['jdk'],
-      devstudio: requirements['devstudio']
+      devstudio: requirements['devstudio'],
+      kompose: requirements['kompose']
     };
     let messages = {
       detected: 'Using detected version',
@@ -180,6 +181,25 @@ describe('Confirm page', function() {
       it('should display a correct description', function() {
         expect(cdk.descriptionElement.isDisplayed()).toBe(true);
         expect(cdk.descriptionElement.getText()).toEqual(cdk.description);
+      });
+    });
+
+    describe('kompose panel', function() {
+      let kompose = components.kompose;
+
+      it('should display a correct name', function() {
+        expect(kompose.nameElement.isDisplayed()).toBe(true);
+        expect(kompose.nameElement.getText()).toEqual(kompose.name);
+      });
+
+      it('should display a correct version', function() {
+        expect(kompose.versionElement.isDisplayed()).toBe(true);
+        expect(kompose.versionElement.getText()).toEqual(kompose.version);
+      });
+
+      it('should display a correct description', function() {
+        expect(kompose.descriptionElement.isDisplayed()).toBe(true);
+        expect(kompose.descriptionElement.getText()).toEqual(kompose.description);
       });
     });
 
