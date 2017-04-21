@@ -1,4 +1,4 @@
-Red Hat Development Suite Installer
+Red Hat Development Suite Installer 
 ====================================
 
 This installer aims to produce ready to use development environment for [Red
