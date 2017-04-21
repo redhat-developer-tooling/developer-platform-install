@@ -30,7 +30,7 @@ class JdkInstall extends InstallableItem {
 
   detectExistingInstall() {
     let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
-    let versionRegex1 = /(\d+\.\d+\.\d+)_.*/;
+    let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
     return Promise.resolve().then(()=>{
