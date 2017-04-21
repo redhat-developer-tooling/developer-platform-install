@@ -180,7 +180,8 @@ class ConfirmController {
     return (this.sc.checkboxModel.virtualbox
       && this.sc.checkboxModel.virtualbox.isConfigured())
       || (this.sc.checkboxModel.hyperv
-      && this.sc.checkboxModel.hyperv.isConfigured());
+      && this.sc.checkboxModel.hyperv.isConfigured()
+      || this.sc.checkboxModel.cdk.selectedOption !== 'install');
   }
 
   isConfigurationValid() {
