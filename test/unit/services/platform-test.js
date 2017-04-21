@@ -189,6 +189,13 @@ describe('Platform', function() {
           expect(result).to.be.undefined;
         });
       });
+
+      it('should return promise resolved to undefined if powershell script execution failed', function() {
+        sandbox.stub(child_process, 'exec').yields('error', null);
+        return Platform.isVirtualizationEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
     });
   });
 
