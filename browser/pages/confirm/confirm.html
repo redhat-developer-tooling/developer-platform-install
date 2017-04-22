@@ -425,6 +425,16 @@
       <span>Please make sure hardware virtualization is enabled on your platform if supported.</span>
     </div>
 
+    <div class="message-container error-message" ng-show="virtualization === false">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Please enable hardware virtualization for your platform to improve performance.</span>
+    </div>
+
+    <div class="message-container error-message" ng-show="virtualization === undefined">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>Make sure hardware virtualization is enabled on your platform if supported to improve performance.</span>
+    </div>
+
     <!-- Cygwin -->
     <div id="cygwin-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.cygwin === undefined" ng-class="{'zero-border': checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
       <div id="cygwin-panel-heading" class="panel-heading panel-normal"

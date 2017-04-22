@@ -87,6 +87,9 @@ class ConfirmController {
       this.isDisabled = true;
       this.installedSearchNote = ' The system is checking if you have any installed components.';
       let detectors = [];
+      detectors.push(Platform.isVirtualizationEnabled().then(status => {
+        $scope.virtualization = status;
+      }));
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
