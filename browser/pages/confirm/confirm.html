@@ -431,7 +431,7 @@
            ng-class="{'dotted-panel':checkboxModel.cygwin.hasOption('detected') && checkboxModel.cygwin.selectedOption === 'detected'}">
            <!--ng-click="checkboxModel.cygwin.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input id="cygwin-checkbox" type="checkbox" ng-disabled="!checkboxModel.cygwin.hasOption('detected') && checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+             <input id="cygwin-checkbox" type="checkbox" ng-disabled="checkboxModel.cygwin.hasOption('detected') && checkboxModel.cdk.selectedOption == 'install'" ng-model="checkboxModel.cygwin.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-cygwin" class="arrow" ng-class="{'arrow-down':!checkboxModel.cygwin.isCollapsed}" aria-label="Toggle ngHide"></div>
