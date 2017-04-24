@@ -8,27 +8,27 @@
     "platform": {
       "win32": {
         "bundle": "yes",
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/windows-amd64/minishift.exe",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/windows-amd64/minishift.exe",
-        "filename": "minishift.exe",
-        "sha256sum": "f029b407bd8ced00330fb0ec09c6e5e34fecc277ed5106d39a2acb505297beae",
-        "version": "3.0.0.GA"
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/windows-amd64/minishift.exe",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/windows-amd64/minishift.exe",
+        "filename": "minishift-3.0.0-rc.1.exe",
+        "sha256sum": "8ac77e9667fa5d84affd924a2a966c8e1470a707e42697a708796de525812752",
+        "version": "3.0.0-rc.1"
       },
       "darwin": {
         "bundle": "yes",
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/darwin-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/darwin-amd64/minishift",
-        "filename": "minishift",
-        "sha256sum": "72df7aadd8f8260c313dc0f8c540d68f39db67c8a46027434a4986fe28d2dcd0",
-        "version": "3.0.0.GA"
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/darwin-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/darwin-amd64/minishift",
+        "filename": "minishift-3.0.0-rc.1",
+        "sha256sum": "c55986bab747298716be12540c1d2adc1395483c7e18446f2ba1999ff29789eb",
+        "version": "3.0.0-rc.1"
       },
       "linux": {
         "bundle": "yes",
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/linux-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Mar-2017.cdk-3.0.0-beta.3/linux-amd64/minishift",
-        "filename": "linux-amd64.tar.gz",
-        "sha256sum": "cfe8cd24c4699a7d1cd7c863a403437754ce2220478e2058ae4058be52391ff9",
-        "version": "3.0.0.GA"
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/linux-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/linux-amd64/minishift",
+        "filename": "minishift-3.0.0-rc.1",
+        "sha256sum": "8d6ab2fa50e2d30996e9daf592afcafa165b56ae0e913c7cc3af507ba6c6f223",
+        "version": "3.0.0-rc.1"
       }
     }
   },
@@ -55,10 +55,10 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "dmUrl": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM2a-build-product/2017-04-06_11-54-09-B390/all/devstudio-10.4.0.AM3-v20170406-1058-B390-installer-standalone.jar",
-    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM2a-build-product/2017-04-06_11-54-09-B390/all/devstudio-10.4.0.AM3-v20170406-1058-B390-installer-standalone.jar",
-    "filename": "devstudio-10.4.0.AM3-v20170406-1058-B390-installer-standalone.jar",
-    "sha256sum": "e5f694ca2defce9ea10b3c3a8d5cc93e0cc24451070b084292b5b8e8617d7efa",
+    "dmUrl": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM3-build-product/latest/all/devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
+    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM3-build-product/latest/all/devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
+    "filename": "devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
+    "sha256sum": "003452c0f981e9fa7749fdb356ca06ebf29f915ab11f0700a39b1dc9e265676e",
     "version": "10.4.0.AM3"
   },
   "jdk": {
@@ -70,12 +70,12 @@
     "platform": {
       "win32": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi?workflow=direct",
-        "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.121/1.b13/win/java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi",
-        "filename": "java-1.8.0-openjdk-1.8.0.121-1.b13.redhat.windows.x86_64.msi",
-        "sha256sum": "de5ea4e373cc913fa89942800998d92fb926f29ae393a2d24a9140a1d821e611",
-        "version": "1.8.0_121",
-        "virusTotalReport": "https://virustotal.com/en/file/de5ea4e373cc913fa89942800998d92fb926f29ae393a2d24a9140a1d821e611/analysis/"
+        "dmUrl": "https://developers.redhat.com/download-manager/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "filename": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
+        "version": "1.8.0_131",
+        "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
       },
       "darwin": {
         "bundle": "no",
@@ -89,12 +89,12 @@
       },
       "linux": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.111-1.b15.redhat.windows.x86_64.msi?workflow=direct",
-        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.111/1.b15/win/java-1.8.0-openjdk-1.8.0.111-1.b15.redhat.windows.x86_64.msi",
-        "filename": "java-1.8.0-openjdk-1.8.0.111-1.b15.redhat.windows.x86_64.msi",
-        "sha256sum": "fc4c77412446d6bbf6bf91d76d4bb5cf5d1e94dc1e932f524796e3f8a9789ccc",
-        "version": "1.8.0_111",
-        "virusTotalReport": "https://virustotal.com/en/file/fc4c77412446d6bbf6bf91d76d4bb5cf5d1e94dc1e932f524796e3f8a9789ccc/analysis/"
+        "dmUrl": "https://developers.redhat.com/download-manager/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "filename": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
+        "version": "1.8.0_131",
+        "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
       }
     }
   },
