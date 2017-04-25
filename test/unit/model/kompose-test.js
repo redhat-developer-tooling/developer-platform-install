@@ -13,6 +13,7 @@ import {ProgressState} from 'browser/pages/install/controller';
 import Platform from 'browser/services/platform';
 import loadMetadata from 'browser/services/metadata';
 import Logger from 'browser/services/logger';
+import mockfs from 'mock-fs';
 chai.use(sinonChai);
 
 let sinon  = require('sinon');
@@ -38,9 +39,18 @@ describe('kompose installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
+
+    mockfs({
+      temporaryFolder: {},
+      installFolder: {}
+    }, {
+      createCwd: false,
+      createTmp: false
+    });
   });
 
   after(function() {
+    mockfs.restore();
     infoStub.restore();
     errorStub.restore();
     sha256Stub.restore();
