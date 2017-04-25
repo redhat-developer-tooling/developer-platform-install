@@ -35,7 +35,8 @@ describe('Downloader', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fakeProgress = sandbox.stub(new ProgressState());
+    fakeProgress = sinon.stub(new ProgressState());
+    fakeProgress.$timeout = sinon.stub();
     downloader = new Downloader(fakeProgress, function() {}, function() {});
   });
 

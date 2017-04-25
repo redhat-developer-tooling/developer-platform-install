@@ -248,8 +248,32 @@
       </div>
     </div>
 
+    <!-- Kompose -->
+    <div id="kompose-panel" class="panel panel-default panel2pxborder">
+      <div id="kompose-panel-heading" class="panel-heading panel-normal">
+           <div class="checkbox-container verticalLine">
+             <input id="kompose-checkbox" type="checkbox" ng-model="checkboxModel.kompose.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
+        <div class="checkbox-container" ng-show="false">
+          <div id="arrow-kompose" class="arrow" ng-class="{'arrow-down':!checkboxModel.kompose.isCollapsed}" aria-label="Toggle ngHide"></div>
+        </div>
+        <div class="product-container">
+          <span id="kompose-name" class="product-name">{{checkboxModel.kompose.productName}}</span>
+          <span id="kompose-version" class="product-version">{{checkboxModel.kompose.version}}</span>
+          <div id="kompose-description">{{checkboxModel.kompose.productDesc}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-block">
+      <span class="pficon pficon-info"></span>
+      <span>For additional information and documentation visit
+        <a type="button" class="pointer" ng-click="confCtrl.download('http://kompose.io')">http://kompose.io</a>
+      </span>
+    </div>
+
     <!-- hyper-v -->
-    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv !== undefined && checkboxModel.hyperv.isConfigured()" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
+    <div id="hyperv-panel" class="panel panel-default panel2pxborder" ng-show="checkboxModel.hyperv !== undefined && (checkboxModel.hyperv.hypervstatus || checkboxModel.hyperv.hypervstatus === false)" ng-class="{'zero-border':checkboxModel.hyperv.isConfigured()}">
       <div id="hyperv-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.hyperv.hasOption('detected')}">
         <div class="checkbox-container verticalLine">
@@ -260,11 +284,23 @@
             <span id="hyperv-installed-note" class="installed-note" ng-show="checkboxModel.hyperv.hasOption('detected')">
               <i class="fa fa-check"></i> Using detected version {{checkboxModel.hyperv.option.detected.version}}
             </span>
+            <span id="hyperv-installed-note" class="installed-note" ng-show="!checkboxModel.hyperv.hasOption('detected')">
+              <i class="fa fa-check"></i>Not installed
+            </span>
           </div>
-          <span id="hyperv-name" class="product-name">{{checkboxModel.hyperv.productName}}</span><span id="hyperv-version" class="product-version">{{checkboxModel.hyperv.option['detected'].version}}</span>
+          <span id="hyperv-name" class="product-name">{{checkboxModel.hyperv.productName}}</span>
+          <span id="hyperv-version" class="product-version">{{checkboxModel.hyperv.option['detected'].version}}</span>
           <div id="hyperv-description">{{checkboxModel.hyperv.productDesc}}</div>
         </div>
       </div>
+    </div>
+
+    <div class="help-block" ng-show="checkboxModel.hyperv !== undefined && !checkboxModel.hyperv.hasOption('detected') && checkboxModel.hyperv.hypervstatus === false">
+      <span class="pficon pficon-info"></span>
+      <span>Follow
+        <a type="button" class="pointer" ng-click="confCtrl.download('https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw')">these steps</a>
+         to install and enable Microsoft Hyper-V on Windows 10
+      </span>
     </div>
 
     <!-- VirtualBox -->
@@ -457,7 +493,6 @@
         </div>
       </div>
     </div>
-
   </form>
 </main>
 

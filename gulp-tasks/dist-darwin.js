@@ -50,6 +50,8 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         }
       });
     });
+  }).catch((error)=>{
+    return Promise.reject(error);
   });
 }
 
@@ -78,7 +80,7 @@ function darwinDist(gulp) {
 
   gulp.task('dist-bundle', ['prefetch'], function() {
     return buildInstaller(gulp,
-      `dist/mac/${productName}-${productVersion}-mac.zip`,
+      `dist/${productName}-${productVersion}-mac.zip`,
       `dist/devsuite-${productVersion}-bundle-installer-mac.zip`,
       [{
         'from': 'requirements-cache',
@@ -89,7 +91,7 @@ function darwinDist(gulp) {
 
   gulp.task('dist-simple', function() {
     return buildInstaller(gulp,
-      `dist/mac/${productName}-${productVersion}-mac.zip`,
+      `dist/${productName}-${productVersion}-mac.zip`,
       `dist/devsuite-${productVersion}-installer-mac.zip`
     );
   });

@@ -17,7 +17,6 @@ import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import child_process from 'child_process';
 import {ProgressState} from 'browser/pages/install/controller';
-import 'sinon-as-promised';
 import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
 
@@ -47,7 +46,7 @@ describe('Cygwin installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) {
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) {
       cb('hash');
     });
 
@@ -183,7 +182,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
-      
+
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(Installer.prototype.exec).to.have.been.calledWithMatch('powershell');
       });

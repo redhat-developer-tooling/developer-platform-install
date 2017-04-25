@@ -33,7 +33,6 @@ function getSHA256(filename, cb) {
 
 // writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
 function createSHA256File(filename, cb) {
-  !cb && cb();
   getSHA256(filename, function(hashstring) {
     fs.writeFile(filename + '.sha256', hashstring + ' *' + path.parse(filename).base, (err)=>{
       cb(err);

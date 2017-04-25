@@ -329,6 +329,24 @@ Now you are ready to test online installer without actual bits published to
 download-manager. Start dist/win/DevelopmentSuiteInstaller-win32-x64-*.exe
 from package explorer and use it as you would normally do after release.
 
+Running online installer with gulp
+----------------------------------
+
+It is possible to run online installer right from your favorite terminal on windows
+or macOS. 
+
+#### Windows
+
+On Windows if you running from cmd, powershell or git bash console and going to install components
+that is MSI installers please be sure you started console as Administrator. That is required 
+because installer starts MSI installers in non-interactive mode and they will fail to run
+without Administartive privileges.
+
+#### macOS
+
+On macOS installer starts macOS installer with osascript that requests administartive account 
+credential to continue, so you can run from any bash instance and installer will show request 
+for account with rights to administer current machine.
 
 Updating dependencies to latest
 -------------------------------

@@ -6,7 +6,6 @@ import { default as sinonChai } from 'sinon-chai';
 import InstallerDataService from 'browser/services/data';
 import Platform from 'browser/services/platform';
 import HypervInstall from 'browser/model/hyperv';
-import 'sinon-as-promised';
 chai.use(sinonChai);
 
 let child_process = require('child_process');

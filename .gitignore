@@ -15,3 +15,5 @@ system-tests.xml
 requirements-cache/
 coverage/
 .DS_Store
+screenshots
+npm-debug.log

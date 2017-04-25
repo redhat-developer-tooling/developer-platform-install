@@ -9,7 +9,8 @@ const baseOrder = {
   'hyperv': ['cygwin'],
   'cygwin': ['cdk'],
   'devstudio': [],
-  'cdk': []
+  'cdk': [],
+  'kompose': []
 };
 
 class ComponentLoader {

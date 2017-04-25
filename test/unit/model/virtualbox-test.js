@@ -18,7 +18,6 @@ import InstallableItem from 'browser/model/installable-item';
 import Util from 'browser/model/helpers/util';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
-import 'sinon-as-promised';
 chai.use(sinonChai);
 
 let child_process = require('child_process');
@@ -47,7 +46,7 @@ describe('Virtualbox installer', function() {
   before(function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
-    sha256Stub = sinon.stub(Hash.prototype, 'SHA256', function(file, cb) { cb('hash'); });
+    sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
     item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
 
     mockfs({

@@ -110,7 +110,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk', 'kompose'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {
@@ -180,7 +180,8 @@ class ConfirmController {
     return (this.sc.checkboxModel.virtualbox
       && this.sc.checkboxModel.virtualbox.isConfigured())
       || (this.sc.checkboxModel.hyperv
-      && this.sc.checkboxModel.hyperv.isConfigured());
+      && this.sc.checkboxModel.hyperv.isConfigured()
+      || this.sc.checkboxModel.cdk.selectedOption !== 'install');
   }
 
   isConfigurationValid() {
