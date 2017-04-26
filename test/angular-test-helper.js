@@ -1,8 +1,9 @@
-var jsdom = require('jsdom').jsdom;
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
-global.document = jsdom('<html><head><script></script></head><body></body></html>');
-global.window = global.document.defaultView;
-global.navigator = global.window.navigator = {};
+
+global.document = (new JSDOM(`<html><head><script></script></head><body></body></html>`));
+global.window = global.document.window;
 global.Node = global.window.Node;
 
 global.window.mocha = {};
