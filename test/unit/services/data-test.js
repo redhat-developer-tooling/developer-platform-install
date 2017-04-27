@@ -112,6 +112,7 @@ describe('InstallerDataService', function() {
       expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'jdk8'));
       expect(svc.devstudioDir()).to.equal(path.join(svc.installRoot, 'devstudio'));
       expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
+      expect(svc.komposeDir()).to.equal(path.join(svc.installRoot, 'kompose'));
       expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
       expect(svc.cdkBoxDir()).to.equal(svc.cdkRoot);
       expect(svc.cdkMarker()).to.equal(path.join(svc.cdkRoot, '.cdk'));
