@@ -10,7 +10,7 @@
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/windows-amd64/minishift.exe",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/windows-amd64/minishift.exe",
-        "filename": "minishift-3.0.0-rc.1.exe",
+        "filename": "minishift_3_0_0_rc1.exe",
         "sha256sum": "8ac77e9667fa5d84affd924a2a966c8e1470a707e42697a708796de525812752",
         "version": "3.0.0-rc.1"
       },
@@ -18,7 +18,7 @@
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/darwin-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/darwin-amd64/minishift",
-        "filename": "minishift-3.0.0-rc.1",
+        "filename": "minishift_3_0_0_rc1",
         "sha256sum": "c55986bab747298716be12540c1d2adc1395483c7e18446f2ba1999ff29789eb",
         "version": "3.0.0-rc.1"
       },
@@ -26,7 +26,7 @@
         "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/linux-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/20-Apr-2017.cdk-3.0.0-rc.1/linux-amd64/minishift",
-        "filename": "minishift-3.0.0-rc.1",
+        "filename": "minishift_3_0_0_rc1",
         "sha256sum": "8d6ab2fa50e2d30996e9daf592afcafa165b56ae0e913c7cc3af507ba6c6f223",
         "version": "3.0.0-rc.1"
       }
