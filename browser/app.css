@@ -248,13 +248,13 @@ footer {
               transition: opacity 0.25s, width 0.25s;
             }
 
-            .spinner.spinner-bgcolour{
+            .spinner.spinner-bgcolour {
               animation: rotation 600ms infinite linear;
               border-bottom: 4px solid rgba(3, 3, 3, 0.25);
               border-left: 4px solid rgba(3, 3, 3, 0.25);
               border-right: 4px solid rgba(3, 3, 3, 0.25);
               border-radius: 100%;
-              border-top: 4px solid #00659c;
+              border-top: 4px solid #00a8e1;
               margin: 0 auto;
               position: relative;
             }
