@@ -49,7 +49,7 @@ describe('Confirm page', function() {
     let footer, cancelButton, backButton;
 
     beforeAll(function() {
-      browser.wait(conditions.visibilityOf(element(By.id('instructions'))))
+      browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
       .then(function() {
         for (var key in components) {
           components[key].name = components[key].name.toUpperCase();
