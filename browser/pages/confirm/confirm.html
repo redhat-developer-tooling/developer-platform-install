@@ -4,17 +4,12 @@
 </header>
 
 <main class="col-sm-12 bottom-spacer" >
-  <p id="detection-info" class="installation-note has-spinner" ng-class="{'active':confCtrl.isDisabled}">
-    <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span>
-    <span class="pficon-info" ng-show="!confCtrl.isDisabled && confCtrl.numberOfExistingInstallations>0"></span>
-      {{confCtrl.installedSearchNote}}
-    <br ng-show="!confCtrl.isDisabled && confCtrl.numberOfExistingInstallations>0">
-    <span id="instructions" class="installation-instruction" ng-show="!confCtrl.isDisabled">
-      Select the components to install
-    </span>
-  </p>
-
   <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
+
+    <p class="installation-note has-spinner" ng-show="confCtrl.numberOfExistingInstallations>0">
+      <span class="pficon-info"></span>{{confCtrl.installedSearchNote}}
+    </p>
+    <p id="instructions" class="installation-note">Select the components to install</p>
 
     <!-- devstudio -->
     <div id="devstudio-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.devstudio === undefined" ng-class="{'zero-border':checkboxModel.devstudio.hasOption('detected')}">
@@ -494,6 +489,15 @@
       </div>
     </div>
   </form>
+
+  <div id="detection-info" class="centered has-spinner" ng-show="confCtrl.isDisabled" ng-class="{'active':confCtrl.isDisabled}">
+    <span class="spinner spinner-lg spinner-bgcolour spinner-inline"><i class="icon-spin icon-refresh"></i></span>
+    <p class="installation-note">
+      <div class="detection-msg">
+          <h2>{{confCtrl.installedSearchNote}}</h2>
+      </div>
+    </p>
+  </div>
 </main>
 
 <footer id="footer-navigation" class="no-background-color">
