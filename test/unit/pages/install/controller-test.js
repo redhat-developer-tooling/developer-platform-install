@@ -222,7 +222,7 @@ describe('Install controller', function() {
           expect(progress.current).equals(10);
         });
         it('lable value', function() {
-          expect(progress.label).equals(
+          expect(progress.label).to.have.string(
             progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' KB (' + progress.current + '%)'
           );
         });
@@ -276,6 +276,29 @@ describe('Install controller', function() {
       });
       it('sets current prcentage to 100',  function() {
         expect(progress.current).equals(100);
+      });
+    });
+    describe('calculateTime', function() {
+      let progress;
+      beforeEach(function() {
+        progress = new ProgressState();
+        progress.lastTime = 100000;
+        progress.totalSize = 9000000;
+        progress.currentAmount = 400000;
+        sandbox.stub(Date.prototype, 'getTime').returns(101000);
+      });
+
+      it('returns time estimate based on average speed', function() {
+        expect(progress.calculateTime()).to.equal((9000000 - 400000) / 400);
+      });
+
+      it('uses exponential moving average speed', function() {
+        progress.averageSpeed = 800;
+
+        //average speed moves with a smoothing factor
+        let result = progress.calculateTime();
+        expect(progress.averageSpeed).to.equal(0.15 * 400 + 0.85 * 800);
+        expect(result).to.equal((9000000 - 400000) / (0.15 * 400 + 0.85 * 800));
       });
     });
   });
