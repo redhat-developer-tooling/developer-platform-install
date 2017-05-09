@@ -223,7 +223,7 @@ describe('Install controller', function() {
         });
         it('lable value', function() {
           expect(progress.label).to.have.string(
-            progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' KB (' + progress.current + '%)'
+            progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' (' + progress.current + '%)'
           );
         });
         it('calls angular async update', function() {

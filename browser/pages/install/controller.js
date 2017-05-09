@@ -2,6 +2,7 @@
 
 import Logger from '../../services/logger';
 import duration from 'humanize-duration';
+import humanize from 'humanize';
 
 class InstallController {
   constructor($scope, $timeout, installerDataSvc) {
@@ -155,7 +156,7 @@ class ProgressState {
       }
 
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
-      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
+      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
       this.$timeout(()=>this.$scope.$apply());
     }
   }
@@ -191,7 +192,7 @@ class ProgressState {
   }
 
   sizeInKB(amount) {
-    return Math.round(amount / 1024);
+    return humanize.filesize(amount);
   }
 }
 
