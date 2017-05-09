@@ -110,7 +110,7 @@ class JdkInstall extends InstallableItem {
     let data = this.getMsiSearchScriptData();
     let args = this.getMsiSearchScriptPowershellArgs(msiSearchScript);
     let result = Promise.resolve('');
-    if (Platform.OS !== 'darwin') {
+    if (Platform.OS == 'win32') {
       result = Util.writeFile(msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
       });
