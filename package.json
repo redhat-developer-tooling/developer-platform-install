@@ -39,6 +39,7 @@
     "fs-extra": "2.1.2",
     "glob": "7.1.1",
     "globby": "6.1.0",
+    "humanize": "0.0.9",
     "humanize-duration": "3.10.0",
     "mkdirp": "^0.5.1",
     "patternfly": "3.23.2",
