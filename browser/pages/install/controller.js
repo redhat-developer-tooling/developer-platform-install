@@ -1,7 +1,7 @@
 'use strict';
 
 import Logger from '../../services/logger';
-import duration from 'duration';
+import duration from 'humanize-duration';
 
 class InstallController {
   constructor($scope, $timeout, installerDataSvc) {
@@ -100,7 +100,23 @@ class InstallController {
   }
 }
 
-const smoothFactor =  0.05;
+const smoothFactor =  0.15;
+const shortDuration = {
+  language: 'shortEn',
+  round: true,
+  spacer: ' ',
+  delimiter: ' ',
+  largest: 2,
+  languages: {
+    shortEn: {
+      y: function(c) { return 'year' + (c === 1 ? '' : 's') },
+      d: function(c) { return 'day' + (c === 1 ? '' : 's') },
+      h: function(c) { return 'hr' + (c === 1 ? '' : 's') },
+      m: function(c) { return 'min' + (c === 1 ? '' : 's') },
+      s: function(c) { return 'sec' + (c === 1 ? '' : 's') }
+    }
+  }
+};
 
 class ProgressState {
   constructor(key, productName, productVersion, productDesc, $scope, $timeout, minValue=0, maxValue=100) {
@@ -120,6 +136,8 @@ class ProgressState {
     this.max = maxValue;
     this.lastTime = Date.now();
     this.averageSpeed = 0;
+    this.durationFormat = duration.humanizer(Object.assign({}, shortDuration));
+    this.durationFormat.units = ['y', 'd', 'h', 'm'];
   }
 
   setTotalDownloadSize(size) {
@@ -132,11 +150,12 @@ class ProgressState {
       this.currentAmount = newVal;
 
       let remaining = this.calculateTime();
-      let labelLevel = remaining.seconds > 59 ? 2 : 1;
-      let remainingLabel = (remaining.seconds > 0) ? remaining.toString(1, labelLevel) + ' left  --  ' : '';
+      if (remaining < 60 * 1000) {
+        this.durationFormat.units.push('s');
+      }
 
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
-      this.label = remainingLabel + this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%)';
+      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' KB (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
       this.$timeout(()=>this.$scope.$apply());
     }
   }
@@ -147,8 +166,7 @@ class ProgressState {
     this.lastTime = currentTime;
     this.averageSpeed = this.averageSpeed === 0 ? this.lastSpeed : smoothFactor * this.lastSpeed + (1 - smoothFactor) * this.averageSpeed;
 
-    let end = new Date(currentTime.getTime() + (this.totalSize - this.currentAmount) / this.averageSpeed);
-    return duration(currentTime, end);
+    return (this.totalSize - this.currentAmount) / this.averageSpeed;
   }
 
   setStatus(newStatus) {
