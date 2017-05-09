@@ -44,7 +44,7 @@ footer {
   }
 
   .is-disabled {
-    opacity: .5;
+    opacity: 0.1;
     pointer-events: none;
   }
 
