@@ -27,9 +27,9 @@ describe('Virtualbox installer', function() {
   let infoStub, errorStub, sandbox, sha256Stub;
 
   let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe';
-  let version = '5.1.12';
-  let revision = '112440';
-  let finalUrl = 'http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-Win.exe';
+  let version = '5.1.22';
+  let revision = '115126';
+  let finalUrl = 'http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-Win.exe';
   let item2;
 
   installerDataSvc = sinon.stub(new InstallerDataService());
@@ -399,7 +399,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add neither warning nor error for recomended version', function() {
-      installer.option['detected'].version = '5.1.12';
+      installer.option['detected'].version = '5.1.22';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
