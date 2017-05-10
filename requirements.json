@@ -107,7 +107,7 @@
     "platform": {
       "win32": {
         "bundle": "no",
-        "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-Win.exe",
+        "url": "https://developers.redhat.com/redirect/to/virtualbox-windows-5.1.22.download",
         "filename": "virtualbox_5.1.22.exe",
         "sha256sum": "e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93",
         "version": "5.1.22",
@@ -116,7 +116,7 @@
       },
       "darwin": {
         "bundle": "no",
-        "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-OSX.dmg",
+        "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.1.22.download",
         "filename": "virtualbox_5.1.22.dmg",
         "sha256sum": "405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa",
         "version": "5.1.22",
