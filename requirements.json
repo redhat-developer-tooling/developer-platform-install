@@ -107,30 +107,30 @@
     "platform": {
       "win32": {
         "bundle": "no",
-        "url": "http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-Win.exe",
+        "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-Win.exe",
         "filename": "virtualbox_5.1.12.exe",
-        "sha256sum": "0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54",
-        "version": "5.1.12",
-        "revision": "112440",
-        "virusTotalReport": "https://virustotal.com/en/file/0cbdc245122fab090625bb3ec49f21f68c9bbad7d69e05e4a42b1a6ad1968b54/analysis/"
+        "sha256sum": "e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93",
+        "version": "5.1.22",
+        "revision": "115126",
+        "virusTotalReport": "https://virustotal.com/en/file/e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93/analysis/"
       },
       "darwin": {
         "bundle": "no",
-        "url": "http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1.12-112440-OSX.dmg",
+        "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-OSX.dmg",
         "filename": "virtualbox_5.1.12.dmg",
-        "sha256sum": "74b10d9af01b8eb7d987088ffe52c74646a479a27cba4f98dc5149f1f6b93c76",
-        "version": "5.1.12",
-        "revision": "112440",
-        "virusTotalReport": "https://virustotal.com/en/file/74b10d9af01b8eb7d987088ffe52c74646a479a27cba4f98dc5149f1f6b93c76/analysis/"
+        "sha256sum": "405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa",
+        "version": "5.1.22",
+        "revision": "115126",
+        "virusTotalReport": "https://virustotal.com/en/file/405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa/analysis/"
       },
       "linux": {
         "bundle": "no",
-        "url": "http://download.virtualbox.org/virtualbox/5.1.12/VirtualBox-5.1-5.1.12_112440_fedora25-1.x86_64.rpm",
+        "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
         "filename": "VirtualBox-5.1-5.1.12_112440_fedora25-1.x86_64.rpm",
-        "sha256sum": "4a97ca581f4aa4e8fc442d60c2cde214c52808bf6e24b28e0574bea22176c76c",
+        "sha256sum": "c112cddf30c3b6f20958f6212fc114c13c8c5ce82caed3d3892d1e6a7bd66a88",
         "version": "5.1.12",
-        "revision": "112440",
-        "virusTotalReport": "https://virustotal.com/en/file/4a97ca581f4aa4e8fc442d60c2cde214c52808bf6e24b28e0574bea22176c76c/analysis/"
+        "revision": "115126",
+        "virusTotalReport": "https://virustotal.com/en/file/c112cddf30c3b6f20958f6212fc114c13c8c5ce82caed3d3892d1e6a7bd66a88/analysis/"
       }
     }
   },
