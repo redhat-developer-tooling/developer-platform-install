@@ -30,6 +30,7 @@ class CDKInstall extends InstallableItem {
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
     let home;
+    let driverName = 'virtualbox';
     return Promise.resolve().then(()=> {
       if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
         return installer.copyFile(this.downloadedFile, minishiftExe);
@@ -38,11 +39,16 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return Platform.makeFileExecutable(minishiftExe);
     }).then(()=> {
-      let driverName = 'virtualbox';
       let hv = this.installerDataSvc.getInstallable('hyperv');
       if (hv && hv.hasOption('detected')) {
         driverName = 'hyperv';
       }
+      return Promise.resolve(driverName);
+    }).then(()=> {
+      return installer.exec(
+        'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
+      ).catch(()=>Promise.resolve());
+    }).then(()=> {
       return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=${driverName}`, this.createEnvironment());
     }).then(()=> {
       return Platform.getUserHomePath();
