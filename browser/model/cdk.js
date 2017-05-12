@@ -57,8 +57,8 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return Platform.getUserHomePath();
     }).then((result)=> {
-      home = result;
-      return globby(ocExePattern, {root: path.join(home, '.minishift', 'cache', 'oc')});
+      home = Platform.ENV.MINISHIFT_HOME ? Platform.ENV.MINISHIFT_HOME : path.join(result, '.minishift');
+      return globby(ocExePattern, {root: path.join(home, 'cache', 'oc')});
     }).then((files)=> {
       ocExe = files[0].replace(/\//g, path.sep);
       return Promise.resolve();
@@ -68,7 +68,7 @@ class CDKInstall extends InstallableItem {
       return Platform.addToUserPath([ocExe, minishiftExe]);
     }).then(()=> {
       return pify(fs.appendFile)(
-        path.join(home, '.minishift', 'cdk'),
+        path.join(home, 'cdk'),
         `rhel.subscription.username=${this.installerDataSvc.username}`);
     }).then(()=> {
       installer.succeed(true);
