@@ -49,6 +49,10 @@ class CDKInstall extends InstallableItem {
         'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
       ).catch(()=>Promise.resolve());
     }).then(()=> {
+      return installer.exec(
+        `${minishiftExe} stop`
+      ).catch(()=>Promise.resolve());
+    }).then(()=> {
       return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=${driverName}`, this.createEnvironment());
     }).then(()=> {
       return Platform.getUserHomePath();
