@@ -125,10 +125,10 @@ class Platform {
   static getUserHomePath() {
     return Platform.identify({
       win32: ()=> {
-        return Promise.resolve(process.env.USERPROFILE);
+        return Promise.resolve(Platform.ENV.USERPROFILE);
       },
-      darwin: ()=> {
-        return Promise.resolve(process.env.HOME);
+      default: ()=> {
+        return Promise.resolve(Platform.ENV.HOME);
       }
     });
   }

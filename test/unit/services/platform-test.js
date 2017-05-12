@@ -103,6 +103,13 @@ describe('Platform', function() {
 
   describe('isVirtualizationEnabled', function() {
 
+    it('should return promise resolved to true for unsupported platforms', function() {
+      sandbox.stub(Platform, 'getOS').returns('OS2');
+      return Platform.isVirtualizationEnabled().then((result) => {
+        expect(result).to.be.true;
+      });
+    });
+
     describe('on mac', function() {
 
       beforeEach(function() {
@@ -202,11 +209,21 @@ describe('Platform', function() {
   describe('isHypervisorEnabled', function() {
 
     describe('on mac', function() {
-      it('should return true if hypervisor check shell script returns true');
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
     });
 
     describe('on linux', function() {
-      it('should return true if hypervisor check shell script returns true');
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
     });
 
     describe('on windows', function() {
@@ -454,4 +471,39 @@ describe('Platform', function() {
     });
   });
 
+  describe('getUserHomePath', function() {
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({USERPROFILE: 'c:\\Users\\dev1'});
+      });
+      it('returns USERPROFILE environment variable value', function() {
+        return Platform.getUserHomePath().then((result) => {
+          expect(result).to.be.equal('c:\\Users\\dev1');
+        });
+      });
+    });
+    describe('on macos', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(Platform, 'getEnv').returns({HOME: 'c:\\Users\\dev1'});
+      });
+      it('returns HOME environment variable value', function() {
+        return Platform.getUserHomePath().then((result) => {
+          expect(result).to.be.equal('c:\\Users\\dev1');
+        });
+      });
+    });
+    describe('on linux', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        sandbox.stub(Platform, 'getEnv').returns({HOME: 'c:\\Users\\dev1'});
+      });
+      it('returns HOME environment variable value', function() {
+        return Platform.getUserHomePath().then((result) => {
+          expect(result).to.be.equal('c:\\Users\\dev1');
+        });
+      });
+    });
+  });
 });
