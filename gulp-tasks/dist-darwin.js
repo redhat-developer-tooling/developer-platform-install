@@ -11,7 +11,6 @@ const fs = require('fs-extra');
 const common = require('./common.js');
 const del = require('del');
 
-pjson.version = pjson.version.replace('GA', 'Alpha1');
 let productName = pjson.productName;
 let productVersion = pjson.version;
 
