@@ -55,11 +55,11 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "dmUrl": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM3-build-product/latest/all/devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
-    "url": "https://devstudio.redhat.com/10.0/staging/builds/devstudio-10.4.0.AM3-build-product/latest/all/devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
-    "filename": "devstudio-10.4.0.AM3-v20170421-0111-B478-installer-standalone.jar",
-    "sha256sum": "003452c0f981e9fa7749fdb356ca06ebf29f915ab11f0700a39b1dc9e265676e",
-    "version": "10.4.0.AM3"
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-10.4.0.GA-installer-standalone.jar?workflow=direct",
+    "url": "http://wonka.mw.lab.eng.bos.redhat.com/rhd/devstudio/10.0/stable/builds/devstudio-10.4.0.GA-build-product/latest/all/devstudio-10.4.0.GA-installer-standalone.jar",
+    "filename": "devstudio-10.4.0.GA-installer-standalone.jar",
+    "sha256sum": "812c135ce00b570e7240e1d4fbc0b4e2a51928e97589ae9cf7aa08b0156ef6b4",
+    "version": "10.4.0.GA"
   },
   "jdk": {
     "name": "OpenJDK",
