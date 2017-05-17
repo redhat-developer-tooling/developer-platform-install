@@ -24,9 +24,7 @@ class KomposeInstall extends InstallableItem {
     let installer = new Installer(KomposeInstall.KEY, progress, success, failure);
     let komposeExe = path.join(komposeDir, Platform.OS === 'win32' ? 'kompose.exe' : 'kompose');
     return Promise.resolve().then(()=> {
-      if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
-        return installer.copyFile(this.downloadedFile, komposeExe);
-      }
+      return installer.copyFile(this.downloadedFile, komposeExe);
     }).then(()=> {
       return Platform.makeFileExecutable(komposeExe);
     }).then(()=> {
