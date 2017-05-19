@@ -8,7 +8,7 @@
     "platform": {
       "win32": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/file/cdk-3.0-minishift-windows-amd64.exe?workflow=direct",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-windows-amd64.exe?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/windows-amd64/minishift.exe",
         "filename": "minishift_3_0_0_GA.exe",
         "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
@@ -24,7 +24,7 @@
       },
       "linux": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/file/cdk-3.0-minishift-linux-amd64?workflow=direct",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-linux-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/linux-amd64/minishift",
         "filename": "minishift_3_0_0_GA",
         "sha256sum": "b754554190756fb3142998b67cd046174f7e0ae9f2d287d673481e20d9482060",
