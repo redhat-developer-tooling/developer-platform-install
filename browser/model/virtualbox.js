@@ -215,7 +215,15 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
+    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
+    return installer.exec(this.getScript()).then((result) => {
+      installer.succeed(result);
+    }).catch((error) => {
+      installer.fail(error);
+    });
+  }
 
+  getScript() {
     let dmgFile = this.downloadedFile;
     //let timestamp = new Date().toJSON().replace(/:/g,'')
     let volumeName = 'virtualbox-5.0.26';
@@ -228,16 +236,11 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
       '-e',
       `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
     ].join(' ');
-
-    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
-    return installer.exec(osaScript).then((result) => {
-      installer.succeed(result);
-    }).catch((error) => {
-      installer.fail(error);
-    });
+    return osaScript
   }
-
 }
+
+
 
 export default Platform.identify({
   darwin: ()=>VirtualBoxInstallDarwin,

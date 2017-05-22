@@ -143,6 +143,12 @@ describe('Virtualbox installer', function() {
         installer = new VirtualBoxInstallDarwin(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
+
+      it('should execute macos installer with osascript', function() {
+        sandbox.stub(Installer.prototype, 'exec').resolves(true);
+        installer.installAfterRequirements(fakeProgress, function() {}, function(){});
+        expect(Installer.prototype.exec).calledWith(installer.getScript());
+      })
     });
 
     describe('on windows', function() {
@@ -151,10 +157,6 @@ describe('Virtualbox installer', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         installer = new VirtualBoxInstallWindows(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
-      });
-
-      afterEach(function () {
-        sandbox.restore();
       });
 
       it('should execute the silent extract', function() {
