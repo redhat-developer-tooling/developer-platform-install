@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import 'angular-ui-router';
+import '@uirouter/angularjs';
 import 'angular-base64';
 import 'angular-messages';
 import acctCtrl from './pages/account/controller';
