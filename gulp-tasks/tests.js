@@ -34,7 +34,7 @@ module.exports = function(gulp) {
     assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');
 
     //Use hardcoded chromedriver version until gulp-angular-protractor gets updated
-    let webdriverPath = '../webdriver-manager/selenium/chromedriver_2.29';
+    let webdriverPath = '../protractor/node_modules/webdriver-manager/selenium/chromedriver_2.29';
     if (process.platform === 'win32') {
       webdriverPath += '.exe';
     }
