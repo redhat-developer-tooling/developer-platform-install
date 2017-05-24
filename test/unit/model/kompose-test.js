@@ -144,6 +144,19 @@ describe('kompose installer', function() {
       });
     });
 
+    it('should call Installer.fail() if kmpose installation failed', function() {
+      installer = new KomposeInstall(installerDataSvc, 'folderName', '0.4.0', komposeUrl, 'kompose.aaa', 'sha1');
+      Installer.prototype.copyFile.restore();
+      sandbox.stub(Installer.prototype, 'copyFile').throws('error');
+      sandbox.spy(Installer.prototype, 'fail');
+      sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve('home'));
+      return new Promise((resolve, reject)=> {
+        installer.installAfterRequirements(fakeProgress, resolve, reject);
+      }).catch(()=> {
+        expect(Installer.prototype.fail).calledOnce;
+      });
+    })
+
     describe('on windows', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
