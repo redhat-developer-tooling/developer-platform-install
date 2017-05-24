@@ -97,6 +97,7 @@ class AccountController {
     this.authFailed = false;
     this.isLoginBtnClicked = false;
     this.httpError = error;
+    console.error(error);
     this.apply();
   }
 
