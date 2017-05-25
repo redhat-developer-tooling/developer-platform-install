@@ -14,7 +14,8 @@ let path = require('path'),
   exec = require('child_process').exec,
   rcedit = require('rcedit'),
   del = require('del'),
-  unzip = require('gulp-unzip');
+  unzip = require('gulp-unzip'),
+  child_process = require('child_process');
 
 module.exports = function(gulp) {
 
@@ -94,7 +95,18 @@ module.exports = function(gulp) {
 
   // prefetch cygwin to always include into installer
   gulp.task('prefetch-cygwin', ['create-prefetch-cache-dir'], function() {
-    return download.prefetch(reqs, 'always', config.prefetchFolder);
+    download.prefetch(reqs, 'always', config.prefetchFolder).then(function() {
+        return new Promise(function(resolve,reject) {
+          child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder,'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder,'packages')}`,function(error, std, err) {
+            if(error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          })
+        });
+      }
+    );
   });
 
   gulp.task('prefetch-tools', ['create-tools-dir'], function() {

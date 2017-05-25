@@ -6,6 +6,7 @@ import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Platform from '../services/platform';
+import fs from 'fs-extra';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256) {
@@ -70,6 +71,10 @@ class CygwinInstall extends InstallableItem {
       .replace(/'/g, '\'\'');
 
     let cygwinArgs = `--no-admin --quiet-mode --only-site -l ${packagesFolder} --site http://mirrors.xmission.com/cygwin --root ${rootFolder} --categories Base --packages openssh,rsync`;
+    let localPackages = path.join(this.bundleFolder,'packages');
+    if(fs.existsSync(localPackages)) {
+      cygwinArgs = cygwinArgs + ' -L -l ${localPackages}';
+    }
     let startProcess = `$p = Start-Process -ErrorAction stop -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFileEscaped}' -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
     let powershellCommand = `powershell -Command "${startProcess}"`;
 
