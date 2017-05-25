@@ -84,29 +84,31 @@ module.exports = function(gulp) {
 
   gulp.task('package-bundle', function(cb) {
     runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
-      'prepare-tools'], 'prefetch', 'package', 'cleanup', cb);
+      'prepare-tools'], 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
   });
 
   // Create both installers
   gulp.task('dist', function(cb) {
     runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
-      'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'package', 'cleanup', cb);
+      'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
   });
 
   // prefetch cygwin to always include into installer
   gulp.task('prefetch-cygwin', ['create-prefetch-cache-dir'], function() {
-    download.prefetch(reqs, 'always', config.prefetchFolder).then(function() {
-        return new Promise(function(resolve,reject) {
-          child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder,'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder,'packages')}`,function(error, std, err) {
-            if(error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          })
-        });
-      }
-    );
+    return download.prefetch(reqs, 'always', config.prefetchFolder);
+  });
+
+  // prefetch cygwin to always include into installer
+  gulp.task('prefetch-cygwin-packages', ['create-prefetch-cache-dir'], function() {
+    return new Promise(function(resolve,reject) {
+      child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder,'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder,'packages')}`,function(error, std, err) {
+        if(error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      })
+    });
   });
 
   gulp.task('prefetch-tools', ['create-tools-dir'], function() {
