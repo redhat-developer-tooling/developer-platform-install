@@ -11,11 +11,7 @@ var requirements = loadMetadata(require('../requirements.json'), process.platfor
 var PORT = 443;
 
 function handleRequest(req, res) {
- console.log(req.url);
-  // Send file in response
-  //http://stackoverflow.com/questions/16333790/node-js-quick-file-server-static-files-over-http
-  //
-  //Process Post Request
+  console.log(`Requested URL: ${req.url}`);
   if(req.method === 'POST') {
 
     var data = '';
@@ -45,7 +41,7 @@ function handleRequest(req, res) {
         console.log(requirement.dmUrl);
         if(requirement.dmUrl && requirement.dmUrl.endsWith(url)
           || requirement.url && requirement.url.endsWith(url) ) {
-          console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + prop);
+          console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + requirement.filename);
           res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + requirement.filename });
           res.end();
           return;
