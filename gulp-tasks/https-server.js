@@ -11,7 +11,7 @@ var requirements = loadMetadata(require('../requirements.json'), process.platfor
 var PORT = 443;
 
 function handleRequest(req, res) {
-
+ console.log(req.url);
   // Send file in response
   //http://stackoverflow.com/questions/16333790/node-js-quick-file-server-static-files-over-http
   //
@@ -34,7 +34,7 @@ function handleRequest(req, res) {
   } else if(req.method === 'GET') {
     let url = req.url;
     console.log(`Url='${url}'`);
-    if (url.endsWith('/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip')) {
+    if (url.endsWith('/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.4.0.zip')) {
       res.end('true');
     } else if(url.endsWith('/favicon.ico')) {
       // not required
@@ -42,10 +42,11 @@ function handleRequest(req, res) {
       console.log('Request to download manager ');
       for (let prop in requirements) {
         let requirement = requirements[prop];
+        console.log(requirement.dmUrl);
         if(requirement.dmUrl && requirement.dmUrl.endsWith(url)
           || requirement.url && requirement.url.endsWith(url) ) {
           console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + prop);
-          res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + prop });
+          res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + requirement.filename });
           res.end();
           return;
         }
