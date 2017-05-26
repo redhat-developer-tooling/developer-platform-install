@@ -4,11 +4,12 @@ import InstallerDataService from './data';
 
 const baseOrder = {
   'root': ['jdk'],
-  'jdk':  ['virtualbox', 'devstudio'],
+  'jdk':  ['virtualbox', 'devstudio', 'jbosseap'],
   'virtualbox': ['hyperv'],
   'hyperv': ['cygwin'],
   'cygwin': ['cdk'],
   'devstudio': [],
+  'jbosseap': [],
   'cdk': [],
   'kompose': []
 };

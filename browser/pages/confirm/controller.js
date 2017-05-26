@@ -6,7 +6,8 @@ import ComponentLoader from '../../services/componentLoader';
 
 const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
-  'devstudio': ['jdk']
+  'devstudio': ['jdk'],
+  'jbosseap': ['jdk']
 };
 
 class ConfirmController {
@@ -58,13 +59,21 @@ class ConfirmController {
     for (let key in watchedComponents) {
       $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
         for (let keyName of watchedComponents[key]) {
-          if(nVal=='install') {
-            if($scope.checkboxModel[keyName].selectedOption == 'detected'
-              && !$scope.checkboxModel[keyName].hasOption('detected')) {
+          if ( keyName === 'jdk' ) {
+            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
+              $scope.checkboxModel[keyName].selectedOption = 'detected';
+            } else {
               $scope.checkboxModel[keyName].selectedOption = 'install';
             }
-          } else if (nVal=='detected') {
-            $scope.checkboxModel[keyName].selectedOption = 'detected';
+          } else {
+            if(nVal=='install') {
+              if($scope.checkboxModel[keyName].selectedOption == 'detected'
+                && !$scope.checkboxModel[keyName].hasOption('detected')) {
+                $scope.checkboxModel[keyName].selectedOption = 'install';
+              }
+            } else if (nVal=='detected') {
+              $scope.checkboxModel[keyName].selectedOption = 'detected';
+            }
           }
         }
       });
@@ -110,7 +119,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'cygwin', 'cdk', 'kompose'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {

@@ -59,7 +59,7 @@ describe('ConfirmController', function() {
       });
 
       it('installs watchers to track components selected for install', function() {
-        expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+3);
+        expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+4);
       });
 
       it('unlock user interface after detection ends without errors', function() {

@@ -221,7 +221,6 @@ class Platform {
     });
     return pify(child_process.exec)(commands.join(' '));
   }
-
 }
 
 export default Platform;
