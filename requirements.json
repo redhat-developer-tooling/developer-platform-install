@@ -61,6 +61,19 @@
     "sha256sum": "812c135ce00b570e7240e1d4fbc0b4e2a51928e97589ae9cf7aa08b0156ef6b4",
     "version": "10.4.0.GA"
   },
+  "jbosseap": {
+    "name": "Red Hat JBoss",
+    "description": "Java EE 7 compliant application server built on open standards",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/jbosseap",
+    "bundle": "no",
+    "targetFolderName": "jbosseap",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-7.0.0-installer.jar?workflow=direct",
+    "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.0.0/jboss-eap-7.0.0-installer.jar",
+    "filename": "jboss-eap-7.0.0-installer.jar",
+    "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
+    "version": "7.0.0"
+  },
   "jdk": {
     "name": "OpenJDK",
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
