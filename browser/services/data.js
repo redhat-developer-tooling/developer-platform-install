@@ -80,7 +80,7 @@ class InstallerDataService {
         Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + uninstallerLocation + ' SUCCESS');
         let timeStamp = new Date().getTime();
         // replace ByPass to AllSigned
-        pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" ${this.installRoot} ${timeStamp} 1.4.0.GA`).then((stdout)=>{
+        pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" "${this.installRoot}" ${timeStamp} 1.4.0.GA`).then((stdout)=>{
           Logger.info(`Created registry item DevelopmentSuite${timeStamp} SUCCESS`);
         }).catch((error)=>{
           Logger.error('Data - ' + err);

@@ -11,9 +11,10 @@ $uninstallString = "powershell -ExecutionPolicy ByPass -File $targetLocation\uni
 $installDate = Get-Date -Format yyyyMMdd
 
 New-Item -Path "$uninstallItem" -Name "DevelopmentSuite$timeStamp"
-New-ItemProperty -Path $devsuiteItem -Name DisplayName -Value "Development Suite"
+New-ItemProperty -Path $devsuiteItem -Name DisplayName -Value "Red Hat Development Suite"
 New-ItemProperty -Path $devsuiteItem -Name DisplayVersion -Value $versionString
 New-ItemProperty -Path $devsuiteItem -Name InstallLocation -Value $targetLocation
+New-ItemProperty -Path $devsuiteItem -Name Comments -Value $targetLocation
 New-ItemProperty -Path $devsuiteItem -Name NoRepair -PropertyType DWORD -Value 1
 New-ItemProperty -Path $devsuiteItem -Name NoModify -PropertyType DWORD -Value 1
 New-ItemProperty -Path $devsuiteItem -Name InstallDate -Value $installDate

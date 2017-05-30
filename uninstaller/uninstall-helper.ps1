@@ -83,5 +83,5 @@ $pathFolders | foreach {
 Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
 
 echo 'DONE'
-Write-Host "Press any key to exit"
-$key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+#Write-Host "Press any key to exit"
+#$key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
