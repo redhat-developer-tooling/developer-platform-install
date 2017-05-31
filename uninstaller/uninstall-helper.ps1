@@ -1,5 +1,6 @@
 #
 $folder=$args[0]
+$timeStamp = $args[1]
 
 $vboxInstalled = Test-Path  $folder'\..\virtualbox'
 $openjdkInstalled = Test-Path  $folder'\..\jdk8'
@@ -79,6 +80,8 @@ $pathFolders | foreach {
 [string] $delimitedFolders = $folderList -Join ';'
 [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, "User")
 
+Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
+
 echo 'DONE'
-Write-Host "Press any key to exit"
-$key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+#Write-Host "Press any key to exit"
+#$key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

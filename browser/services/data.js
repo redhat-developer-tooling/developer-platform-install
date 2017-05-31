@@ -8,8 +8,9 @@ let path = require('path');
 let fs = require('fs');
 let fsExtra = require('fs-extra');
 let electron = require('electron');
-var mkdirp = require('mkdirp');
-
+let mkdirp = require('mkdirp');
+let pify = require('pify');
+let child_process = require('child_process');
 
 class InstallerDataService {
   constructor($state, requirements = require('../../requirements.json')) {
@@ -68,6 +69,7 @@ class InstallerDataService {
 
   copyUninstaller() {
     let uninstallerLocation = path.resolve(this.installRoot, 'uninstaller');
+    let uninstallerCreateLocation =path.resolve(uninstallerLocation, 'create-uninstaller.ps1');
     Logger.info(`Data - Create uninstaller in ${uninstallerLocation}`);
     mkdirp.sync(uninstallerLocation);
     let uninstallerPs1 = path.resolve(path.join(__dirname, '..', '..', 'uninstaller'));
@@ -76,6 +78,13 @@ class InstallerDataService {
         Logger.error('Data - ' + err);
       } else {
         Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + uninstallerLocation + ' SUCCESS');
+        let timeStamp = new Date().getTime();
+        // replace ByPass to AllSigned
+        pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" "${this.installRoot}" ${timeStamp} 1.4.0.GA`).then((stdout)=>{
+          Logger.info(`Created registry item DevelopmentSuite${timeStamp} SUCCESS`);
+        }).catch((error)=>{
+          Logger.error('Data - ' + err);
+        });
       }
     });
   }
