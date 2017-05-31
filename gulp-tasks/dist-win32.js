@@ -142,6 +142,7 @@ module.exports = function(gulp) {
       'icon': config.configIcon,
       'file-version': pjson.version,
       'product-version': pjson.version,
+      'application-manifest': 'devstudio.manifest',
       'version-string': {
         'ProductName': pjson.productName,
         'FileDescription': pjson.description + ' v' + pjson.version,
