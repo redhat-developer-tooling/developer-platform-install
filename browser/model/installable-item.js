@@ -7,6 +7,7 @@ import fs from 'fs-extra';
 import Downloader from './helpers/downloader';
 
 let ipcRenderer = require('electron').ipcRenderer;
+let remote = require('electron').remote;
 
 class InstallableItem {
   constructor(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
@@ -37,7 +38,7 @@ class InstallableItem {
 
     this.downloadUrl = downloadUrl;
 
-    this.bundleFolder = path.normalize(path.join(__dirname, '../../../..'));
+    this.bundleFolder = remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
     this.bundledFile = path.join(this.bundleFolder, fileName);
 
     this.isCollapsed = true;

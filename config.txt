@@ -1,4 +1,5 @@
 ;!@Install@!UTF-8!
 Title="Red Hat Development Suite"
-RunProgram="devsuite.exe"
+Progress="no"
+RunProgram="devsuite.exe %%T"
 ;!@InstallEnd@!
