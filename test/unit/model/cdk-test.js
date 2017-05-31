@@ -276,6 +276,32 @@ describe('CDK installer', function() {
         });
       });
 
+      it('should add current user to `Hyper-V Administrators` group', function() {
+        Installer.prototype.exec.restore();
+        sandbox.stub(Installer.prototype,'exec').onCall(0).rejects('Error');
+        Installer.prototype.exec.onCall(1).resolves();
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=>{
+          expect(Installer.prototype.exec).calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
+        }).catch(()=>{
+          expect.fail();
+        });
+      });
+
+      it('should stop minishift before running `minishift setup-cdk`', function() {
+        Installer.prototype.exec.restore();
+        sandbox.stub(Installer.prototype,'exec').onCall(0).resolves();
+        Installer.prototype.exec.onCall(1).rejects('error');
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=>{
+          expect(Installer.prototype.exec).calledWith(`${installer.minishiftExeLocation} stop`);
+        }).catch(()=>{
+          expect.fail();
+        });
+      });
+
       afterEach(function() {
         sandbox.restore();
       });
