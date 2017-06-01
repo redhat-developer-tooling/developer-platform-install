@@ -29,7 +29,7 @@ class CDKInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let minishiftDir = this.installerDataSvc.ocDir();
-    let minishiftExe = t
+    let minishiftExe = this.minishiftExeLocation;
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
