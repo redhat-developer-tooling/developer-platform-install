@@ -29,7 +29,7 @@ class CDKInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let minishiftDir = this.installerDataSvc.ocDir();
-    let minishiftExe = this.minishiftExeLocation;
+    let minishiftExe = t
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
@@ -90,7 +90,9 @@ class CDKInstall extends InstallableItem {
 
     newPath.push(vboxInstall.getLocation());
 
-    newPath.push(cygwinInstall.getLocation());
+    if(cygwinInstall) {
+      newPath.push(cygwinInstall.getLocation());
+    }
 
     if(oldPath.trim()) {
       newPath.push(oldPath);
