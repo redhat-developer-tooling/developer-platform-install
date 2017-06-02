@@ -83,7 +83,7 @@ class InstallerDataService {
         pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" "${this.installRoot}" ${timeStamp} 1.4.0.GA`).then((stdout)=>{
           Logger.info(`Created registry item DevelopmentSuite${timeStamp} SUCCESS`);
         }).catch((error)=>{
-          Logger.error('Data - ' + err);
+          Logger.error('Data - ' + error);
         });
       }
     });

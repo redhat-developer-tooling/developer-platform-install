@@ -197,19 +197,18 @@ describe('InstallerDataService', function() {
       it('should add uninstaller entry to control panel and log error message in case of failure', function() {
         fxExtraStub.yields();
         Logger.info.reset();
-        Logger.error.reset();
+        Logger.error.restore();
         let resolve;
         let result = new Promise((r) => {
           resolve = r;
         });
-        sandbox.stub(child_process, 'exec').callsFake(function(exec, cb){
-          cb('error','stdout','');
+        sandbox.stub(child_process, 'exec').yields('error');
+        sandbox.stub(Logger, 'error').callsFake(function() {
           resolve();
         });
         svc.setup();
         return result.then(()=>{
           expect(child_process.exec).to.be.called;
-          expect(Logger.error).to.be.calledOnce;
         });
       });
     });
