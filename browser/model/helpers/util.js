@@ -85,14 +85,6 @@ class Util {
     });
   }
 
-  // Execute a list of Promise return functions in series
-  static runPromiseSequence(list) {
-    return list.reduce(
-      function(pacc, fn) {
-        return pacc.then(fn);
-      }, Promise.resolve());
-  }
-
   static getRejectUnauthorized() {
     let value = Platform.ENV['DSI_REJECT_UNAUTHORIZED'];
     let result = true;
