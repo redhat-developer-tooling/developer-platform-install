@@ -26,7 +26,8 @@ class JbosseapInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    this.installGenerator = new JbosseapAutoInstallGenerator(this.installerDataSvc.jbosseapDir(), this.installerDataSvc.jdkDir(), this.version);
+    let version = /(\d+\.\d+\.\d+).*/.exec(this.version)[1];
+    this.installGenerator = new JbosseapAutoInstallGenerator(this.installerDataSvc.jbosseapDir(), this.installerDataSvc.jdkDir(), version);
     let installer = new Installer(JbosseapInstall.KEY, progress, success, failure);
 
     if(fs.existsSync(this.installerDataSvc.jbosseapDir())) {
@@ -62,8 +63,9 @@ class JbosseapInstall extends InstallableItem {
 
   configureRuntimeDetection() {
     let runtimeproperties = path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties');
+    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g,'\\:');
     if(fs.existsSync(runtimeproperties)) {
-      fs.appendFile(runtimeproperties , '\njbosseap=' + this.installerDataSvc.jbosseapDir() + ',true').catch((error)=>{
+      fs.appendFile(runtimeproperties , `\njbosseap=${escapedLocation},true`).catch((error)=>{
         Logger.error(JbosseapInstall.KEY + ' - error occured during runtime detection configuration in DevStudio');
         Logger.error(JbosseapInstall.KEY + ` -  ${error}`);
       });
