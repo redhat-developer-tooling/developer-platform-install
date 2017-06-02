@@ -38,6 +38,7 @@ describe('Confirm page', function() {
       cdk: requirements['cdk'],
       jdk: requirements['jdk'],
       devstudio: requirements['devstudio'],
+      jbosseap: requirements['jbosseap'],
       kompose: requirements['kompose']
     };
     let messages = {
@@ -219,6 +220,25 @@ describe('Confirm page', function() {
       it('should display a correct description', function() {
         expect(devstudio.descriptionElement.isDisplayed()).toBe(true);
         expect(devstudio.descriptionElement.getText()).toEqual(devstudio.description);
+      });
+    });
+
+    describe('jbosseap panel', function() {
+      let jbosseap = components.jbosseap;
+
+      it('should display a correct name', function() {
+        expect(jbosseap.nameElement.isDisplayed()).toBe(true);
+        expect(jbosseap.nameElement.getText()).toEqual(jbosseap.name);
+      });
+
+      it('should display a correct version', function() {
+        expect(jbosseap.versionElement.isDisplayed()).toBe(true);
+        expect(jbosseap.versionElement.getText()).toEqual(jbosseap.version);
+      });
+
+      it('should display a correct description', function() {
+        expect(jbosseap.descriptionElement.isDisplayed()).toBe(true);
+        expect(jbosseap.descriptionElement.getText()).toEqual(jbosseap.description);
       });
     });
 

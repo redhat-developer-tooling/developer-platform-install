@@ -23,6 +23,7 @@ function checkRequirements() {
   fileNames['oc'] = 'oc-origin-cli';
   fileNames['cygwin'] = 'cygwin';
   fileNames['devstudio'] = 'devstudio';
+  fileNames['jbosseap'] = 'jboss-eap';
   fileNames['jdk'] = 'openjdk';
   fileNames['virtualbox'] = 'virtualbox';
   fileNames['7zip'] = '7-Zip';
@@ -35,6 +36,7 @@ function checkRequirements() {
   minSizes['oc.zip'] = 10 * 1024 * 1024;
   minSizes['cygwin'] = 500 * 1024;
   minSizes['devstudio'] = 400 * 1024 * 1024;
+  minSizes['jbosseap'] = 174 * 1024 * 1024;
   minSizes['jdk'] = 50 * 1024 *1024;
   minSizes['virtualbox'] = 85 * 1024 * 1024;
   minSizes['7zip'] = 200 * 1024;
