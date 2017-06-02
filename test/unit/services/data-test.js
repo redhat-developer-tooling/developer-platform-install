@@ -12,13 +12,18 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
+import child_process from 'child_process';
 chai.use(sinonChai);
 
 
 describe('InstallerDataService', function() {
-  let sandbox, svc, jdk, vbox;
+  let sandbox = sinon.sandbox.create();
+  let svc;
+  let jdk;
+  let vbox;
 
   beforeEach(function() {
+    sandbox = sinon.sandbox.create();
     svc = new InstallerDataService();
     svc.ipcRenderer = {
       send: function() {}
@@ -26,10 +31,11 @@ describe('InstallerDataService', function() {
     svc.router = {
       go: function() {}
     };
-    sandbox = sinon.sandbox.create();
-    jdk = new InstallableItem('jdk', 'https://domain.com/jdk.msi', 'jdk.msi', 'jdk', svc);
+
+    jdk = new InstallableItem('jdk', 'https://developers.redhat.com/download-manager/jdf/file/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall(svc, 'virtualbox',
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
+
   });
 
   afterEach(function() {
@@ -118,14 +124,21 @@ describe('InstallerDataService', function() {
       expect(svc.cdkMarker()).to.equal(path.join(svc.cdkRoot, '.cdk'));
       expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
     });
+
+    it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function(){
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost'});
+      svc = new InstallerDataService();
+      expect(svc.requirements.jdk.dmUrl.startsWith('https://localhost')).equals(true);
+    });
   });
 
-  describe('installables', function() {
-    it('should be able to handle installables', function() {
-      svc.addItemToInstall('key', jdk);
-
-      expect(svc.installableItems.size).to.equal(1);
-      expect(svc.getInstallable('key')).to.equal(jdk);
+  describe('addItemsToInstall', function() {
+    it('should add all items to installables', function() {
+      svc.addItemsToInstall(jdk,vbox);
+      expect(svc.installableItems.size).to.equal(2);
+      expect(svc.getInstallable('jdk')).to.equal(jdk);
+      expect(svc.getInstallable('virtualbox')).to.equal(vbox);
       expect(svc.allInstallables()).to.equal(svc.installableItems);
     });
   });
@@ -159,6 +172,43 @@ describe('InstallerDataService', function() {
         Logger.info.reset();
         svc.setup();
         expect(Logger.info).calledTwice;
+      });
+
+      it('should add uninstaller entry to control panel and log info message about success', function() {
+        fxExtraStub.yields();
+        Logger.info.reset();
+        let resolve;
+        let result = new Promise((r) => {
+          resolve = r;
+        });
+        sandbox.stub(child_process, 'exec').callsFake(function(exec, cb){
+          cb(undefined,'stdout','');
+          resolve();
+        });
+        svc.setup();
+        return result.then(()=>{
+          expect(child_process.exec).to.be.called;
+          expect(Logger.info).calledThrice;
+          expect(Logger.error).not.called;
+        });
+      });
+
+      it('should add uninstaller entry to control panel and log error message in case of failure', function() {
+        fxExtraStub.yields();
+        Logger.info.reset();
+        let resolve;
+        let result = new Promise((r) => {
+          resolve = r;
+        });
+        sandbox.stub(child_process, 'exec').callsFake(function(exec, cb){
+          cb('error','stdout','');
+          resolve();
+        });
+        svc.setup();
+        return result.then(()=>{
+          expect(child_process.exec).to.be.called;
+          expect(Logger.error).to.be.calledOnce;
+        });
       });
     });
 
