@@ -10,6 +10,7 @@ import { Readable, PassThrough, Writable } from 'stream';
 import Hash from 'browser/model/helpers/hash';
 import fs from 'fs-extra';
 import {ProgressState} from 'browser/pages/install/controller';
+const EventEmitter = require('events');
 chai.use(sinonChai);
 
 describe('Downloader', function() {
@@ -106,6 +107,7 @@ describe('Downloader', function() {
   it('closeHandler should verify downloaded files checksum', function() {
     let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
 
+    downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
     downloader.closeHandler('file', 'hash', 'url');
 
     expect(stub).to.have.been.calledOnce;
@@ -116,6 +118,7 @@ describe('Downloader', function() {
     sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
     fakeProgress.current = 100;
 
+    downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
     downloader.closeHandler('file', 'hash', 'url');
 
     expect(fakeProgress.setStatus).to.have.been.calledOnce;
@@ -126,6 +129,7 @@ describe('Downloader', function() {
     sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
     fakeProgress.current = 88;
 
+    downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
     downloader.closeHandler('file', 'hash', 'url');
 
     expect(fakeProgress.setStatus).to.have.not.been.called;
@@ -137,6 +141,7 @@ describe('Downloader', function() {
     let successSpy = sandbox.spy(downloader, 'success');
     let failureSpy = sandbox.spy(downloader, 'failure');
 
+    downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
     downloader.closeHandler('file', 'hash');
 
     expect(successSpy).to.have.been.calledOnce;
@@ -145,6 +150,7 @@ describe('Downloader', function() {
 
   it('closeHandler should call failure when verification fails', function() {
     downloader = new Downloader(fakeProgress, succ, fail);
+    downloader.downloads.set('file', {options: 'options', sha: 'sha', 'failure': false});
     sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
     let successSpy = sandbox.spy(downloader, 'success');
     let failureSpy = sandbox.spy(downloader, 'failure');
@@ -251,6 +257,7 @@ describe('Downloader', function() {
       let successSpy = sandbox.spy(downloader, 'success');
       downloader.download(options);
       response.emit('error', error);
+      downloader.downloads.set('file1', {options: 'options', sha: 'sha', 'failure': false});
       downloader.download(options2, 'file1');
       downloader.closeHandler('file1');
 
@@ -262,13 +269,17 @@ describe('Downloader', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
 
-      let stream = new Writable();
-      stream.close = function() {};
+      let stream1 = new Writable();
+      stream1.path = "file1";
+      stream1.close = function() {};
       downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
-      downloader.setWriteStream(stream);
+      downloader.setWriteStream(stream1);
       let successHandler = sandbox.stub(downloader, 'success');
       downloader.download(options);
       downloader.closeHandler('file1');
+      let stream2 = new Writable();
+      stream2.path = "file1";
+      stream2.close = function() {};
       downloader.download(options2);
       downloader.closeHandler('file2');
 
@@ -290,9 +301,9 @@ describe('Downloader', function() {
     });
 
     it('should call authDownload for entries that requires authentication', function() {
-      let response = new Readable();
+      let response = new EventEmitter();
       sandbox.stub(request, 'get').returns(response);
-      response.auth = function() { return response; };
+      response.auth = response.pipe = function() { return response; };
       let error = new Error('something bad happened');
       let stream = new Writable();
       stream.close = function() {};
@@ -301,9 +312,11 @@ describe('Downloader', function() {
       downloader.downloadAuth(options, 'username', 'password', 'key', 'sha');
       response.emit('error', error);
       stream.close = function() {};
-      sandbox.stub(fs, 'createWriteStream');
-      sandbox.stub(downloader, 'downloadAuth');
+      sandbox.stub(fs, 'createWriteStream').returns(stream);
+      sandbox.spy(downloader, 'downloadAuth');
       downloader.restartDownload();
+      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
+      response.emit('close')
       expect(downloader.downloadAuth).to.be.calledOnce;
       expect(downloader.downloadAuth).to.be.calledWith(options, 'username', 'password', 'key', 'sha');
     });
@@ -320,12 +333,30 @@ describe('Downloader', function() {
       downloader.download(options);
       response.emit('error', error);
       stream.close = function() {};
-      sandbox.stub(fs, 'createWriteStream');
+      sandbox.stub(fs, 'createWriteStream').returns(stream);
       sandbox.stub(downloader, 'download');
       downloader.restartDownload();
       expect(downloader.download).to.be.calledOnce;
       expect(downloader.download).to.be.calledWith(options);
+    });
 
+    it('should not call download method for not failed downloads', function() {
+      let response = new Readable();
+      sandbox.stub(request, 'get').returns(response);
+      response.auth = function() { return response; };
+      let error = new Error('something bad happened');
+      let stream = new Writable();
+      stream.close = function() {};
+      stream.path = 'key';
+      downloader.setWriteStream(stream);
+      downloader.download(options);
+      response.emit('end');
+      response.emit('close');
+      stream.close = function() {};
+      sandbox.stub(fs, 'createWriteStream');
+      sandbox.stub(downloader, 'download');
+      downloader.restartDownload();
+      expect(downloader.download.called).equals(false);
     });
   });
 
