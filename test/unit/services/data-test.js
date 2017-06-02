@@ -177,6 +177,7 @@ describe('InstallerDataService', function() {
       it('should add uninstaller entry to control panel and log info message about success', function() {
         fxExtraStub.yields();
         Logger.info.reset();
+        Logger.error.reset();
         let resolve;
         let result = new Promise((r) => {
           resolve = r;
@@ -196,6 +197,7 @@ describe('InstallerDataService', function() {
       it('should add uninstaller entry to control panel and log error message in case of failure', function() {
         fxExtraStub.yields();
         Logger.info.reset();
+        Logger.error.reset();
         let resolve;
         let result = new Promise((r) => {
           resolve = r;
