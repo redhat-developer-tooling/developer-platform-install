@@ -34,7 +34,9 @@ describe('jbosseap installer', function() {
 
   function stubDataService() {
     let ds = sinon.stub(new InstallerDataService({}, {
-      jbosseap: {},
+      jbosseap: {
+        version: "7.0.0.GA"
+      },
       jdk:{
         name: 'OpenJDK'
       }
@@ -219,7 +221,7 @@ describe('jbosseap installer', function() {
       sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
 
-      let data = new JbosseapAutoInstallGenerator(installerDataSvc.jbosseapDir(), installerDataSvc.jdkDir(), installer.version).fileContent();
+      let data = new JbosseapAutoInstallGenerator(installerDataSvc.jbosseapDir(), installerDataSvc.jdkDir(), /(\d+\.\d+\.\d+).*/.exec(installer.version)[1]).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'jbosseap-autoinstall.xml');
       installer.installAfterRequirements(fakeProgress, success, failure);
 
