@@ -35,7 +35,11 @@ describe('InstallerDataService', function() {
     jdk = new InstallableItem('jdk', 'https://developers.redhat.com/download-manager/jdf/file/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall(svc, 'virtualbox',
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
-
+    logStub = sandbox.stub(Logger, 'initialize');
+    infoStub = sandbox.stub(Logger, 'info');
+    errorStub = sandbox.stub(Logger, 'error');
+    fsStub = sandbox.stub(fs, 'mkdirSync');
+    fxExtraStub  = sandbox.stub(fsExtra, 'copy');
   });
 
   afterEach(function() {
@@ -47,22 +51,6 @@ describe('InstallerDataService', function() {
     installTrigger: function() {},
     setStatus: function() {}
   };
-
-  before(function() {
-    logStub = sinon.stub(Logger, 'initialize');
-    infoStub = sinon.stub(Logger, 'info');
-    errorStub = sinon.stub(Logger, 'error');
-    fsStub = sinon.stub(fs, 'mkdirSync');
-    fxExtraStub  = sinon.stub(fsExtra, 'copy');
-  });
-
-  after(function() {
-    logStub.restore();
-    fsStub.restore();
-    infoStub.restore();
-    errorStub.restore();
-    fxExtraStub.restore();
-  });
 
   describe('initial state', function() {
 
