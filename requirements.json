@@ -62,7 +62,7 @@
     "version": "11.0.0.AM1"
   },
   "jbosseap": {
-    "name": "Red Hat JBoss",
+    "name": "Red Hat JBoss Enterprise Application Platform",
     "description": "Java EE 7 compliant application server built on open standards",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/jbosseap",
@@ -72,7 +72,7 @@
     "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.0.0/jboss-eap-7.0.0-installer.jar",
     "filename": "jboss-eap-7.0.0-installer.jar",
     "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
-    "version": "7.0.0"
+    "version": "7.0.0.GA"
   },
   "jdk": {
     "name": "OpenJDK",
