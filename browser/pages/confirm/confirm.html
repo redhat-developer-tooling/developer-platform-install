@@ -78,13 +78,30 @@
       </div>
     </div>
 
+    <!-- jbosseap -->
+    <div id="jbosseap-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.jbosseap === undefined" ng-class="{'zero-border':checkboxModel.jbosseap.hasOption('detected')}">
+      <div id="jbosseap-panel-heading" class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.jbosseap.hasOption('detected')}">
+           <div class="checkbox-container verticalLine">
+             <input id="jbosseap-checkbox" type="checkbox" ng-model="checkboxModel.jbosseap.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           </div>
+        <div class="checkbox-container" ng-show="false">
+          <div id="arrow-jbosseap" class="arrow" ng-class="{'arrow-down':!checkboxModel.jbosseap.isCollapsed}" aria-label="Toggle ngHide"></div>
+        </div>
+        <div class="product-container">
+          <span id="jbosseap-name" class="product-name">{{checkboxModel.jbosseap.productName}}</span><span id="jbosseap-version" class="product-version">{{checkboxModel.jbosseap.version}}</span>
+          <div id="jbosseap-description">{{checkboxModel.jbosseap.productDesc}}</div>
+        </div>
+      </div>
+    </div>
+
     <!-- JDK -->
     <div id="jdk-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.jdk === undefined" ng-class="{'zero-border':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
       <div id="jdk-panel-heading" class="panel-heading panel-normal"
            ng-class="{'dotted-panel':checkboxModel.jdk.hasOption('detected')&&checkboxModel.jdk.selectedOption === 'detected' || platform === 'darwin'}">
            <!--ng-click="checkboxModel.jdk.changeIsCollapsed()">-->
            <div class="checkbox-container verticalLine">
-             <input id="jdk-checkbox" type="checkbox" ng-disabled="!checkboxModel.jdk.hasOption('detected') && checkboxModel.devstudio.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && !checkboxModel.jdk.option.detected.valid && checkboxModel.devstudio.selectedOption === 'install' || checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.option.detected.valid && checkboxModel.jdk.openJdkMsi || platform==='darwin'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+             <input id="jdk-checkbox" type="checkbox" ng-disabled="!checkboxModel.jdk.hasOption('detected') && (checkboxModel.jbosseap.selectedOption === 'install' || checkboxModel.devstudio.selectedOption === 'install') || checkboxModel.jdk.hasOption('detected') && !checkboxModel.jdk.option.detected.valid && (checkboxModel.jbosseap.selectedOption === 'install' || checkboxModel.devstudio.selectedOption === 'install') || checkboxModel.jdk.hasOption('detected') && checkboxModel.jdk.option.detected.valid && checkboxModel.jdk.openJdkMsi || platform==='darwin'" ng-model="checkboxModel.jdk.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
            </div>
         <div class="checkbox-container" ng-show="false">
           <div id="arrow-jdk" class="arrow" ng-class="{'arrow-down':!checkboxModel.jdk.isCollapsed}" aria-label="Toggle ngHide"></div>

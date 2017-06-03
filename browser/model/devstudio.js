@@ -8,7 +8,6 @@ import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
-import CDKInstall from './cdk.js';
 
 class DevstudioInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, devstudioSha256, additionalLocations, additionalIus) {

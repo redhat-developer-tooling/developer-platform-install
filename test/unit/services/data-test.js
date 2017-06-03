@@ -105,6 +105,7 @@ describe('InstallerDataService', function() {
       expect(svc.virtualBoxDir()).to.equal(path.join(svc.installRoot, 'virtualbox'));
       expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'jdk8'));
       expect(svc.devstudioDir()).to.equal(path.join(svc.installRoot, 'devstudio'));
+      expect(svc.jbosseapDir()).to.equal(path.join(svc.installRoot, 'jbosseap'));
       expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
       expect(svc.komposeDir()).to.equal(path.join(svc.installRoot, 'kompose'));
       expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
