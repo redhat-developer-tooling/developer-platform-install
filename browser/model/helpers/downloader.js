@@ -154,7 +154,7 @@ class Downloader {
     optionsObj['followAllRedirects'] = true;
     optionsObj['jar'] = request.jar();
     optionsObj['rejectUnauthorized'] = Util.getRejectUnauthorized();
-    optionsObj.timeout = 10000;
+    optionsObj.timeout = 60000;
     return optionsObj;
   }
 }
