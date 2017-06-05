@@ -62,19 +62,7 @@ function darwinDist(gulp) {
   });
 
   gulp.task('dist', function() {
-    return runSequence('clean', 'check-requirements', 'update-package', 'dist-simple', 'dist-bundle', 'cleanup');
-  });
-
-  gulp.task('update-package', ['update-requirements'], function() {
-    return new Promise((resolve, reject)=>{
-      fs.writeFile('./transpiled/package.json', JSON.stringify(pjson, null, 2), function(error) {
-        if(error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    });
+    return runSequence('clean', 'check-requirements', 'update-requirements', 'dist-simple', 'dist-bundle', 'cleanup');
   });
 
   gulp.task('dist-bundle', ['prefetch'], function() {

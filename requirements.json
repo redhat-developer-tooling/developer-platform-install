@@ -55,8 +55,8 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "dmUrl": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.0.0.AM1-build-product/2017-06-01_13-56-01-B198/all/devstudio-11.0.0.AM1-v20170601-1252-B198-installer-standalone.jar",
-    "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.0.0.AM1-build-product/2017-06-01_13-56-01-B198/all/devstudio-11.0.0.AM1-v20170601-1252-B198-installer-standalone.jar",
+    "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
+    "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "filename": "devstudio-11.0.0.AM1-installer-standalone.jar",
     "sha256sum": "",
     "version": "11.0.0.AM1"

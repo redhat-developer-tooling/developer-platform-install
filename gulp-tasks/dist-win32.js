@@ -78,18 +78,18 @@ module.exports = function(gulp) {
 
   // Create stub installer that will then download all the requirements
   gulp.task('package-simple', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
+    runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
       'prepare-tools'], 'prefetch-cygwin', 'package', 'cleanup', cb);
   });
 
   gulp.task('package-bundle', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
+    runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
       'prepare-tools'], 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
   });
 
   // Create both installers
   gulp.task('dist', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', 'update-requirements', ['generate',
+    runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
       'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
   });
 
