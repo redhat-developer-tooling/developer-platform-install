@@ -96,7 +96,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
+      let url = reqs['devstudio'].url + '/content.json';
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
