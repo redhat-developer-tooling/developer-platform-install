@@ -30,7 +30,7 @@ class DevstudioAutoInstallGenerator {
         '<installgroup>devstudio</installgroup>',
         '</com.jboss.devstudio.core.installer.JBossAsSelectPanel>',
         '<com.jboss.devstudio.core.installer.InstallAdditionalFeaturesPanel id="features">',
-        '<ius>com.jboss.devstudio.core.package,org.testng.eclipse.feature.group,org.eclipse.wst.common_core_EBZ511793.feature.patch.feature.group</ius>',
+        '<ius>com.jboss.devstudio.core.package,org.testng.eclipse.feature.group</ius>',
         '<locations>devstudio</locations>',
         '</com.jboss.devstudio.core.installer.InstallAdditionalFeaturesPanel>',
         '<com.jboss.devstudio.core.installer.UpdatePacksPanel id="updatepacks"/>',
