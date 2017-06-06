@@ -70,7 +70,7 @@ app.on('ready', function() {
 
   // Load the index.html of the app
   mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
-
+  mainWindow.bundleTempFolder = process.argv.length > 1 ? process.argv[1] : undefined;
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
