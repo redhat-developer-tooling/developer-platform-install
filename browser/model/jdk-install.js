@@ -35,6 +35,8 @@ class JdkInstall extends InstallableItem {
     this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
     return Promise.resolve().then(()=>{
       return this.findMsiInstalledJava();
+    }).then(() => {
+      return this.findDarwinJava();
     }).then((output)=>{
       this.openJdkMsi = output.length>0;
       return Util.executeCommand('java -version', 2);
@@ -113,6 +115,22 @@ class JdkInstall extends InstallableItem {
     if (Platform.OS == 'win32') {
       result = Util.writeFile(msiSearchScript, data).then(()=>{
         return Util.executeFile('powershell', args);
+      });
+    }
+    return result;
+  }
+
+  findDarwinJava() {
+    let javaHome = '/usr/libexec/java_home';
+    let result = Promise.resolve();
+    if (Platform.OS === 'darwin') {
+      result = Util.executeFile(javaHome)
+      .then((output) => {
+        if (!output || output.startsWith('Unable to find any JVMs')) {
+          return Promise.reject('No JVM found');
+        } else {
+          return Promise.resolve(output);
+        }
       });
     }
     return result;

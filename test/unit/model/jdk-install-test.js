@@ -75,12 +75,13 @@ describe('JDK installer', function() {
   });
 
   function mockDetectedJvm(version, location = 'java.home = /java/home\n') {
-    sandbox.stub(JdkInstall.prototype, 'findMsiInstalledJava').returns(Promise.resolve(''));
+    sandbox.stub(JdkInstall.prototype, 'findMsiInstalledJava').resolves('');
+    sandbox.stub(JdkInstall.prototype, 'findDarwinJava').resolves('');
     sandbox.stub(Util, 'executeCommand')
-      .onFirstCall().returns(Promise.resolve(`version "${version}"`))
-      .onSecondCall().returns(Promise.resolve(location));
-    sandbox.stub(Util, 'writeFile').returns(Promise.resolve(true));
-    sandbox.stub(Util, 'executeFile').returns(Promise.resolve(true));
+      .onFirstCall().resolves(`version "${version}"`)
+      .onSecondCall().resolves(location);
+    sandbox.stub(Util, 'writeFile').resolves(true);
+    sandbox.stub(Util, 'executeFile').resolves(true);
   }
 
   describe('when instantiated', function() {
@@ -182,6 +183,14 @@ describe('JDK installer', function() {
         });
       });
 
+      it('should skip darwin JVM detection', function() {
+        mockDetectedJvm('1.8.0_1');
+        jdk.findDarwinJava.restore();
+        return jdk.detectExistingInstall().then(()=>{
+          expect(Util.executeFile).not.calledWith('/usr/libexec/java_home');
+        });
+      })
+
       it('should remove detected option and mark for installation in case detection ran agian an nothing detected', function() {
         mockDetectedJvm('1.9.0_1');
         return jdk.detectExistingInstall().then(()=>{
@@ -227,6 +236,23 @@ describe('JDK installer', function() {
         return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).to.have.not.been.called;
           expect(Util.writeFile).to.have.not.been.called;
+        });
+      });
+
+      it('should check if a JVM exists first', function() {
+        mockDetectedJvm('1.8.0_1');
+        jdk.findDarwinJava.restore();
+        return jdk.detectExistingInstall().then(()=>{
+          expect(Util.executeFile).to.have.been.called;
+          expect(Util.executeFile).calledWith('/usr/libexec/java_home');
+        });
+      });
+
+      it('should not call java if no JVM exists', function() {
+        mockDetectedJvm('1.8.0_1');
+        jdk.findDarwinJava.rejects();
+        return jdk.detectExistingInstall().then(()=>{
+          expect(Util.executeFile).to.not.have.been.called;
         });
       });
 
