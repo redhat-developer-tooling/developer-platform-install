@@ -19,6 +19,10 @@ describe('Account controller', function() {
     controller = new AccountController({}, timeout, scope, null, null, {}, electron);
   });
 
+  afterEach(function() {
+    sandbox.restore();
+  });
+
 
   describe('initial state', function() {
 
@@ -27,23 +31,19 @@ describe('Account controller', function() {
     });
 
     it('should not be failed', function() {
-      expect(controller.authFailed).to.be.defined;
-      expect(controller.authFailed).to.be.false;
+      expect(controller).to.have.property('authFailed', false);
     });
 
     it('username should be empty', function() {
-      expect(controller.username).to.be.defined;
-      expect(controller.username).to.be.empty;
+      expect(controller).to.have.property('username').to.be.empty;
     });
 
     it('password should be empty', function() {
-      expect(controller.password).to.be.defined;
-      expect(controller.password).to.be.empty;
+      expect(controller).to.have.property('password').to.be.empty;
     });
 
     it('terms and conditions should be considered signed', function() {
-      expect(controller.tandcNotSigned).to.be.defined;
-      expect(controller.tandcNotSigned).to.be.false;
+      expect(controller).to.have.property('tandcNotSigned').to.be.false;
     });
   });
 
@@ -139,15 +139,16 @@ describe('Account controller', function() {
     it('should open createAccount url in browser using electron.shell.openExternal', function() {
       sandbox.stub(electron.shell);
       controller.createAccount();
-      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).calledOnce;
       expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/protocol/openid-connect/registrations?client_id=web&response_mode=fragment&response_type=code&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2F%2Fconfirmation');
     });
   });
 
   describe('forgotPassword', function() {
     it('should open forgotPassword url in browser using electron.shell.openExternal', function() {
+      sandbox.stub(electron.shell);
       controller.forgotPassword();
-      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).calledOnce;
       expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/account');
     });
   });
@@ -185,8 +186,9 @@ describe('Account controller', function() {
 
   describe('gotoDRH', function() {
     it('should open DRH url in browser using electron.shell.openExternal', function() {
+      sandbox.stub(electron.shell);
       controller.gotoDRH();
-      expect(electron.shell.openExternal).twice;
+      expect(electron.shell.openExternal).calledOnce;
       expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com');
     });
   });

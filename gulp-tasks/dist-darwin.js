@@ -26,7 +26,8 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
       mac: {
         category: 'public.app-category.developer-tools',
         icon: 'resources/devsuite.icns',
-        target: ['zip']
+        target: ['zip'],
+        publish: null
       },
       extraFiles,
       directories: {
