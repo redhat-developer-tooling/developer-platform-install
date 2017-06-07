@@ -17,6 +17,7 @@ let config = {
 config.buildFolderRoot = path.join('dist', config.artifactPlatform + '-' + config.artifactArch );
 config.buildFileNamePrefix = config.artifactName;
 config.buildFolderPath = path.resolve(config.buildFolderRoot);
+config.genFolderPath = path.join(config.buildFolderPath, 'devsuite-win32-x64');
 config.configIcon = path.resolve(path.join('resources', config.artifactName + '.ico'));
 
 module.exports = config;
