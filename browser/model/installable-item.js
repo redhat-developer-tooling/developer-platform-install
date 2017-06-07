@@ -38,7 +38,7 @@ class InstallableItem {
 
     this.downloadUrl = downloadUrl;
 
-    this.bundleFolder = remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
+    this.bundleFolder = remote && remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
     this.bundledFile = path.join(this.bundleFolder, fileName);
 
     this.isCollapsed = true;
