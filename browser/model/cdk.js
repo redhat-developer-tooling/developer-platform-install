@@ -14,7 +14,7 @@ class CDKInstall extends InstallableItem {
     super(CDKInstall.KEY, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = minishiftSha256;
-    this.addOption('install', '3.0.0', '', true);
+    this.addOption('install', this.version, '', true);
     this.selected = false;
   }
 
@@ -28,7 +28,6 @@ class CDKInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let minishiftDir = this.installerDataSvc.ocDir();
     let minishiftExe = this.minishiftExeLocation;
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;

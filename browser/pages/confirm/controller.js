@@ -99,12 +99,13 @@ class ConfirmController {
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
-      Promise.all(detectors).then(()=> {
+      this.detection = Promise.all(detectors).then(()=> {
         this.setIsDisabled();
       }).catch(()=> {
         this.setIsDisabled();
       });
     }
+    return this.detection;
   }
 
   download(url) {

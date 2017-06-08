@@ -22,6 +22,7 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
     this.sha256 = sha256;
+    this.addOption('install', this.version, '', true);
   }
 
   static get KEY() {
@@ -236,7 +237,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
       '-e',
       `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
     ].join(' ');
-    return osaScript
+    return osaScript;
   }
 }
 
