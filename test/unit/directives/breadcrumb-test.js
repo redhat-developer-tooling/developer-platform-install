@@ -1,5 +1,7 @@
 'use strict';
 
+import fs from 'fs-extra';
+import path from 'path';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
@@ -17,10 +19,8 @@ describe('BreadcrumbDirective', function() {
     // The injector unwraps the underscores (_) from around the parameter names when matching
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    // FIXME figure out how to test real template with templateUrl
-    //let templateContent = fs.readFileSync(templatePath, 'utf8');
-    //let templatePath = path.resolve('./browser/directives/breadcrumbs.html');
-    _$templateCache_.put('directives/breadcrumbs.html', '<a>template</a>');
+    let templatePath = path.resolve('./browser/directives/breadcrumbs.html');
+    _$templateCache_.put('directives/breadcrumbs.html', fs.readFileSync(templatePath, 'utf8'));
   }));
   afterEach(function() {
     sandbox.restore();
@@ -31,9 +31,8 @@ describe('BreadcrumbDirective', function() {
     $compile(angular.element(
         '<breadcrumb></breadcrumb>'))(scope);
     scope.$digest();
-      // Check that the compiled element contains the templated content
+    // Check that the compiled element contains the templated content
     // expect(compiledDirective.html()).to.contain('notSelected-message');
     // expect(compiledDirective.html()).to.not.contain('notAbsolute-message');
   });
-
 });

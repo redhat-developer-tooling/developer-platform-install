@@ -7,20 +7,12 @@ function breadcrumb() {
     templateUrl: 'directives/breadcrumbs.html',
     compile: () => {
       return ($scope) => {
-        $scope.show = (state) => {
-          if (!angular.isDefined(state.data)) {
-            return false;
-          }
-          return true;
-        };
+        $scope.show = (state) => angular.isDefined(state.data);
       };
     },
     controller: ['$scope', '$state', ($scope, $state) => {
       $scope.$navItems = $state.get();
-
-      $scope.isCurrent = (state) => {
-        return $state.$current.name == state.name;
-      };
+      $scope.isCurrent = (state) => $state.$current.name == state.name;
     }]
   };
 }
