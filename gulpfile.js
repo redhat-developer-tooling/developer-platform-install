@@ -16,7 +16,8 @@ var gulp = require('gulp'),
   sourcemaps = require('gulp-sourcemaps'),
   symlink = require('gulp-symlink'),
   common = require('./gulp-tasks/common'),
-  config = require('./gulp-tasks/config');
+  config = require('./gulp-tasks/config'),
+  yargs = require('yargs');
 
 require('./gulp-tasks/tests')(gulp);
 require('./gulp-tasks/dist-' + process.platform)(gulp);
@@ -81,7 +82,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements'], function(c
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
   cmd += ' --prune --ignore="test|' + config.prefetchFolder + '"';
   cmd += ' --icon="' + config.configIcon + '"';
-  //console.log(cmd);
+    //console.log(cmd);
   exec(cmd, common.createExecCallback(cb, true));
 });
 
@@ -169,7 +170,11 @@ gulp.task('create-prefetch-cache-dir', function() {
 
 //check if URLs in requirements.json return 200 and generally point to their appropriate tools
 gulp.task('check-requirements', function(cb) {
-  exec('node test/check-requirements.js', common.createExecCallback(cb, false));
+  if(yargs.argv['skip-req-check']) {
+    cb();
+  } else {
+    exec('node test/check-requirements.js', common.createExecCallback(cb, false));
+  }
 });
 
 gulp.task('watch', function () {
