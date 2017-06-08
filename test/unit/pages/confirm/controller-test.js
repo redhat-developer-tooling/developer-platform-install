@@ -6,6 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
 import ElectronMock from '../../../mock/electron';
 import ConfirmController from 'browser/pages/confirm/controller';
+import fs from 'fs';
 
 require('../../../angular-test-helper');
 require('browser/main');
@@ -31,6 +32,7 @@ describe('ConfirmController', function() {
     $watch = sandbox.spy($scope, '$watch');
     installerDataSvc = _installerDataSvc_;
     sandbox.stub(installerDataSvc, 'copyUninstaller');
+    sandbox.stub(fs, 'existsSync').returns(true);
     installerDataSvc.setup();
     for (var installer of installerDataSvc.allInstallables().values()) {
       sandbox.stub(installer, 'detectExistingInstall').resolves();
