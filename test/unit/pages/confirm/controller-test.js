@@ -27,15 +27,18 @@ describe('ConfirmController', function() {
   // The injector unwraps the underscores (_) from around the parameter names when matching
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
+    $scope.$apply = function applyStub() {};
     $watch = sandbox.spy($scope, '$watch');
     installerDataSvc = _installerDataSvc_;
+    sandbox.stub(installerDataSvc, 'copyUninstaller');
+    installerDataSvc.setup();
     for (var installer of installerDataSvc.allInstallables().values()) {
       sandbox.stub(installer, 'detectExistingInstall').resolves();
     }
     confirmController = $controller('ConfirmController', {
       $scope,
       $state: _$state_,
-      $timeout: function(callback) { callback(); },
+      $timeout: function timeoutStub(callback) { callback(); },
       installerDataSvc,
       electron
     });
@@ -63,16 +66,18 @@ describe('ConfirmController', function() {
       });
 
       it('unlock user interface after detection ends without errors', function() {
-        return new Promise(function(resolve) {
-          confirmController.sc.$apply = function() {
-            resolve();
-          };
-          $scope.$digest();
-        }).then(function() {
+        confirmController.detectInstalledComponents();
+        return confirmController.detection.then(function() {
           expect(confirmController.setIsDisabled).to.be.called;
+        });
+      });it('install', function() {
+        confirmController.detectInstalledComponents();
+        return confirmController.detection.then(function() {
+          confirmController.install();
         });
       });
     });
+
   });
 
   beforeEach(function() {
