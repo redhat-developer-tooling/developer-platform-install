@@ -208,7 +208,7 @@ describe('Install controller', function() {
       });
       describe('should update', function() {
         let progress;
-        before(function() {
+        beforeEach(function() {
           progress = new ProgressState();
           progress.$timeout = sinon.stub().yields();
           progress.$scope = {$apply:sinon.stub()};
@@ -229,6 +229,57 @@ describe('Install controller', function() {
         it('calls angular async update', function() {
           expect(progress.$scope.$apply).calledOnce;
         });
+        it('ETA to second', function() {
+          sinon.stub(progress, 'calculateTime').returns(1000);
+          progress.setCurrent(101);
+          expect(progress.label).to.have.string('sec');
+        });
+        it('ETA to seconds', function() {
+          sinon.stub(progress, 'calculateTime').returns(45000);
+          progress.setCurrent(102);
+          expect(progress.label).to.have.string('secs');
+        });
+        it('ETA to minute', function() {
+          sinon.stub(progress, 'calculateTime').returns(65000);
+          progress.setCurrent(103);
+          expect(progress.label).to.have.string('min');
+        });
+        it('ETA to minutes', function() {
+          sinon.stub(progress, 'calculateTime').returns(125000);
+          progress.setCurrent(104);
+          expect(progress.label).to.have.string('mins');
+        });
+        it('ETA to hour', function() {
+          sinon.stub(progress, 'calculateTime').returns(3600000);
+          progress.setCurrent(105);
+          expect(progress.label).to.have.string('hr');
+        });
+        it('ETA to hours', function() {
+          sinon.stub(progress, 'calculateTime').returns(7200000);
+          progress.setCurrent(106);
+          expect(progress.label).to.have.string('hrs');
+        });
+        it('ETA to day', function() {
+          sinon.stub(progress, 'calculateTime').returns(3600000*24);
+          progress.setCurrent(105);
+          expect(progress.label).to.have.string('day');
+        });
+        it('ETA to days', function() {
+          sinon.stub(progress, 'calculateTime').returns(7200000*24);
+          progress.setCurrent(106);
+          expect(progress.label).to.have.string('days');
+        });
+        it('ETA to year', function() {
+          sinon.stub(progress, 'calculateTime').returns(3600000*24*366);
+          progress.setCurrent(105);
+          expect(progress.label).to.have.string('year');
+        });
+        it('ETA to years', function() {
+          sinon.stub(progress, 'calculateTime').returns(7200000*24*366);
+          progress.setCurrent(106);
+          expect(progress.label).to.have.string('years');
+        });
+
       });
     });
     describe('setStatus', function() {
