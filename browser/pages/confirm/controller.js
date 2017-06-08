@@ -165,13 +165,6 @@ class ConfirmController {
     });
   }
 
-  // Check if the product is already installed
-  // ATM this is only devstudio
-  checkItem(key) {
-    let item = this.installerDataSvc.allInstallables().get(key);
-    item.checkForExistingInstall();
-  }
-
   devstudioIsConfigured() {
     return this.sc.checkboxModel.jdk.isConfigured()
       && this.sc.checkboxModel.devstudio.isConfigured()
