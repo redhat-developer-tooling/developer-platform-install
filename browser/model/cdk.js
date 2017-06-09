@@ -45,12 +45,11 @@ class CDKInstall extends InstallableItem {
       let hv = this.installerDataSvc.getInstallable('hyperv');
       if (hv && hv.hasOption('detected')) {
         driverName = 'hyperv';
+        return installer.exec(
+          'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
+        ).catch(()=>Promise.resolve());
       }
-      return Promise.resolve(driverName);
-    }).then(()=> {
-      return installer.exec(
-        'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
-      ).catch(()=>Promise.resolve());
+      return Promise.resolve();
     }).then(()=> {
       return installer.exec(
         `${minishiftExe} stop`
