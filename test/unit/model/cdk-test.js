@@ -66,21 +66,17 @@ describe('CDK installer', function() {
     svc.cygwinRoot = 'cygwinLocation';
     let cygwin;
     if (process.platform === 'win32') {
-      svc.addItemsToInstall(
-        new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false)
-      );
-      cygwin = svc.getInstallable('cygwin');
+      cygwin = new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false);
+      svc.addItemsToInstall(cygwin);
       cygwin.addOption('install', '1.0.0', 'cygwin', true);
     } else {
       svc.requirements['hyperv'] = {};
     }
-    svc.addItemsToInstall(
-      new InstallableItem('virtualbox', 'url', 'virtualbox.exe', 'virtualbox', svc, false)
-    );
-    let virtualbox = svc.getInstallable('virtualbox');
+    let virtualbox = new InstallableItem('virtualbox', 'url', 'virtualbox.exe', 'virtualbox', svc, false);
+    svc.addItemsToInstall(virtualbox);
     virtualbox.addOption('install', '1.0.0', 'virtualbox', true);
-
     let cdk = new CDKInstall(svc, 'folderName', cdkUrl, 'file.exe', 'sha1');
+
     return {
       svc,
       virtualbox,
@@ -205,9 +201,10 @@ describe('CDK installer', function() {
     });
 
     describe('on windows', function() {
+      let svc;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        ( {cdk: installer} = stubInstaller() );
+        ( {cdk: installer, svc} = stubInstaller() );
         sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve(path.join('Users', 'dev1')));
         sandbox.stub(Installer.prototype, 'copyFile').resolves();
         sandbox.stub(Installer.prototype, 'exec').resolves();
@@ -273,10 +270,13 @@ describe('CDK installer', function() {
         });
       });
 
-      it('should add current user to `Hyper-V Administrators` group', function() {
+      it('should add current user to `Hyper-V Administrators` group when hyper-v is detected', function() {
         Installer.prototype.exec.restore();
         sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
         Installer.prototype.exec.onCall(1).resolves();
+        let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
+        svc.addItemsToInstall(hyperv);
+        hyperv.addOption('detected', '1.0.0', 'hyperv', true);
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
@@ -286,10 +286,23 @@ describe('CDK installer', function() {
         });
       });
 
+      it('should not add current user to `Hyper-V Administrators` group when hyper-v is not detected', function() {
+        Installer.prototype.exec.restore();
+        sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
+        Installer.prototype.exec.onCall(1).resolves();
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=>{
+          expect(Installer.prototype.exec).not.calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
+        }).catch(()=>{
+          expect.fail();
+        });
+      });
+
       it('should stop minishift before running `minishift setup-cdk`', function() {
         Installer.prototype.exec.restore();
-        sandbox.stub(Installer.prototype, 'exec').onCall(0).resolves();
-        Installer.prototype.exec.onCall(1).rejects('error');
+        sandbox.stub(Installer.prototype, 'exec');
+        Installer.prototype.exec.onCall(0).rejects('error');
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
