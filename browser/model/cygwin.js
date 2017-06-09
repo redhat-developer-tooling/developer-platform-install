@@ -71,7 +71,7 @@ class CygwinInstall extends InstallableItem {
       .replace(/'/g, '\'\'');
 
     let cygwinArgs = `--no-admin --quiet-mode --only-site -l ${packagesFolder} --site http://mirrors.xmission.com/cygwin --root ${rootFolder} --categories Base --packages openssh,rsync`;
-    let localPackages = path.join(this.bundleFolder,'packages');
+    let localPackages = path.join(this.bundleFolder, 'packages');
     if(fs.existsSync(localPackages)) {
       cygwinArgs = cygwinArgs + ' -L -l ${localPackages}';
     }

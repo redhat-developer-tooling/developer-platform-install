@@ -1,7 +1,6 @@
 'use strict';
 
 let path = require('path');
-let fs = require('fs-extra');
 
 import DevstudioAutoInstallGenerator from './devstudio-autoinstall';
 import InstallableItem from './installable-item';

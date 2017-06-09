@@ -270,7 +270,7 @@ describe('Downloader', function() {
       sandbox.stub(request, 'get').returns(response);
 
       let stream1 = new Writable();
-      stream1.path = "file1";
+      stream1.path = 'file1';
       stream1.close = function() {};
       downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
       downloader.setWriteStream(stream1);
@@ -278,7 +278,7 @@ describe('Downloader', function() {
       downloader.download(options);
       downloader.closeHandler('file1');
       let stream2 = new Writable();
-      stream2.path = "file1";
+      stream2.path = 'file1';
       stream2.close = function() {};
       downloader.download(options2);
       downloader.closeHandler('file2');
@@ -316,7 +316,7 @@ describe('Downloader', function() {
       sandbox.spy(downloader, 'downloadAuth');
       downloader.restartDownload();
       sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
-      response.emit('close')
+      response.emit('close');
       expect(downloader.downloadAuth).to.be.calledOnce;
       expect(downloader.downloadAuth).to.be.calledWith(options, 'username', 'password', 'key', 'sha');
     });
@@ -344,7 +344,6 @@ describe('Downloader', function() {
       let response = new Readable();
       sandbox.stub(request, 'get').returns(response);
       response.auth = function() { return response; };
-      let error = new Error('something bad happened');
       let stream = new Writable();
       stream.close = function() {};
       stream.path = 'key';

@@ -1,6 +1,7 @@
 'use strict';
 
-import chai, { expect } from 'chai';
+import 'chai';
+import { expect } from 'chai';
 import InstallerDataService from 'browser/services/data';
 import ComponentLoader from 'browser/services/componentLoader';
 
@@ -148,7 +149,7 @@ describe('Component Loader', function() {
       expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
       expect(svc.getInstallable('cygwin')).to.equal(undefined);
       expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('virtualbox');
-    })
+    });
   });
 
   describe('removeComponent', function() {
@@ -195,7 +196,7 @@ describe('Component Loader', function() {
     });
 
     it('should rearange the installation sequence', function() {
-      loader.loadComponent('jdk')
+      loader.loadComponent('jdk');
 
       expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
       expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
@@ -222,7 +223,7 @@ describe('Component Loader', function() {
     });
 
     it('should order the installation sequence', function() {
-      loader.loadComponents()
+      loader.loadComponents();
 
       expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
       expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');

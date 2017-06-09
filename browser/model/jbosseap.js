@@ -9,7 +9,6 @@ import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
-import Platform from '../services/platform';
 
 class JbosseapInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, jbosseapSha256) {
@@ -63,9 +62,9 @@ class JbosseapInstall extends InstallableItem {
 
   configureRuntimeDetection() {
     let runtimeproperties = path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties');
-    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g,'\\:');
+    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
     if(fs.existsSync(runtimeproperties)) {
-      fs.appendFile(runtimeproperties , `\njbosseap=${escapedLocation},true`).catch((error)=>{
+      fs.appendFile(runtimeproperties, `\njbosseap=${escapedLocation},true`).catch((error)=>{
         Logger.error(JbosseapInstall.KEY + ' - error occured during runtime detection configuration in DevStudio');
         Logger.error(JbosseapInstall.KEY + ` -  ${error}`);
       });

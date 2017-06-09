@@ -17,10 +17,7 @@ import child_process from 'child_process';
 import mockfs from 'mock-fs';
 import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
-
 let sinon  = require('sinon');
-
-
 
 describe('CDK installer', function() {
   let sandbox, installerDataSvc;
@@ -278,7 +275,7 @@ describe('CDK installer', function() {
 
       it('should add current user to `Hyper-V Administrators` group', function() {
         Installer.prototype.exec.restore();
-        sandbox.stub(Installer.prototype,'exec').onCall(0).rejects('Error');
+        sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
         Installer.prototype.exec.onCall(1).resolves();
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
@@ -291,7 +288,7 @@ describe('CDK installer', function() {
 
       it('should stop minishift before running `minishift setup-cdk`', function() {
         Installer.prototype.exec.restore();
-        sandbox.stub(Installer.prototype,'exec').onCall(0).resolves();
+        sandbox.stub(Installer.prototype, 'exec').onCall(0).resolves();
         Installer.prototype.exec.onCall(1).rejects('error');
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);

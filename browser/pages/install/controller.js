@@ -110,11 +110,11 @@ const shortDuration = {
   largest: 2,
   languages: {
     shortEn: {
-      y: function(c) { return 'year' + (c === 1 ? '' : 's') },
-      d: function(c) { return 'day' + (c === 1 ? '' : 's') },
-      h: function(c) { return 'hr' + (c === 1 ? '' : 's') },
-      m: function(c) { return 'min' + (c === 1 ? '' : 's') },
-      s: function(c) { return 'sec' + (c === 1 ? '' : 's') }
+      y: function(c) { return 'year' + (c === 1 ? '' : 's'); },
+      d: function(c) { return 'day' + (c === 1 ? '' : 's'); },
+      h: function(c) { return 'hr' + (c === 1 ? '' : 's'); },
+      m: function(c) { return 'min' + (c === 1 ? '' : 's'); },
+      s: function(c) { return 'sec' + (c === 1 ? '' : 's'); }
     }
   }
 };

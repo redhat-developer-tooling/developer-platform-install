@@ -1,8 +1,8 @@
-const jsdom = require("jsdom");
+const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
 
-global.document = (new JSDOM(`<html><head><script></script></head><body></body></html>`));
+global.document = (new JSDOM('<html><head><script></script></head><body></body></html>'));
 global.window = global.document.window;
 global.Node = global.window.Node;
 

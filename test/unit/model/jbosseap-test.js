@@ -35,7 +35,7 @@ describe('jbosseap installer', function() {
   function stubDataService() {
     let ds = sinon.stub(new InstallerDataService({}, {
       jbosseap: {
-        version: "7.0.0.GA"
+        version: '7.0.0.GA'
       },
       jdk:{
         name: 'OpenJDK'

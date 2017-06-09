@@ -189,7 +189,7 @@ describe('JDK installer', function() {
         return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).not.calledWith('/usr/libexec/java_home');
         });
-      })
+      });
 
       it('should remove detected option and mark for installation in case detection ran agian an nothing detected', function() {
         mockDetectedJvm('1.9.0_1');
