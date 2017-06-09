@@ -4,6 +4,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
+import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
 import ConfirmController from 'browser/pages/confirm/controller';
 import fs from 'fs';
@@ -94,6 +95,9 @@ describe('ConfirmController', function() {
   });
 
   describe('install', function() {
+    beforeEach(function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
+    });
     beforeEach(inject(context));
     it('should navigate to install page', function() {
       $watch.args.forEach(function(el) {
