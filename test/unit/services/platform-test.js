@@ -344,6 +344,23 @@ describe('Platform', function() {
     });
   });
 
+  describe('getFreeDiskSpace', function() {
+    describe('on windows', function() {
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should able to return free disk space', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '248005160960');
+        let location = 'C:\\DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.equal(248005160960);
+        });
+      });
+    });
+  });
+
   describe('addToUserPath', function() {
     describe('on windows', function() {
       beforeEach(function() {
