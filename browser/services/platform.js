@@ -133,6 +133,21 @@ class Platform {
     });
   }
 
+  static getFreeDiskSpace(location) {
+    return Platform.identify({
+      win32: ()=> {
+        let disk = path.parse(location).root.charAt(0);
+        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\") }"`).then((stdout) => {
+          return Promise.resolve(Number.parseInt(stdout));
+        });
+      },
+      darwin: ()=> {
+
+      },
+      default: ()=> Promise.resolve()
+    });
+  }
+
   static addToUserPath(locations) {
     return Platform.identify({
       win32: ()=> {
