@@ -35,10 +35,10 @@ describe('InstallerDataService', function() {
     jdk = new InstallableItem('jdk', 'https://developers.redhat.com/download-manager/jdf/file/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall(svc, 'virtualbox',
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
-    logStub = sandbox.stub(Logger, 'initialize');
-    infoStub = sandbox.stub(Logger, 'info');
-    errorStub = sandbox.stub(Logger, 'error');
-    fsStub = sandbox.stub(fs, 'mkdirSync');
+    sandbox.stub(Logger, 'initialize');
+    sandbox.stub(Logger, 'info');
+    sandbox.stub(Logger, 'error');
+    sandbox.stub(fs, 'mkdirSync');
     fxExtraStub  = sandbox.stub(fsExtra, 'copy');
   });
 
@@ -46,7 +46,7 @@ describe('InstallerDataService', function() {
     sandbox.restore();
   });
 
-  let logStub, fsStub, infoStub, errorStub, fxExtraStub;
+  let fxExtraStub;
   let fakeProgress = {
     installTrigger: function() {},
     setStatus: function() {}
@@ -114,7 +114,7 @@ describe('InstallerDataService', function() {
       expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
     });
 
-    it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function(){
+    it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost'});
       svc = new InstallerDataService();
@@ -124,7 +124,7 @@ describe('InstallerDataService', function() {
 
   describe('addItemsToInstall', function() {
     it('should add all items to installables', function() {
-      svc.addItemsToInstall(jdk,vbox);
+      svc.addItemsToInstall(jdk, vbox);
       expect(svc.installableItems.size).to.equal(2);
       expect(svc.getInstallable('jdk')).to.equal(jdk);
       expect(svc.getInstallable('virtualbox')).to.equal(vbox);
@@ -171,8 +171,8 @@ describe('InstallerDataService', function() {
         let result = new Promise((r) => {
           resolve = r;
         });
-        sandbox.stub(child_process, 'exec').callsFake(function(exec, cb){
-          cb(undefined,'stdout','');
+        sandbox.stub(child_process, 'exec').callsFake(function(exec, cb) {
+          cb(undefined, 'stdout', '');
           resolve();
         });
         svc.setup();

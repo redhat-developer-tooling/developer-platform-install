@@ -3,8 +3,6 @@
 let path = require('path');
 let esc = require('xml-escape');
 
-import Platform from '../services/platform';
-
 class JbosseapAutoInstallGenerator {
   constructor(jbosseapInstallDir, jdkInstallDir, version) {
     this.autoInstall = this.generate(jbosseapInstallDir, jdkInstallDir, version);
@@ -15,7 +13,6 @@ class JbosseapAutoInstallGenerator {
   }
 
   generate(jbosseapInstallDir, jdkInstallDir, jbosseapVersion) {
-    let exeSuffix = Platform.OS === 'win32' ? 'w.exe' : '';
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',

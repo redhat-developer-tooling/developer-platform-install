@@ -146,9 +146,9 @@ describe('Virtualbox installer', function() {
 
       it('should execute macos installer with osascript', function() {
         sandbox.stub(Installer.prototype, 'exec').resolves(true);
-        installer.installAfterRequirements(fakeProgress, function() {}, function(){});
+        installer.installAfterRequirements(fakeProgress, function() {}, function() {});
         expect(Installer.prototype.exec).calledWith(installer.getScript());
-      })
+      });
     });
 
     describe('on windows', function() {
