@@ -21,7 +21,7 @@
     "package-simple": "./node_modules/.bin/gulp package-simple",
     "coverage:publish": "codecov",
     "dist": "./node_modules/.bin/gulp dist",
-    "debug-test": "NODE_PATH=. node node_modules/.bin/mocha --inspect --debug-brk --compilers=js:babel-core/register --recursive",
+    "debug-test": "NODE_PATH=. node_modules/.bin/mocha.cmd --inspect --inspect-brk --compilers=js:babel-core/register --recursive",
     "test": "./node_modules/.bin/gulp test",
     "ui-test": "./node_modules/.bin/gulp ui-test",
     "system-test": "./node_modules/.bin/gulp system-test",

@@ -6,6 +6,7 @@ import Platform from 'browser/services/platform';
 import child_process from 'child_process';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
+import fs from 'fs-extra';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -367,6 +368,7 @@ describe('Platform', function() {
       it('adds directory if file passed in', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        sandbox.stub(fs, 'statSync').returns({isFile:function isFile() { return true; }});
         let locations = ['path1/file1', 'path2/file1', 'path3/file1'];
         return Platform.addToUserPath(locations).then(() => {
           expect(Platform.setUserPath_win32).calledWith(['path2', 'path3', 'path1'].join(';'));
