@@ -144,7 +144,7 @@ class Platform {
         });
       },
       darwin: ()=> {
-        let path = location[0] === '/' ? '/' + location.split('/')[1] : location.split('/')[0]
+        let path = location[0] === '/' ? '/' + location.split('/')[1] : location.split('/')[0];
         return pify(child_process.exec)(`df -k ${path}`).then((stdout) => {
           let lines = stdout.split('\n');
           let split = lines[1].replace( / +/g, ' ' ).split(' ');
