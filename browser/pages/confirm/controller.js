@@ -58,9 +58,7 @@ class ConfirmController {
 
     for (let key in watchedComponents) {
       $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
-        console.log($scope.checkboxModel.devstudio.selectedOption, $scope.checkboxModel.jbosseap.selectedOption);
         for (let keyName of watchedComponents[key]) {
-          console.log(keyName);
           if ( keyName === 'jdk' ) {
             if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
               $scope.checkboxModel[keyName].selectedOption = 'detected';
