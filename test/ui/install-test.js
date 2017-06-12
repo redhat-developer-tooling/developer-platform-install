@@ -7,24 +7,25 @@ let breadcrumbBase = require('./breadcrumbs-base');
 let loadMetadata = require('../../browser/services/metadata');
 let requirements = loadMetadata(require(path.join(rootPath, 'requirements.json')), process.platform);
 
+for (var key in requirements) {
+  if (requirements[key].bundle === 'tools') {
+    delete requirements[key];
+  }
+}
+// Hyper-V has no progress bar
+delete requirements.hyperv;
+
 describe('Installation page', function() {
-  let components = {
-    virtualbox: requirements['virtualbox'],
-    cygwin: requirements['cygwin'],
-    cdk: requirements['cdk'],
-    jdk: requirements['jdk'],
-    devstudio: requirements['devstudio']
-  };
 
   beforeAll(function() {
     browser.ignoreSynchronization = true;
     browser.setLocation('install')
     .then(function() {
-      for (var key in components) {
-        components[key].name = components[key].name.toUpperCase();
-        components[key].panel = element(By.id(key + '-progress'));
-        components[key].descriptionPane = components[key].panel.element(By.className('progress-description'));
-        components[key].progress = components[key].panel.element(By.className('progress-bar'));
+      for (var key in requirements) {
+        requirements[key].name = requirements[key].name.toUpperCase();
+        requirements[key].panel = element(By.id(key + '-progress'));
+        requirements[key].descriptionPane = requirements[key].panel.element(By.className('progress-description'));
+        requirements[key].progress = requirements[key].panel.element(By.className('progress-bar'));
       }
     });
   });
@@ -32,8 +33,8 @@ describe('Installation page', function() {
   breadcrumbBase.describeBreadcrumbs(context);
 
   it('should display progress panel for each component', function() {
-    for (var key in components) {
-      expect(components[key].panel.isDisplayed()).toBe(true);
+    for (var key in requirements) {
+      expect(requirements[key].panel.isDisplayed()).toBe(true);
     }
   });
 
@@ -42,32 +43,32 @@ describe('Installation page', function() {
     describe('Description pane', function() {
 
       it('should be displayed for each progress panel', function() {
-        for (var key in components) {
-          expect(components[key].descriptionPane.isDisplayed()).toBe(true);
+        for (var key in requirements) {
+          expect(requirements[key].descriptionPane.isDisplayed()).toBe(true);
         }
       });
 
       it('should each display a correct component name', function() {
-        for (var key in components) {
-          let productName = components[key].descriptionPane.element(By.className('product-name'));
+        for (var key in requirements) {
+          let productName = requirements[key].descriptionPane.element(By.className('product-name'));
           expect(productName.isDisplayed()).toBe(true);
-          expect(productName.getText()).toEqual(components[key].name);
+          expect(productName.getText()).toEqual(requirements[key].name);
         }
       });
 
       it('should each display a correct component version', function() {
-        for (var key in components) {
-          let productVersion = components[key].descriptionPane.all(By.className('product-version')).first();
+        for (var key in requirements) {
+          let productVersion = requirements[key].descriptionPane.all(By.className('product-version')).first();
           expect(productVersion.isDisplayed()).toBe(true);
-          expect(productVersion.getText()).toEqual(components[key].version);
+          expect(productVersion.getText()).toEqual(requirements[key].version);
         }
       });
 
       it('should each display a correct component description', function() {
-        for (var key in components) {
-          let productDesc = components[key].descriptionPane.element(By.tagName('div'));
+        for (var key in requirements) {
+          let productDesc = requirements[key].descriptionPane.element(By.tagName('div'));
           expect(productDesc.isDisplayed()).toBe(true);
-          expect(productDesc.getText()).toEqual(components[key].description);
+          expect(productDesc.getText()).toEqual(requirements[key].description);
         }
       });
     });
@@ -75,15 +76,15 @@ describe('Installation page', function() {
     describe('Progress bar', function() {
 
       it('should be displayed for each progress panel', function() {
-        for (var key in components) {
-          expect(components[key].progress.isDisplayed()).toBe(true);
+        for (var key in requirements) {
+          expect(requirements[key].progress.isDisplayed()).toBe(true);
         }
       });
 
       it('should each go from 0 to 100%', function() {
-        for (var key in components) {
-          expect(components[key].progress.getAttribute('aria-valuemin')).toEqual('0');
-          expect(components[key].progress.getAttribute('aria-valuemax')).toEqual('100');
+        for (var key in requirements) {
+          expect(requirements[key].progress.getAttribute('aria-valuemin')).toEqual('0');
+          expect(requirements[key].progress.getAttribute('aria-valuemax')).toEqual('100');
         }
       });
     });
