@@ -51,14 +51,15 @@ describe('CDK installer', function() {
     sha256Stub.restore();
   });
 
-  let reqs = loadMetadata(require('../../../requirements.json'), process.platform);
 
-  let cdkUrl = reqs['cdk'].url;
+
+  let cdkUrl = 'https://doenload.cdk/url';
 
   let success = () => {};
   let failure = () => {};
 
   function stubInstaller() {
+    let reqs = loadMetadata(require('../../../requirements.json'), process.platform);
     let svc = new InstallerDataService({}, reqs);
     svc.cdkRoot = 'cdkLocation';
     svc.ocBinRoot = 'ocBinRoot';
@@ -128,11 +129,13 @@ describe('CDK installer', function() {
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
+    console.log("beforeEach!");
   });
 
   afterEach(function () {
     sandbox.restore();
     mockfs.restore();
+    console.log('afterEach!');
   });
 
   it('should fail when some download url is not set and installed file not defined', function() {
@@ -208,24 +211,6 @@ describe('CDK installer', function() {
       }).catch(()=> {
         expect(stubCopy).to.have.been.not.called;
         expect(stubUnzip).to.have.been.not.called;
-      });
-    });
-
-    it('should use MINISHIFT_HOME env variable when search for oc executable', function() {
-      sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: 'minishift-home'});
-      sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve(path.join('Users', 'dev1')));
-      sandbox.stub(Installer.prototype, 'copyFile').resolves();
-      sandbox.stub(Installer.prototype, 'exec').resolves();
-      sandbox.stub(child_process, 'exec').yields();
-      sandbox.stub(Platform, 'addToUserPath').resolves();
-      sandbox.stub(installer, 'createEnvironment').returns({PATH:''});
-      return new Promise((resolve, reject)=> {
-        installer.installAfterRequirements(fakeProgress, resolve, reject);
-      }).then(()=> {
-        expect(Platform.addToUserPath).to.have.been.calledWith([
-          path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe'),
-          path.join('installFolder', 'cdk', 'bin', 'minishift.exe')
-        ]);
       });
     });
 
@@ -341,8 +326,16 @@ describe('CDK installer', function() {
         });
       });
 
-      afterEach(function() {
-        sandbox.restore();
+      it('should use MINISHIFT_HOME env variable when search for oc.exe executable', function() {
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        return new Promise((resolve, reject)=> {
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
+          expect(Platform.addToUserPath).to.have.been.calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe'),
+            path.join('ocBinRoot', 'minishift.exe')
+          ]);
+        });
       });
     });
 
@@ -386,10 +379,18 @@ describe('CDK installer', function() {
           ]);
         });
       });
-    });
 
-    afterEach(function() {
-      sandbox.restore();
+      it('should use MINISHIFT_HOME env variable when search for oc executable', function() {
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        return new Promise((resolve, reject)=> {
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
+          expect(Platform.addToUserPath).to.have.been.calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc'),
+            path.join('ocBinRoot', 'minishift')
+          ]);
+        });
+      });
     });
   });
 
@@ -418,18 +419,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
-        let pathArray = ['virtualbox', 'path'];
-        if (process.platform === 'win32') {
-          pathArray.splice(1, 0, 'cygwin');
-        }
+        let pathArray = ['virtualbox', 'cygwin', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':''});
-        let pathArray = ['virtualbox'];
-        if (process.platform === 'win32') {
-          pathArray.push('cygwin');
-        }
+        let pathArray = ['virtualbox', 'cygwin'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
