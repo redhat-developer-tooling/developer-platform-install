@@ -129,13 +129,11 @@ describe('CDK installer', function() {
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
-    console.log("beforeEach!");
   });
 
   afterEach(function () {
     sandbox.restore();
     mockfs.restore();
-    console.log('afterEach!');
   });
 
   it('should fail when some download url is not set and installed file not defined', function() {

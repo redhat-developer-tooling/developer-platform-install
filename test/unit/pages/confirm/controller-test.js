@@ -144,7 +144,6 @@ describe('ConfirmController', function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('detected');
         confirmController.detectInstalledComponents();
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'install';
-        console.log($watch.args);
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
