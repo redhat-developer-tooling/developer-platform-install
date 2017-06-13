@@ -85,8 +85,9 @@ describe('Account controller', function() {
         rejectUnauthorized: true,
         url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip'
       };
-
-      controller = new AccountController({}, timeout, scope, http, base64);
+      let installerDataSvc = { setCredentials: function() {} };
+      let router = {go: function() {}};
+      controller = new AccountController(router, timeout, scope, http, base64, installerDataSvc);
       controller.username = 'username';
       controller.password = 'password';
       controller.login();
