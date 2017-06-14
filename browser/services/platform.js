@@ -144,7 +144,14 @@ class Platform {
         });
       },
       darwin: ()=> {
-
+        let path = location[0] === '/' ? '/' + location.split('/')[1] : location.split('/')[0]
+        return pify(child_process.exec)(`df -k ${path}`).then((stdout) => {
+          let lines = stdout.split('\n');
+          let split = lines[1].replace( / +/g, ' ' ).split(' ');
+          return Promise.resolve(Number.parseInt(split[split.length - 1] === '/' ? split[3] : split[4]));
+        }).catch(()=>{
+          return Promise.resolve('No such file or dir');
+        });
       },
       default: ()=> Promise.resolve()
     });
