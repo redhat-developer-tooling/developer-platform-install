@@ -250,6 +250,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     ].join(' ');
     return osaScript;
   }
+<<<<<<< HEAD
 
   static convertor() {
   }
@@ -260,6 +261,16 @@ function fromJsonDarwin({installerDataSvc, targetFolderName, downloadUrl, fileNa
 }
 
 VirtualBoxInstallDarwin.convertor = {fromJson: fromJsonDarwin};
+=======
+
+  static convertor() {
+  }
+}
+
+VirtualBoxInstallDarwin.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+  return new VirtualBoxInstallDarwin(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
+};
+>>>>>>> Fuse installer integrated
 
 export default Platform.identify({
   darwin: ()=>VirtualBoxInstallDarwin,
