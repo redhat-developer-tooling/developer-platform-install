@@ -59,7 +59,7 @@ describe('CDK installer', function() {
   let failure = () => {};
 
   function stubInstaller() {
-    let reqs = loadMetadata(require('../../../requirements.json'), process.platform);
+    let reqs = loadMetadata(require('../../../requirements.json'), Platform.getOS());
     let svc = new InstallerDataService({}, reqs);
     svc.cdkRoot = 'cdkLocation';
     svc.ocBinRoot = 'ocBinRoot';

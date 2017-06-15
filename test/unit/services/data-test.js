@@ -17,10 +17,7 @@ chai.use(sinonChai);
 
 
 describe('InstallerDataService', function() {
-  let sandbox = sinon.sandbox.create();
-  let svc;
-  let jdk;
-  let vbox;
+  let sandbox, svc, jdk, vbox, fxExtraStub;
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -39,14 +36,13 @@ describe('InstallerDataService', function() {
     sandbox.stub(Logger, 'info');
     sandbox.stub(Logger, 'error');
     sandbox.stub(fs, 'mkdirSync');
-    fxExtraStub  = sandbox.stub(fsExtra, 'copy');
+    fxExtraStub = sandbox.stub(fsExtra, 'copy');
   });
 
   afterEach(function() {
     sandbox.restore();
   });
 
-  let fxExtraStub;
   let fakeProgress = {
     installTrigger: function() {},
     setStatus: function() {}
@@ -118,6 +114,7 @@ describe('InstallerDataService', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost'});
       svc = new InstallerDataService();
+      // console.log(svc.requirements.jdk);
       expect(svc.requirements.jdk.dmUrl.startsWith('https://localhost')).equals(true);
     });
   });
