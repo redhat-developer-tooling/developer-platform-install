@@ -16,7 +16,7 @@ class InstallerDataService {
   constructor($state, requirements = require('../../requirements.json')) {
     this.tmpDir = os.tmpdir();
 
-    if (Platform.OS === 'win32') {
+    if (Platform.getOS() === 'win32') {
       this.installRoot = 'c:\\DevelopmentSuite';
     } else {
       this.installRoot = '/Applications/DevelopmentSuite';
@@ -33,7 +33,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
-    this.requirements = loadMetadata(requirements, Platform.OS);
+    this.requirements = loadMetadata(requirements, Platform.getOS());
     // filter download-manager urls and replace host name with stage
     // host name provided in environment variable
     let stageHost = Platform.ENV['DM_STAGE_HOST'];
