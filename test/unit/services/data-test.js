@@ -114,7 +114,6 @@ describe('InstallerDataService', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost'});
       svc = new InstallerDataService();
-      // console.log(svc.requirements.jdk);
       expect(svc.requirements.jdk.dmUrl.startsWith('https://localhost')).equals(true);
     });
   });
