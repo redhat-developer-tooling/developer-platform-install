@@ -13,6 +13,7 @@ class ConfirmController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.loader = new ComponentLoader(installerDataSvc);
+    this.loader.loadComponents();
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;

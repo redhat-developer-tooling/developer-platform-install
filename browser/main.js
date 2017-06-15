@@ -74,10 +74,6 @@ let mainModule =
             displayName: 'Get Started'
           }
         });
-    }])
-    .run( ['installerDataSvc', (installerDataSvc) => {
-      let loader = new ComponentLoader(installerDataSvc);
-      loader.loadComponents();
     }]);
 
 export default mainModule;
