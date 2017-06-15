@@ -10,14 +10,13 @@ let path = require('path'),
   runSequence = require('run-sequence'),
   fs = require('fs-extra'),
   loadMetadata = require('../browser/services/metadata'),
-  reqs = loadMetadata(require('../requirements.json'), process.platform),
   exec = require('child_process').exec,
   rcedit = require('rcedit'),
   del = require('del'),
   unzip = require('gulp-unzip'),
   child_process = require('child_process');
 
-module.exports = function(gulp) {
+module.exports = function(gulp, reqs) {
 
   let zaRoot = path.resolve(config.buildFolderRoot);
   let toolsFolder = 'tools';

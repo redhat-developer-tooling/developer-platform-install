@@ -20,7 +20,7 @@ var gulp = require('gulp'),
   yargs = require('yargs');
 
 require('./gulp-tasks/tests')(gulp);
-require('./gulp-tasks/dist-' + process.platform)(gulp);
+require('./gulp-tasks/dist-' + process.platform)(gulp, reqs);
 
 process.on('uncaughtException', function(err) {
   if(err) {
