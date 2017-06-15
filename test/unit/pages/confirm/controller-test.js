@@ -7,6 +7,7 @@ import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
 import ConfirmController from 'browser/pages/confirm/controller';
+
 import fs from 'fs';
 
 require('../../../angular-test-helper');
@@ -45,9 +46,7 @@ describe('ConfirmController', function() {
     sandbox.stub(fs, 'existsSync').returns(true);
     sandbox.spy(_$state_, 'go');
     installerDataSvc.setup();
-    for (var installer of installerDataSvc.allInstallables().values()) {
-      sandbox.stub(installer, 'detectExistingInstall').resolves();
-    }
+
     confirmController = $controller('ConfirmController', {
       $scope,
       $state: _$state_,
@@ -56,6 +55,9 @@ describe('ConfirmController', function() {
       electron
     });
     sandbox.spy(confirmController, 'setIsDisabled');
+    for (let installer of installerDataSvc.allInstallables().values()) {
+      sandbox.stub(installer, 'detectExistingInstall').resolves();
+    }
   };
 
   describe('initial state', function() {
@@ -157,7 +159,7 @@ describe('ConfirmController', function() {
     });
     beforeEach(inject(context));
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
-      debugger;
+
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
@@ -211,7 +213,7 @@ describe('ConfirmController', function() {
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
-            el[1]('install','detected');
+            el[1]('install', 'detected');
           }
         });
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
