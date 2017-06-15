@@ -6,16 +6,22 @@ let esc = require('xml-escape');
 import Platform from '../services/platform';
 
 class DevstudioAutoInstallGenerator {
-  constructor(devstudioInstallDir, jdkInstallDir, version) {
-    this.autoInstall = this.generate(devstudioInstallDir, jdkInstallDir, version);
+  constructor(devstudioInstallDir, jdkInstallDir, version, additionalLocations='', additionalIus='') {
+    this.autoInstall = this.generate(devstudioInstallDir, jdkInstallDir, version, additionalLocations, additionalIus);
   }
 
   fileContent() {
     return this.autoInstall;
   }
 
-  generate(devstudioInstallDir, jdkInstallDir, devstudioVersion) {
+  generate(devstudioInstallDir, jdkInstallDir, devstudioVersion, additionalLocations, additionalIus) {
     let exeSuffix = Platform.OS === 'win32' ? 'w.exe' : '';
+    if(additionalLocations) {
+      additionalLocations = ',' + additionalLocations.trim();
+    }
+    if (additionalIus) {
+      additionalIus = ',' + additionalIus.trim();
+    }
     let temp =
       [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
@@ -30,8 +36,8 @@ class DevstudioAutoInstallGenerator {
         '<installgroup>devstudio</installgroup>',
         '</com.jboss.devstudio.core.installer.JBossAsSelectPanel>',
         '<com.jboss.devstudio.core.installer.InstallAdditionalFeaturesPanel id="features">',
-        '<ius>com.jboss.devstudio.core.package,org.testng.eclipse.feature.group</ius>',
-        '<locations>devstudio</locations>',
+        '<ius>com.jboss.devstudio.core.package,org.testng.eclipse.feature.group,' + additionalIus + '</ius>',
+        '<locations>devstudio' + additionalLocations + '</locations>',
         '</com.jboss.devstudio.core.installer.InstallAdditionalFeaturesPanel>',
         '<com.jboss.devstudio.core.installer.UpdatePacksPanel id="updatepacks"/>',
         '<com.jboss.devstudio.core.installer.DiskSpaceCheckPanel id="diskspacecheck"/>',

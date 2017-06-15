@@ -60,7 +60,7 @@ gulp.task('clean-all', ['clean'], function() {
 gulp.task('clean', function() {
   var files = ['dist', 'transpiled', config.prefetchFolder + '/*'];
   for (var key in reqs) {
-    files.push('!' + config.prefetchFolder + '/' + reqs[key].filename);
+    files.push('!' + config.prefetchFolder + '/' + reqs[key].fileName);
   }
 
   return del(files, { force: true });
@@ -113,7 +113,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
           if(reqs.devstudio.sha256sum == '') {
             reqs.devstudio.url = meta.installer;
             reqs.devstudio.dmUrl = meta.installer;
-            reqs.devstudio.filename = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/'));
+            reqs.devstudio.fileName = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/'));
             reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
           }
           resolve();

@@ -9,14 +9,15 @@ import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
 
 class DevstudioInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, devstudioSha256, additionalLocations, additionalIus) {
-    super(DevstudioInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
+  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload) {
+    super(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
-    this.sha256 = devstudioSha256;
+    this.sha256 = sha256sum;
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
     this.addOption('install', this.version, '', true);
     this.additionalLocations = additionalLocations;
     this.additionalIus = additionalIus;
+    this.useDownload = useDownload;
   }
 
   static get KEY() {
@@ -25,12 +26,12 @@ class DevstudioInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version);
-    let installer = new Installer(DevstudioInstall.KEY, progress, success, failure);
+    this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
+    let installer = new Installer(this.keyName, progress, success, failure);
 
-    Logger.info(DevstudioInstall.KEY + ' - Generate devstudio auto install file content');
+    Logger.info(this.keyName + ' - Generate devstudio auto install file content');
     let data = this.installGenerator.fileContent();
-    Logger.info(DevstudioInstall.KEY + ' - Generate devstudio auto install file content SUCCESS');
+    Logger.info(this.keyName + ' - Generate devstudio auto install file content SUCCESS');
 
     return installer.writeFile(this.installConfigFile, data)
       .then((result) => {
@@ -53,7 +54,7 @@ class DevstudioInstall extends InstallableItem {
         .then((res) => { resolve(res); })
         .catch((err) => { reject(err); });
       } else {
-        Logger.info(DevstudioInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
+        Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
             return this.headlessInstall(installer, result)
@@ -66,7 +67,7 @@ class DevstudioInstall extends InstallableItem {
   }
 
   headlessInstall(installer) {
-    Logger.info(DevstudioInstall.KEY + ' - headlessInstall() called');
+    Logger.info(this.keyName + ' - headlessInstall() called');
     let javaOpts = [
       '-DTRACE=true',
       '-jar',
@@ -79,6 +80,13 @@ class DevstudioInstall extends InstallableItem {
 
     return res;
   }
+
+  static convertor() {
+  }
 }
+
+DevstudioInstall.convertor.fromJson = function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload}) {
+  return new DevstudioInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload);
+};
 
 export default DevstudioInstall;

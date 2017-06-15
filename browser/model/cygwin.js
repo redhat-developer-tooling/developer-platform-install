@@ -9,7 +9,7 @@ import Platform from '../services/platform';
 import fs from 'fs-extra';
 
 class CygwinInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(CygwinInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.cygwinPathScript = path.join(this.installerDataSvc.tempDir(), 'set-cygwin-path.ps1');
     this.addOption('install', this.version, '', true);
@@ -17,7 +17,7 @@ class CygwinInstall extends InstallableItem {
       this.selectedOption = 'detected';
       this.addOption('detected', '', '', true);
     }
-    this.sha256 = sha256;
+    this.sha256 = sha256sum;
   }
 
   static get KEY() {
@@ -55,7 +55,7 @@ class CygwinInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let originalExecFile = path.join(this.installerDataSvc.cygwinDir(), 'setup-x86_64.exe');
-    let installer = new Installer(CygwinInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
     let packagesFolder = path.join(this.installerDataSvc.cygwinDir(), 'packages');
     let rootFolder = this.installerDataSvc.cygwinDir();
 
@@ -90,6 +90,13 @@ class CygwinInstall extends InstallableItem {
       installer.fail(error);
     });
   }
+
+  static convertor() {
+  }
 }
+
+CygwinInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+  return new CygwinInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
+};
 
 export default CygwinInstall;

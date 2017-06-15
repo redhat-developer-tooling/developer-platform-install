@@ -11,7 +11,7 @@ import Version from './helpers/version';
 import del from 'del';
 
 class VirtualBoxInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256, version, revision) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision) {
     super(VirtualBoxInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = version;
@@ -21,7 +21,7 @@ class VirtualBoxInstall extends InstallableItem {
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
-    this.sha256 = sha256;
+    this.sha256 = sha256sum;
     this.addOption('install', this.version, '', true);
   }
 
@@ -109,7 +109,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   }
 
   installAfterRequirements(progress, success, failure) {
-    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
     return installer.execFile(
       this.downloadedFile, ['--extract', '-path', this.installerDataSvc.virtualBoxDir(), '--silent']
     ).then(() => {
@@ -126,7 +126,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     return new Promise((resolve, reject) => {
       // If downloading is not finished wait for event
       if (this.installerDataSvc.downloading) {
-        Logger.info(VirtualBoxInstall.KEY + ' - Waiting for all downloads to complete');
+        Logger.info(this.keyName + ' - Waiting for all downloads to complete');
         installer.progress.setStatus('Waiting for all downloads to finish');
         this.ipcRenderer.on('downloadingComplete', () => {
           // time to start virtualbox installer
@@ -157,7 +157,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         let regexTargetDir = /CopyDir: DestDir=(.*)\,.*/;
         let targetDir = regexTargetDir.exec(result)[1];
         if(targetDir !== this.getLocation()) {
-          Logger.info(VirtualBoxInstall.KEY + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
+          Logger.info(this.keyName + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
           this.setOptionLocation('install', targetDir);
         }
         resolve(res);
@@ -171,7 +171,14 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
   }
+
+  static convertor() {
+  }
 }
+
+VirtualBoxInstallWindows.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+  return new VirtualBoxInstallWindows(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
+};
 
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
@@ -216,7 +223,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let installer = new Installer(VirtualBoxInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
     return installer.exec(this.getScript()).then((result) => {
       installer.succeed(result);
     }).catch((error) => {
@@ -239,9 +246,14 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     ].join(' ');
     return osaScript;
   }
+
+  static convertor() {
+  }
 }
 
-
+VirtualBoxInstallDarwin.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+  return new VirtualBoxInstallDarwin(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
+};
 
 export default Platform.identify({
   darwin: ()=>VirtualBoxInstallDarwin,

@@ -11,9 +11,9 @@ import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
 
 class JbosseapInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, jbosseapSha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(JbosseapInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
-    this.sha256 = jbosseapSha256;
+    this.sha256 = sha256sum;
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbosseap-autoinstall.xml');
     this.configFile = path.join(this.installerDataSvc.tempDir(), 'jbosseap-autoinstall.xml.variables');
     this.addOption('install', this.version, '', true);
@@ -27,15 +27,15 @@ class JbosseapInstall extends InstallableItem {
     progress.setStatus('Installing');
     let version = /(\d+\.\d+\.\d+).*/.exec(this.version)[1];
     this.installGenerator = new JbosseapAutoInstallGenerator(this.installerDataSvc.jbosseapDir(), this.installerDataSvc.jdkDir(), version);
-    let installer = new Installer(JbosseapInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
 
     if(fs.existsSync(this.installerDataSvc.jbosseapDir())) {
       rimraf.sync(this.installerDataSvc.jbosseapDir());
     }
 
-    Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content');
+    Logger.info(this.keyName + ' - Generate jbosseap auto install file content');
     let data = this.installGenerator.fileContent();
-    Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content SUCCESS');
+    Logger.info(this.keyName + ' - Generate jbosseap auto install file content SUCCESS');
     return installer.writeFile(this.installConfigFile, data)
       .then((result) => {
         installer.writeFile(this.configFile, 'adminPassword=changeit');
@@ -65,8 +65,8 @@ class JbosseapInstall extends InstallableItem {
     let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
     if(fs.existsSync(runtimeproperties)) {
       fs.appendFile(runtimeproperties, `\njbosseap=${escapedLocation},true`).catch((error)=>{
-        Logger.error(JbosseapInstall.KEY + ' - error occured during runtime detection configuration in DevStudio');
-        Logger.error(JbosseapInstall.KEY + ` -  ${error}`);
+        Logger.error(this.keyName + ' - error occured during runtime detection configuration in DevStudio');
+        Logger.error(this.keyName + ` -  ${error}`);
       });
     }
   }
@@ -80,7 +80,7 @@ class JbosseapInstall extends InstallableItem {
         .then((res) => { resolve(res); })
         .catch((err) => { reject(err); });
       } else {
-        Logger.info(JbosseapInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
+        Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
             return this.headlessInstall(installer, result)
@@ -93,7 +93,7 @@ class JbosseapInstall extends InstallableItem {
   }
 
   headlessInstall(installer) {
-    Logger.info(JbosseapInstall.KEY + ' - headlessInstall() called');
+    Logger.info(this.keyName + ' - headlessInstall() called');
     let javaOpts = [
       '-DTRACE=true',
       '-jar',
@@ -106,6 +106,13 @@ class JbosseapInstall extends InstallableItem {
 
     return res;
   }
+
+  static convertor() {
+  }
 }
+
+JbosseapInstall.convertor.fromJson = function fromJson({ installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+  return new JbosseapInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
+};
 
 export default JbosseapInstall;

@@ -13,12 +13,16 @@ import Util from './helpers/util';
 import Version from './helpers/version';
 
 class JdkInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, jdkSha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(JdkInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
-    this.sha256 = jdkSha256;
+    this.sha256 = sha256sum;
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.openJdkMsi = false;
+  }
+
+  static get KEY() {
+    return 'jdk';
   }
 
   getLocation() {
@@ -75,8 +79,8 @@ class JdkInstall extends InstallableItem {
         return Promise.reject('Cannot detect Java home folder');
       }
     }).catch((error) => {
-      Logger.info(JdkInstall.KEY + ' - Detection failed with error');
-      Logger.info(JdkInstall.KEY + ' - ' + error);
+      Logger.info(this.keyName + ' - Detection failed with error');
+      Logger.info(this.keyName + ' - ' + error);
       if(this.option.detected) {
         delete this.option.detected;
       }
@@ -150,13 +154,9 @@ class JdkInstall extends InstallableItem {
     }
   }
 
-  static get KEY() {
-    return 'jdk';
-  }
-
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let installer = new Installer(JdkInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
 
     if(fs.existsSync(this.installerDataSvc.jdkDir())) {
       rimraf.sync(this.installerDataSvc.jdkDir());
@@ -169,7 +169,7 @@ class JdkInstall extends InstallableItem {
         let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
         let targetDir = regexTargetDir.exec(line)[1];
         if(targetDir !== this.getLocation()) {
-          Logger.info(JdkInstall.KEY + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
+          Logger.info(this.keyName + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
           this.installerDataSvc.jdkRoot = targetDir;
         }
         installer.succeed(true);
@@ -195,6 +195,13 @@ class JdkInstall extends InstallableItem {
       path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
     ];
   }
+
+  static convertor() {
+  }
 }
+
+JdkInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+  return new JdkInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
+};
 
 export default JdkInstall;
