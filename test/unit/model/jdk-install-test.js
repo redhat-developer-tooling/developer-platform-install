@@ -81,7 +81,7 @@ describe('JDK installer', function() {
       .onFirstCall().resolves(`version "${version}"`)
       .onSecondCall().resolves(location);
     sandbox.stub(Util, 'writeFile').resolves(true);
-    sandbox.stub(Util, 'executeFile').resolves(true);
+    sandbox.stub(Util, 'executeFile').resolves('optput');
   }
 
   describe('when instantiated', function() {
@@ -248,9 +248,20 @@ describe('JDK installer', function() {
         });
       });
 
-      it('should not call java if no JVM exists', function() {
+      it('should not call java if no JVM installed', function() {
         mockDetectedJvm('1.8.0_1');
-        jdk.findDarwinJava.rejects();
+        jdk.findDarwinJava.restore();
+        Util.executeFile.restore();
+        sandbox.stub(Util, 'executeFile');
+        Util.executeFile.resolves('Unable to find any JVMs');
+        return jdk.detectExistingInstall().then(()=>{
+          expect(Util.executeCommand).not.calledWith('java -version');
+        });
+      });
+
+      it('should call java if JVM exists', function() {
+        mockDetectedJvm('1.8.0_1');
+        Util.executeFile.resolves('location');
         return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).to.not.have.been.called;
         });
