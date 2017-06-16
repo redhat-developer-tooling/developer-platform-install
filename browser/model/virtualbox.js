@@ -267,10 +267,16 @@ VirtualBoxInstallDarwin.convertor = {fromJson: fromJsonDarwin};
   }
 }
 
-VirtualBoxInstallDarwin.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+function fromJsonDarwin({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
   return new VirtualBoxInstallDarwin(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
+<<<<<<< HEAD
 };
 >>>>>>> Fuse installer integrated
+=======
+}
+
+VirtualBoxInstallDarwin.convertor = {fromJson: fromJsonDarwin};
+>>>>>>> JBDS-4437 restore unit tests code coverage for DevStudio
 
 export default Platform.identify({
   darwin: ()=>VirtualBoxInstallDarwin,
