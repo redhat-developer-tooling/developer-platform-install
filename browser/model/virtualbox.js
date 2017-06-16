@@ -175,9 +175,6 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
   }
-
-  static convertor() {
-  }
 }
 
 function fromJsonWindows({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
