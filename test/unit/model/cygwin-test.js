@@ -188,6 +188,17 @@ describe('Cygwin installer', function() {
       });
     });
 
+    it('should run the cygwin.exe installer with local packages if they present', function() {
+      sandbox.stub(Installer.prototype, 'exec').resolves(true);
+      sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Platform, 'addToUserPath').resolves(true);
+      sandbox.stub(fs, 'existsSync').returns(true);
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        let localPackages = path.join(installer.bundleFolder, 'packages');
+        expect(Installer.prototype.exec).to.have.been.calledWithMatch(`-L -l ${localPackages}`);
+      });
+    });
+
     it('should catch errors thrown during the installation', function() {
       let err = new Error('critical error');
       sandbox.stub(child_process, 'execFile').yields(err);
