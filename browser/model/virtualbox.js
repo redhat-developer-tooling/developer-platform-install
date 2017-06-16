@@ -171,14 +171,15 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
   }
-
-  static convertor() {
-  }
 }
 
-VirtualBoxInstallWindows.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+function fromJsonWindows({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
   return new VirtualBoxInstallWindows(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
-};
+}
+
+VirtualBoxInstallWindows.convertor = {fromJson: fromJsonWindows};
+
+
 
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
@@ -251,9 +252,11 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
   }
 }
 
-VirtualBoxInstallDarwin.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
+function fromJsonDarwin({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision}) {
   return new VirtualBoxInstallDarwin(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision);
-};
+}
+
+VirtualBoxInstallDarwin.convertor = {fromJson: fromJsonDarwin};
 
 export default Platform.identify({
   darwin: ()=>VirtualBoxInstallDarwin,

@@ -35,12 +35,12 @@ class KomposeInstall extends InstallableItem {
     });
   }
 
-  static convertor() {
-  }
 }
 
-KomposeInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
   return new KomposeInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
-};
+}
+
+KomposeInstall.convertor = {fromJson};
 
 export default KomposeInstall;

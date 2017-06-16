@@ -195,13 +195,12 @@ class JdkInstall extends InstallableItem {
       path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
     ];
   }
-
-  static convertor() {
-  }
 }
 
-JdkInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
   return new JdkInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
-};
+}
+
+JdkInstall.convertor = {fromJson};
 
 export default JdkInstall;

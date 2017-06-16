@@ -100,14 +100,12 @@ class CDKInstall extends InstallableItem {
     Logger.info(this.keyName + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
     return env;
   }
-
-  static convertor() {
-  }
-
 }
 
-CDKInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
   return new CDKInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
-};
+}
+
+CDKInstall.convertor = {fromJson};
 
 export default CDKInstall;

@@ -205,6 +205,20 @@ describe('devstudio installer', function() {
       expect(spy).to.have.been.calledWith(installConfigFile, data);
     });
 
+    it('should write the install configuration into temp/devstudio-autoinstall.xml with additionalLocations and IUs if provided', function() {
+      sandbox.stub(fsextra, 'writeFile').yields();
+      let spy = sandbox.spy(Installer.prototype, 'writeFile');
+      installer = new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha', 'additionalLocations', 'additionalIUs');
+      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.jdkDir(), installer.version, 'additionalLocations', 'additionalIUs').fileContent();
+      let installConfigFile = path.join(installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
+      installer.installAfterRequirements(fakeProgress, success, failure);
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(installConfigFile, data);
+      expect(data.includes('additionalLocations')).is.true;
+      expect(data.includes('additionalIUs')).is.true;
+    });
+
     it('should catch errors thrown during the installation', function(done) {
       let err = new Error('critical error');
       sandbox.stub(fsextra, 'writeFile').yields(err);

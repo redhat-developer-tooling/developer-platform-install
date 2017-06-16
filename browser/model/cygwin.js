@@ -90,13 +90,12 @@ class CygwinInstall extends InstallableItem {
       installer.fail(error);
     });
   }
-
-  static convertor() {
-  }
 }
 
-CygwinInstall.convertor.fromJson = function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
   return new CygwinInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
-};
+}
+
+CygwinInstall.convertor = {fromJson};
 
 export default CygwinInstall;

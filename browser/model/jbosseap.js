@@ -106,13 +106,12 @@ class JbosseapInstall extends InstallableItem {
 
     return res;
   }
-
-  static convertor() {
-  }
 }
 
-JbosseapInstall.convertor.fromJson = function fromJson({ installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+function fromJson({ installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
   return new JbosseapInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
-};
+}
+
+JbosseapInstall.convertor = {fromJson};
 
 export default JbosseapInstall;

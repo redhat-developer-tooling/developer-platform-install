@@ -80,13 +80,12 @@ class DevstudioInstall extends InstallableItem {
 
     return res;
   }
-
-  static convertor() {
-  }
 }
 
-DevstudioInstall.convertor.fromJson = function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload}) {
+function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload}) {
   return new DevstudioInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload);
-};
+}
+
+DevstudioInstall.convertor = {fromJson};
 
 export default DevstudioInstall;

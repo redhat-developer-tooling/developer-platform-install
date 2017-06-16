@@ -53,13 +53,12 @@ class HypervInstall extends InstallableItem {
       return true;
     }
   }
-
-  static convertor() {
-  }
 }
 
-HypervInstall.convertor.fromJson = function fromJson({installerDataSvc, downloadUrl}) {
+function fromJson({installerDataSvc, downloadUrl}) {
   return new HypervInstall(installerDataSvc, downloadUrl);
-};
+}
+
+HypervInstall.convertor = {fromJson};
 
 export default HypervInstall;
