@@ -47,6 +47,15 @@ describe('Account controller', function() {
     });
   });
 
+  describe('getUserAgent', function() {
+    it('returns electron\'s userAgent name', function() {
+      let getUserAgentSpy = sandbox.spy(electron.remote.getCurrentWindow().webContents.session, 'getUserAgent');
+      let agent = controller.getUserAgent();
+      expect(getUserAgentSpy).calledOnce;
+      expect(agent).is.equal('agent');
+    });
+  });
+
   describe('login', function() {
 
     let http, base64;

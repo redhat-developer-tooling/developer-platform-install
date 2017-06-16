@@ -4,7 +4,14 @@ function electron() {
   let electronWindow = {
     close() {},
     removeAllListeners() {},
-    addListener() {}
+    addListener() {},
+    webContents: {
+      session: {
+        getUserAgent() {
+          return 'agent';
+        }
+      }
+    }
   };
   let remote = {
     getCurrentWindow () {
