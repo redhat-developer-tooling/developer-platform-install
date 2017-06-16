@@ -195,6 +195,13 @@ class JdkInstall extends InstallableItem {
       path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
     ];
   }
+
+  isConfigured() {
+    if (Platform.getOS() === 'darwin') {
+      return this.isDetected() && this.option['detected'].valid;
+    }
+    return super.isConfigured();
+  }
 }
 
 function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {

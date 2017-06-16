@@ -173,6 +173,12 @@ class ConfirmController {
       || this.sc.checkboxModel.devstudio.isSkipped();
   }
 
+  eapIsConfigured() {
+    return this.sc.checkboxModel.jdk.isConfigured()
+      && this.sc.checkboxModel.jbosseap.isConfigured()
+      || this.sc.checkboxModel.jbosseap.isSkipped();
+  }
+
   cdkIsConfigured() {
     return this.sc.checkboxModel.cdk.isConfigured()
       && this.virtualizationIsConfigured()
@@ -190,6 +196,7 @@ class ConfirmController {
 
   isConfigurationValid() {
     return this.devstudioIsConfigured()
+      && this.eapIsConfigured()
       && this.cdkIsConfigured()
       && this.virtualizationIsConfigured()
       && this.isAtLeastOneSelected();

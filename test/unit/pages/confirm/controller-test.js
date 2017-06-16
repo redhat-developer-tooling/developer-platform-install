@@ -219,6 +219,12 @@ describe('ConfirmController', function() {
 
   describe('isConfigurationValid', function() {
     it('should return true if all components selected for install are configured correctly', function() {
+      //JDK on mac only is configured properly when detected with a valid version
+      if (Platform.getOS() === 'darwin') {
+        confirmController.sc.checkboxModel.jdk.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.jdk.option.detected = { valid: true };
+      }
+
       expect(confirmController.isConfigurationValid()).to.be.true;
     });
 
