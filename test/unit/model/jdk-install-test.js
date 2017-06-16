@@ -11,6 +11,7 @@ import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Util from 'browser/model/helpers/util';
 import JdkInstall from 'browser/model/jdk-install';
+import InstallableItem from 'browser/model/installable-item';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
@@ -149,7 +150,6 @@ describe('JDK installer', function() {
         });
       });
 
-
       // FIXME is not the case for JDK 9, because version has different format
       it('should select openjdk for installation if newer than supported java version detected', function() {
         mockDetectedJvm('1.9.0_1');
@@ -279,6 +279,26 @@ describe('JDK installer', function() {
           expect(jdk.selectedOption).to.be.equal('detected');
         });
       });
+    });
+  });
+
+  describe('after detection', function() {
+    it('isConfigured function should not be overriden on windows', function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      let stub = sandbox.stub(InstallableItem.prototype, 'isConfigured');
+      installer.isConfigured();
+      expect(stub).to.have.been.calledOnce;
+    });
+
+    it('should only be configured properly when detected and valid on mac', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
+      sandbox.stub(installer, 'isDetected').returns(true);
+
+      installer.option.detected = { valid: false };
+      expect(installer.isConfigured()).to.be.false;
+
+      installer.option.detected.valid = true;
+      expect(installer.isConfigured()).to.be.true;
     });
   });
 
