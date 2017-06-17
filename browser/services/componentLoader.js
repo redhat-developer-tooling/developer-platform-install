@@ -64,10 +64,7 @@ class ComponentLoader {
     } while (changed);
 
     for (let [key, value] of this.installerDataSvc.allInstallables()) {
-      for (let i = 0; i < newOrder[key].length; i++) {
-        let nextItem = this.installerDataSvc.getInstallable(newOrder[key][i]);
-        value.thenInstall(nextItem);
-      }
+      value.installAfter = this.installerDataSvc.getInstallable(this.requirements[key].installAfter);
     }
   }
 

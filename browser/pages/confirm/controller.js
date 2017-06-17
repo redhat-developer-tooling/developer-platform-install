@@ -7,7 +7,8 @@ import ComponentLoader from '../../services/componentLoader';
 const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
   'devstudio': ['jdk'],
-  'jbosseap': ['jdk']
+  'jbosseap': ['jdk'],
+  'fusetools' : ['devstudio']
 };
 
 class ConfirmController {

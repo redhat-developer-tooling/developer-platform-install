@@ -7,6 +7,7 @@
     "installable": true,
     "detectable": false,
     "targetFolderName": "cdk",
+    "installAfter": "virtualbox",
     "platform": {
       "win32": {
         "bundle": "yes",
