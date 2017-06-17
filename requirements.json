@@ -18,6 +18,7 @@
         "version": "3.0.0.GA",
         "requires": ["cygwin","hyperv||virtualbox"],
         "installAfter": "cygwin"
+        "requires": "cygwin,hyperv||virtualbox"
       },
       "darwin": {
         "bundle": "yes",
@@ -85,6 +86,7 @@
     "modulePath": "model/devstudio",
     "bundle": "no",
     "targetFolderName": "developer-studio",
+    "installAfter": "devstudio",
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "fileName": "devstudio-11.0.0.AM1-installer-standalone.jar",
