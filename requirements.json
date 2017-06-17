@@ -5,6 +5,7 @@
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/cdk",
     "targetFolderName": "cdk",
+    "installAfter": "virtualbox",
     "platform": {
       "win32": {
         "bundle": "yes",
@@ -12,7 +13,8 @@
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/windows-amd64/minishift.exe",
         "fileName": "minishift_3_0_0_GA.exe",
         "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "cygwin, virtualbox || hyperv"
       },
       "darwin": {
         "bundle": "yes",
@@ -20,7 +22,8 @@
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/darwin-amd64/minishift",
         "fileName": "minishift_3_0_0_GA",
         "sha256sum": "1aad3cc784f312568357c9d3e1a2111ceedac884c59e0953b06aea45de49bb25",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "virtualbox"
       },
       "linux": {
         "bundle": "yes",
@@ -28,7 +31,8 @@
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/linux-amd64/minishift",
         "fileName": "minishift_3_0_0_GA",
         "sha256sum": "b754554190756fb3142998b67cd046174f7e0ae9f2d287d673481e20d9482060",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "kvm"
       }
     }
   },
@@ -39,6 +43,7 @@
     "modulePath": "model/cygwin",
     "bundle": "always",
     "targetFolderName": "cygwin",
+    "installAfter": "jdk",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.8.0.exe",
     "sha256sum": "83f128c7cd121e455fd3f5cc732aca8f313d0eb1accbd97e99fc14f2df2fe7eb",
@@ -55,12 +60,14 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
+    "installAfter": "jdk",
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "fileName": "devstudio-11.0.0.AM1-installer-standalone.jar",
     "sha256sum": "",
     "version": "11.0.0.AM1",
-    "useDownload": true
+    "useDownload": true,
+    "requires": "jdk"
   },
   "fusetools": {
     "name": "Red Hat JBoss Fuse Tools",
@@ -69,6 +76,7 @@
     "modulePath": "model/devstudio",
     "bundle": "no",
     "targetFolderName": "developer-studio",
+    "installAfter": "devstudio",
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "fileName": "devstudio-11.0.0.AM1-installer-standalone.jar",
@@ -76,7 +84,8 @@
     "version": "11.0.0.AM1",
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
-    "useDownload": false
+    "useDownload": false,
+    "requires": "devstudio"
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
@@ -85,11 +94,13 @@
     "modulePath": "model/jbosseap",
     "bundle": "no",
     "targetFolderName": "jbosseap",
+    "installAfter": "jdk",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-7.0.0-installer.jar?workflow=direct",
     "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.0.0/jboss-eap-7.0.0-installer.jar",
     "fileName": "jboss-eap-7.0.0-installer.jar",
     "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
-    "version": "7.0.0.GA"
+    "version": "7.0.0.GA",
+    "requires": "jdk"
   },
   "jdk": {
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
@@ -135,6 +146,7 @@
     "vendor": "Oracle, Inc.",
     "modulePath": "model/virtualbox",
     "targetFolderName": "virtualbox",
+    "installAfter": "jdk",
     "platform": {
       "win32": {
         "bundle": "no",
