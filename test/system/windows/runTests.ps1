@@ -5,7 +5,8 @@ param(
   [string]$vagrant,
   [string]$cygwin,
   [string]$jdk,
-  [string]$targetFolder
+  [string]$targetFolder,
+  [string]$bundle
 )
 
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -32,7 +33,7 @@ if (-Not $myWindowsPrincipal.IsInRole($adminRole)) {
 $folder = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 Set-Location -Path $folder
 
-npm run system-test -- --binary $binary --virtualbox $virtualbox --hyperv $hyperv --vagrant $vagrant --cygwin $cygwin --jdk $jdk --targetFolder $targetFolder
+npm run system-test -- --binary $binary --virtualbox $virtualbox --hyperv $hyperv --vagrant $vagrant --cygwin $cygwin --jdk $jdk --targetFolder $targetFolder --bundle $bundle
 
 $logs = $folder + '\..\..\..\logs';
 $targetFolder = if ($targetFolder) { $targetFolder } else { "C:\DevelopmentSuite\" }

@@ -159,7 +159,8 @@ gulp.task('system-test', function(cb) {
   if (process.platform === 'win32') {
     tasks.push('prepare-tools');
   }
-  return runSequence(tasks, 'unpack-installer', 'protractor-run', cb);
+  tasks.push('unpack-installer', 'protractor-run');
+  return runSequence(...tasks, cb);
 });
 
 gulp.task('create-prefetch-cache-dir', function() {
