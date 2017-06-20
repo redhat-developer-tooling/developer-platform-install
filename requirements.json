@@ -7,7 +7,7 @@
     "installable": true,
     "detectable": false,
     "targetFolderName": "cdk",
-    "installAfter": "virtualbox",
+    "installAfter": "cygwin",
     "platform": {
       "win32": {
         "bundle": "yes",
