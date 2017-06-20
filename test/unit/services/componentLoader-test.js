@@ -54,20 +54,8 @@ describe('Component Loader', function() {
       dmUrl: 'devstudioDmUrl',
       fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
-      version: '10.4.0'
-    },
-    'fusetools': {
-      name: 'fusetools',
-      modulePath: 'model/devstudio',
-      targetFolderName: 'devstudioFolder',
-      bundle: 'yes',
-      url: 'devstudioUrl',
-      dmUrl: 'devstudioDmUrl',
-      fileName: 'devstudio.jar',
-      sha256sum: 'devstudioSHA',
       version: '10.4.0',
-      installAfter: 'devstudio',
-      requires : ['devstudio']
+      installAfter: 'jdk'
     },
     'cygwin': {
       name: 'cygwin',
