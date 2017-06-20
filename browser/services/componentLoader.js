@@ -52,9 +52,59 @@ class ComponentLoader {
   }
 
   orderInstallation() {
+    let newOrder = {};
+    Object.assign(newOrder, this.buildBaseOrder());
+    let changed;
+
+    do {
+      changed = false;
+      for (let item of Object.keys(newOrder)) {
+        let children = newOrder[item];
+        let finalChildren = [];
+        for (var i = 0; i < children.length; i++) {
+          if (this.installerDataSvc.getInstallable(children[i])) {
+            finalChildren.push(children[i]);
+          } else {
+            if (newOrder[children[i]]) {
+              finalChildren = finalChildren.concat(newOrder[children[i]]);
+              newOrder[item] = finalChildren;
+              changed = true;
+            }
+          }
+        }
+      }
+    } while (changed);
+
     for (let [key, value] of this.installerDataSvc.allInstallables()) {
-      value.installAfter = this.installerDataSvc.getInstallable(this.requirements[key].installAfter);
+      for (let i = 0; i < newOrder[key].length; i++) {
+        let nextItem = this.installerDataSvc.getInstallable(newOrder[key][i]);
+        value.thenInstall(nextItem);
+      }
     }
+  }
+
+  buildBaseOrder() {
+    let baseOrder = {
+      root: []
+    };
+    let requirements = JSON.parse(JSON.stringify(require('../../requirements.json')));
+    for (let key in requirements) {
+      let item = requirements[key];
+      if( item.bundle !== 'tools') {
+        if(baseOrder[key] == undefined) {
+          baseOrder[key] = [];
+        }
+        if(item.installAfter == undefined) {
+          baseOrder.root.push(key);
+        } else {
+          if (baseOrder[item.installAfter] == undefined) {
+            baseOrder[item.installAfter] = [];
+          }
+          baseOrder[item.installAfter].push(key);
+        }
+      }
+    }
+    return baseOrder;
   }
 }
 

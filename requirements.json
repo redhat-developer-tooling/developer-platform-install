@@ -5,7 +5,7 @@
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/cdk",
     "targetFolderName": "cdk",
-    "installAfter": "virtualbox",
+    "installAfter": "cygwin",
     "platform": {
       "win32": {
         "bundle": "yes",
@@ -14,7 +14,7 @@
         "fileName": "minishift_3_0_0_GA.exe",
         "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
         "version": "3.0.0.GA",
-        "requires": "cygwin, virtualbox || hyperv"
+        "requires": "cygwin,virtualbox||hyperv"
       },
       "darwin": {
         "bundle": "yes",
@@ -43,7 +43,7 @@
     "modulePath": "model/cygwin",
     "bundle": "always",
     "targetFolderName": "cygwin",
-    "installAfter": "jdk",
+    "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.8.0.exe",
     "sha256sum": "83f128c7cd121e455fd3f5cc732aca8f313d0eb1accbd97e99fc14f2df2fe7eb",

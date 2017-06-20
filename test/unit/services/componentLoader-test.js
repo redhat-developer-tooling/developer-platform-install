@@ -17,7 +17,8 @@ describe('Component Loader', function() {
       url: 'cdkUrl',
       fileName: 'minishift.exe',
       sha256sum: 'cdkSHA',
-      version: '3.0.0.GA'
+      version: '3.0.0.GA',
+      installAfter: 'cygwin'
     },
     'jdk': {
       name: 'jdk',
@@ -39,7 +40,8 @@ describe('Component Loader', function() {
       dmUrl: 'devstudioDmUrl',
       fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
-      version: '10.4.0'
+      version: '10.4.0',
+      installAfter: 'jdk'
     },
     'fusetools': {
       name: 'fusetools',
@@ -50,7 +52,8 @@ describe('Component Loader', function() {
       dmUrl: 'devstudioDmUrl',
       fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
-      version: '10.4.0'
+      version: '10.4.0',
+      installAfter: 'devstudio'
     },
     'cygwin': {
       name: 'cygwin',
@@ -60,7 +63,8 @@ describe('Component Loader', function() {
       url: 'cygwinUrl',
       fileName: 'cygwin.exe',
       sha256sum: 'cygwinSHA',
-      version: '2.7.0'
+      version: '2.7.0',
+      installAfter: 'virtualbox'
     },
     'virtualbox': {
       name: 'virtualbox',
@@ -70,7 +74,8 @@ describe('Component Loader', function() {
       url: 'virtualboxUrl',
       fileName: 'virtualbox.exe',
       sha256sum: 'virtualboxSHA',
-      version: '5.1.12'
+      version: '5.1.12',
+      installAfter: 'jdk'
     },
     '7zip': {
       name: '7zip',
