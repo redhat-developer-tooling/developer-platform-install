@@ -8,7 +8,7 @@ const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
   'devstudio': ['jdk'],
   'jbosseap': ['jdk'],
-  'fusetools' : ['devstudio']
+  'fuseplatform' : ['jdk']
 };
 
 class ConfirmController {
@@ -121,7 +121,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fusetools'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fuseplatform'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {

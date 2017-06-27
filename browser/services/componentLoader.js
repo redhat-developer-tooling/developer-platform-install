@@ -5,8 +5,8 @@ const baseOrder = {
   'jdk':  ['virtualbox', 'devstudio', 'jbosseap'],
   'virtualbox': ['cygwin'],
   'cygwin': ['cdk'],
-  'devstudio': ['fusetools'],
-  'fusetools': [],
+  'devstudio': ['fuseplatform'],
+  'fuseplatform': [],
   'jbosseap': [],
   'cdk': [],
   'kompose': []

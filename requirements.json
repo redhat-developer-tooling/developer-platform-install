@@ -69,23 +69,21 @@
     "useDownload": true,
     "requires": "jdk"
   },
-  "fusetools": {
-    "name": "Red Hat JBoss Fuse Tools",
-    "description": "A certified Eclipse-based integrated development environment (IDE) for Fuse",
+  "fuseplatform": {
+    "name": "Red Hat JBoss Fuse Integration Platform",
+    "description": "An agile, lightweight and modern integration platform",
     "vendor": "Red Hat, Inc.",
-    "modulePath": "model/devstudio",
+    "modulePath": "model/jbossfuse",
     "bundle": "no",
-    "targetFolderName": "developer-studio",
-    "installAfter": "devstudio",
-    "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
-    "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
-    "fileName": "devstudio-11.0.0.AM1-installer-standalone.jar",
-    "sha256sum": "",
-    "version": "11.0.0.AM1",
-    "additionalLocation": "",
-    "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
-    "useDownload": false,
-    "requires": "devstudio"
+    "targetFolderName": "fuseplatform",
+    "installAfter": "jdk",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
+    "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar",
+    "fileName": "fuse-eap-installer-6.3.0.redhat-187.jar",
+    "sha256sum": "847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd",
+    "version": "6.3.0",
+    "useDownload": true,
+    "requires": "jdk"
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",

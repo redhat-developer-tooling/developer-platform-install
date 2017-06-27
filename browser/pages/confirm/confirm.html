@@ -78,18 +78,18 @@
       </div>
     </div>
 
-    <!-- fuse tooling -->
-    <div id="fusetools-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.fuse.hasOption('detected')}">
-      <div id="fusetools-panel-heading" class="panel-heading panel-normal"
-           ng-class="{'dotted-panel':checkboxModel.fusetools.hasOption('detected')}">
+    <!-- fuseplatform -->
+    <div id="fuseplatform-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.fuse.hasOption('detected')}">
+      <div id="fuseplatform-panel-heading" class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.fuseplatform.hasOption('detected')}">
         <!--ng-click="checkboxModel.jbds.changeIsCollapsed()">-->
         <div class="checkbox-container verticalLine"> <!--ng-show="!checkboxModel.jbds.hasOption('detected')"-->
-         <input id="fusetools-checkbox" type="checkbox" ng-model="checkboxModel.fusetools.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+         <input id="fuseplatform-checkbox" type="checkbox" ng-model="checkboxModel.fuseplatform.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
         </div>
         <div class="product-container">
-          <span id="fusetools-installed-note" class="installed-note" ng-show="checkboxModel.fusetools.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
-          <span id="fusetools-name" class="product-name">{{checkboxModel.fusetools.productName}}</span><span id="fusetools-version" class="product-version">{{checkboxModel.fusetools.version}}</span>
-          <div id="fusetools-description">{{checkboxModel.fusetools.productDesc}}</div>
+          <span id="fuseplatform-installed-note" class="installed-note" ng-show="checkboxModel.fuseplatform.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="fuseplatform-name" class="product-name">{{checkboxModel.fuseplatform.productName}}</span><span id="fuseplatform-version" class="product-version">{{checkboxModel.fuseplatform.version}}</span>
+          <div id="fuseplatform-description">{{checkboxModel.fuseplatform.productDesc}}</div>
         </div>
       </div>
     </div>

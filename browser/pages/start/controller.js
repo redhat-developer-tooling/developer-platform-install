@@ -13,7 +13,7 @@ class StartController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.devstudioInstall = this.installerDataSvc.getInstallable('devstudio');
-    this.fuseInstall = this.installerDataSvc.getInstallable('fusetools');
+    this.fuseInstall = this.installerDataSvc.getInstallable('fuseplatform');
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
