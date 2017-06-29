@@ -9,12 +9,18 @@ const pass = 'Devsuite';
 let loadMetadata = require('../../browser/services/metadata');
 let reqs = loadMetadata(require(path.join(rootPath, './requirements.json')), process.platform);
 
+for (let key in reqs) {
+  if (reqs[key].bundle === 'tools') {
+    delete reqs[key];
+  }
+}
+
 let expectedComponents = {
-  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs['virtualbox'].version },
-  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs['jdk'].version.substring(0, 5) }
+  virtualbox: { installedVersion: process.env.PDKI_TEST_INSTALLED_VBOX, recommendedVersion: reqs.virtualbox.version },
+  jdk: { installedVersion: process.env.PDKI_TEST_INSTALLED_JDK, recommendedVersion: reqs.jdk.version.substring(0, 5) }
 };
 if (process.platform === 'win32') {
-  expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs['cygwin'].version };
+  expectedComponents.cygwin = { installedVersion: process.env.PDKI_TEST_INSTALLED_CYGWIN, recommendedVersion: reqs.cygwin.version };
   expectedComponents.hyperv = { installedVersion: process.env.PDKI_TEST_INSTALLED_HYPERV, recommendedVersion: '0' };
 }
 
@@ -43,19 +49,11 @@ function systemTest() {
     let usernameField, passwordField, loginButton;
     let error = false;
 
-    let components = {
-      cdk: {},
-      jdk: {},
-      devstudio: {}
-    };
-    if (process.platform === 'win32') {
-      components.cygwin = {};
-    }
     if (hypervisor === 'Virtualbox') {
-      components.virtualbox = {};
+      delete reqs.hyperv;
       delete expectedComponents.hyperv;
     } else {
-      components.hyperv = {};
+      delete reqs.virtualbox;
       delete expectedComponents.virtualbox;
     }
 
@@ -114,35 +112,35 @@ function systemTest() {
           browser.wait(conditions.elementToBeClickable(backButton), 60000);
 
           if (detectComponents) {
-            for (var key in components) {
-              components[key].installedNote = element(By.id(key + '-installed-note'));
-              components[key].panel = element(By.id(key + '-panel-heading'));
-              components[key].checkbox = element(By.id(key + '-checkbox'));
+            for (var key in reqs) {
+              reqs[key].installedNote = element(By.id(key + '-installed-note'));
+              reqs[key].panel = element(By.id(key + '-panel-heading'));
+              reqs[key].checkbox = element(By.id(key + '-checkbox'));
             }
-            if (components.virtualbox) {
-              components['virtualbox'].newerWarning = element(By.id('virtualbox-newer-warning'));
-              components['virtualbox'].olderError = element(By.id('virtualbox-older-error'));
+            if (reqs.virtualbox) {
+              reqs.virtualbox.newerWarning = element(By.id('virtualbox-newer-warning'));
+              reqs.virtualbox.olderError = element(By.id('virtualbox-older-error'));
             }
-            components['jdk'].olderError = element(By.id('jdk-older-warning'));
+            reqs.jdk.olderError = element(By.id('jdk-older-warning'));
           }
         });
 
         if (detectComponents) {
           it('should properly detect the installed components', function() {
-            for (var key in components) {
+            for (var key in reqs) {
               if (expectedComponents[key] && expectedComponents[key].installedVersion) {
-                expect(components[key].installedNote.isDisplayed()).toBe(true);
-                expect(components[key].panel.getAttribute('class')).toMatch('dotted-panel');
-                expect(components[key].installedNote.getText()).toMatch(expectedComponents[key].installedVersion);
+                expect(reqs[key].installedNote.isDisplayed()).toBe(true);
+                expect(reqs[key].panel.getAttribute('class')).toMatch('dotted-panel');
+                expect(reqs[key].installedNote.getText()).toMatch(expectedComponents[key].installedVersion);
               }
             }
           });
 
           it('should not affect the undetected components', function() {
-            for (var key in components) {
+            for (var key in reqs) {
               if (expectedComponents[key] && !expectedComponents[key].installedVersion) {
-                expect(components[key].installedNote.isDisplayed()).toBe(false);
-                expect(components[key].panel.getAttribute('class')).not.toMatch('dotted-panel');
+                expect(reqs[key].installedNote.isDisplayed()).toBe(false);
+                expect(reqs[key].panel.getAttribute('class')).not.toMatch('dotted-panel');
               }
             }
           });
@@ -150,7 +148,7 @@ function systemTest() {
           it('should allow reinstallation of non-msi software', function() {
             for (var key in expectedComponents) {
               if (expectedComponents[key].installedVersion && !(key === 'virtualbox' || key === 'jdk' || key === 'hyperv')) {
-                expect(components[key].checkbox.isEnabled()).toBe(true);
+                expect(reqs[key].checkbox.isEnabled()).toBe(true);
               }
             }
           });
@@ -158,33 +156,33 @@ function systemTest() {
           it('should not allow reinstallation of msi packages', function() {
             for (var key in expectedComponents) {
               if (expectedComponents[key].installedVersion && (key === 'virtualbox' || key === 'jdk' || key === 'hyperv')) {
-                expect(components[key].checkbox.isEnabled()).toBe(false);
+                expect(reqs[key].checkbox.isEnabled()).toBe(false);
               }
             }
           });
 
           it('should display a warning when a component is newer than recommended', function() {
             for (var key in expectedComponents) {
-              if (components[key].newerWarning && expectedComponents[key].installedVersion > expectedComponents[key].recommendedVersion) {
-                expect(components[key].newerWarning.isDisplayed()).toBe(true);
+              if (reqs[key].newerWarning && expectedComponents[key].installedVersion > expectedComponents[key].recommendedVersion) {
+                expect(reqs[key].newerWarning.isDisplayed()).toBe(true);
               }
             }
           });
 
-          if (components.virtualbox) {
+          if (reqs.virtualbox) {
             it('should display an error when virtualbox is older than recommended', function() {
               for (var key in expectedComponents) {
-                if (components[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
+                if (reqs[key].olderError && expectedComponents[key].installedVersion < expectedComponents[key].recommendedVersion) {
                   error = true;
-                  expect(components[key].olderError.isDisplayed()).toBe(true);
+                  expect(reqs[key].olderError.isDisplayed()).toBe(true);
                 }
               }
             });
           }
 
           it('should display a warning when jdk is older than recommended', function() {
-            if(expectedComponents['jdk'].installedVersion < expectedComponents['jdk'].recommendedVersion) {
-              expect(components['jdk'].olderWarning.isDisplayed()).toBe(true);
+            if(expectedComponents.jdk.installedVersion < expectedComponents.jdk.recommendedVersion) {
+              expect(reqs.jdk.olderWarning.isDisplayed()).toBe(true);
             }
           });
         }
@@ -204,7 +202,7 @@ function systemTest() {
         it('should display progress bars for components being installed', function(done) {
           if (!error) {
             browser.ignoreSynchronization = true;
-            for (var key in components) {
+            for (var key in reqs) {
               if (!expectedComponents[key] || (expectedComponents[key] && !expectedComponents[key].installedVersion)) {
                 progress[key] = element(By.id(key + '-progress'));
               }
@@ -218,9 +216,9 @@ function systemTest() {
             let startTime = new Date().getTime();
 
             let check = function() {
-              browser.getLocationAbsUrl().then(function(url) {
+              browser.getCurrentUrl().then(function(url) {
                 //Installation finished
-                if (url === '/start') {
+                if (url.endsWith('/start')) {
                   clearInterval(check);
                   let closeButton = element(By.id('exit-btn'));
                   closeButton.click();
@@ -242,8 +240,8 @@ function systemTest() {
                       }
                     }).catch(function(error) {
                       if (error.message.indexOf('element is not attached') > -1) {
-                        browser.getLocationAbsUrl().then(function(url) {
-                          if (url !== '/start') {
+                        browser.getCurrentUrl().then(function(url) {
+                          if (!url.endsWith('/start')) {
                             throw error;
                           }
                         });
