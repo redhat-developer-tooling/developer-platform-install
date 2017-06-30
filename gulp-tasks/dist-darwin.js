@@ -28,6 +28,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         target: ['zip'],
         publish: null
       },
+      files: '**/*',
       extraFiles,
       directories: {
         app : 'transpiled'
