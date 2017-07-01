@@ -36,28 +36,26 @@ class JbosseapInstall extends InstallableItem {
     Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content');
     let data = this.installGenerator.fileContent();
     Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content SUCCESS');
-    return installer.writeFile(this.installConfigFile, data)
-      .then((result) => {
-        installer.writeFile(this.configFile, 'adminPassword=changeit');
-        return this.postJDKInstall(installer, result);
-      })
-      .then(() => {
-        let devstudio = this.installerDataSvc.getInstallable('devstudio');
-        if(devstudio.installed) {
-          this.configureRuntimeDetection();
-        } else {
-          let that = this;
-          this.ipcRenderer.on('installComplete', function(event, arg) {
-            if(arg == 'devstudio') {
-              that.configureRuntimeDetection();
-            }
-          });
-        }
-        installer.succeed(true);
-      })
-      .catch((error) => {
-        installer.fail(error);
-      });
+    return Promise.resolve().then(()=> {
+      return installer.writeFile(this.installConfigFile, data);
+    }).then((result) => {
+      return this.postJDKInstall(installer, result);
+    }).then(() => {
+      let devstudio = this.installerDataSvc.getInstallable('devstudio');
+      if(devstudio.installed) {
+        this.configureRuntimeDetection();
+      } else {
+        let that = this;
+        this.ipcRenderer.on('installComplete', function(event, arg) {
+          if(arg == 'devstudio') {
+            that.configureRuntimeDetection();
+          }
+        });
+      }
+      installer.succeed(true);
+    }).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   configureRuntimeDetection() {

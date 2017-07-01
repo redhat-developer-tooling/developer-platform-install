@@ -1,6 +1,5 @@
 'use strict';
 
-let path = require('path');
 let esc = require('xml-escape');
 
 class JbosseapAutoInstallGenerator {
@@ -35,7 +34,7 @@ class JbosseapAutoInstallGenerator {
         '<com.izforge.izpack.panels.UserInputPanel id="CreateUserPanel">',
         '<userInput>',
         '<entry key="adminUser" value="admin"/>',
-        '<entry autoPrompt="true" key="adminPassword"/>',
+        '<entry key="adminPassword" value="changeit!1"/>',
         '</userInput>',
         '</com.izforge.izpack.panels.UserInputPanel>',
         '<com.izforge.izpack.panels.SummaryPanel id="SummaryPanel"/>',
@@ -70,16 +69,7 @@ class JbosseapAutoInstallGenerator {
         '<com.izforge.izpack.panels.UserInputPanel id="JDBC Setup Panel"/>',
         '<com.izforge.izpack.panels.UserInputPanel id="Datasource Configuration Panel"/>',
         '<com.izforge.izpack.panels.ProcessPanel id="ProcessPanel"/>',
-        '<com.izforge.izpack.panels.ShortcutPanel id="ShortcutPanel">',
-        '<programGroup name="JBoss Platform"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="-jar &quot;' + esc(path.join(jbosseapInstallDir, 'Uninstaller', 'uninstaller.jar')) + '&quot;" createForAll="true" description="Uninstall the JBoss Platform ' + jbosseapVersion + '" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-uninstall.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Uninstall Platform ' + jbosseapVersion + '" target=  "' + esc(path.join(jdkInstallDir, 'bin', 'java')) + '" terminal="false" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="true" description="Start the standalone server" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-start.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Start Server (standalone)" target="' + esc(path.join(jbosseapInstallDir, 'bin', 'standalone.bat')) + '" terminal="true" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="true" description="Start the domain server" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-start.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Start Server (domain)" target="' + esc(path.join(jbosseapInstallDir, 'bin', 'domain.ico')) + '" terminal="true" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="/C start http:\\localhost:9990\console" createForAll="true" description="Launch the JBoss Administration Console" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-jmx.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="JBoss Administration Console (domain)" target="C:\Windows\System32\cmd.exe" terminal="false" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="/C start http:\\localhost:9990\console" createForAll="true" description="Launch the JBoss Administration Console" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-jmx.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="JBoss Administration Console (standalone)" target="C:\Windows\System32\cmd.exe" terminal="false" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="--connect command=:shutdown --controller=localhost:9990" createForAll="true" description="Shutdown the application server" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-stop.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Shutdown Server (standalone)" target="' + esc(path.join(jbosseapInstallDir, 'bin', 'jboss-cli.bat')) + '" terminal="true" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="--connect command=/host=master:shutdown --controller=localhost:9990" createForAll="true" description="Shutdown the application server" encoding="UTF-8" excludeOS="" group="true" icon="' + esc(path.join(jbosseapInstallDir, 'icons', '48-stop.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Shutdown Server (domain)" target=  "' + esc(path.join(jbosseapInstallDir, 'bin', 'jboss-cli.bat')) + '" terminal="true" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory=""/>',
-        '</com.izforge.izpack.panels.ShortcutPanel>',
+        '<com.izforge.izpack.panels.ShortcutPanel id="ShortcutPanel"/>',
         '<com.izforge.izpack.panels.FinishPanel id="FinishPanel"/>',
         '</AutomatedInstallation>'
       ].join('\r\n');
