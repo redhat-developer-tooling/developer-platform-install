@@ -43,17 +43,17 @@ describe('Component Loader', function() {
       version: '10.4.0',
       installAfter: 'jdk'
     },
-    'fusetools': {
-      name: 'fusetools',
-      modulePath: 'model/devstudio',
-      targetFolderName: 'devstudioFolder',
-      bundle: 'yes',
-      url: 'devstudioUrl',
-      dmUrl: 'devstudioDmUrl',
-      fileName: 'devstudio.jar',
-      sha256sum: 'devstudioSHA',
-      version: '10.4.0',
-      installAfter: 'devstudio'
+    'fuseplatform': {
+      name: 'fuseplatform',
+      modulePath: 'model/jbossfuse',
+      targetFolderName: 'fuseplatformFolder',
+      bundle: 'no',
+      url: 'fuseplatformUrl',
+      dmUrl: 'fuseplatformDmUrl',
+      fileName: 'fuseplatform.jar',
+      sha256sum: 'fuseplatformSHA',
+      version: '6.3.0',
+      installAfter: 'jdk'
     },
     'cygwin': {
       name: 'cygwin',

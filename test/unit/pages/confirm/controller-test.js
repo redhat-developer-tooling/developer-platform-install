@@ -111,16 +111,18 @@ describe('ConfirmController', function() {
       });
     });
 
-    it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
+    it('should deselect openjdk if jbosseap and devstudio and fuseplatform are not selected', function() {
       confirmController.detectInstalledComponents();
       return confirmController.detection.then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.fuseplatform.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.jbosseap.selectedOption'
-            || el[0] == 'checkboxModel.devstudio.selectedOption') {
+            || el[0] == 'checkboxModel.devstudio.selectedOption'
+            || el[0] == 'checkboxModel.fuseplatform.selectedOption') {
             el[1]();
           }
         });
@@ -128,16 +130,18 @@ describe('ConfirmController', function() {
       });
     });
 
-    it('should select openjdk if jbosseap or devstudio selected', function() {
+    it('should select openjdk if jbosseap or devstudio or fuseplatform selected', function() {
       confirmController.detectInstalledComponents();
       return confirmController.detection.then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.fuseplatform.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.jbosseap.selectedOption'
-            || el[0] == 'checkboxModel.devstudio.selectedOption') {
+            || el[0] == 'checkboxModel.devstudio.selectedOption'
+            || el[0] == 'checkboxModel.fuseplatform.selectedOption') {
             el[1]('detected');
           }
         });

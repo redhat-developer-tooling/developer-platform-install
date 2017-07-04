@@ -61,7 +61,7 @@ class ConfirmController {
       $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
         for (let keyName of watchedComponents[key]) {
           if (keyName === 'jdk' && $scope.checkboxModel[keyName].selectedOption !== 'detected') {
-            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
+            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' && $scope.checkboxModel.fuseplatform.selectedOption === 'detected' ) {
               $scope.checkboxModel[keyName].selectedOption = 'detected';
             } else {
               $scope.checkboxModel[keyName].selectedOption = 'install';

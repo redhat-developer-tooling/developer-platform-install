@@ -19,7 +19,7 @@ import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
 
-describe('jbossfuse installer', function() {
+describe('fuseplatform installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox, installer, sha256Stub;
   let downloadUrl = 'http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar';
@@ -44,7 +44,7 @@ describe('jbossfuse installer', function() {
     ds.installDir.returns('installationFolder');
     ds.jdkDir.returns('install/jdk8');
     ds.jbosseapDir.returns('installationFolder/jbosseap');
-    ds.fuseplatformDir.returns('installationFolder/jbossfuse');
+    ds.fuseplatformDir.returns('installationFolder/fuseplatform');
     ds.cdkDir.returns('installationFolder/cdk');
     ds.getInstallable.returns(fakeInstall);
     ds.getUsername.returns('user');
@@ -86,7 +86,7 @@ describe('jbossfuse installer', function() {
 
   beforeEach(function () {
     installerDataSvc = stubDataService();
-    installer = new FusePlatformInstall(installerDataSvc, 'jbossfuse', downloadUrl, 'jbossfuse.jar', 'sha');
+    installer = new FusePlatformInstall(installerDataSvc, 'fuseplatform', downloadUrl, 'fuseplatform.jar', 'sha');
     installer.ipcRenderer = { on: sinon.stub().yields(undefined, JdkInstall.KEY) };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -108,9 +108,9 @@ describe('jbossfuse installer', function() {
     }).to.throw('No download URL set');
   });
 
-  it('should download jbossfuse installer to temporary folder with configured filename', function() {
-    expect(new FusePlatformInstall(installerDataSvc, 'jbossfuse', 'url', 'jbossfuse.jar').downloadedFile).to.equal(
-      path.join('tempDirectory', 'jbossfuse.jar'));
+  it('should download fuseplatform installer to temporary folder with configured filename', function() {
+    expect(new FusePlatformInstall(installerDataSvc, 'fuseplatform', 'url', 'fuseplatform.jar').downloadedFile).to.equal(
+      path.join('tempDirectory', 'fuseplatform.jar'));
   });
 
   describe('installer download', function() {
@@ -128,7 +128,7 @@ describe('jbossfuse installer', function() {
       expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
     });
 
-    it('should write the data into temp/jbossfuse.jar', function() {
+    it('should write the data into temp/fuseplatform.jar', function() {
       let spy = sandbox.spy(fs, 'createWriteStream');
       let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
 
@@ -136,7 +136,7 @@ describe('jbossfuse installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jbossfuse.jar'));
+      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'fuseplatform.jar'));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
@@ -195,8 +195,8 @@ describe('jbossfuse installer', function() {
       expect(stub).calledOnce;
     });
 
-    it('should copy jbossfuse.jar file to install folder', function() {
-      let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbossfuse.jar');
+    it('should copy fuseplatform.jar file to install folder', function() {
+      let downloadedFile = path.join(installerDataSvc.tempDir(), 'fuseplatform.jar');
       sandbox.stub(installer, 'postJDKInstall').resolves();
       return new Promise((resolve, reject)=>{
         installer.installAfterRequirements(fakeProgress, resolve, reject);
@@ -224,7 +224,7 @@ describe('jbossfuse installer', function() {
       let helper, stubInstall, eventSpy;
 
       beforeEach(function() {
-        helper = new Installer('jbossfuse', fakeProgress, success, failure);
+        helper = new Installer('fuseplatform', fakeProgress, success, failure);
         stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
         eventSpy = installer.ipcRenderer.on;
       });
@@ -277,14 +277,14 @@ describe('jbossfuse installer', function() {
       let child_process = require('child_process');
 
       beforeEach(function() {
-        helper = new Installer('jbossfuse', fakeProgress, success, failure);
+        helper = new Installer('fuseplatform', fakeProgress, success, failure);
         sandbox.stub(child_process, 'execFile').yields();
         sandbox.stub(fs, 'appendFile').yields();
       });
 
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
-        let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbossfuse.jar');
+        let downloadedFile = path.join(installerDataSvc.tempDir(), 'fuseplatform.jar');
         let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',

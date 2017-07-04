@@ -86,7 +86,9 @@ class CDKInstall extends InstallableItem {
     let newPath = [];
     let oldPath = Platform.ENV[Platform.PATH];
 
-    newPath.push(vboxInstall.getLocation());
+    if(vboxInstall) {
+      newPath.push(vboxInstall.getLocation());
+    }
 
     if(cygwinInstall) {
       newPath.push(cygwinInstall.getLocation());
