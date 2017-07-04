@@ -62,7 +62,7 @@ describe('kompose installer', function() {
   let failure = () => {};
 
   beforeEach(function () {
-    installer = new KomposeInstall(installerDataSvc, 'folderName', '0.4.0', komposeUrl, 'kompose.exe', 'sha1');
+    installer = new KomposeInstall(installerDataSvc, 'folderName', komposeUrl, 'kompose.exe', 'sha1');
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
   });
@@ -73,13 +73,13 @@ describe('kompose installer', function() {
 
   it('should fail when some download url is not set and installed file not defined', function() {
     expect(function() {
-      new KomposeInstall(installerDataSvc, 'folderName', '0.4.0', null, 'installFile', 'sha1');
+      new KomposeInstall(installerDataSvc, 'folderName', null, 'installFile', 'sha1');
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new KomposeInstall(installerDataSvc, 'folderName', '0.4.0', null, 'installFile', 'sha1');
+      new KomposeInstall(installerDataSvc, 'folderName', null, 'installFile', 'sha1');
     }).to.throw('No download URL set');
   });
 

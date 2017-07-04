@@ -3,9 +3,12 @@
   "libs": [
     "chai"
   ],
-  "loadEagerly": [],
+  "loadEagerly": [
+    "browser/**"
+  ],
   "dontLoad": [
-    "node_modules/**"
+    "node_modules/**",
+    "transpiled/node_modules/**"
   ],
   "plugins": {
     "doc_comment": true,

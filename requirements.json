@@ -5,30 +5,34 @@
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/cdk",
     "targetFolderName": "cdk",
+    "installAfter": "cygwin",
     "platform": {
       "win32": {
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-windows-amd64.exe?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/windows-amd64/minishift.exe",
-        "filename": "minishift_3_0_0_GA.exe",
+        "fileName": "minishift_3_0_0_GA.exe",
         "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "cygwin,virtualbox||hyperv"
       },
       "darwin": {
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-darwin-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/darwin-amd64/minishift",
-        "filename": "minishift_3_0_0_GA",
+        "fileName": "minishift_3_0_0_GA",
         "sha256sum": "1aad3cc784f312568357c9d3e1a2111ceedac884c59e0953b06aea45de49bb25",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "virtualbox"
       },
       "linux": {
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-linux-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/linux-amd64/minishift",
-        "filename": "minishift_3_0_0_GA",
+        "fileName": "minishift_3_0_0_GA",
         "sha256sum": "b754554190756fb3142998b67cd046174f7e0ae9f2d287d673481e20d9482060",
-        "version": "3.0.0.GA"
+        "version": "3.0.0.GA",
+        "requires": "kvm"
       }
     }
   },
@@ -39,8 +43,9 @@
     "modulePath": "model/cygwin",
     "bundle": "always",
     "targetFolderName": "cygwin",
+    "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
-    "filename": "cygwin_2.8.0.exe",
+    "fileName": "cygwin_2.8.0.exe",
     "sha256sum": "83f128c7cd121e455fd3f5cc732aca8f313d0eb1accbd97e99fc14f2df2fe7eb",
     "version": "2.8.0-1",
     "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
@@ -55,11 +60,30 @@
     "modulePath": "model/devstudio",
     "bundle": "yes",
     "targetFolderName": "developer-studio",
+    "installAfter": "jdk",
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
-    "filename": "devstudio-11.0.0.AM2-installer-standalone.jar",
+    "fileName": "devstudio-11.0.0.AM2-installer-standalone.jar",
     "sha256sum": "",
-    "version": "11.0.0.AM2"
+    "version": "11.0.0.AM2",
+    "useDownload": true,
+    "requires": "jdk"
+  },
+  "fuseplatform": {
+    "name": "Red Hat JBoss Fuse Integration Platform",
+    "description": "An agile, lightweight and modern integration platform",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/jbossfuse",
+    "bundle": "no",
+    "targetFolderName": "fuseplatform",
+    "installAfter": "jdk",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
+    "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar",
+    "fileName": "fuse-eap-installer-6.3.0.redhat-187.jar",
+    "sha256sum": "847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd",
+    "version": "6.3.0",
+    "useDownload": true,
+    "requires": "jdk"
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
@@ -68,11 +92,13 @@
     "modulePath": "model/jbosseap",
     "bundle": "no",
     "targetFolderName": "jbosseap",
+    "installAfter": "jdk",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-7.0.0-installer.jar?workflow=direct",
     "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.0.0/jboss-eap-7.0.0-installer.jar",
-    "filename": "jboss-eap-7.0.0-installer.jar",
+    "fileName": "jboss-eap-7.0.0-installer.jar",
     "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
-    "version": "7.0.0.GA"
+    "version": "7.0.0.GA",
+    "requires": "jdk"
   },
   "jdk": {
     "modulePath": "model/jdk-install",
@@ -85,7 +111,7 @@
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
         "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "filename": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "fileName": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
         "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
         "version": "1.8.0_131",
         "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
@@ -97,7 +123,7 @@
         "bundle": "no",
         "dmUrl": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",
         "url": "http://www.oracle.com/technetwork/java/javase/downloads/index.html",
-        "filename": "",
+        "fileName": "",
         "sha256sum": "",
         "version": "1.8.0",
         "virusTotalReport": ""
@@ -109,7 +135,7 @@
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
         "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "filename": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
+        "fileName": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
         "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
         "version": "1.8.0_131",
         "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
@@ -122,11 +148,12 @@
     "vendor": "Oracle, Inc.",
     "modulePath": "model/virtualbox",
     "targetFolderName": "virtualbox",
+    "installAfter": "jdk",
     "platform": {
       "win32": {
         "bundle": "no",
         "url": "https://developers.redhat.com/redirect/to/virtualbox-windows-5.1.22.download",
-        "filename": "virtualbox_5.1.22.exe",
+        "fileName": "virtualbox_5.1.22.exe",
         "sha256sum": "e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93",
         "version": "5.1.22",
         "revision": "115126",
@@ -135,7 +162,7 @@
       "darwin": {
         "bundle": "no",
         "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.1.22.download",
-        "filename": "virtualbox_5.1.22.dmg",
+        "fileName": "virtualbox_5.1.22.dmg",
         "sha256sum": "405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa",
         "version": "5.1.22",
         "revision": "115126",
@@ -144,7 +171,7 @@
       "linux": {
         "bundle": "no",
         "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
-        "filename": "VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
+        "fileName": "VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
         "sha256sum": "c112cddf30c3b6f20958f6212fc114c13c8c5ce82caed3d3892d1e6a7bd66a88",
         "version": "5.1.22",
         "revision": "115126",
@@ -158,7 +185,7 @@
     "modulePath": "model/hyperv",
     "bundle": "no",
     "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
-    "filename": "",
+    "fileName": "",
     "sha256sum": "",
     "version": "",
     "revision": "112440",
@@ -177,7 +204,7 @@
         "bundle": "tools",
         "version": "9.20",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
-        "filename": "7zip.zip",
+        "fileName": "7zip.zip",
         "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
       }
     }
@@ -191,7 +218,7 @@
         "bundle": "tools",
         "version": "9.20",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
-        "filename": "7zip-extra.7z",
+        "fileName": "7zip-extra.7z",
         "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757"
       }
     }
@@ -206,17 +233,17 @@
     "platform": {
       "win32": {
         "url": "https://developers.redhat.com/redirect/to/kompose-windows-0.6.0.download",
-        "filename": "kompose-0.6.0.TP-windows-amd64.exe",
+        "fileName": "kompose-0.6.0.TP-windows-amd64.exe",
         "sha256sum": "2b641b12c3e8c1aae1b63b0d32dedc4e4128fd906c752893050a0f7a549f83fa"
       },
       "darwin": {
         "url": "https://developers.redhat.com/redirect/to/kompose-macos-0.6.0.download",
-        "filename": "kompose-0.6.0.TP-darwin-amd64",
+        "fileName": "kompose-0.6.0.TP-darwin-amd64",
         "sha256sum": "fe2253f3535226e27e22d137a04c6383175f38822c1389d7ee043ad243320200"
       },
       "linux": {
         "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.6.0/kompose-linux-amd64",
-        "filename": "kompose-0.6.0.TP-linux-amd64",
+        "fileName": "kompose-0.6.0.TP-linux-amd64",
         "sha256sum": "1597d3ef7b663d38b3758eceeec36951c0d99449b7949b61f0355157003b9094"
       }
     }

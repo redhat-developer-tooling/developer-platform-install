@@ -86,11 +86,11 @@ function prefetch(reqs, bundle, targetFolder) {
   let promises = new Array();
   for (let key in reqs) {
     if (reqs[key].bundle === bundle) {
-      let currentFile = path.join(targetFolder, reqs[key].filename);
+      let currentFile = path.join(targetFolder, reqs[key].fileName);
       promises.push(() => {
         return new Promise((resolve, reject) => {
           // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(targetFolder, reqs[key].filename + '.sha256', reqs[key].sha256sum, reject, (currentSHA256) => {
+          downloadAndReadSHA256(targetFolder, reqs[key].fileName + '.sha256', reqs[key].sha256sum, reject, (currentSHA256) => {
             //console.log('[DEBUG] SHA256SUM for ' + key + ' = ' + currentSHA256);
             comm.isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
               if(dl) {
@@ -102,7 +102,7 @@ function prefetch(reqs, bundle, targetFolder) {
                 } else {
                   console.log('[INFO] \'' + currentFile + '\' is not downloaded yet');
                 }
-                downloadFileAndCreateSha256(targetFolder, reqs[key].filename, reqs[key].url, currentSHA256, resolve, reject);
+                downloadFileAndCreateSha256(targetFolder, reqs[key].fileName, reqs[key].url, currentSHA256, resolve, reject);
               }
             });
           });

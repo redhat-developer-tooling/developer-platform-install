@@ -7,7 +7,8 @@ import ComponentLoader from '../../services/componentLoader';
 const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
   'devstudio': ['jdk'],
-  'jbosseap': ['jdk']
+  'jbosseap': ['jdk'],
+  'fuseplatform' : ['jdk']
 };
 
 class ConfirmController {
@@ -60,7 +61,7 @@ class ConfirmController {
       $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
         for (let keyName of watchedComponents[key]) {
           if (keyName === 'jdk' && $scope.checkboxModel[keyName].selectedOption !== 'detected') {
-            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
+            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' && $scope.checkboxModel.fuseplatform.selectedOption === 'detected' ) {
               $scope.checkboxModel[keyName].selectedOption = 'detected';
             } else {
               $scope.checkboxModel[keyName].selectedOption = 'install';
@@ -120,7 +121,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fuseplatform'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {

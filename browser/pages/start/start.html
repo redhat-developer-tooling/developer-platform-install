@@ -9,7 +9,7 @@
     <div class="text-padding">What’s next? <a id="quickstart-link" href="" ng-click="startCtrl.learnCDK()">Learn how to create your first CDK project.</a></div>
   </div>
   <form id="startForm" role="form" class="text-center" ng-submit="startCtrl.start()">
-    <div ng-hide="startCtrl.devstudioInstall.isSkipped()">
+    <div ng-hide="startCtrl.devstudioInstall.isSkipped() && startCtrl.fuseInstall.isSkipped()">
       <button type="submit" id="start-submit" class="btn btn-primary">Open Red Hat JBoss Developer Studio</button>
     </div>
     <div>
