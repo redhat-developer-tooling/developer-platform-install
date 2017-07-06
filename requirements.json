@@ -41,7 +41,7 @@
     "targetFolderName": "cygwin",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "filename": "cygwin_2.8.0.exe",
-    "sha256sum": "83f128c7cd121e455fd3f5cc732aca8f313d0eb1accbd97e99fc14f2df2fe7eb",
+    "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
     "version": "2.8.0-1",
     "virusTotalReport": "https://virustotal.com/en/file/446b658bc1b8b6c7865474188cb4d7e9873003e2b6a9d74dcdfb7a3ff77e8634/analysis/",
     "platform": {
