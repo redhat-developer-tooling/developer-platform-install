@@ -84,6 +84,8 @@
     "description": "A certified Eclipse-based integrated development environment (IDE) for Fuse",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/devstudio",
+    "installable": true,
+    "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
     "installAfter": "devstudio",
