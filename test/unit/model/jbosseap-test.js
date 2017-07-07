@@ -16,7 +16,6 @@ import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
-import JbosseapAutoInstallGenerator from 'browser/model/jbosseap-autoinstall';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 chai.use(sinonChai);
@@ -210,7 +209,7 @@ describe('jbosseap installer', function() {
     });
 
     it('should load the install config contents', function() {
-      let spy = sandbox.spy(JbosseapAutoInstallGenerator.prototype, 'fileContent');
+      let spy = sandbox.spy(installer, 'installGenerator');
 
       installer.installAfterRequirements(fakeProgress, success, failure);
 
@@ -221,12 +220,11 @@ describe('jbosseap installer', function() {
       sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
 
-      let data = new JbosseapAutoInstallGenerator(installerDataSvc.jbosseapDir(), installerDataSvc.jdkDir(), /(\d+\.\d+\.\d+).*/.exec(installer.version)[1]).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'jbosseap-autoinstall.xml');
       installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(installConfigFile, data);
+      expect(spy).to.have.been.calledWith(installConfigFile, installer.installGenerator(installerDataSvc.jbosseapDir(), installerDataSvc.jdkDir(), /(\d+\.\d+\.\d+).*/.exec(installer.version)[1]));
     });
 
     it('should catch errors thrown during the installation', function(done) {
@@ -264,9 +262,9 @@ describe('jbosseap installer', function() {
 
       it('should wait for JDK install to complete', function() {
         return installer.postJDKInstall(helper, true)
-        .then(() => {
-          expect(eventSpy).calledOnce;
-        });
+          .then(() => {
+            expect(eventSpy).calledOnce;
+          });
       });
 
       it('should wait for JDK install to complete and ignore other installed components', function() {
@@ -327,10 +325,10 @@ describe('jbosseap installer', function() {
         ];
 
         return installer.headlessInstall(helper)
-        .then(() => {
-          expect(spy).calledOnce;
-          expect(spy).calledWith(javaPath, javaOpts);
-        });
+          .then(() => {
+            expect(spy).calledOnce;
+            expect(spy).calledWith(javaPath, javaOpts);
+          });
       });
     });
   });

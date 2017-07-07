@@ -77,13 +77,23 @@
     "bundle": "no",
     "targetFolderName": "fuseplatform",
     "installAfter": "jdk",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
-    "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar",
-    "fileName": "fuse-eap-installer-6.3.0.redhat-187.jar",
-    "sha256sum": "847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd",
+    "requires": "jdk",
     "version": "6.3.0",
-    "useDownload": true,
-    "requires": "jdk"
+    "file": {
+      "platform": {
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar",
+        "fileName": "fuse-eap-installer-6.3.0.redhat-187.jar",
+        "sha256sum": "847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd"
+      },
+      "eap": {
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-6.4.0.GA-installer.jar?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-6/6.4.0/jboss-eap-6.4.0-installer.jar",
+        "fileName": "jboss-eap-6.4.0.GA-installer.jar",
+        "sha256sum": "363ab89d81b1f496da3e745f6cac7f9456d76bd4a9d1908c597f514232f84c0a"
+      }
+    },
+    "useDownload": true
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
