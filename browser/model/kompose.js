@@ -7,10 +7,10 @@ import Installer from './helpers/installer';
 import Platform from '../services/platform';
 
 class KomposeInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, version, downloadUrl, fileName, sha256) {
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(KomposeInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.addOption('install', this.version, '', true);
-    this.sha256 = sha256;
+    this.sha256 = sha256sum;
   }
 
   static get KEY() {
@@ -34,6 +34,13 @@ class KomposeInstall extends InstallableItem {
       installer.fail(error);
     });
   }
+
 }
+
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+  return new KomposeInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
+}
+
+KomposeInstall.convertor = {fromJson};
 
 export default KomposeInstall;

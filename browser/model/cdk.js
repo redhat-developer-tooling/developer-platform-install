@@ -10,10 +10,10 @@ import fs from 'fs-extra';
 import pify from 'pify';
 
 class CDKInstall extends InstallableItem {
-  constructor(installerDataSvc, targetFolderName, minishiftUrl, fileName, minishiftSha256) {
-    super(CDKInstall.KEY, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
+  constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
+    super(CDKInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
-    this.sha256 = minishiftSha256;
+    this.sha256 = sha256sum;
     this.addOption('install', this.version, '', true);
     this.selected = false;
   }
@@ -29,7 +29,7 @@ class CDKInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let minishiftExe = this.minishiftExeLocation;
-    let installer = new Installer(CDKInstall.KEY, progress, success, failure);
+    let installer = new Installer(this.keyName, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
     let home;
@@ -99,10 +99,15 @@ class CDKInstall extends InstallableItem {
     }
 
     env[Platform.PATH] = newPath.join(path.delimiter);
-    Logger.info(CDKInstall.KEY + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
+    Logger.info(this.keyName + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
     return env;
   }
-
 }
+
+function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
+  return new CDKInstall(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum);
+}
+
+CDKInstall.convertor = {fromJson};
 
 export default CDKInstall;

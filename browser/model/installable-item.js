@@ -12,6 +12,7 @@ let ipcRenderer = require('electron').ipcRenderer;
 class InstallableItem {
   constructor(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
     this.keyName = keyName;
+    this.fileName = fileName;
     let requirement = installerDataSvc.getRequirementByName(keyName);
     this.productName = requirement.name;
     this.productVersion = requirement.version;
