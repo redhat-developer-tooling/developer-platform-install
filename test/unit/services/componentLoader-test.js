@@ -15,9 +15,10 @@ describe('Component Loader', function() {
       bundle: 'yes',
       dmUrl: 'cdkDmUrl',
       url: 'cdkUrl',
-      filename: 'minishift.exe',
+      fileName: 'minishift.exe',
       sha256sum: 'cdkSHA',
-      version: '3.0.0.GA'
+      version: '3.0.0.GA',
+      installAfter: 'cygwin'
     },
     'jdk': {
       name: 'jdk',
@@ -26,7 +27,7 @@ describe('Component Loader', function() {
       bundle: 'yes',
       dmUrl: 'jdkDmUrl',
       url: 'jdkUrl',
-      filename: 'jdk.msi',
+      fileName: 'jdk.msi',
       sha256sum: 'jdkSHA',
       version: '1.8.0'
     },
@@ -37,9 +38,10 @@ describe('Component Loader', function() {
       bundle: 'yes',
       url: 'devstudioUrl',
       dmUrl: 'devstudioDmUrl',
-      filename: 'devstudio.jar',
+      fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
-      version: '10.4.0'
+      version: '10.4.0',
+      installAfter: 'jdk'
     },
     'cygwin': {
       name: 'cygwin',
@@ -47,9 +49,10 @@ describe('Component Loader', function() {
       targetFolderName: 'cygwinFolder',
       bundle: 'always',
       url: 'cygwinUrl',
-      filename: 'cygwin.exe',
+      fileName: 'cygwin.exe',
       sha256sum: 'cygwinSHA',
-      version: '2.7.0'
+      version: '2.7.0',
+      installAfter: 'virtualbox'
     },
     'virtualbox': {
       name: 'virtualbox',
@@ -57,15 +60,16 @@ describe('Component Loader', function() {
       targetFolderName: 'virtualboxFolder',
       bundle: 'no',
       url: 'virtualboxUrl',
-      filename: 'virtualbox.exe',
+      fileName: 'virtualbox.exe',
       sha256sum: 'virtualboxSHA',
-      version: '5.1.12'
+      version: '5.1.12',
+      installAfter: 'jdk'
     },
     '7zip': {
       name: '7zip',
       bundle: 'tools',
       url: '7zipUrl',
-      filename: '7zip.exe',
+      fileName: '7zip.exe',
       sha256sum: '7zipSHA',
       version: '1.0.0'
     }
