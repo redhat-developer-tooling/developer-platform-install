@@ -49,7 +49,7 @@
     "targetFolderName": "cygwin",
     "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
-    "filename": "cygwin_2.8.1-1.exe",
+    "fileName": "cygwin_2.8.1-1.exe",
     "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
     "version": "2.8.1-1",
     "virusTotalReport": "https://virustotal.com/en/file/062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214/analysis/",
