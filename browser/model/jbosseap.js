@@ -37,9 +37,10 @@ class JbosseapInstall extends InstallableItem {
     let data = this.installGenerator.fileContent();
     Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content SUCCESS');
     return installer.writeFile(this.installConfigFile, data)
-      .then((result) => {
-        installer.writeFile(this.configFile, 'adminPassword=changeit');
-        return this.postJDKInstall(installer, result);
+      .then(() => {
+        return installer.writeFile(this.configFile, 'adminPassword=changeit');
+      }).then(() => {
+        return this.postJDKInstall(installer);
       })
       .then(() => {
         let devstudio = this.installerDataSvc.getInstallable('devstudio');
@@ -71,21 +72,21 @@ class JbosseapInstall extends InstallableItem {
     }
   }
 
-  postJDKInstall(installer, result) {
+  postJDKInstall(installer) {
     return new Promise((resolve, reject) => {
       let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
 
       if (jdkInstall.isInstalled()) {
-        return this.headlessInstall(installer, result)
-        .then((res) => { resolve(res); })
-        .catch((err) => { reject(err); });
+        return this.headlessInstall(installer)
+          .then((res) => { resolve(res); })
+          .catch((err) => { reject(err); });
       } else {
         Logger.info(JbosseapInstall.KEY + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
-            return this.headlessInstall(installer, result)
-            .then((res) => { resolve(res); })
-            .catch((err) => { reject(err); });
+            return this.headlessInstall(installer)
+              .then((res) => { resolve(res); })
+              .catch((err) => { reject(err); });
           }
         });
       }
