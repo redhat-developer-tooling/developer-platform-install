@@ -54,6 +54,7 @@ class HypervInstall extends InstallableItem {
       return true;
     }
   }
+}
 
   isDisabled() {
     return true;
