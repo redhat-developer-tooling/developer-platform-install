@@ -35,10 +35,11 @@ class Installer {
     });
   }
 
-  execFile(file, args) {
+  execFile(file, args, options = {}) {
+    options.maxBuffer = 1024*1024*2;
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute ' + file + ' ' + args);
-      child_process.execFile(file, args, {'maxBuffer': 1024*1024*2}, (error, stdout, stderr) => {
+      child_process.execFile(file, args, options, (error, stdout, stderr) => {
         if (error) {
           Logger.error(this.key + ' - ' + error);
           Logger.error(this.key + ' - ' + stderr);
@@ -80,15 +81,15 @@ class Installer {
       } else if(zipFile.endsWith('.zip')) {
         Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
         fs.createReadStream(zipFile)
-        .pipe(unzip.Extract({path: extractTo}))
-        .on('close', () => {
-          Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
-          resolve(true);
-        })
-        .on('error', (err) => {
-          Logger.error(this.key + ' - ' + err);
-          reject(err);
-        });
+          .pipe(unzip.Extract({path: extractTo}))
+          .on('close', () => {
+            Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
+            resolve(true);
+          })
+          .on('error', (err) => {
+            Logger.error(this.key + ' - ' + err);
+            reject(err);
+          });
       } else {
         reject(`unsupported extension for ${zipFile}`);
       }
