@@ -34,9 +34,13 @@ class JdkInstall extends InstallableItem {
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
     return Promise.resolve().then(()=>{
-      return this.findMsiInstalledJava();
-    }).then(() => {
-      return this.findDarwinJava();
+      if(Platform.OS == 'win32') {
+        return this.findMsiInstalledJava();
+      } else if(Platform.OS == 'darwin') {
+        return this.findDarwinJava();
+      } else {
+        return Promise.resolve('');
+      }
     }).then((output)=>{
       this.openJdkMsi = output.length>0;
       return Util.executeCommand('java -version', 2);
@@ -111,29 +115,21 @@ class JdkInstall extends InstallableItem {
     let msiSearchScript = this.getMsiSearchScriptLocation();
     let data = this.getMsiSearchScriptData();
     let args = this.getMsiSearchScriptPowershellArgs(msiSearchScript);
-    let result = Promise.resolve('');
-    if (Platform.OS == 'win32') {
-      result = Util.writeFile(msiSearchScript, data).then(()=>{
-        return Util.executeFile('powershell', args);
-      });
-    }
-    return result;
+    return Util.writeFile(msiSearchScript, data).then(()=>{
+      return Util.executeFile('powershell', args);
+    });
   }
 
   findDarwinJava() {
     let javaHome = '/usr/libexec/java_home';
-    let result = Promise.resolve();
-    if (Platform.OS === 'darwin') {
-      result = Util.executeFile(javaHome)
+    return Util.executeFile(javaHome)
       .then((output) => {
         if (!output || output.startsWith('Unable to find any JVMs')) {
-          return Promise.reject('No JVM found');
+          return Promise.reject('No java detected');
         } else {
           return Promise.resolve(output);
         }
       });
-    }
-    return result;
   }
 
   validateVersion() {
@@ -198,6 +194,13 @@ class JdkInstall extends InstallableItem {
       '/Lviwe',
       path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
     ];
+  }
+
+  isConfigured() {
+    if (Platform.getOS() === 'darwin') {
+      return this.isDetected() && this.option['detected'].valid;
+    }
+    return super.isConfigured();
   }
 }
 

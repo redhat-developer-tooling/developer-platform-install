@@ -6,6 +6,7 @@ import Platform from 'browser/services/platform';
 import child_process from 'child_process';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
+import fs from 'fs-extra';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -345,7 +346,6 @@ describe('Platform', function() {
 
   describe('getFreeDiskSpace', function() {
     describe('on windows', function() {
-
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
       });
@@ -363,6 +363,59 @@ describe('Platform', function() {
         let location = 'd:\\DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
           expect(result).to.be.NaN;
+        });
+      });
+    });
+
+    describe('on mac', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      });
+
+      it('should able to return free disk space for home', function() {
+        let home = `Filesystem    1024-blocks Used Available Capacity iused ifree %iused  Mounted on\nmap auto_home           0    0         0   100%       0     0  100%   /home`;
+        sandbox.stub(child_process, 'exec').yields(undefined, home);
+        let location = '/home/DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.equal(0);
+        });
+      });
+
+      it('should able to return free disk space', function() {
+        let applications = `Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /`;
+        sandbox.stub(child_process, 'exec').yields(undefined, applications);
+        let location = '/Applications/DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.equal(195032688);
+        });
+      });
+
+      it('should able to return free disk space', function() {
+        let applications = `Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /`;
+        sandbox.stub(child_process, 'exec').yields(undefined, applications);
+        let location = 'Downloads/DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.equal(195032688);
+        });
+      });
+
+      it('should able to return error if path is not present', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, `df: /Applications/developer: No such file or dir`);
+        let location = '/Applications/developer';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.equal('No such file or dir');
+        });
+      });
+    });
+
+    describe('on linux', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+      });
+      it('it does nothing', function() {
+        let location = '/home/user';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.undefined;
         });
       });
     });
@@ -392,6 +445,7 @@ describe('Platform', function() {
       it('adds directory if file passed in', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        sandbox.stub(fs, 'statSync').returns({isFile:function isFile() { return true; }});
         let locations = ['path1/file1', 'path2/file1', 'path3/file1'];
         return Platform.addToUserPath(locations).then(() => {
           expect(Platform.setUserPath_win32).calledWith(['path2', 'path3', 'path1'].join(';'));

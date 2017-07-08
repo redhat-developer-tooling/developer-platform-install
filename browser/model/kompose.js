@@ -4,7 +4,6 @@ let path = require('path');
 
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
-import Util from './helpers/util';
 import Platform from '../services/platform';
 
 class KomposeInstall extends InstallableItem {

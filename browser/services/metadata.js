@@ -1,8 +1,7 @@
 'use strict';
 
 function loadMetadata(requirements, platform) {
-  let reqs = {}
-  Object.assign(reqs, requirements);
+  let reqs = JSON.parse(JSON.stringify(requirements));
   for(var object in requirements) {
     if(reqs[object].platform) {
       if(reqs[object].platform[platform]) {

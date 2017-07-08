@@ -10,14 +10,13 @@ let path = require('path'),
   runSequence = require('run-sequence'),
   fs = require('fs-extra'),
   loadMetadata = require('../browser/services/metadata'),
-  reqs = loadMetadata(require('../requirements.json'), process.platform),
   exec = require('child_process').exec,
   rcedit = require('rcedit'),
   del = require('del'),
   unzip = require('gulp-unzip'),
   child_process = require('child_process');
 
-module.exports = function(gulp) {
+module.exports = function(gulp, reqs) {
 
   let zaRoot = path.resolve(config.buildFolderRoot);
   let toolsFolder = 'tools';
@@ -51,18 +50,19 @@ module.exports = function(gulp) {
 
   // wrap electron-generated app to 7zip archive
   gulp.task('create-7zip-archive', function(cb) {
-    let packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '*';
+    let packCmd = zaExe + ' a ' + bundled7z;
     // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
     if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf('-bundle') > 0) {
-      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
+      packCmd = zaExe + ' a -m0=Copy ' + bundled7z + ' ' + installerExe.replace('-bundle', '') + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
     } else {
-      packCmd = packCmd + ' ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].filename;
+      packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '* ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].filename;
     }
     //console.log('[DEBUG]' + packCmd);
     exec(packCmd, common.createExecCallback(cb, true));
   });
+
   gulp.task('create-final-exe', function(cb) {
-    let configTxt = path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
+    let configTxt = installerExe.indexOf('-bundle') > 0 ? path.resolve(path.join(zaRoot, '..', '..', 'config-bundle.txt')) :path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
     let packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
 
     exec(packageCmd, common.createExecCallback(cb, true));
@@ -79,18 +79,16 @@ module.exports = function(gulp) {
   // Create stub installer that will then download all the requirements
   gulp.task('package-simple', function(cb) {
     runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
-      'prepare-tools'], 'prefetch-cygwin', 'package', 'cleanup', cb);
+      'prepare-tools'], 'prefetch-cygwin', 'package', cb);
   });
 
   gulp.task('package-bundle', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
-      'prepare-tools'], 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
+    runSequence('package-simple', 'prefetch', 'prefetch-cygwin-packages', 'cleanup', 'package', cb);
   });
 
   // Create both installers
-  gulp.task('dist', function(cb) {
-    runSequence(['check-requirements', 'clean'], 'create-dist-dir', ['generate',
-      'prepare-tools'], 'prefetch-cygwin', 'package', 'prefetch', 'prefetch-cygwin-packages', 'package', 'cleanup', cb);
+  gulp.task('dist', ['package-bundle'], function(cb) {
+    cb();
   });
 
   // prefetch cygwin to always include into installer
@@ -100,14 +98,14 @@ module.exports = function(gulp) {
 
   // prefetch cygwin to always include into installer
   gulp.task('prefetch-cygwin-packages', ['create-prefetch-cache-dir'], function() {
-    return new Promise(function(resolve,reject) {
-      child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder,'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder,'packages')}`,function(error, std, err) {
+    return new Promise(function(resolve, reject) {
+      child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder, 'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder, 'packages')}`, function(error, std, err) {
         if(error) {
           reject(error);
         } else {
           resolve();
         }
-      })
+      });
     });
   });
 
@@ -154,9 +152,7 @@ module.exports = function(gulp) {
   });
 
   gulp.task('cleanup', function() {
-    return del([bundled7z,
-      path.resolve(path.join(config.buildFolderRoot, '7z*')),
-      path.resolve(zaElectronPackage)],
+    return del([bundled7z],
       { force: false });
   });
 

@@ -155,7 +155,7 @@ describe('kompose installer', function() {
       }).catch(()=> {
         expect(Installer.prototype.fail).calledOnce;
       });
-    })
+    });
 
     describe('on windows', function() {
       beforeEach(function() {

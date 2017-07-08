@@ -184,15 +184,16 @@
       <span class="pficon pficon-error-circle-o"></span>
       <span>You are required to install OpenJDK because you have selected Red Hat JBoss Developer Studio and that requires Java VM version 1.8.0 or higher to run installation.</span>
     </div>
-    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.jdk.isInvalidVersionDetected() && checkboxModel.devstudio.selectedOption == 'install' && platform == 'darwin'">
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled
+      && (checkboxModel.jdk.isNotDetected() || checkboxModel.jdk.isInvalidVersionDetected())
+      && (checkboxModel.devstudio.selectedOption == 'install' || checkboxModel.jbosseap.selectedOption == 'install') && platform == 'darwin'">
       <span class="pficon pficon-error-circle-o"></span>
-      <span>You have selected Red Hat JBoss Developer Studio which requires Java SE version {{checkboxModel.jdk.minimumVersion}} or higher to run installation. Due to licence limitations we may not install Java for you.
-        Please uninstall detected Java SE, install JDK version {{checkboxModel.jdk.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and restart Installer to continue.</span>
-    </div>
-    <div class="message-container error-message" ng-show="!confCtrl.isDisabled && checkboxModel.jdk.isNotDetected() && checkboxModel.devstudio.selectedOption == 'install' && platform == 'darwin'">
-      <span class="pficon pficon-error-circle-o"></span>
-      <span>You have selected Red Hat JBoss Developer Studio which requires Java SE version {{checkboxModel.jdk.minimumVersion}} or higher to run installation. Due to licence limitations we may not install Java for you.
-        Please install JDK {{checkboxModel.jdk.minimumVersion}} downloaded from <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and restart Installer to continue.</span>
+      <span>You have selected
+        <span ng-show="checkboxModel.devstudio.selectedOption != 'install' && checkboxModel.jbosseap.selectedOption == 'install'">{{checkboxModel.jbosseap.productName}}</span>
+        <span ng-show="checkboxModel.devstudio.selectedOption == 'install'">{{checkboxModel.devstudio.productName}}</span>
+        which requires Java SE version {{checkboxModel.jdk.minimumVersion}} or higher to run installation. Due to licence limitations we may not install Java for you.
+        Please <span ng-show="checkboxModel.jdk.isInvalidVersionDetected()">uninstall detected Java SE, </span>install JDK version {{checkboxModel.jdk.minimumVersion}} downloaded from
+        <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and restart Installer to continue.</span>
     </div>
 
     <!-- CDK -->

@@ -17,10 +17,7 @@ import child_process from 'child_process';
 import mockfs from 'mock-fs';
 import loadMetadata from 'browser/services/metadata';
 chai.use(sinonChai);
-
 let sinon  = require('sinon');
-
-
 
 describe('CDK installer', function() {
   let sandbox, installerDataSvc;
@@ -54,36 +51,33 @@ describe('CDK installer', function() {
     sha256Stub.restore();
   });
 
-  let reqs = loadMetadata(require('../../../requirements.json'), process.platform);
 
-  let cdkUrl = reqs['cdk'].url;
+
+  let cdkUrl = 'https://doenload.cdk/url';
 
   let success = () => {};
   let failure = () => {};
 
   function stubInstaller() {
+    let reqs = loadMetadata(require('../../../requirements.json'), Platform.getOS());
     let svc = new InstallerDataService({}, reqs);
     svc.cdkRoot = 'cdkLocation';
     svc.ocBinRoot = 'ocBinRoot';
     svc.vboxRoot = 'virtualboxLocation';
     svc.cygwinRoot = 'cygwinLocation';
     let cygwin;
-    if (process.platform === 'win32') {
-      svc.addItemsToInstall(
-        new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false)
-      );
-      cygwin = svc.getInstallable('cygwin');
+    if (Platform.OS === 'win32') {
+      cygwin = new InstallableItem('cygwin', 'url', 'cygwin.exe', 'cygwin', svc, false);
+      svc.addItemsToInstall(cygwin);
       cygwin.addOption('install', '1.0.0', 'cygwin', true);
     } else {
       svc.requirements['hyperv'] = {};
     }
-    svc.addItemsToInstall(
-      new InstallableItem('virtualbox', 'url', 'virtualbox.exe', 'virtualbox', svc, false)
-    );
-    let virtualbox = svc.getInstallable('virtualbox');
+    let virtualbox = new InstallableItem('virtualbox', 'url', 'virtualbox.exe', 'virtualbox', svc, false);
+    svc.addItemsToInstall(virtualbox);
     virtualbox.addOption('install', '1.0.0', 'virtualbox', true);
-
     let cdk = new CDKInstall(svc, 'folderName', cdkUrl, 'file.exe', 'sha1');
+
     return {
       svc,
       virtualbox,
@@ -108,6 +102,16 @@ describe('CDK installer', function() {
           }
         }
       },
+      'minishift-home': {
+        'cache': {
+          'oc': {
+            '1.4.1': {
+              'oc.exe': 'executable code',
+              'oc': 'executable code'
+            }
+          }
+        }
+      },
       temporaryFolder: {},
       installFolder: {
         cdk: {
@@ -116,11 +120,12 @@ describe('CDK installer', function() {
           }
         }
       }
-    }, {
-      createCwd: false,
-      createTmp: false
-    });
-    installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile.zip', 'sha1');
+    },
+      {
+        createCwd: false,
+        createTmp: false
+      });
+    installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile.exe', 'sha1');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -208,9 +213,10 @@ describe('CDK installer', function() {
     });
 
     describe('on windows', function() {
+      let svc;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        ( {cdk: installer} = stubInstaller() );
+        ( {cdk: installer, svc} = stubInstaller() );
         sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve(path.join('Users', 'dev1')));
         sandbox.stub(Installer.prototype, 'copyFile').resolves();
         sandbox.stub(Installer.prototype, 'exec').resolves();
@@ -276,10 +282,13 @@ describe('CDK installer', function() {
         });
       });
 
-      it('should add current user to `Hyper-V Administrators` group', function() {
+      it('should add current user to `Hyper-V Administrators` group when hyper-v is detected', function() {
         Installer.prototype.exec.restore();
-        sandbox.stub(Installer.prototype,'exec').onCall(0).rejects('Error');
+        sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
         Installer.prototype.exec.onCall(1).resolves();
+        let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
+        svc.addItemsToInstall(hyperv);
+        hyperv.addOption('detected', '1.0.0', 'hyperv', true);
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
@@ -289,10 +298,23 @@ describe('CDK installer', function() {
         });
       });
 
+      it('should not add current user to `Hyper-V Administrators` group when hyper-v is not detected', function() {
+        Installer.prototype.exec.restore();
+        sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
+        Installer.prototype.exec.onCall(1).resolves();
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=>{
+          expect(Installer.prototype.exec).not.calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
+        }).catch(()=>{
+          expect.fail();
+        });
+      });
+
       it('should stop minishift before running `minishift setup-cdk`', function() {
         Installer.prototype.exec.restore();
-        sandbox.stub(Installer.prototype,'exec').onCall(0).resolves();
-        Installer.prototype.exec.onCall(1).rejects('error');
+        sandbox.stub(Installer.prototype, 'exec');
+        Installer.prototype.exec.onCall(0).rejects('error');
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
@@ -302,8 +324,16 @@ describe('CDK installer', function() {
         });
       });
 
-      afterEach(function() {
-        sandbox.restore();
+      it('should use MINISHIFT_HOME env variable when search for oc.exe executable', function() {
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        return new Promise((resolve, reject)=> {
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
+          expect(Platform.addToUserPath).to.have.been.calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe'),
+            path.join('ocBinRoot', 'minishift.exe')
+          ]);
+        });
       });
     });
 
@@ -347,10 +377,18 @@ describe('CDK installer', function() {
           ]);
         });
       });
-    });
 
-    afterEach(function() {
-      sandbox.restore();
+      it('should use MINISHIFT_HOME env variable when search for oc executable', function() {
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        return new Promise((resolve, reject)=> {
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(()=> {
+          expect(Platform.addToUserPath).to.have.been.calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc'),
+            path.join('ocBinRoot', 'minishift')
+          ]);
+        });
+      });
     });
   });
 
@@ -363,17 +401,11 @@ describe('CDK installer', function() {
       it('returns copy of Platform.ENV with virtualbox location added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':'path'});
         let pathArray = ['virtualbox', 'path'];
-        if (process.platform === 'win32') {
-          pathArray.splice(1, 0, 'cygwin');
-        }
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':''});
         let pathArray = ['virtualbox'];
-        if (process.platform === 'win32') {
-          pathArray.push('cygwin');
-        }
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
@@ -385,18 +417,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
-        let pathArray = ['virtualbox', 'path'];
-        if (process.platform === 'win32') {
-          pathArray.splice(1, 0, 'cygwin');
-        }
+        let pathArray = ['virtualbox', 'cygwin', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':''});
-        let pathArray = ['virtualbox'];
-        if (process.platform === 'win32') {
-          pathArray.push('cygwin');
-        }
+        let pathArray = ['virtualbox', 'cygwin'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });

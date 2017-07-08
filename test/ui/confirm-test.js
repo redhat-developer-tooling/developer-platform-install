@@ -8,6 +8,20 @@ let loadMetadata = require('../../browser/services/metadata');
 let requirements = loadMetadata(require(path.join(rootPath, 'requirements.json')), process.platform);
 let conditions = protractor.ExpectedConditions;
 
+for (let key in requirements) {
+  if (requirements[key].bundle === 'tools') {
+    delete requirements[key];
+  }
+}
+// Hyper-V is not enabled on CI
+delete requirements.hyperv;
+
+const messages = {
+  detected: 'Using detected version',
+  older: 'Older than recommended!',
+  newer: 'Newer than recommended!'
+};
+
 describe('Confirm page', function() {
   let confirmForm, detectionInfo, nextButton;
 
@@ -32,41 +46,28 @@ describe('Confirm page', function() {
   breadcrumbBase.describeBreadcrumbs(context);
 
   describe('after detection', function() {
-    let components = {
-      virtualbox: requirements['virtualbox'],
-      cygwin: requirements['cygwin'],
-      cdk: requirements['cdk'],
-      jdk: requirements['jdk'],
-      devstudio: requirements['devstudio'],
-      jbosseap: requirements['jbosseap'],
-      kompose: requirements['kompose']
-    };
-    let messages = {
-      detected: 'Using detected version',
-      older: 'Older than recommended!',
-      newer: 'Newer than recommended!'
-    };
 
     let footer, cancelButton, backButton;
 
     beforeAll(function() {
       browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
       .then(function() {
-        for (var key in components) {
-          components[key].name = components[key].name.toUpperCase();
-          components[key].panel = element(By.id(key + '-panel'));
-          components[key].nameElement = element(By.id(key + '-name'));
-          components[key].versionElement = element(By.id(key + '-version'));
-          components[key].descriptionElement = element(By.id(key + '-description'));
+        for (let key in requirements) {
+          requirements[key].name = requirements[key].name.toUpperCase();
+          requirements[key].panel = element(By.id(key + '-panel'));
+          requirements[key].nameElement = element(By.id(key + '-name'));
+          requirements[key].versionElement = element(By.id(key + '-version'));
+          requirements[key].descriptionElement = element(By.id(key + '-description'));
 
           if(key === 'virtualbox') {
-            components[key].installedNote = element(By.id(key + '-installed-note'));
-            components[key].newerWarning = element(By.id(key + '-newer-warning'));
-            components[key].newerMessage = element(By.id(key + '-newer-message'));
-            components[key].olderError = element(By.id(key + '-older-error'));
-            components[key].olderMessage = element(By.id(key + '-older-message'));
+            requirements[key].installedNote = element(By.id(key + '-installed-note'));
+            requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
+            requirements[key].newerMessage = element(By.id(key + '-newer-message'));
+            requirements[key].olderError = element(By.id(key + '-older-error'));
+            requirements[key].olderMessage = element(By.id(key + '-older-message'));
           }
         }
+
         footer = element(By.id('footer-navigation'));
         cancelButton = element(By.id('confirm-cancel-btn'));
         backButton = element(By.id('confirm-back-btn'));
@@ -75,7 +76,7 @@ describe('Confirm page', function() {
 
     //scoll down and select Java if it is deselected by default so that all panels appear on install screen
     afterAll(function() {
-      let checkbox = components.jdk.panel.all(By.model('checkboxModel.jdk.selectedOption')).first();
+      let checkbox = requirements.jdk.panel.all(By.model('checkboxModel.jdk.selectedOption')).first();
       browser.executeScript('window.scrollTo(0,10000);').then(function() {
         return checkbox.isEnabled().then(function(enabled) {
           if (enabled) {
@@ -106,159 +107,55 @@ describe('Confirm page', function() {
     });
 
     it('should display a panel for each component', function() {
-      for (var key in components) {
-        expect(components[key].panel.isDisplayed()).toBe(true);
+      for (let key in requirements) {
+        expect(requirements[key].panel.isDisplayed()).toBe(true);
       }
     });
 
-    describe('virtualbox panel', function() {
-      let vbox = components.virtualbox;
-
-      it('should display a correct name', function() {
-        expect(vbox.nameElement.isDisplayed()).toBe(true);
-        expect(vbox.nameElement.getText()).toEqual(vbox.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(vbox.versionElement.isDisplayed()).toBe(true);
-        expect(vbox.versionElement.getText()).toEqual(vbox.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(vbox.descriptionElement.isDisplayed()).toBe(true);
-        expect(vbox.descriptionElement.getText()).toEqual(vbox.description);
-      });
-
-      it('detected installation message should be available', function() {
-        expect(vbox.installedNote.isPresent()).toBe(true);
-        expect(vbox.installedNote.getAttribute('innerHTML')).toMatch(messages.detected);
-      });
-
-      it('newer versions should come with a warning', function() {
-        expect(vbox.newerWarning.isPresent()).toBe(true);
-        expect(vbox.newerWarning.getAttribute('class')).toMatch('has-warning');
-        expect(vbox.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
-      });
-
-      it('older versions should come with an error', function() {
-        expect(vbox.olderError.isPresent()).toBe(true);
-        expect(vbox.olderError.getAttribute('class')).toMatch('has-error');
-        expect(vbox.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
-      });
-    });
-
-    describe('cygwin panel', function() {
-      let cygwin = components.cygwin;
-
-      it('should display a correct name', function() {
-        expect(cygwin.nameElement.isDisplayed()).toBe(true);
-        expect(cygwin.nameElement.getText()).toEqual(cygwin.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(cygwin.versionElement.isDisplayed()).toBe(true);
-        expect(cygwin.versionElement.getText()).toEqual(cygwin.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(cygwin.descriptionElement.isDisplayed()).toBe(true);
-        expect(cygwin.descriptionElement.getText()).toEqual(cygwin.description);
-      });
-    });
-
-    describe('cdk panel', function() {
-      let cdk = components.cdk;
-
-      it('should display a correct name', function() {
-        expect(cdk.nameElement.isDisplayed()).toBe(true);
-        expect(cdk.nameElement.getText()).toEqual(cdk.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(cdk.versionElement.isDisplayed()).toBe(true);
-        expect(cdk.versionElement.getText()).toEqual(cdk.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(cdk.descriptionElement.isDisplayed()).toBe(true);
-        expect(cdk.descriptionElement.getText()).toEqual(cdk.description);
-      });
-    });
-
-    describe('kompose panel', function() {
-      let kompose = components.kompose;
-
-      it('should display a correct name', function() {
-        expect(kompose.nameElement.isDisplayed()).toBe(true);
-        expect(kompose.nameElement.getText()).toEqual(kompose.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(kompose.versionElement.isDisplayed()).toBe(true);
-        expect(kompose.versionElement.getText()).toEqual(kompose.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(kompose.descriptionElement.isDisplayed()).toBe(true);
-        expect(kompose.descriptionElement.getText()).toEqual(kompose.description);
-      });
-    });
-
-    describe('devstudio panel', function() {
-      let devstudio = components.devstudio;
-
-      it('should display a correct name', function() {
-        expect(devstudio.nameElement.isDisplayed()).toBe(true);
-        expect(devstudio.nameElement.getText()).toEqual(devstudio.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(devstudio.versionElement.isDisplayed()).toBe(true);
-        expect(devstudio.versionElement.getText()).toEqual(devstudio.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(devstudio.descriptionElement.isDisplayed()).toBe(true);
-        expect(devstudio.descriptionElement.getText()).toEqual(devstudio.description);
-      });
-    });
-
-    describe('jbosseap panel', function() {
-      let jbosseap = components.jbosseap;
-
-      it('should display a correct name', function() {
-        expect(jbosseap.nameElement.isDisplayed()).toBe(true);
-        expect(jbosseap.nameElement.getText()).toEqual(jbosseap.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(jbosseap.versionElement.isDisplayed()).toBe(true);
-        expect(jbosseap.versionElement.getText()).toEqual(jbosseap.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(jbosseap.descriptionElement.isDisplayed()).toBe(true);
-        expect(jbosseap.descriptionElement.getText()).toEqual(jbosseap.description);
-      });
-    });
-
-    describe('jdk panel', function() {
-      let jdk = components.jdk;
-
-      it('should display a correct name', function() {
-        expect(jdk.nameElement.isDisplayed()).toBe(true);
-        expect(jdk.nameElement.getText()).toEqual(jdk.name);
-      });
-
-      it('should display a correct version', function() {
-        expect(jdk.versionElement.isDisplayed()).toBe(true);
-        expect(jdk.versionElement.getText()).toEqual(jdk.version);
-      });
-
-      it('should display a correct description', function() {
-        expect(jdk.descriptionElement.isDisplayed()).toBe(true);
-        expect(jdk.descriptionElement.getText()).toEqual(jdk.description);
-      });
+    describe('components', function() {
+      for (let key in requirements) {
+        testComponentPanel(key);
+      }
     });
   });
 });
+
+function testComponentPanel(key) {
+  describe(key + ' panel', function() {
+    let component = requirements[key];
+
+    it('should display a correct name', function() {
+      expect(component.nameElement.isDisplayed()).toBe(true);
+      expect(component.nameElement.getText()).toEqual(component.name);
+    });
+
+    it('should display a correct version', function() {
+      expect(component.versionElement.isDisplayed()).toBe(true);
+      expect(component.versionElement.getText()).toEqual(component.version);
+    });
+
+    it('should display a correct description', function() {
+      expect(component.descriptionElement.isDisplayed()).toBe(true);
+      expect(component.descriptionElement.getText()).toEqual(component.description);
+    });
+
+    if (key === 'virtualbox') {
+      it('detected installation message should be available', function() {
+        expect(component.installedNote.isPresent()).toBe(true);
+        expect(component.installedNote.getAttribute('innerHTML')).toMatch(messages.detected);
+      });
+
+      it('newer versions should come with a warning', function() {
+        expect(component.newerWarning.isPresent()).toBe(true);
+        expect(component.newerWarning.getAttribute('class')).toMatch('has-warning');
+        expect(component.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
+      });
+
+      it('older versions should come with an error', function() {
+        expect(component.olderError.isPresent()).toBe(true);
+        expect(component.olderError.getAttribute('class')).toMatch('has-error');
+        expect(component.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
+      });
+    }
+  });
+}

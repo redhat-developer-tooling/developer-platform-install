@@ -2,7 +2,6 @@
 
 const download = require('./download.js');
 const loadMetadata = require('../browser/services/metadata');
-const reqs = loadMetadata(require('../requirements.json'), process.platform);
 const config = require('./config.js');
 const rename = require('gulp-rename');
 const runSequence = require('run-sequence');
@@ -29,6 +28,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         target: ['zip'],
         publish: null
       },
+      files: '**/*',
       extraFiles,
       directories: {
         app : 'transpiled'
@@ -55,7 +55,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
   });
 }
 
-function darwinDist(gulp) {
+function darwinDist(gulp, reqs) {
 
   // prefetch all the installer dependencies so we can package them up into the .exe
   gulp.task('prefetch', ['create-prefetch-cache-dir'], function() {

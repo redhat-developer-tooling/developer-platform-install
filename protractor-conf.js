@@ -13,11 +13,18 @@ if(process.platform === 'darwin') {
 }
 
 var executable = path.join(__dirname, 'dist', platform, 'devsuite-' + platform, 'devsuite' + installerExecSuffix);
+var chromeArgs = [];
 
 if (process.env.PTOR_TEST_RUN === 'system') {
   files = ['test/system/system-test.js'];
   report = path.join(__dirname, 'system-tests');
   executable = path.join(__dirname, process.env.PTOR_BINARY);
+  chromeArgs.push(executable);
+  if (process.platform === 'win32') {
+    executable = path.join(executable, 'devsuite.exe');
+  } else {
+    executable = path.join(executable, 'MacOS', 'Red\ Hat\ Development\ Suite\ Installer');
+  }
 } else {
   //start with login and end with installation page, because of angular synchronization issues
   files = ['test/ui/login-test.js', 'test/ui/location-test.js', 'test/ui/confirm-test.js', 'test/ui/start-test.js', 'test/ui/install-test.js'];
@@ -33,7 +40,8 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      binary: executable
+      binary: executable,
+      args: chromeArgs
     }
   },
 

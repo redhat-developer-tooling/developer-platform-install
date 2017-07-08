@@ -9,7 +9,6 @@ import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
-import Platform from '../services/platform';
 
 class JbosseapInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, jbosseapSha256) {
@@ -37,35 +36,33 @@ class JbosseapInstall extends InstallableItem {
     Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content');
     let data = this.installGenerator.fileContent();
     Logger.info(JbosseapInstall.KEY + ' - Generate jbosseap auto install file content SUCCESS');
-    return installer.writeFile(this.installConfigFile, data)
-      .then((result) => {
-        installer.writeFile(this.configFile, 'adminPassword=changeit');
-        return this.postJDKInstall(installer, result);
-      })
-      .then(() => {
-        let devstudio = this.installerDataSvc.getInstallable('devstudio');
-        if(devstudio.installed) {
-          this.configureRuntimeDetection();
-        } else {
-          let that = this;
-          this.ipcRenderer.on('installComplete', function(event, arg) {
-            if(arg == 'devstudio') {
-              that.configureRuntimeDetection();
-            }
-          });
-        }
-        installer.succeed(true);
-      })
-      .catch((error) => {
-        installer.fail(error);
-      });
+    return Promise.resolve().then(()=> {
+      return installer.writeFile(this.installConfigFile, data);
+    }).then((result) => {
+      return this.postJDKInstall(installer, result);
+    }).then(() => {
+      let devstudio = this.installerDataSvc.getInstallable('devstudio');
+      if(devstudio.installed) {
+        this.configureRuntimeDetection();
+      } else {
+        let that = this;
+        this.ipcRenderer.on('installComplete', function(event, arg) {
+          if(arg == 'devstudio') {
+            that.configureRuntimeDetection();
+          }
+        });
+      }
+      installer.succeed(true);
+    }).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   configureRuntimeDetection() {
     let runtimeproperties = path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties');
-    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g,'\\:');
+    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
     if(fs.existsSync(runtimeproperties)) {
-      fs.appendFile(runtimeproperties , `\njbosseap=${escapedLocation},true`).catch((error)=>{
+      fs.appendFile(runtimeproperties, `\njbosseap=${escapedLocation},true`).catch((error)=>{
         Logger.error(JbosseapInstall.KEY + ' - error occured during runtime detection configuration in DevStudio');
         Logger.error(JbosseapInstall.KEY + ` -  ${error}`);
       });

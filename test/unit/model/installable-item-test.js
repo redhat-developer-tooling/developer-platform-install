@@ -10,6 +10,7 @@ import Downloader from 'browser/model/helpers/downloader';
 import InstallerDataService from 'browser/services/data';
 import Hash from 'browser/model/helpers/hash';
 import {ProgressState} from 'browser/pages/install/controller';
+import Platform from 'browser/services/platform';
 
 chai.use(sinonChai);
 
@@ -30,6 +31,7 @@ describe('InstallableItem', function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
+    sandbox.stub(Platform, 'getOS').returns('win32');
   });
 
   afterEach(function() {

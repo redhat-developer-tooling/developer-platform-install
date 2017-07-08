@@ -1,7 +1,8 @@
 var angularProtractor = require('gulp-angular-protractor'),
   exec = require('child_process').exec,
   mocha = require('gulp-spawn-mocha'),
-  path = require('path');
+  path = require('path'),
+  globby = require('globby');
 
 var yargs = require('yargs');
 var buildFolder = path.join('dist', process.platform + '-' + process.arch);
@@ -25,7 +26,17 @@ module.exports = function(gulp) {
     }));
   });
 
-  gulp.task('protractor-run', function() {
+  gulp.task('webdriver-update', function(cb) {
+    let cmd = 'node ' + path.join('node_modules', 'protractor', 'bin', 'webdriver-manager') + ' update --chrome=true --gecko=false';
+
+    exec(cmd, function(err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      cb(err);
+    });
+  });
+
+  gulp.task('protractor-run', ['webdriver-update'], function(cb) {
     yargs.string(['virtualbox', 'hyperv', 'cygwin', 'jdk', 'targetFolder']);
     assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VBOX');
     assignArgument('hyperv', 'PDKI_TEST_INSTALLED_HYPERV');
@@ -33,49 +44,48 @@ module.exports = function(gulp) {
     assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
     assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');
 
-    //Use hardcoded chromedriver version until gulp-angular-protractor gets updated
-    let webdriverPath = '../protractor/node_modules/webdriver-manager/selenium/chromedriver_2.29';
-    if (process.platform === 'win32') {
-      webdriverPath += '.exe';
-    }
-
-    return gulp.src(['../test/ui/**/*.js'])
+    gulp.src(['../test/ui/**/*.js'])
       .pipe(angularProtractor({
         'configFile': 'protractor-conf.js',
-        'autoStartStopServer': true,
-        'debug': false,
-        'webDriverUpdate': {
-          'browsers': ['chrome'],
-          'args': ['--versions.chrome', '2.29']
-        },
-        'webDriverStart': {
-          'args': ['--versions.chrome', '2.29']
-        },
-        'args': ['--chromeDriver', webdriverPath]
+        'autoStartStopServer': false,
+        'debug': false
       }))
       .on('error', function(e) {
-        throw e;
-      });
+        cb(e);
+      })
+      .on('end', cb);
   });
 
   gulp.task('unpack-installer', function(cb) {
     process.env.PTOR_BINARY = yargs.argv.binary;
+    var bundle = yargs.argv.bundle;
     var zip = path.join(buildFolder, '7za.exe');
     var targetFolder = path.join(buildFolder, 'target');
     var cmd;
 
     if (process.platform === 'win32') {
       cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
-      process.env.PTOR_BINARY = path.join(targetFolder, 'devsuite.exe');
+      process.env.PTOR_BINARY = targetFolder;
     } else if (process.platform === 'darwin') {
-      cmd = 'unzip -o ' + process.env.PTOR_BINARY;
-      process.env.PTOR_BINARY = path.join('Red\ Hat\ Development\ Suite\ Installer.app', 'Contents', 'MacOS', 'Red\ Hat\ Development\ Suite\ Installer');
+      targetFolder = 'dist';
+      cmd = 'unzip -o ' + '"' + process.env.PTOR_BINARY + '" -d ' + targetFolder;
+      process.env.PTOR_BINARY = path.join(targetFolder, 'Red\ Hat\ Development\ Suite\ Installer.app', 'Contents');
     }
 
     exec(cmd, {maxbuffer: 1024 * 512}, function(err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
-      cb(err);
+      if (process.platform === 'win32' && bundle) {
+        var fileName = globby.sync(process.env.PTOR_BINARY + '/devsuite*.exe')[0];
+        cmd = zip + ' x ' + fileName + ' -o' + targetFolder + ' -ry';
+        exec(cmd, {maxbuffer: 1024 * 512}, function(error, stdo, stde) {
+          console.log(stdo);
+          console.log(stde);
+          cb(error);
+        });
+      } else {
+        cb(err);
+      }
     });
   });
 };

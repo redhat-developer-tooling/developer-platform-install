@@ -59,7 +59,7 @@ class ConfirmController {
     for (let key in watchedComponents) {
       $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
         for (let keyName of watchedComponents[key]) {
-          if ( keyName === 'jdk' ) {
+          if (keyName === 'jdk' && $scope.checkboxModel[keyName].selectedOption !== 'detected') {
             if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
               $scope.checkboxModel[keyName].selectedOption = 'detected';
             } else {
@@ -99,12 +99,13 @@ class ConfirmController {
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
-      Promise.all(detectors).then(()=> {
+      this.detection = Promise.all(detectors).then(()=> {
         this.setIsDisabled();
       }).catch(()=> {
         this.setIsDisabled();
       });
     }
+    return this.detection;
   }
 
   download(url) {
@@ -171,6 +172,12 @@ class ConfirmController {
       || this.sc.checkboxModel.devstudio.isSkipped();
   }
 
+  eapIsConfigured() {
+    return this.sc.checkboxModel.jdk.isConfigured()
+      && this.sc.checkboxModel.jbosseap.isConfigured()
+      || this.sc.checkboxModel.jbosseap.isSkipped();
+  }
+
   cdkIsConfigured() {
     return this.sc.checkboxModel.cdk.isConfigured()
       && this.virtualizationIsConfigured()
@@ -188,6 +195,7 @@ class ConfirmController {
 
   isConfigurationValid() {
     return this.devstudioIsConfigured()
+      && this.eapIsConfigured()
       && this.cdkIsConfigured()
       && this.virtualizationIsConfigured()
       && this.isAtLeastOneSelected();

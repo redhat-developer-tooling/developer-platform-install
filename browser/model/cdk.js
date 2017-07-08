@@ -14,7 +14,7 @@ class CDKInstall extends InstallableItem {
     super(CDKInstall.KEY, minishiftUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = minishiftSha256;
-    this.addOption('install', '3.0.0', '', true);
+    this.addOption('install', this.version, '', true);
     this.selected = false;
   }
 
@@ -28,7 +28,6 @@ class CDKInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let minishiftDir = this.installerDataSvc.ocDir();
     let minishiftExe = this.minishiftExeLocation;
     let installer = new Installer(CDKInstall.KEY, progress, success, failure);
     let ocExe;
@@ -46,12 +45,11 @@ class CDKInstall extends InstallableItem {
       let hv = this.installerDataSvc.getInstallable('hyperv');
       if (hv && hv.hasOption('detected')) {
         driverName = 'hyperv';
+        return installer.exec(
+          'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
+        ).catch(()=>Promise.resolve());
       }
-      return Promise.resolve(driverName);
-    }).then(()=> {
-      return installer.exec(
-        'net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add'
-      ).catch(()=>Promise.resolve());
+      return Promise.resolve();
     }).then(()=> {
       return installer.exec(
         `${minishiftExe} stop`
@@ -88,7 +86,9 @@ class CDKInstall extends InstallableItem {
     let newPath = [];
     let oldPath = Platform.ENV[Platform.PATH];
 
-    newPath.push(vboxInstall.getLocation());
+    if(vboxInstall) {
+      newPath.push(vboxInstall.getLocation());
+    }
 
     if(cygwinInstall) {
       newPath.push(cygwinInstall.getLocation());
