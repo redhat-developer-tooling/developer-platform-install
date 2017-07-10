@@ -14,7 +14,8 @@ let path = require('path'),
   rcedit = require('rcedit'),
   del = require('del'),
   unzip = require('gulp-unzip'),
-  child_process = require('child_process');
+  child_process = require('child_process'),
+  replace = require('replace-in-file');
 
 module.exports = function(gulp, reqs) {
 
@@ -61,11 +62,26 @@ module.exports = function(gulp, reqs) {
     exec(packCmd, common.createExecCallback(cb, true));
   });
 
-  gulp.task('create-final-exe', function(cb) {
+  gulp.task('create-final-exe', ['update-7zip-config'], function(cb) {
     let configTxt = installerExe.indexOf('-bundle') > 0 ? path.resolve(path.join(zaRoot, '..', '..', 'config-bundle.txt')) :path.resolve(path.join(zaRoot, '..', '..', 'config.txt'));
     let packageCmd = 'copy /b ' + zaSfx + ' + ' + configTxt + ' + ' + bundled7z + ' ' + installerExe;
 
     exec(packageCmd, common.createExecCallback(cb, true));
+  });
+
+  gulp.task('update-7zip-config', function(cb) {
+    if (installerExe.indexOf('-bundle') > 0) {
+      const options = {
+        files: path.resolve(path.join(zaRoot, '..', '..', 'config-bundle.txt')),
+        from: /RunProgram=".*"/,
+        to: 'RunProgram="' + path.basename(installerExe.replace('-bundle', '')) + ' %%T"'
+      };
+      replace(options, (err) => {
+        cb(err);
+      });
+    } else {
+      cb();
+    }
   });
 
   gulp.task('create-sha256sum-of-exe', function(cb) {
