@@ -292,7 +292,7 @@ footer {
     color: #c00;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: x-large;
+    font-size: 22px;
   }
 
   .product-version {
@@ -590,7 +590,7 @@ footer {
 
   .verticalLine {
     border-right: 2px solid #dddddd;
-    margin-right: 6%;
+    margin-right: 5px;
   }
 
   .checkbox-container {

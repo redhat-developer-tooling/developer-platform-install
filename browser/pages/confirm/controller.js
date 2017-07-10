@@ -8,7 +8,8 @@ const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
   'devstudio': ['jdk'],
   'jbosseap': ['jdk'],
-  'fuseplatform' : ['jdk']
+  'fuseplatform' : ['jdk'],
+  'fuseplatformkaraf' : ['jdk'],
 };
 
 class ConfirmController {

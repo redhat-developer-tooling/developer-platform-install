@@ -2,11 +2,13 @@
 
 const baseOrder = {
   'root': ['jdk'],
-  'jdk':  ['virtualbox', 'devstudio', 'jbosseap'],
+
+  'jdk':  ['virtualbox', 'devstudio', 'jbosseap', 'fuseplatform', 'fuseplatformkaraf'],
   'virtualbox': ['cygwin'],
   'cygwin': ['cdk'],
-  'devstudio': ['fuseplatform'],
+  'devstudio': [],
   'fuseplatform': [],
+  'fuseplatformkaraf': [],
   'jbosseap': [],
   'cdk': [],
   'kompose': []
