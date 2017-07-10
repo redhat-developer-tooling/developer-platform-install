@@ -346,7 +346,6 @@ describe('Platform', function() {
 
   describe('getFreeDiskSpace', function() {
     describe('on windows', function() {
-
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
       });
@@ -358,10 +357,17 @@ describe('Platform', function() {
           expect(result).to.be.equal(248005160960);
         });
       });
+
+      it('should return NaN if drive not found', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, "");
+        let location = 'd:\\DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.NaN;
+        });
+      });
     });
 
     describe('on mac', function() {
-
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
