@@ -7,7 +7,6 @@
     "installable": true,
     "detectable": false,
     "targetFolderName": "cdk",
-    "installAfter": "cygwin",
     "platform": {
       "win32": {
         "bundle": "yes",
@@ -16,7 +15,8 @@
         "fileName": "minishift_3_0_0_GA.exe",
         "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
         "version": "3.0.0.GA",
-        "requires": ["cygwin","hyperv||virtualbox"]
+        "requires": ["cygwin","hyperv||virtualbox"],
+        "installAfter": "cygwin"
       },
       "darwin": {
         "bundle": "yes",
@@ -25,7 +25,8 @@
         "fileName": "minishift_3_0_0_GA",
         "sha256sum": "1aad3cc784f312568357c9d3e1a2111ceedac884c59e0953b06aea45de49bb25",
         "version": "3.0.0.GA",
-        "requires": ["virtualbox"]
+        "requires": ["virtualbox"],
+        "installAfter": "virtualbox"
       },
       "linux": {
         "bundle": "yes",
@@ -34,7 +35,8 @@
         "fileName": "minishift_3_0_0_GA",
         "sha256sum": "b754554190756fb3142998b67cd046174f7e0ae9f2d287d673481e20d9482060",
         "version": "3.0.0.GA",
-        "requires": ["kvm"]
+        "requires": ["kvm"],
+        "installAfter": "virtualbox"
       }
     }
   },

@@ -44,7 +44,6 @@ class ComponentLoader {
     let newOrder = {};
     Object.assign(newOrder, this.buildBaseOrder());
     let changed;
-
     do {
       changed = false;
       for (let item of Object.keys(newOrder)) {
@@ -76,7 +75,7 @@ class ComponentLoader {
     let baseOrder = {
       root: []
     };
-    let requirements = JSON.parse(JSON.stringify(require('../../requirements.json')));
+    let requirements = this.installerDataSvc.requirements;
     for (let key in requirements) {
       let item = requirements[key];
       if( item.bundle !== 'tools') {

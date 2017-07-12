@@ -146,7 +146,6 @@ describe('ConfirmController', function() {
             el[1]('install');
           }
         });
-        console.log($watch.args);
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
       });
     });
@@ -159,7 +158,6 @@ describe('ConfirmController', function() {
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
-            console.log(1);
             el[1]('detected');
           }
         });
