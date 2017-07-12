@@ -6,6 +6,7 @@ import Platform from '../services/platform';
 class HypervInstall extends InstallableItem {
   constructor(installerDataSvc, downloadUrl) {
     super(HypervInstall.KEY, downloadUrl, '', '', installerDataSvc, false);
+    this.selectedOption = 'detected';
   }
 
   static get KEY() {
@@ -52,6 +53,10 @@ class HypervInstall extends InstallableItem {
     } else {
       return true;
     }
+  }
+
+  isDisabled() {
+    return true;
   }
 }
 

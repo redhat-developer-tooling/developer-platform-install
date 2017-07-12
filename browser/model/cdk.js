@@ -102,6 +102,25 @@ class CDKInstall extends InstallableItem {
     Logger.info(this.keyName + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
     return env;
   }
+
+  isConfigurationValid() {
+    let cygwin = this.installerDataSvc.getInstallable('cygwin');
+    return this.isConfigured()
+      && this.virtualizationIsConfigured()
+      && (!cygwin || cygwin.isConfigured())
+      || this.isSkipped();
+  }
+
+
+  virtualizationIsConfigured() {
+    let virtualbox = this.installerDataSvc.getInstallable('virtualbox');
+    let hyperv = this.installerDataSvc.getInstallable('hyperv');
+    return (virtualbox
+      && virtualbox.isConfigured())
+      || (hyperv
+      && hyperv.isConfigured()
+      || this.selectedOption !== 'install');
+  }
 }
 
 function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {

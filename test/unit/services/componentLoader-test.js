@@ -18,7 +18,21 @@ describe('Component Loader', function() {
       fileName: 'minishift.exe',
       sha256sum: 'cdkSHA',
       version: '3.0.0.GA',
-      installAfter: 'cygwin'
+      installAfter: 'cygwin',
+      requires: ['cygwin', 'virtualbox']
+    },
+    'devstudio': {
+      name: 'devstudio',
+      modulePath: 'model/devstudio',
+      targetFolderName: 'devstudioFolder',
+      bundle: 'yes',
+      url: 'devstudioUrl',
+      dmUrl: 'devstudioDmUrl',
+      fileName: 'devstudio.jar',
+      sha256sum: 'devstudioSHA',
+      version: '10.4.0',
+      installAfter: 'jdk',
+      requires : ['jdk']
     },
     'jdk': {
       name: 'jdk',
@@ -31,7 +45,7 @@ describe('Component Loader', function() {
       sha256sum: 'jdkSHA',
       version: '1.8.0'
     },
-    'devstudio': {
+    'fusetools': {
       name: 'devstudio',
       modulePath: 'model/devstudio',
       targetFolderName: 'devstudioFolder',
@@ -41,7 +55,8 @@ describe('Component Loader', function() {
       fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
       version: '10.4.0',
-      installAfter: 'jdk'
+      installAfter: 'devstudio',
+      requires : ['devstudio']
     },
     'cygwin': {
       name: 'cygwin',

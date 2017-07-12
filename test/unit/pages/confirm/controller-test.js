@@ -74,20 +74,18 @@ describe('ConfirmController', function() {
       });
 
       it('installs watchers to track components selected for install', function() {
-        expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+4);
+        expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+1);
       });
 
       it('unlock user interface after detection ends without errors', function() {
-        confirmController.detectInstalledComponents();
-        return confirmController.detection.then(function() {
+        return confirmController.initPage().then(function() {
           expect(confirmController.setIsDisabled).to.be.called;
         });
       });
 
       it('unlock user interface after detection ends with errors', function() {
         installerDataSvc.getInstallable('cdk').detectExistingInstall.rejects('error');
-        confirmController.detectInstalledComponents();
-        return confirmController.detection.then(function() {
+        return confirmController.initPage().then(function() {
           expect(confirmController.setIsDisabled).to.be.called;
         });
       });
@@ -112,8 +110,7 @@ describe('ConfirmController', function() {
     });
 
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
-      confirmController.detectInstalledComponents();
-      return confirmController.detection.then(function() {
+      return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
@@ -129,8 +126,7 @@ describe('ConfirmController', function() {
     });
 
     it('should select openjdk if jbosseap or devstudio selected', function() {
-      confirmController.detectInstalledComponents();
-      return confirmController.detection.then(function() {
+      return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
@@ -142,27 +138,28 @@ describe('ConfirmController', function() {
           }
         });
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('detected');
-        confirmController.detectInstalledComponents();
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'install';
+        confirmController.detectInstalledComponents();
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
             el[1]('install');
           }
         });
+        console.log($watch.args);
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
       });
     });
 
     it('should deselect cygwin and virtualbox if cdk deselected', function() {
-      confirmController.detectInstalledComponents();
-      return confirmController.detection.then(function() {
+      return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
         expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
         confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
+            console.log(1);
             el[1]('detected');
           }
         });
@@ -172,8 +169,7 @@ describe('ConfirmController', function() {
     });
 
     it('should select cygwin and virtualbox if cdk selected', function() {
-      confirmController.detectInstalledComponents();
-      return confirmController.detection.then(function() {
+      return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
         expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
         confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
@@ -234,6 +230,8 @@ describe('ConfirmController', function() {
     });
 
     it('should return false if at least one component selected for installation is not configured correctly', function() {
+      let cdk = confirmController.installerDataSvc.getInstallable('cdk');
+      sandbox.stub(cdk, 'isConfigurationValid').returns(false);
       sandbox.stub(ConfirmController.prototype, 'cdkIsConfigured').returns(false);
       expect(confirmController.isConfigurationValid()).to.be.false;
     });

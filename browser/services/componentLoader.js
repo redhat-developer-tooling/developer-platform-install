@@ -1,4 +1,5 @@
 'use strict';
+var DepGraph = require('dependency-graph').DepGraph;
 
 class ComponentLoader {
   constructor(installerDataSvc) {
@@ -93,6 +94,38 @@ class ComponentLoader {
       }
     }
     return baseOrder;
+  }
+
+  static loadGraph(svc) {
+    let graph = new DepGraph();
+    // first add all the nodes into graph
+    for (let key in svc.requirements) {
+      let item = svc.requirements[key];
+      if( item.bundle !== 'tools') {
+        graph.addNode(key);
+      }
+    }
+    // then add releations between nodes
+    for (let key of graph.overallOrder()) {
+      let item = svc.requirements[key];
+      if(item.requires) {
+        for(const dep of item.requires) {
+          if(dep.includes('||')) {
+            let orDeps = dep.split('||');
+            for(let orDep of orDeps) {
+              let installable = svc.getInstallable(orDep);
+              if(installable.isConfigured() || installable.isSelected()) {
+                graph.addDependency(key, orDep);
+                break;
+              }
+            }
+          } else {
+            graph.addDependency(key, dep);
+          }
+        }
+      }
+    }
+    return graph;
   }
 }
 

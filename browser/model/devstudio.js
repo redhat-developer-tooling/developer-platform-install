@@ -51,15 +51,15 @@ class DevstudioInstall extends InstallableItem {
 
       if (jdkInstall.isInstalled()) {
         return this.headlessInstall(installer, result)
-        .then((res) => { resolve(res); })
-        .catch((err) => { reject(err); });
+          .then((res) => { resolve(res); })
+          .catch((err) => { reject(err); });
       } else {
         Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
         this.ipcRenderer.on('installComplete', (event, arg) => {
           if (arg == JdkInstall.KEY) {
             return this.headlessInstall(installer, result)
-            .then((res) => { resolve(res); })
-            .catch((err) => { reject(err); });
+              .then((res) => { resolve(res); })
+              .catch((err) => { reject(err); });
           }
         });
       }
@@ -79,6 +79,13 @@ class DevstudioInstall extends InstallableItem {
     );
 
     return res;
+  }
+
+  isConfigurationValid() {
+    let jdk = this.installerDataSvc.getInstallable('jdk');
+    return jdk.isConfigured()
+      && this.isConfigured()
+      || this.isSkipped();
   }
 }
 

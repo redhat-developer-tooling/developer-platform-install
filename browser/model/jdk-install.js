@@ -202,6 +202,13 @@ class JdkInstall extends InstallableItem {
     }
     return super.isConfigured();
   }
+
+  isDisabled() {
+    return !this.hasOption('detected') && (this.references > 0)
+    || this.hasOption('detected') && !this.option.detected.valid && (this.references > 0)
+    || this.hasOption('detected') && this.option.detected.valid && this.openJdkMsi
+    || Platform.OS === 'darwin';
+  }
 }
 
 function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {

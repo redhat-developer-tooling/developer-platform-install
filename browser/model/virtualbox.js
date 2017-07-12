@@ -50,6 +50,10 @@ class VirtualBoxInstall extends InstallableItem {
       }
     }
   }
+
+  isDisabled() {
+    return this.hasOption('detected') || this.references > 0;
+  }
 }
 
 class VirtualBoxInstallWindows extends VirtualBoxInstall {

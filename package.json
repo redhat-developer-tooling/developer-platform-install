@@ -30,12 +30,13 @@
     "update-deps": "node_modules/.bin/ncu --upgrade --loglevel verbose --packageFile package.json && npm update"
   },
   "dependencies": {
+    "@uirouter/angularjs": "1.0.5",
     "angular": "1.6.4",
     "angular-base64": "2.0.5",
     "angular-messages": "1.6.4",
     "angular-mocks": "1.6.4",
-    "@uirouter/angularjs": "1.0.5",
     "del": "3.0.0",
+    "dependency-graph": "^0.5.0",
     "fs-extra": "3.0.1",
     "glob": "7.1.2",
     "globby": "6.1.0",

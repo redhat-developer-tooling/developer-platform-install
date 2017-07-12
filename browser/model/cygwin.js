@@ -90,6 +90,10 @@ class CygwinInstall extends InstallableItem {
       installer.fail(error);
     });
   }
+
+  isDisabled() {
+    return !this.hasOption('detected') && this.references > 0;
+  }
 }
 
 function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
