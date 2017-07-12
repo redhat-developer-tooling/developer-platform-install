@@ -8,6 +8,7 @@ import JbosseapAutoInstallGenerator from './jbosseap-autoinstall';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
+import Platform from '../services/platform'
 import JdkInstall from './jdk-install';
 
 class JbosseapInstall extends InstallableItem {
@@ -59,7 +60,7 @@ class JbosseapInstall extends InstallableItem {
   }
 
   configureRuntimeDetection() {
-    let runtimeproperties = path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties');
+    let runtimeproperties =  Platform.OS === 'win32' ? path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties') : path.join(this.installerDataSvc.devstudioDir(), 'studio/devstudio.app/Contents/Eclipse', 'runtime_locations.properties');
     let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
     if(fs.existsSync(runtimeproperties)) {
       fs.appendFile(runtimeproperties, `\njbosseap=${escapedLocation},true`).catch((error)=>{
