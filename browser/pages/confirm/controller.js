@@ -88,10 +88,10 @@ class ConfirmController {
           }
         } else {
           for(let dep of this.graph.dependenciesOf(node)) {
-            if(!this.sc.checkboxModel[dep].isDisabled()) {
+            this.sc.checkboxModel[dep].references++;
+            if(this.sc.checkboxModel[dep].isDisabled()) {
               this.sc.checkboxModel[dep].selectedOption = 'install';
             }
-            this.sc.checkboxModel[dep].references++;
           }
         }
       };
