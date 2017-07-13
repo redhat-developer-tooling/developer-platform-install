@@ -55,7 +55,7 @@ module.exports = function(gulp, reqs) {
     if (fs.existsSync(path.resolve(config.prefetchFolder)) && installerExe.indexOf('-bundle') > 0) {
       packCmd = zaExe + ' a -m0=Copy ' + bundled7z + ' ' + installerExe.replace('-bundle', '') + ' ' + path.resolve(config.prefetchFolder) + path.sep + '*';
     } else {
-      packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '* ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].filename;
+      packCmd = zaExe + ' a ' + bundled7z + ' ' + zaElectronPackage + path.sep + '* ' + path.resolve(config.prefetchFolder) + path.sep + reqs['cygwin'].fileName;
     }
     //console.log('[DEBUG]' + packCmd);
     exec(packCmd, common.createExecCallback(cb, true));
@@ -99,7 +99,7 @@ module.exports = function(gulp, reqs) {
   // prefetch cygwin to always include into installer
   gulp.task('prefetch-cygwin-packages', ['create-prefetch-cache-dir'], function() {
     return new Promise(function(resolve, reject) {
-      child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.filename} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder, 'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder, 'packages')}`, function(error, std, err) {
+      child_process.exec(`${path.resolve(config.prefetchFolder)}\\${reqs.cygwin.fileName} -D --no-admin --quiet-mode --only-site -l ${path.resolve(config.prefetchFolder, 'packages')} --site http://mirrors.xmission.com/cygwin --categories Base --packages openssh,rsync --root ${path.resolve(config.prefetchFolder, 'packages')}`, function(error, std, err) {
         if(error) {
           reject(error);
         } else {

@@ -233,12 +233,12 @@ class InstallerDataService {
 
     let item = this.getInstallable(key);
     return item.setup(progress,
-        () => {
-          this.setupDone(progress, key);
-        },
-        (error) => {
-          Logger.error(key + ' failed to install: ' + error);
-        }
+      () => {
+        this.setupDone(progress, key);
+      },
+      (error) => {
+        Logger.error(key + ' failed to install: ' + error);
+      }
     );
   }
 

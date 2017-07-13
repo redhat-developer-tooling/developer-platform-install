@@ -51,6 +51,7 @@ class InstallableItem {
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;
+    this.references = 0;
   }
 
   getProductName() {
@@ -220,6 +221,9 @@ class InstallableItem {
     return this.selectedOption == 'detected';
   }
 
+  isSelected() {
+    return this.selectedOption == 'install';
+  }
 
   getLocation() {
     return this.isDetected()
@@ -250,6 +254,13 @@ class InstallableItem {
     success();
   }
 
+  isDisabled() {
+    return this.references > 0;
+  }
+
+  isConfigurationValid() {
+    return true;
+  }
 }
 
 export default InstallableItem;

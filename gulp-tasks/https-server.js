@@ -41,8 +41,8 @@ function handleRequest(req, res) {
         console.log(requirement.dmUrl);
         if(requirement.dmUrl && requirement.dmUrl.endsWith(url)
           || requirement.url && requirement.url.endsWith(url) ) {
-          console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + requirement.filename);
-          res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + requirement.filename });
+          console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + requirement.fileName);
+          res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + requirement.fileName });
           res.end();
           return;
         }

@@ -19,7 +19,6 @@ class ConfirmController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.loader = new ComponentLoader(installerDataSvc);
-
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
@@ -39,56 +38,65 @@ class ConfirmController {
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
-    let watchedComponents = {};
-    for (let key in baseDependencies) {
-      if ($scope.checkboxModel[key]) {
-        watchedComponents[key] = [];
-        let installAfter = this.installerDataSvc.getInstallable(key).getInstallAfter();
-        let keyName;
-
-        while (installAfter) {
-          keyName = installAfter.keyName;
-          if (baseDependencies[key].indexOf(keyName) > -1) {
-            watchedComponents[key].push(keyName);
-          }
-          installAfter = installAfter.getInstallAfter();
-        }
-      }
-    }
-
-    for (let key in watchedComponents) {
-      $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchComponent(nVal) {
-        for (let keyName of watchedComponents[key]) {
-          if (keyName === 'jdk' && $scope.checkboxModel[keyName].selectedOption !== 'detected') {
-            if ($scope.checkboxModel.devstudio.selectedOption === 'detected' && $scope.checkboxModel.jbosseap.selectedOption === 'detected' ) {
-              $scope.checkboxModel[keyName].selectedOption = 'detected';
-            } else {
-              $scope.checkboxModel[keyName].selectedOption = 'install';
-            }
-          } else {
-            if(nVal=='install') {
-              if($scope.checkboxModel[keyName].selectedOption == 'detected'
-                && !$scope.checkboxModel[keyName].hasOption('detected')) {
-                $scope.checkboxModel[keyName].selectedOption = 'install';
-              }
-            } else if (nVal=='detected') {
-              $scope.checkboxModel[keyName].selectedOption = 'detected';
-            }
-          }
-        }
-      });
-    }
-
     $scope.$watch('$viewContentLoaded', ()=>{
-      this.detectInstalledComponents();
+      this.initPage();
     });
 
     this.electron.remote.getCurrentWindow().addListener('focus', ()=> {
       this.timeout( () => {
-        this.detectInstalledComponents();
+        this.activatePage();
         this.sc.$apply();
       });
     });
+  }
+
+  initPage() {
+    return this.detectInstalledComponents().then(()=> {
+      this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
+      this.installWatchers();
+      return Promise.resolve();
+    }).then(
+      ()=> this.setIsDisabled()
+    ).catch((error)=> {
+      Logger.error(error);
+      this.setIsDisabled();
+    });
+  }
+
+  activatePage() {
+    return this.detectInstalledComponents().then(
+      ()=> this.setIsDisabled()
+    ).catch((error)=> {
+      Logger.error(error);
+      this.setIsDisabled();
+    });
+  }
+
+  installWatchers() {
+    let nodes = this.graph.overallOrder() ;
+    for (let node of nodes) {
+      this.sc.checkboxModel[node].references=0;
+    }
+    for (let node of nodes) {
+      let watchComponent = ()=> {
+        if(!this.sc.checkboxModel[node].isSelected()) {
+          for(let dep of this.graph.dependenciesOf(node)) {
+            this.sc.checkboxModel[dep].references--;
+            if(!this.sc.checkboxModel[dep].isDisabled()) {
+              this.sc.checkboxModel[dep].selectedOption = 'detected';
+            }
+          }
+        } else {
+          for(let dep of this.graph.dependenciesOf(node)) {
+            this.sc.checkboxModel[dep].references++;
+            if(this.sc.checkboxModel[dep].isDisabled()) {
+              this.sc.checkboxModel[dep].selectedOption = 'install';
+            }
+          }
+        }
+      };
+      this.sc.$watch(`checkboxModel.${node}.selectedOption`, watchComponent);
+    }
   }
 
   detectInstalledComponents() {
@@ -99,11 +107,7 @@ class ConfirmController {
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
-      this.detection = Promise.all(detectors).then(()=> {
-        this.setIsDisabled();
-      }).catch(()=> {
-        this.setIsDisabled();
-      });
+      this.detection = Promise.all(detectors);
     }
     return this.detection;
   }
@@ -166,39 +170,14 @@ class ConfirmController {
     });
   }
 
-  devstudioIsConfigured() {
-    return this.sc.checkboxModel.jdk.isConfigured()
-      && this.sc.checkboxModel.devstudio.isConfigured()
-      || this.sc.checkboxModel.devstudio.isSkipped();
-  }
-
-  eapIsConfigured() {
-    return this.sc.checkboxModel.jdk.isConfigured()
-      && this.sc.checkboxModel.jbosseap.isConfigured()
-      || this.sc.checkboxModel.jbosseap.isSkipped();
-  }
-
-  cdkIsConfigured() {
-    return this.sc.checkboxModel.cdk.isConfigured()
-      && this.virtualizationIsConfigured()
-      && (!this.sc.checkboxModel.cygwin || this.sc.checkboxModel.cygwin.isConfigured())
-      || this.sc.checkboxModel.cdk.isSkipped();
-  }
-
-  virtualizationIsConfigured() {
-    return (this.sc.checkboxModel.virtualbox
-      && this.sc.checkboxModel.virtualbox.isConfigured())
-      || (this.sc.checkboxModel.hyperv
-      && this.sc.checkboxModel.hyperv.isConfigured()
-      || this.sc.checkboxModel.cdk.selectedOption !== 'install');
-  }
-
   isConfigurationValid() {
-    return this.devstudioIsConfigured()
-      && this.eapIsConfigured()
-      && this.cdkIsConfigured()
-      && this.virtualizationIsConfigured()
-      && this.isAtLeastOneSelected();
+    let result = true;
+    for (let [, value] of this.installerDataSvc.allInstallables().entries()) {
+      if(! (result = value.isConfigurationValid())) {
+        break;
+      }
+    }
+    return result && this.isAtLeastOneSelected();
   }
 
   isAtLeastOneSelected() {

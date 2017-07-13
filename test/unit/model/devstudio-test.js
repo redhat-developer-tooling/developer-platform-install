@@ -74,7 +74,7 @@ describe('devstudio installer', function() {
 
   beforeEach(function () {
     installerDataSvc = stubDataService();
-    installer = new DevstudioInstall(installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha');
+    installer = new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha');
     installer.ipcRenderer = { on: sinon.stub().yields(undefined, JdkInstall.KEY) };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
@@ -86,18 +86,18 @@ describe('devstudio installer', function() {
 
   it('should fail when no url is set and installed file not defined', function() {
     expect(function() {
-      new DevstudioInstall(installerDataSvc, null, null, null);
+      new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, null, null, null);
     }).to.throw('No download URL set');
   });
 
   it('should fail when no url is set and installed file is empty', function() {
     expect(function() {
-      new DevstudioInstall(installerDataSvc, null, null, '');
+      new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, null, null, '');
     }).to.throw('No download URL set');
   });
 
   it('should download devstudio installer to temporary folder with configured filename', function() {
-    expect(new DevstudioInstall(installerDataSvc, 'dev-studio', 'url', 'devstudio.jar').downloadedFile).to.equal(
+    expect(new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', 'url', 'devstudio.jar').downloadedFile).to.equal(
       path.join('tempDirectory', 'devstudio.jar'));
   });
 
@@ -203,6 +203,20 @@ describe('devstudio installer', function() {
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(installConfigFile, data);
+    });
+
+    it('should write the install configuration into temp/devstudio-autoinstall.xml with additionalLocations and IUs if provided', function() {
+      sandbox.stub(fsextra, 'writeFile').yields();
+      let spy = sandbox.spy(Installer.prototype, 'writeFile');
+      installer = new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha', 'additionalLocations', 'additionalIUs');
+      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.jdkDir(), installer.version, 'additionalLocations', 'additionalIUs').fileContent();
+      let installConfigFile = path.join(installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
+      installer.installAfterRequirements(fakeProgress, success, failure);
+
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(installConfigFile, data);
+      expect(data.includes('additionalLocations')).is.true;
+      expect(data.includes('additionalIUs')).is.true;
     });
 
     it('should catch errors thrown during the installation', function(done) {

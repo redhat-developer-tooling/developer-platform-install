@@ -15,20 +15,11 @@ describe('Component Loader', function() {
       bundle: 'yes',
       dmUrl: 'cdkDmUrl',
       url: 'cdkUrl',
-      filename: 'minishift.exe',
+      fileName: 'minishift.exe',
       sha256sum: 'cdkSHA',
-      version: '3.0.0.GA'
-    },
-    'jdk': {
-      name: 'jdk',
-      modulePath: 'model/jdk-install',
-      targetFolderName: 'jdkFolder',
-      bundle: 'yes',
-      dmUrl: 'jdkDmUrl',
-      url: 'jdkUrl',
-      filename: 'jdk.msi',
-      sha256sum: 'jdkSHA',
-      version: '1.8.0'
+      version: '3.0.0.GA',
+      installAfter: 'cygwin',
+      requires: ['cygwin', 'virtualbox']
     },
     'devstudio': {
       name: 'devstudio',
@@ -37,9 +28,35 @@ describe('Component Loader', function() {
       bundle: 'yes',
       url: 'devstudioUrl',
       dmUrl: 'devstudioDmUrl',
-      filename: 'devstudio.jar',
+      fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
-      version: '10.4.0'
+      version: '10.4.0',
+      installAfter: 'jdk',
+      requires : ['jdk']
+    },
+    'jdk': {
+      name: 'jdk',
+      modulePath: 'model/jdk-install',
+      targetFolderName: 'jdkFolder',
+      bundle: 'yes',
+      dmUrl: 'jdkDmUrl',
+      url: 'jdkUrl',
+      fileName: 'jdk.msi',
+      sha256sum: 'jdkSHA',
+      version: '1.8.0'
+    },
+    'fusetools': {
+      name: 'devstudio',
+      modulePath: 'model/devstudio',
+      targetFolderName: 'devstudioFolder',
+      bundle: 'yes',
+      url: 'devstudioUrl',
+      dmUrl: 'devstudioDmUrl',
+      fileName: 'devstudio.jar',
+      sha256sum: 'devstudioSHA',
+      version: '10.4.0',
+      installAfter: 'devstudio',
+      requires : ['devstudio']
     },
     'cygwin': {
       name: 'cygwin',
@@ -47,9 +64,10 @@ describe('Component Loader', function() {
       targetFolderName: 'cygwinFolder',
       bundle: 'always',
       url: 'cygwinUrl',
-      filename: 'cygwin.exe',
+      fileName: 'cygwin.exe',
       sha256sum: 'cygwinSHA',
-      version: '2.7.0'
+      version: '2.7.0',
+      installAfter: 'virtualbox'
     },
     'virtualbox': {
       name: 'virtualbox',
@@ -57,15 +75,16 @@ describe('Component Loader', function() {
       targetFolderName: 'virtualboxFolder',
       bundle: 'no',
       url: 'virtualboxUrl',
-      filename: 'virtualbox.exe',
+      fileName: 'virtualbox.exe',
       sha256sum: 'virtualboxSHA',
-      version: '5.1.12'
+      version: '5.1.12',
+      installAfter: 'jdk'
     },
     '7zip': {
       name: '7zip',
       bundle: 'tools',
       url: '7zipUrl',
-      filename: '7zip.exe',
+      fileName: '7zip.exe',
       sha256sum: '7zipSHA',
       version: '1.0.0'
     }
@@ -136,19 +155,6 @@ describe('Component Loader', function() {
       expect(svc.getInstallable('virtualbox').installAfter).to.equal(undefined);
       expect(svc.getInstallable('cygwin').installAfter.keyName).to.equal('virtualbox');
       expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('cygwin');
-    });
-
-    it('should squash the install sequence if some component not present', function() {
-      svc = new InstallerDataService({}, reducedReqs2);
-      loader = new ComponentLoader(svc);
-      addAll(loader, reducedReqs2);
-      loader.orderInstallation();
-
-      expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
-      expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('cygwin')).to.equal(undefined);
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('virtualbox');
     });
   });
 

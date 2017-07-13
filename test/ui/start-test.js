@@ -8,11 +8,11 @@ describe('Getting Started Page', function() {
 
   beforeAll(function() {
     browser.setLocation('start')
-    .then(function() {
-      devstudioButton = element(By.id('start-submit'));
-      closeButton = element(By.id('exit-btn'));
-      quickstartLink = element(By.id('quickstart-link'));
-    });
+      .then(function() {
+        devstudioButton = element(By.id('start-submit'));
+        closeButton = element(By.id('exit-btn'));
+        quickstartLink = element(By.id('quickstart-link'));
+      });
   });
 
   it('should display a button to start devstudio', function() {
