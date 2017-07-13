@@ -128,18 +128,27 @@ describe('ConfirmController', function() {
     it('should select openjdk if jbosseap or devstudio selected', function() {
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
+        expect(confirmController.sc.checkboxModel.devstudio.selectedOption).equals('install');
+        expect(confirmController.sc.checkboxModel.jbosseap.selectedOption).equals('install');
+        $watch.args.forEach(function(el) {
+          if(el[1].name == 'watchComponent'
+            && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
+              || el[0] == 'checkboxModel.devstudio.selectedOption')) {
+            el[1]();
+          }
+        });
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
-            && el[0] == 'checkboxModel.jbosseap.selectedOption'
-            || el[0] == 'checkboxModel.devstudio.selectedOption') {
+            && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
+              || el[0] == 'checkboxModel.devstudio.selectedOption')) {
             el[1]('detected');
           }
         });
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('detected');
+
         confirmController.sc.checkboxModel.devstudio.selectedOption = 'install';
-        confirmController.detectInstalledComponents();
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
@@ -170,20 +179,26 @@ describe('ConfirmController', function() {
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
         expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
+        expect(confirmController.sc.checkboxModel.cdk.selectedOption).equals('install');
+        $watch.args.forEach(function(el) {
+          if(el[1].name == 'watchComponent'
+            && 'checkboxModel.cdk.selectedOption') {
+            el[1]();
+          }
+        });
         confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
-            el[1]('detected');
+            el[1]();
           }
         });
-        expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('detected');
-        expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('detected');
+
         confirmController.sc.checkboxModel.cdk.selectedOption = 'install';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
-            el[1]('install');
+            el[1]();
           }
         });
         expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
