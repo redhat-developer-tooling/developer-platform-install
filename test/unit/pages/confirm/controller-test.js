@@ -107,8 +107,8 @@ describe('ConfirmController', function() {
       it('counts and presents number of detected components', function() {
         confirmController.sc.checkboxModel.kompose.selectedOption = 'detected';
         confirmController.sc.checkboxModel.kompose.option.detected = { valid: true };
-        confirmController.sc.checkboxModel.cygwin.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.cygwin.option.detected = { valid: true };
+        confirmController.sc.checkboxModel.jdk.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.jdk.option.detected = { valid: true };
         return confirmController.initPage().then(function() {
           expect(confirmController.numberOfExistingInstallations).equals(2);
           expect(confirmController.installedSearchNote).includes(' 2 ');

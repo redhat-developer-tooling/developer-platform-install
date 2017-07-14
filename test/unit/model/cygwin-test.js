@@ -225,7 +225,7 @@ describe('Cygwin installer', function() {
   describe('isDisabled', function() {
     it('returns true if not detected and required at least by one other selected installer', function() {
       if(installer.option.detected) {
-        delete installer.options.detected;
+        delete installer.option.detected;
       }
       installer.references = 1;
       expect(installer.isDisabled()).to.be.equal(true);
