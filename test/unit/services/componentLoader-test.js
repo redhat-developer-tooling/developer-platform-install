@@ -55,7 +55,8 @@ describe('Component Loader', function() {
       fileName: 'devstudio.jar',
       sha256sum: 'devstudioSHA',
       version: '10.4.0',
-      installAfter: 'jdk'
+      installAfter: 'devstudio',
+      requires : ['devstudio']
     },
     'cygwin': {
       name: 'cygwin',

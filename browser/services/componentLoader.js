@@ -75,30 +75,6 @@ class ComponentLoader {
     let baseOrder = {
       root: []
     };
-    let requirements = JSON.parse(JSON.stringify(require('../../requirements.json')));
-    for (let key in requirements) {
-      let item = requirements[key];
-      if( item.bundle !== 'tools') {
-        if(baseOrder[key] == undefined) {
-          baseOrder[key] = [];
-        }
-        if(item.installAfter == undefined) {
-          baseOrder.root.push(key);
-        } else {
-          if (baseOrder[item.installAfter] == undefined) {
-            baseOrder[item.installAfter] = [];
-          }
-          baseOrder[item.installAfter].push(key);
-        }
-      }
-    }
-    return baseOrder;
-  }
-
-  buildBaseOrder() {
-    let baseOrder = {
-      root: []
-    };
     let requirements = this.installerDataSvc.requirements;
     for (let key in requirements) {
       let item = requirements[key];

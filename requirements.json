@@ -7,7 +7,6 @@
     "installable": true,
     "detectable": false,
     "targetFolderName": "cdk",
-    "installAfter": "cygwin",
     "platform": {
       "win32": {
         "bundle": "yes",
@@ -18,7 +17,6 @@
         "version": "3.0.0.GA",
         "requires": ["cygwin","hyperv||virtualbox"],
         "installAfter": "cygwin"
-        "requires": "cygwin,hyperv||virtualbox"
       },
       "darwin": {
         "bundle": "yes",
@@ -97,7 +95,7 @@
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
     "useDownload": false,
-    "requires": "devstudio"
+    "requires": ["devstudio"]
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",

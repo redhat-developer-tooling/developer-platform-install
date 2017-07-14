@@ -102,7 +102,6 @@ class CDKInstall extends InstallableItem {
     Logger.info(this.keyName + ' - Set PATH environment variable to \'' + env[Platform.PATH] + '\'');
     return env;
   }
-}
 
   isConfigurationValid() {
     let cygwin = this.installerDataSvc.getInstallable('cygwin');

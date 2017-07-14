@@ -112,7 +112,6 @@ class JbosseapInstall extends InstallableItem {
       && this.isConfigured()
       || this.isSkipped();
   }
-
 }
 
 function fromJson({ installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
