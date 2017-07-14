@@ -99,7 +99,7 @@ module.exports = function(gulp, reqs) {
   });
 
   gulp.task('package-bundle', function(cb) {
-    runSequence('package-simple', 'prefetch', 'prefetch-cygwin-packages', 'cleanup', 'package', cb);
+    runSequence('package-simple', 'clean-old-cache', 'prefetch', 'prefetch-cygwin-packages', 'cleanup', 'package', cb);
   });
 
   // Create both installers
