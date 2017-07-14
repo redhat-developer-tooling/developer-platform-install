@@ -398,4 +398,35 @@ describe('InstallableItem', function() {
       expect(item.getLocation()).to.be.equal('path/to/instal/location');
     });
   });
+
+  describe('isValidVerisonDetected', function() {
+    beforeEach(function() {
+      let svc = new InstallerDataService();
+      item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
+    });
+
+    it('should return true if detected and version valid', function() {
+      item.selectedOption = 'detected';
+      item.addOption('detected', '1.0.0', 'path/to/detected/location', true);
+      expect(item.isValidVersionDetected()).to.be.equal(true);
+    });
+
+    it('should return false if not detected or detected version is invalid', function() {
+      item.selectedOption = 'detected';
+      expect(item.isValidVersionDetected()).to.be.equal(false);
+      item.addOption('detected', '1.0.0', 'path/to/detected/location', false);
+      expect(item.isValidVersionDetected()).to.be.equal(false);
+    });
+  });
+
+  describe('isDisabled', function() {
+    it('returns true if referenced at least by one other installer', function() {
+      item.references = 1;
+      expect(item.isDisabled()).to.be.equal(true);
+    });
+    it('returns false if there are no references', function() {
+      item.references = 0;
+      expect(item.isDisabled()).to.be.equal(false);
+    });
+  });
 });

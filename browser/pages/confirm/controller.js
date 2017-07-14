@@ -156,17 +156,12 @@ class ConfirmController {
         }
       }
 
-      // Set the message depending on if the view is disabled or not.
-      if (this.isDisabled) {
-        this.installedSearchNote = '  The system is checking if you have any installed components';
+      if (this.numberOfExistingInstallations == 1) {
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
+      } else if (this.numberOfExistingInstallations > 1) {
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
       } else {
-        if (this.numberOfExistingInstallations == 1) {
-          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
-        } else if (this.numberOfExistingInstallations > 1) {
-          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
-        } else {
-          this.installedSearchNote = '';
-        }
+        this.installedSearchNote = '';
       }
 
       // Call the digest cycle so that the view gets updated.
