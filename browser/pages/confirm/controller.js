@@ -80,18 +80,21 @@ class ConfirmController {
     }
     for (let node of nodes) {
       let watchComponent = ()=> {
-        if(!this.sc.checkboxModel[node].isSelected()) {
+        let installer = this.sc.checkboxModel[node];
+        if(installer.isSelected()) {
           for(let dep of this.graph.dependenciesOf(node)) {
-            this.sc.checkboxModel[dep].references--;
-            if(!this.sc.checkboxModel[dep].isDisabled()) {
-              this.sc.checkboxModel[dep].selectedOption = 'detected';
+            let depInstaller = this.sc.checkboxModel[dep];
+            if(depInstaller.references==0 && depInstaller.isNotDetected()) {
+              depInstaller.selectedOption = 'install';
             }
+            depInstaller.references++;
           }
         } else {
           for(let dep of this.graph.dependenciesOf(node)) {
-            this.sc.checkboxModel[dep].references++;
-            if(this.sc.checkboxModel[dep].isDisabled()) {
-              this.sc.checkboxModel[dep].selectedOption = 'install';
+            let depInstaller = this.sc.checkboxModel[dep];
+            depInstaller.references--;
+            if(depInstaller.references==0) {
+              depInstaller.selectedOption = 'detected';
             }
           }
         }

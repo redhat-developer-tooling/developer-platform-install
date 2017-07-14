@@ -88,7 +88,6 @@ gulp.task('generate', ['create-modules-link', 'update-requirements'], function(c
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
   cmd += ' --prune --ignore="test|' + config.prefetchFolder + '"';
   cmd += ' --icon="' + config.configIcon + '"';
-    //console.log(cmd);
   exec(cmd, common.createExecCallback(cb, true));
 });
 
@@ -122,6 +121,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
             reqs.devstudio.fileName = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/') + 1);
             reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
           }
+          reqs.fusetools.fileName = reqs.devstudio.fileName;
           resolve();
         }
       });

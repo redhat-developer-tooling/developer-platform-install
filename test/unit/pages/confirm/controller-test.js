@@ -112,12 +112,22 @@ describe('ConfirmController', function() {
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
-        confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
-            && el[0] == 'checkboxModel.jbosseap.selectedOption'
-            || el[0] == 'checkboxModel.devstudio.selectedOption') {
+            && (el[0] == 'checkboxModel.jbosseap.selectedOption'
+            || el[0] == 'checkboxModel.devstudio.selectedOption'
+            || el[0] == 'checkboxModel.fusetools.selectedOption')) {
+            el[1]();
+          }
+        });
+        confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
+        confirmController.sc.checkboxModel.fusetools.selectedOption = 'detected';
+        $watch.args.forEach(function(el) {
+          if(el[1].name == 'watchComponent'
+            && (el[0] == 'checkboxModel.jbosseap.selectedOption'
+            || el[0] == 'checkboxModel.devstudio.selectedOption'
+            || el[0] == 'checkboxModel.fusetools.selectedOption')) {
             el[1]();
           }
         });
@@ -163,6 +173,12 @@ describe('ConfirmController', function() {
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
         expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
+        $watch.args.forEach(function(el) {
+          if(el[1].name == 'watchComponent'
+            && el[0] == 'checkboxModel.cdk.selectedOption') {
+            el[1]('detected');
+          }
+        });
         confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
