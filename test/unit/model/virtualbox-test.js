@@ -418,4 +418,26 @@ describe('Virtualbox installer', function() {
       expect(option.valid).to.equal(false);
     });
   });
+
+  describe('isDisabled', function() {
+    it('returns true if detected and required at least by one other selected installer', function() {
+      if(installer.option.detected) {
+        delete installer.options.detected;
+      }
+      installer.references = 1;
+      expect(installer.isDisabled()).to.be.equal(true);
+
+      installer.addOption('detected', '2.8.1-1', '/location', true);
+      installer.references = 0;
+      expect(installer.isDisabled()).to.be.equal(true);
+    });
+
+    it('returns false if not detected and not referenced', function() {
+      if(installer.option.detected) {
+        delete installer.options.detected;
+      }
+      installer.references = 0;
+      expect(installer.isDisabled()).to.be.equal(false);
+    });
+  });
 });

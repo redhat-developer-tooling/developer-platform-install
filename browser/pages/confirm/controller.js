@@ -7,7 +7,8 @@ import ComponentLoader from '../../services/componentLoader';
 const baseDependencies = {
   'cdk': ['virtualbox', 'cygwin'],
   'devstudio': ['jdk'],
-  'jbosseap': ['jdk']
+  'jbosseap': ['jdk'],
+  'fusetools' : ['devstudio']
 };
 
 class ConfirmController {
@@ -79,18 +80,21 @@ class ConfirmController {
     }
     for (let node of nodes) {
       let watchComponent = ()=> {
-        if(!this.sc.checkboxModel[node].isSelected()) {
+        let installer = this.sc.checkboxModel[node];
+        if(installer.isSelected()) {
           for(let dep of this.graph.dependenciesOf(node)) {
-            this.sc.checkboxModel[dep].references--;
-            if(!this.sc.checkboxModel[dep].isDisabled()) {
-              this.sc.checkboxModel[dep].selectedOption = 'detected';
+            let depInstaller = this.sc.checkboxModel[dep];
+            if(depInstaller.references==0 && depInstaller.isNotDetected()) {
+              depInstaller.selectedOption = 'install';
             }
+            depInstaller.references++;
           }
         } else {
           for(let dep of this.graph.dependenciesOf(node)) {
-            this.sc.checkboxModel[dep].references++;
-            if(this.sc.checkboxModel[dep].isDisabled()) {
-              this.sc.checkboxModel[dep].selectedOption = 'install';
+            let depInstaller = this.sc.checkboxModel[dep];
+            depInstaller.references--;
+            if(depInstaller.references==0) {
+              depInstaller.selectedOption = 'detected';
             }
           }
         }
@@ -124,7 +128,7 @@ class ConfirmController {
       this.loader.removeComponent('hyperv');
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fusetools'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {
@@ -152,17 +156,12 @@ class ConfirmController {
         }
       }
 
-      // Set the message depending on if the view is disabled or not.
-      if (this.isDisabled) {
-        this.installedSearchNote = '  The system is checking if you have any installed components';
+      if (this.numberOfExistingInstallations == 1) {
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
+      } else if (this.numberOfExistingInstallations > 1) {
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
       } else {
-        if (this.numberOfExistingInstallations == 1) {
-          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
-        } else if (this.numberOfExistingInstallations > 1) {
-          this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
-        } else {
-          this.installedSearchNote = '';
-        }
+        this.installedSearchNote = '';
       }
 
       // Call the digest cycle so that the view gets updated.

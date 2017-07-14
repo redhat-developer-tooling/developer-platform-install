@@ -49,7 +49,7 @@ class ComponentLoader {
       for (let item of Object.keys(newOrder)) {
         let children = newOrder[item];
         let finalChildren = [];
-        for (var i = 0; i < children.length; i++) {
+        for (let i = 0; i < children.length; i++) {
           if (this.installerDataSvc.getInstallable(children[i])) {
             finalChildren.push(children[i]);
           } else {

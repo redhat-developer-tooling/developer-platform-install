@@ -77,6 +77,26 @@
     "useDownload": true,
     "requires": ["jdk"]
   },
+  "fusetools": {
+    "name": "Red Hat JBoss Fuse Tools",
+    "description": "A certified Eclipse-based integrated development environment (IDE) for Fuse",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/devstudio",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "devstudio",
+    "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
+    "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
+    "fileName": "devstudio-11.0.0.AM1-installer-standalone.jar",
+    "sha256sum": "",
+    "version": "11.0.0.AM2",
+    "additionalLocation": "",
+    "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
+    "useDownload": false,
+    "requires": ["devstudio"]
+  },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
     "description": "Java EE 7 compliant application server built on open standards",

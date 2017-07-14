@@ -158,4 +158,18 @@ describe('Hyper-V Installer', function() {
       });
     });
   });
+
+  describe('isDisabled', function() {
+    it('always returns true', function() {
+      expect(hvInstall.isDisabled()).to.be.equal(true);
+      hvInstall.references = 1;
+      expect(hvInstall.isDisabled()).to.be.equal(true);
+      if(hvInstall.option.detected) {
+        delete hvInstall.options.detected;
+      }
+      expect(hvInstall.isDisabled()).to.be.equal(true);
+      hvInstall.references = 0;
+      expect(hvInstall.isDisabled()).to.be.equal(true);
+    });
+  });
 });

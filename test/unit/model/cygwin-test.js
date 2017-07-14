@@ -222,6 +222,25 @@ describe('Cygwin installer', function() {
     });
   });
 
+  describe('isDisabled', function() {
+    it('returns true if not detected and required at least by one other selected installer', function() {
+      if(installer.option.detected) {
+        delete installer.option.detected;
+      }
+      installer.references = 1;
+      expect(installer.isDisabled()).to.be.equal(true);
+    });
+
+    it('returns false if detected', function() {
+      if(!installer.option.detected) {
+        installer.addOption('detected', '2.8.1-1', '/location', true);
+      }
+      expect(installer.isDisabled()).to.be.equal(false);
+      installer.references = 1;
+      expect(installer.isDisabled()).to.be.equal(false);
+    });
+  });
+
   describe('detectExistingInstall', function() {
     describe('on macOS', function() {
       it('should mark cygwin as detected', function() {

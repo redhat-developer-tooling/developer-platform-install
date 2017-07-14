@@ -209,6 +209,10 @@ class InstallableItem {
     return this.selectedOption == 'detected' && this.hasOption('detected');
   }
 
+  isValidVersionDetected() {
+    return this.hasOption('detected') && this.option['detected'].valid;
+  }
+
   isInvalidVersionDetected() {
     return this.hasOption('detected') && !this.option['detected'].valid;
   }

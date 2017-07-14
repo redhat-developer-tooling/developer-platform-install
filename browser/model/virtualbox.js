@@ -183,8 +183,6 @@ function fromJsonWindows({installerDataSvc, targetFolderName, downloadUrl, fileN
 
 VirtualBoxInstallWindows.convertor = {fromJson: fromJsonWindows};
 
-
-
 class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   detectExistingInstall() {
@@ -251,9 +249,6 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
       `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
     ].join(' ');
     return osaScript;
-  }
-
-  static convertor() {
   }
 }
 
