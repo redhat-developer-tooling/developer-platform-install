@@ -103,7 +103,7 @@
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/jbossfuse",
     "bundle": "no",
-    "targetFolderName": "fuseplatform",
+    "targetFolderName": "jboss-fuse-eap",
     "installAfter": "jdk",
     "requires": "jdk",
     "version": "6.3.0.GA",
@@ -124,6 +124,23 @@
     },
     "useDownload": true,
     "requires": ["jdk"]
+  },
+  "fuseplatformkaraf": {
+    "name": "Red Hat JBoss Fuse Integration Platform on Apache Karaf",
+     "description": "An agile, lightweight and modern integration platform (installed on Apache Karaf package)",
+     "vendor": "Red Hat, Inc.",
+     "modulePath": "model/jbossfusekaraf",
+     "bundle": "no",
+     "targetFolderName": "jboss-fuse-karaf",
+     "installAfter": "jdk",
+     "requires": "jdk",
+     "version": "6.3.0.GA",
+     "dmUrl": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/jboss-fuse-karaf-6.3.0.redhat-187.zip",
+     "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/jboss-fuse-karaf-6.3.0.redhat-187.zip",
+     "fileName": "jboss-fuse-karaf-6.3.0.redhat-187.zip",
+     "sha256sum": "4ef481bb22f4a9c688d03f46374917e0f2548229f94ebd817c33817baf203b0c",
+     "useDownload": true,
+     "requires": ["jdk"]
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",

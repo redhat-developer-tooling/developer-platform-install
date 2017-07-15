@@ -110,6 +110,21 @@
       </div>
     </div>
 
+    <!-- fuseplatformkaraf -->
+    <div id="fuseplatformkaraf-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':checkboxModel.fuseplatformkaraf.hasOption('detected')}">
+      <div id="fuseplatformkaraf-panel-heading" class="panel-heading panel-normal"
+           ng-class="{'dotted-panel':checkboxModel.fuseplatformkaraf.hasOption('detected')}">
+        <div class="checkbox-container verticalLine">
+         <input id="fuseplatformkaraf-checkbox" type="checkbox" ng-model="checkboxModel.fuseplatformkaraf.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+        </div>
+        <div class="product-container">
+          <span id="fuseplatformkaraf-installed-note" class="installed-note" ng-show="checkboxModel.fuseplatformkaraf.hasOption('detected')"><i class="fa fa-check"></i> Existing installation found</span>
+          <span id="fuseplatformkaraf-name" class="product-name">{{checkboxModel.fuseplatformkaraf.productName}}</span><span id="fuseplatformkaraf-version" class="product-version">{{checkboxModel.fuseplatformkaraf.version}}</span>
+          <div id="fuseplatformkaraf-description">{{checkboxModel.fuseplatformkaraf.productDesc}}</div>
+        </div>
+      </div>
+    </div>
+
     <!-- jbosseap -->
     <div id="jbosseap-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.jbosseap === undefined" ng-class="{'zero-border':checkboxModel.jbosseap.hasOption('detected')}">
       <div id="jbosseap-panel-heading" class="panel-heading panel-normal"
