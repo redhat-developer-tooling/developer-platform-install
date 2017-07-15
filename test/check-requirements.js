@@ -29,6 +29,7 @@ function checkRequirements() {
   fileNames['7zip'] = '7-Zip';
   fileNames['7zip-extra'] = '7-Zip';
   fileNames['kompose'] = 'kompose';
+  fileNames['fuseplatformkaraf'] = 'karaf';
 
   //to check if the files are rougly the size they should be
   minSizes['cdk'] = 50 * 1024;
@@ -42,7 +43,8 @@ function checkRequirements() {
   minSizes['7zip'] = 200 * 1024;
   minSizes['7zip-extra'] = 400 * 1024;
   minSizes['kompose'] = 400 * 1024;
-
+  minSizes['fuseplatformkaraf']= 749 *1024;
+  
   console.log('-------------------------------');
   console.log('Checking download URLs');
   for (var key in data) {
@@ -59,33 +61,33 @@ function checkFileName(key) {
 
 function checkUrl(key) {
   let req = request.get(data[key])
-  .on('response', function(response) {
-    let size = response.headers['content-length'];
-    if (response.statusCode !== 200) {
-      req.abort();
-      throw new Error(key + ' url returned code ' + response.statusCode);
-    }
-    console.log(key + ' - url: ' + data[key]);
-    console.log(key + ' - size: ' + size + 'B');
-    console.log();
+    .on('response', function(response) {
+      let size = response.headers['content-length'];
+      if (response.statusCode !== 200) {
+        req.abort();
+        throw new Error(key + ' url returned code ' + response.statusCode);
+      }
+      console.log(key + ' - url: ' + data[key]);
+      console.log(key + ' - size: ' + size + 'B');
+      console.log();
 
-    if (size < minSizes[key]) {
+      if (size < minSizes[key]) {
+        req.abort();
+        throw new Error(key + ' is unexpectedly small with just ' + size + ' bytes in size');
+      } else {
+        req.abort();
+      }
+    })
+    .on('end', function() {
+      if (--count === 0) {
+        console.log('Checking download URLs complete');
+        console.log('-------------------------------');
+      }
+    })
+    .on('error', function(err) {
       req.abort();
-      throw new Error(key + ' is unexpectedly small with just ' + size + ' bytes in size');
-    } else {
-      req.abort();
-    }
-  })
-  .on('end', function() {
-    if (--count === 0) {
-      console.log('Checking download URLs complete');
-      console.log('-------------------------------');
-    }
-  })
-  .on('error', function(err) {
-    req.abort();
-    throw err;
-  });
+      throw err;
+    });
 }
 
 checkRequirements();
