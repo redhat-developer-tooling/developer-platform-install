@@ -1,12 +1,14 @@
 'use strict';
 
-let path = require('path');
+import path from 'path';
+import fs from 'fs-extra';
 
 import DevstudioAutoInstallGenerator from './devstudio-autoinstall';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
 import JdkInstall from './jdk-install';
+import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
   constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload) {
@@ -86,6 +88,21 @@ class DevstudioInstall extends InstallableItem {
     return jdk.isConfigured()
       && this.isConfigured()
       || this.isSkipped();
+  }
+
+  configureRuntimeDetection(name, location) {
+    let runtimeproperties =  Platform.OS === 'win32'
+      ? path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties')
+      : path.join(this.installerDataSvc.devstudioDir(), 'studio/devstudio.app/Contents/Eclipse', 'runtime_locations.properties');
+    let escapedLocation = location.replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
+    let result = Promise.resolve();
+    if(fs.existsSync(runtimeproperties)) {
+      result = fs.appendFile(runtimeproperties, `\n${name}=${escapedLocation},true`).catch((error)=>{
+        Logger.error(this.keyName + ' - error occured during runtime detection configuration in DevStudio');
+        Logger.error(this.keyName + ` -  ${error}`);
+      });
+    }
+    return result;
   }
 }
 

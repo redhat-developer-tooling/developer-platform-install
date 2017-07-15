@@ -8,7 +8,6 @@ import JbosseapAutoInstallGenerator from './jbosseap-autoinstall';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
-import Platform from '../services/platform'
 import JdkInstall from './jdk-install';
 
 class JbosseapInstall extends InstallableItem {
@@ -44,12 +43,11 @@ class JbosseapInstall extends InstallableItem {
     }).then(() => {
       let devstudio = this.installerDataSvc.getInstallable('devstudio');
       if(devstudio.installed) {
-        this.configureRuntimeDetection();
+        devstudio.configureRuntimeDetection('jbosseap', this.installerDataSvc.jbosseapDir());
       } else {
-        let that = this;
-        this.ipcRenderer.on('installComplete', function(event, arg) {
+        this.ipcRenderer.on('installComplete', (event, arg)=> {
           if(arg == 'devstudio') {
-            that.configureRuntimeDetection();
+            devstudio.configureRuntimeDetection('jbosseap', this.installerDataSvc.jbosseapDir());
           }
         });
       }
@@ -57,17 +55,6 @@ class JbosseapInstall extends InstallableItem {
     }).catch((error) => {
       installer.fail(error);
     });
-  }
-
-  configureRuntimeDetection() {
-    let runtimeproperties =  Platform.OS === 'win32' ? path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties') : path.join(this.installerDataSvc.devstudioDir(), 'studio/devstudio.app/Contents/Eclipse', 'runtime_locations.properties');
-    let escapedLocation = this.installerDataSvc.jbosseapDir().replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
-    if(fs.existsSync(runtimeproperties)) {
-      fs.appendFile(runtimeproperties, `\njbosseap=${escapedLocation},true`).catch((error)=>{
-        Logger.error(this.keyName + ' - error occured during runtime detection configuration in DevStudio');
-        Logger.error(this.keyName + ` -  ${error}`);
-      });
-    }
   }
 
   postJDKInstall(installer, result) {

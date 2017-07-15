@@ -75,6 +75,16 @@ class FusePlatformInstall extends InstallableItem {
     }).then(()=> {
       return this.postJDKInstall(installer);
     }).then(()=> {
+      let devstudio = this.installerDataSvc.getInstallable('devstudio');
+      if(devstudio.installed) {
+        devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
+      } else {
+        this.ipcRenderer.on('installComplete', (event, arg)=> {
+          if(arg == 'devstudio') {
+            devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
+          }
+        });
+      }
       installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);
