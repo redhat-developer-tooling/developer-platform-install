@@ -107,6 +107,7 @@
     "installAfter": "jdk",
     "requires": "jdk",
     "version": "6.3.0.GA",
+    "sha256sum": "",
     "file": {
       "platform": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
