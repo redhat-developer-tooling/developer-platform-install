@@ -119,7 +119,6 @@ describe('jbosseap installer', function() {
     sandbox.stub(Util, 'findText').rejects();
     sandbox.stub(fs, 'existsSync').returns(true);
     let stub = sandbox.stub(rimraf, 'sync').returns();
-    installer.configureRuntimeDetection();
     installer.install(fakeProgress, success, failure);
 
     expect(stub).calledOnce;
@@ -264,9 +263,9 @@ describe('jbosseap installer', function() {
 
       it('should wait for JDK install to complete', function() {
         return installer.postJDKInstall(helper, true)
-        .then(() => {
-          expect(eventSpy).calledOnce;
-        });
+          .then(() => {
+            expect(eventSpy).calledOnce;
+          });
       });
 
       it('should wait for JDK install to complete and ignore other installed components', function() {
@@ -327,10 +326,10 @@ describe('jbosseap installer', function() {
         ];
 
         return installer.headlessInstall(helper)
-        .then(() => {
-          expect(spy).calledOnce;
-          expect(spy).calledWith(javaPath, javaOpts);
-        });
+          .then(() => {
+            expect(spy).calledOnce;
+            expect(spy).calledWith(javaPath, javaOpts);
+          });
       });
     });
   });
