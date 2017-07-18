@@ -13,7 +13,7 @@ let pify = require('pify');
 let child_process = require('child_process');
 
 class InstallerDataService {
-  constructor($state, requirements = require('../../requirements.json')) {
+  constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
@@ -23,6 +23,7 @@ class InstallerDataService {
     }
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
+    this.packageConf = packageConf;
 
     this.username = '';
     this.password = '';
@@ -83,7 +84,7 @@ class InstallerDataService {
         Logger.info('Data - Copy ' + uninstallerPs1 + ' to ' + uninstallerLocation + ' SUCCESS');
         let timeStamp = new Date().getTime();
         // replace ByPass to AllSigned
-        pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" "${this.installRoot}" ${timeStamp} 1.4.0.GA`).then(()=>{
+        pify(child_process.exec)(`powershell.exe -ExecutionPolicy ByPass -file "${uninstallerCreateLocation}" "${this.installRoot}" ${timeStamp} ${this.packageConf.version}`).then(()=>{
           Logger.info(`Created registry item DevelopmentSuite${timeStamp} SUCCESS`);
         }).catch((error)=>{
           Logger.error('Data - ' + error);

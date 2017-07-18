@@ -1,7 +1,6 @@
 'use strict';
 
 import Util from '../../model/helpers/util';
-let pjson = require('../../../package.json');
 
 class AccountController {
 
@@ -13,12 +12,11 @@ class AccountController {
     this.scope = $scope;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
-
+    $scope.version = electron.remote.app.getVersion();
     this.username = '';
     this.password = '';
     this.authFailed = false;
     this.tandcNotSigned = false;
-    this.pdkVersion = pjson.version;
     this.isLoginBtnClicked = false;
     this.httpError = undefined;
   }
