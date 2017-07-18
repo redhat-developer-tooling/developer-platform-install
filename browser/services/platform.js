@@ -137,7 +137,7 @@ class Platform {
     return Platform.identify({
       win32: ()=> {
         let disk = path.parse(location).root.charAt(0);
-        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\") }"`).then((stdout) => {
+        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\").FreeSpace }"`).then((stdout) => {
           return Promise.resolve(Number.parseInt(stdout));
         }).catch(()=>{
           return Promise.resolve();
