@@ -20,6 +20,9 @@ function electron() {
     currentWindow: electronWindow,
     dialog: {
       showOpenDialog() {}
+    },
+    app: {
+      getVersion() {}
     }
   };
   let shell = {

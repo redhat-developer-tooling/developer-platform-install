@@ -10,13 +10,16 @@ chai.use(sinonChai);
 describe('Account controller', function() {
 
   let controller, timeout, scope;
+  let http, base64;
   let sandbox = sinon.sandbox.create();
   let electron = new ElectronMock();
 
   beforeEach(function() {
     timeout = function(cb) { cb(); };
     scope = { '$apply': function() { } };
-    controller = new AccountController({}, timeout, scope, null, null, {}, electron);
+    base64 = { encode: function() {}};
+    http = sandbox.stub().resolves('success');
+    controller = new AccountController({}, timeout, scope, http, base64, {}, electron);
   });
 
   afterEach(function() {
@@ -25,10 +28,6 @@ describe('Account controller', function() {
 
 
   describe('initial state', function() {
-
-    beforeEach(function() {
-      controller = new AccountController();
-    });
 
     it('should not be failed', function() {
       expect(controller).to.have.property('authFailed', false);
@@ -58,23 +57,12 @@ describe('Account controller', function() {
 
   describe('login', function() {
 
-    let http, base64;
-
     before(function() {
       sinon.stub(AccountController.prototype, 'getUserAgent');
     });
 
-    beforeEach(function() {
-      base64 = { encode: function() {}};
-    });
-
-
     it('should make an HTTP request', function() {
-      http = sinon.stub().resolves('success');
-
-      controller = new AccountController({}, timeout, scope, http, base64);
       controller.login();
-
       expect(http).to.have.been.calledOnce;
     });
 
@@ -96,7 +84,7 @@ describe('Account controller', function() {
       };
       let installerDataSvc = { setCredentials: function() {} };
       let router = {go: function() {}};
-      controller = new AccountController(router, timeout, scope, http, base64, installerDataSvc);
+      controller = new AccountController(router, timeout, scope, http, base64, installerDataSvc, electron);
       controller.username = 'username';
       controller.password = 'password';
       controller.login();
@@ -107,7 +95,7 @@ describe('Account controller', function() {
 
     it('should call handleHttpFailure on HTTP failure', function() {
       http = ()=> Promise.reject('serious error');
-      controller = new AccountController({}, timeout, scope, http, base64);
+      controller = new AccountController({}, timeout, scope, http, base64, {}, electron);
       let spy = sinon.spy(controller, 'handleHttpFailure');
 
       controller.login();
@@ -122,7 +110,7 @@ describe('Account controller', function() {
 
     it('should call handleHttpSuccess on successful HTTP request', function() {
       http = ()=> Promise.resolve({ status: 404 });
-      controller = new AccountController({}, timeout, scope, http, base64);
+      controller = new AccountController({}, timeout, scope, http, base64, {}, electron);
       let spy = sinon.spy(controller, 'handleHttpSuccess');
 
       controller.login();
@@ -221,7 +209,7 @@ describe('Account controller', function() {
       let spy = sinon.spy(router, 'go');
       let installerDataSvc = { setCredentials: function() {} };
 
-      controller = new AccountController(router, timeout, scope, null, null, installerDataSvc);
+      controller = new AccountController(router, timeout, scope, null, null, installerDataSvc, electron);
       controller.handleHttpSuccess({ status: 200, data: true });
 
       expect(spy).to.have.been.calledOnce;
@@ -235,7 +223,7 @@ describe('Account controller', function() {
       let installerDataSvc = { setCredentials: function() {} };
       let spy = sinon.spy(installerDataSvc, 'setCredentials');
 
-      controller = new AccountController(router, timeout, scope, null, null, installerDataSvc);
+      controller = new AccountController(router, timeout, scope, null, null, installerDataSvc, electron);
       controller.username = 'Frank';
       controller.password = 'p@ssw0rd';
       controller.handleHttpSuccess({ status: 200, data: true });
