@@ -227,8 +227,20 @@ parameter like shown below
 
     npm test -- --report cobertura
 
+Debugging unit tests
+--------------------
+
+Add
+
+    debugger;
+
+statement in test where you want debugger to stop after start. Set env variable
+NODE_PATH pointing to the project's root folder and run
+
+    node_modules\.bin\mocha.cmd --inspect --inspect-brk --compilers js:babel-core/register path/to/file-test.js
+
 Running Angular protractor UI tests
----------------------------
+-----------------------------------
 
 UI tests located in 'test/ui'. To run all UI tests:
 
@@ -333,19 +345,19 @@ Running online installer with gulp
 ----------------------------------
 
 It is possible to run online installer right from your favorite terminal on windows
-or macOS. 
+or macOS.
 
 #### Windows
 
 On Windows if you running from cmd, powershell or git bash console and going to install components
-that is MSI installers please be sure you started console as Administrator. That is required 
+that is MSI installers please be sure you started console as Administrator. That is required
 because installer starts MSI installers in non-interactive mode and they will fail to run
 without Administartive privileges.
 
 #### macOS
 
-On macOS installer starts macOS installer with osascript that requests administartive account 
-credential to continue, so you can run from any bash instance and installer will show request 
+On macOS installer starts macOS installer with osascript that requests administartive account
+credential to continue, so you can run from any bash instance and installer will show request
 for account with rights to administer current machine.
 
 Updating dependencies to latest
