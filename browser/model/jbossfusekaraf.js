@@ -5,7 +5,6 @@ import Installer from './helpers/installer';
 let fs = require('fs');
 let path = require('path');
 let unzip = require('unzip-stream');
-let rimraf = require('rimraf');
 let mkdirp = require('mkdirp');
 
 class FusePlatformInstallKaraf extends InstallableItem {
@@ -22,21 +21,23 @@ class FusePlatformInstallKaraf extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
-    new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject)=> {
       fs.createReadStream(this.downloadedFile).pipe(unzip.Parse())
         .on('entry', (entry)=> {
-          var fileName = entry.path;
-          let f = fileName.substring(fileName.indexOf('/')+1);
-          let dest = path.join(this.installerDataSvc.fuseplatformkarafDir(), ...f.split('/'));
-          if (entry.type === 'File') {
-            entry.pipe(fs.createWriteStream(dest));
-          } else if(entry.type == 'Directory') {
-            mkdirp.sync(dest);
-            entry.autodrain();
-          } else {
-            entry.autodrain();
+          try {
+            var fileName = entry.path;
+            let f = fileName.substring(fileName.indexOf('/')+1);
+            let dest = path.join(this.installerDataSvc.fuseplatformkarafDir(), ...f.split('/'));
+            if (entry.type === 'File') {
+              entry.pipe(fs.createWriteStream(dest));
+            } else {
+              mkdirp.sync(dest);
+              entry.autodrain();
+            }
+          } catch(err) {
+            reject(err);
           }
-        }).on('error', (error)=> {
+        }).on('error', function (error) {
           reject(error);
         }).on('close', ()=> {
           resolve();
@@ -55,6 +56,7 @@ class FusePlatformInstallKaraf extends InstallableItem {
       installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);
+      return Promise.reject(error);
     });
   }
 }
