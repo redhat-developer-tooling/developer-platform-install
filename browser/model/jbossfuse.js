@@ -80,7 +80,7 @@ class FusePlatformInstall extends InstallableItem {
         devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
       } else {
         this.ipcRenderer.on('installComplete', (event, arg)=> {
-          if(arg == 'devstudio') {
+          if(arg == 'fusetools') {
             devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
           }
         });

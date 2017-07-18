@@ -108,11 +108,11 @@ describe('jbossplaformkaraf nstaller', function() {
       let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
       mockDevSuiteInstaller.emitEntries();
       return promise.then(()=>{
-        let devstudioInstaller = fuseInstaller.installerDataSvc.getInstallable('devstudio');
+        let devstudioInstaller = fuseInstaller.installerDataSvc.getInstallable('fusetools');
         expect(devstudioInstaller.configureRuntimeDetection).not.called;
         fuseInstaller.ipcRenderer.emit('installComplete', 'installComplete', 'jdk');
         expect(devstudioInstaller.configureRuntimeDetection).not.called;
-        fuseInstaller.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
+        fuseInstaller.ipcRenderer.emit('installComplete', 'installComplete', 'fusetools');
         expect(devstudioInstaller.configureRuntimeDetection).calledOnce;
       });
     });

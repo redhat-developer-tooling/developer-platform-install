@@ -48,7 +48,7 @@ class FusePlatformInstallKaraf extends InstallableItem {
         devstudio.configureRuntimeDetection('fuse-platform-on-karaf', this.installerDataSvc.fuseplatformkarafDir());
       } else {
         this.ipcRenderer.on('installComplete', (event, arg)=> {
-          if(arg == 'devstudio') {
+          if(arg == 'fusetools') {
             devstudio.configureRuntimeDetection('fuse-platform-on-karaf', this.installerDataSvc.fuseplatformkarafDir());
           }
         });
