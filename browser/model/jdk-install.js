@@ -33,7 +33,7 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
-    let versionRegex = /version\s\"(\d+\.\d+\.\d+)_.*\"/;
+    let versionRegex = /version\s"(\d+\.\d+\.\d+)_.*"/;
     let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
@@ -166,7 +166,7 @@ class JdkInstall extends InstallableItem {
     ).then(() => {
       // msiexec logs are in UCS-2
       return Util.findText(path.join(this.installerDataSvc.installDir(), 'openjdk.log'), 'Dir (target): Key: INSTALLDIR	, Object:', 'ucs2').then((line)=>{
-        let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s\, Object\:\s(.*)/;
+        let regexTargetDir = /.*Dir \(target\): Key: INSTALLDIR\s, Object:\s(.*)/;
         let targetDir = regexTargetDir.exec(line)[1];
         if(targetDir !== this.getLocation()) {
           Logger.info(this.keyName + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
