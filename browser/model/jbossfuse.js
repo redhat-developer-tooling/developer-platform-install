@@ -183,7 +183,7 @@ function installGenerator(jbosseapInstallDir) {
 <com.izforge.izpack.panels.UserInputPanel id="CreateUserPanel">
 <userInput>
 <entry key="adminUser" value="admin"/>
-<entry key="adminPassword" value="changeit"/>
+<entry key="adminPassword" value="changeit1!"/>
 </userInput>
 </com.izforge.izpack.panels.UserInputPanel>
 <com.izforge.izpack.panels.UserInputPanel id="QuickStartsPanel">
