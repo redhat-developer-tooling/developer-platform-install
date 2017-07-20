@@ -73,7 +73,9 @@ class FusePlatformInstall extends InstallableItem {
     return Promise.resolve().then(()=> {
       return installer.writeFile(this.installConfigFile, installGenerator(this.installerDataSvc.fuseplatformDir()));
     }).then(()=> {
-      return this.postJDKInstall(installer);
+        return this.headlessEapInstall(installer);
+    }).then(()=> {
+        return this.headlessInstall(installer);
     }).then(()=> {
       let devstudio = this.installerDataSvc.getInstallable('devstudio');
       if(devstudio.installed) {
@@ -91,42 +93,9 @@ class FusePlatformInstall extends InstallableItem {
     });
   }
 
-  postJDKInstall(installer) {
-    return new Promise((resolve, reject) => {
-      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
-      if (jdkInstall.isInstalled()) {
-        return Promise.resolve().then(()=> {
-          return this.headlessEapInstall(installer);
-        }).then(()=> {
-          return this.headlessInstall(installer);
-        }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      } else {
-        Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
-        this.ipcRenderer.on('installComplete', (event, arg) => {
-          if (arg == JdkInstall.KEY) {
-            return Promise.resolve().then(()=> {
-              return this.headlessEapInstall(installer);
-            }).then(()=> {
-              return this.headlessInstall(installer);
-            }).then((res) => {
-              resolve(res);
-            }).catch((err) => {
-              reject(err);
-            });
-          }
-        });
-      }
-    });
-  }
-
   headlessInstall(installer) {
     Logger.info(this.keyName + ' - headlessInstall() called');
     let javaOpts = [
-      '-DTRACE=true',
       '-jar',
       this.downloadedFile
     ];

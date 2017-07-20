@@ -31,12 +31,14 @@ describe('devstudio installer', function() {
   let failure = () => {};
 
   function stubDataService() {
-    let ds = sinon.stub(new InstallerDataService({}, {
+    let reqsJson = {
       devstudio: {},
       jdk:{
         name: 'OpenJDK'
       }
-    }));
+    };
+    let packageJson = {version: "X.0.0-GA"};
+    let ds = sinon.stub(new InstallerDataService({}, reqsJson, packageJson));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
     ds.installDir.returns('installationFolder');
@@ -233,65 +235,13 @@ describe('devstudio installer', function() {
 
     it('should call success callback when installation is finished successfully', function() {
       sandbox.stub(Installer.prototype, 'writeFile').resolves();
-      sandbox.stub(installer, 'postJDKInstall').resolves();
+      sandbox.stub(installer, 'headlessInstall').resolves();
       sandbox.stub(Installer.prototype, 'succeed');
 
       return installer.installAfterRequirements(
         fakeProgress, function() {}, function() {}
       ).then(()=>{
         expect(Installer.prototype.succeed).to.be.calledWith(true);
-      });
-    });
-
-    describe('postJDKInstall', function() {
-      let helper, stubInstall, eventSpy;
-
-      beforeEach(function() {
-        helper = new Installer('devstudio', fakeProgress, success, failure);
-        stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
-        eventSpy = installer.ipcRenderer.on;
-      });
-
-      it('should wait for JDK install to complete', function() {
-        return installer.postJDKInstall(helper, true)
-        .then(() => {
-          expect(eventSpy).calledOnce;
-        });
-      });
-
-      it('should wait for JDK install to complete and ignore other installed components', function() {
-        installer.ipcRenderer.on = sinon.stub();
-        installer.ipcRenderer.on.onFirstCall().yields({}, 'cdk');
-        sandbox.stub(fakeInstall, 'isInstalled').returns(false);
-        installer.postJDKInstall(helper, true);
-        expect(installer.ipcRenderer.on).has.been.called;
-        expect(stubInstall).has.not.been.called;
-      });
-
-      it('should call headlessInstall if JDK is installed', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-        });
-      });
-
-      it('should reject promise if headlessInstall fails', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-        installer.headlessInstall.restore();
-        stubInstall = sandbox.stub(installer, 'headlessInstall').rejects('Error');
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect.fail();
-        }).catch((error)=> {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-          expect(error.name).to.be.equal('Error');
-        });
       });
     });
 

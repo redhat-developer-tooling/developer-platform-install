@@ -149,8 +149,15 @@ describe('ConfirmController', function() {
         expect(confirmController.router.go).calledOnce;
       });
     });
+  });
 
+  describe('dependency resolution', function() {
+    beforeEach(function() {
+      sandbox.stub(Platform, 'getOS').returns('win32');
+    });
+    beforeEach(inject(context));
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
+      debugger;
       return confirmController.initPage().then(function() {
         expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
         $watch.args.forEach(function(el) {

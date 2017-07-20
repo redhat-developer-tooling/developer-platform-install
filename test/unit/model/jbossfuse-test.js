@@ -211,59 +211,6 @@ describe('fuseplatform installer', function() {
       }
     });
 
-    describe('postJDKInstall', function() {
-      let helper, stubInstall, eventSpy;
-
-      beforeEach(function() {
-        helper = new Installer('fuseplatform', fakeProgress, success, failure);
-        stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
-        stubInstall = sandbox.stub(installer, 'headlessEapInstall').resolves(true);
-        eventSpy = installer.ipcRenderer.on;
-      });
-
-      it('should wait for JDK install to complete', function() {
-        return installer.postJDKInstall(helper, true)
-          .then(() => {
-            expect(eventSpy).calledOnce;
-          });
-      });
-
-      it('should wait for JDK install to complete and ignore other installed components', function() {
-        installer.ipcRenderer.on = sinon.stub();
-        installer.ipcRenderer.on.onFirstCall().yields({}, 'cdk');
-        sandbox.stub(fakeInstall, 'isInstalled').returns(false);
-        installer.postJDKInstall(helper, true);
-        expect(installer.ipcRenderer.on).has.been.called;
-        expect(stubInstall).has.not.been.called;
-      });
-
-      it('should call headlessInstall if JDK is installed', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-        });
-      });
-
-      it('should reject promise if headlessInstall fails', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-        installer.headlessInstall.restore();
-        stubInstall = sandbox.stub(installer, 'headlessInstall').rejects('Error');
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect.fail();
-        }).catch((error)=> {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-          expect(error.name).to.be.equal('Error');
-        });
-      });
-    });
-
     describe('headlessInstall', function() {
       let helper;
       let child_process = require('child_process');
@@ -279,7 +226,6 @@ describe('fuseplatform installer', function() {
         let downloadedFile = path.join(installerDataSvc.tempDir(), files.platform.fileName);
         let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
-          '-DTRACE=true',
           '-jar',
           downloadedFile
         ];

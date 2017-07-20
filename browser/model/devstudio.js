@@ -39,7 +39,7 @@ class DevstudioInstall extends InstallableItem {
 
     return installer.writeFile(this.installConfigFile, data)
       .then((result) => {
-        return this.postJDKInstall(installer, result);
+        return this.headlessInstall(installer, result);
       })
       .then(() => {
         installer.succeed(true);
@@ -47,27 +47,6 @@ class DevstudioInstall extends InstallableItem {
       .catch((error) => {
         installer.fail(error);
       });
-  }
-
-  postJDKInstall(installer, result) {
-    return new Promise((resolve, reject) => {
-      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
-
-      if (jdkInstall.isInstalled()) {
-        return this.headlessInstall(installer, result)
-          .then((res) => { resolve(res); })
-          .catch((err) => { reject(err); });
-      } else {
-        Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
-        this.ipcRenderer.on('installComplete', (event, arg) => {
-          if (arg == JdkInstall.KEY) {
-            return this.headlessInstall(installer, result)
-              .then((res) => { resolve(res); })
-              .catch((err) => { reject(err); });
-          }
-        });
-      }
-    });
   }
 
   headlessInstall(installer) {
