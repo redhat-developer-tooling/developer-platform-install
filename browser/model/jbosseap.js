@@ -41,16 +41,14 @@ class JbosseapInstall extends InstallableItem {
     }).then((result) => {
       return this.headlessInstall(installer, result);
     }).then(() => {
-      let devstudio = this.installerDataSvc.getInstallable('devstudio');
-      if(devstudio.installed) {
-        devstudio.configureRuntimeDetection('jbosseap', this.installerDataSvc.jbosseapDir());
-      } else {
-        this.ipcRenderer.on('installComplete', (event, arg)=> {
-          if(arg == 'devstudio') {
+      this.ipcRenderer.on('installComplete', (event, arg)=> {
+        if(arg == 'all') {
+          let devstudio = this.installerDataSvc.getInstallable('devstudio');
+          if(devstudio.installed) {
             devstudio.configureRuntimeDetection('jbosseap', this.installerDataSvc.jbosseapDir());
           }
-        });
-      }
+        }
+      });
       installer.succeed(true);
     }).catch((error) => {
       installer.fail(error);

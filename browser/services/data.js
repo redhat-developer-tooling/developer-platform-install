@@ -266,6 +266,7 @@ class InstallerDataService {
     if (!this.isDownloading() && this.toInstall.size == 0) {
       Logger.info('All installs complete');
       this.installing = false;
+      this.ipcRenderer.send('installComplete', 'all');
       this.router.go('start');
     }
   }
