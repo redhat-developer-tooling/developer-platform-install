@@ -4,13 +4,6 @@ import Logger from '../../services/logger';
 import Platform from '../../services/platform';
 import ComponentLoader from '../../services/componentLoader';
 
-const baseDependencies = {
-  'cdk': ['virtualbox', 'cygwin'],
-  'devstudio': ['jdk'],
-  'jbosseap': ['jdk'],
-  'fusetools' : ['devstudio']
-};
-
 class ConfirmController {
 
   constructor($scope, $state, $timeout, installerDataSvc, electron) {
