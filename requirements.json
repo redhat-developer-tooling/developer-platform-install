@@ -71,7 +71,7 @@
     "installAfter": "jdk",
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
-    "fileName": "devstudio-11.0.0.AM2-installer-standalone.jar",
+    "fileName": "devstudio-11.0.0.GA-installer-standalone.jar",
     "sha256sum": "",
     "version": "11.0.0.GA",
     "useDownload": true,

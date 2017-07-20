@@ -116,8 +116,9 @@ gulp.task('update-requirements', ['transpile:app'], function() {
           }
           console.log(meta);
           if(reqs.devstudio.sha256sum == '') {
-            reqs.devstudio.url = meta.installer;
-            reqs.devstudio.dmUrl = meta.installer;
+            let latestUrl = meta.installer.replace(/devstudio-.+\.jar/, 'devstudio-' + finalVersion.substring(0, finalVersion.lastIndexOf('.') + 1) + 'latest-installer-standalone.jar');
+            reqs.devstudio.url = latestUrl;
+            reqs.devstudio.dmUrl = latestUrl;
             reqs.devstudio.fileName = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/') + 1);
             reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
           }
