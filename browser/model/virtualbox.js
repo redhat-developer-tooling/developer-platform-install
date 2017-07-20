@@ -158,7 +158,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     ]).then((res) => {
       // msiexec logs are in UCS-2
       Util.findText(path.join(this.installerDataSvc.installDir(), 'vbox.log'), 'CopyDir: DestDir=', 'ucs2').then((result)=>{
-        let regexTargetDir = /CopyDir: DestDir=(.*)\,.*/;
+        let regexTargetDir = /CopyDir: DestDir=(.*),.*/;
         let targetDir = regexTargetDir.exec(result)[1];
         if(targetDir !== this.getLocation()) {
           Logger.info(this.keyName + ' - virtual box location not detected, but it is installed into ' + targetDir + ' according info in log file');
@@ -246,7 +246,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     let osaScript = [
       'osascript',
       '-e',
-      `"do shell script \\\"${shellScript}\\\" with administrator privileges"`
+      `"do shell script \\"${shellScript}\\" with administrator privileges"`
     ].join(' ');
     return osaScript;
   }

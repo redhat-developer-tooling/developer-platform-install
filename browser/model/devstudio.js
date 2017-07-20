@@ -96,7 +96,7 @@ class DevstudioInstall extends InstallableItem {
     let runtimeproperties =  Platform.OS === 'win32'
       ? path.join(this.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties')
       : path.join(this.installerDataSvc.devstudioDir(), 'studio/devstudio.app/Contents/Eclipse', 'runtime_locations.properties');
-    let escapedLocation = location.replace(/\\/g, '\\\\').replace(/\:/g, '\\:');
+    let escapedLocation = location.replace(/\\/g, '\\\\').replace(/:/g, '\\:');
     let result = Promise.resolve();
     if(fs.existsSync(runtimeproperties)) {
       result = fs.appendFile(runtimeproperties, `\n${name}=${escapedLocation},true`).catch((error)=>{
