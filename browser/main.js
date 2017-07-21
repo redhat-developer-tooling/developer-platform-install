@@ -4,6 +4,8 @@ import angular from 'angular';
 import '@uirouter/angularjs';
 import 'angular-base64';
 import 'angular-messages';
+import 'ng-focus-if';
+import aboutCtrl from './pages/about/controller';
 import acctCtrl from './pages/account/controller';
 import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
@@ -20,7 +22,8 @@ import Electron from 'electron';
 import request from 'request';
 
 let mainModule =
-  angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages'])
+  angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages', 'focus-if'])
+    .controller(aboutCtrl.name, aboutCtrl)
     .controller(acctCtrl.name, acctCtrl)
     .controller(locCtrl.name, locCtrl)
     .controller(confCtrl.name, confCtrl)
@@ -35,12 +38,12 @@ let mainModule =
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
-      $urlRouterProvider.otherwise('/account');
+      $urlRouterProvider.otherwise('/about');
       $stateProvider
-        .state('account', {
-          url: '/account',
-          controller: 'AccountController as acctCtrl',
-          templateUrl: 'pages/account/account.html'
+        .state('about', {
+          url: '/about',
+          controller: 'AboutController as aboutCtrl',
+          templateUrl: 'pages/about/about.html'
         })
         .state('location', {
           url: '/location',
@@ -56,6 +59,14 @@ let mainModule =
           templateUrl: 'pages/confirm/confirm.html',
           data: {
             displayName: 'Confirmation'
+          }
+        })
+        .state('account', {
+          url: '/account',
+          controller: 'AccountController as acctCtrl',
+          templateUrl: 'pages/account/account.html',
+          data: {
+            displayName: 'Account'
           }
         })
         .state('install', {

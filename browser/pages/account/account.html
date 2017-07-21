@@ -1,17 +1,15 @@
-<header class="login-header">
-  <div class="login-title">
-    <img class="branding-title" src="images/RHDSP.svg"/><span class="login-title-post-text"></span>
-  </div>
-  <img class="branding branding-login" src="images/logo_RHD_RGB_default.svg"/>
+<header>
+  <breadcrumb></breadcrumb>
+  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
 <main>
-  <div class="container">
-    <div id="login-section" class="verticalLine">
+  <div class="col-sm-12 bottom-spacer">
+    <div id="login-section" class="verticalLine" >
       <form name="accountForm" id="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
         <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
           <label for="username" class="login-form-label">Username</label>
-          <input type="text" id="username" name="username" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.username" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="usernameStatus" autofocus/>
+          <input type="text" id="username" name="username" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.username" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="usernameStatus" focus-if/>
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>-->
           <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
         </div>
@@ -46,28 +44,32 @@
             <span id="NetworkErrorIcon" class="pficon pficon-error-circle-o"></span>
             <strong id="httpErrorMessage">Cannot access developers.redhat.com, please check your internet connection.</strong>
           </div>
-        </div>
-        <div class="form-group pull-right form-buttons">
-          <a id="registerLink" type="button" class="btn-style-link" ng-click="acctCtrl.createAccount()">Register</a>
-          <button id="loginButton" type="submit" class="btn-med-size btn btn-primary btn-lg btn-success has-spinner"
-                  ng-disabled="accountForm.$invalid" ng-class="{'active':acctCtrl.isLoginBtnClicked}" ng-click="acctCtrl.isLoginBtnClicked = true">
-            <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
-            <span id="account-form-btn-text">Log in</span>
-          </button>
-        </div>
-        <div class="pull-right">
-          Forgot your <a id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">username or password</a>?
+          <div id="loginInProgress" ng-show="acctCtrl.isLoginBtnClicked" class="form-group active has-spinner">
+            <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span><strong>Logging in</strong>
+          </div>
         </div>
       </form>
     </div>
     <p id="welcome-text">
-      Welcome to Red Hat Development Suite. This will help you install Red Hat JBoss Developer Studio with a full
-      development environment for container based development using Red Hat Enterprise Linux and OpenShift.
-      Try it now by providing your <a href="" id="dev-rh-link" ng-click="acctCtrl.gotoDRH()">developers.redhat.com</a> credentials to get access.
+      To continue installation please provide your <a href="" id="dev-rh-link" ng-click="acctCtrl.gotoDRH()">developers.redhat.com</a> user name and password.
+    </p>
+    <p>
+      If you don't have account yet <a id="registerLink" href="" ng-click="acctCtrl.createAccount()">register here</a>.
+    </p>
+    <p>
+      If you forgot your username or password <a id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">recover it here</a>.
     </p>
   </div>
 </main>
 
-<footer>
-  <span class="footer-version">Version: {{version}}</span>
+<footer class="no-background-color">
+  <div class="footer-border"></div>
+  <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="accountForm"
+          ng-click="acctCtrl.exit()">Cancel</button>
+  <button type="button" id="location-back-btn" class="back-btn-spacer btn footer-btns btn-plain btn-med-size btn btn-lg" form="accountForm"
+          ng-click="acctCtrl.back()">Back</button>
+  <button id="loginButton" type="submit" class="go-btn footer-btns btn btn-lg btn-primary" form="accountForm"
+          ng-disabled="accountForm.$invalid || acctCtrl.isLoginBtnClicked" ng-class="{'active':acctCtrl.isLoginBtnClicked}">
+    Download & Install
+  </button>
 </footer>

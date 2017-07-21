@@ -27,7 +27,7 @@ if (process.env.PTOR_TEST_RUN === 'system') {
   }
 } else {
   //start with login and end with installation page, because of angular synchronization issues
-  files = ['test/ui/login-test.js', 'test/ui/location-test.js', 'test/ui/confirm-test.js', 'test/ui/start-test.js', 'test/ui/install-test.js'];
+  files = ['test/ui/about-test.js', 'test/ui/login-test.js', 'test/ui/location-test.js', 'test/ui/confirm-test.js', 'test/ui/start-test.js', 'test/ui/install-test.js'];
   report = path.join(__dirname, 'ui-tests');
 }
 

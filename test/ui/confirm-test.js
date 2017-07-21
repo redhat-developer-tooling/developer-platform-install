@@ -22,7 +22,7 @@ const messages = {
   newer: 'Newer than required!'
 };
 
-describe('Confirm page', function() {
+describe('Confirm page', function confimPage() {
   let confirmForm, detectionInfo, nextButton;
 
   beforeAll(function() {

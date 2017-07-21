@@ -57,7 +57,7 @@ class LocationController {
   back() {
     Logger.info('Going back a page');
     this.installerDataSvc.installRoot = this.folder;
-    this.router.go('account');
+    this.router.go('about');
   }
 
 }
