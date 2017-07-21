@@ -1,0 +1,49 @@
+<div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-hide="item === undefined" ng-class="{'zero-border':item.isDetected() || (item.selectedOption === 'detected' && !item.hasOption('detected'))}">
+  <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
+       ng-class="{'dotted-panel':item.isDetected() || (item.selectedOption === 'detected' && !item.hasOption('detected'))}">
+       <div class="checkbox-container verticalLine">
+         <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+       </div>
+    <div class="product-container">
+      <div class="warnings-in-panel">
+        <span id="{{item.keyName}}-installed-note" class="installed-note" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+          <i class="fa fa-check"></i> Using detected version {{item.option.detected.version}}
+        </span>
+        <div ng-show="item.hasOption('detected')">
+          <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
+            <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <span>Newer than required!</span>
+            </div>
+          </div>
+          <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
+            <div class="help-block">
+            <span class="pficon pficon-warning-triangle-o"></span>
+              <span>Older than required!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span><span id="{{item.keyName}-version" class="product-version">{{item.version}}</span>
+      <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
+    </div>
+  </div>
+  <div ng-show="item.dependenciesOf.length > 0 && !item.isConfigured()">
+    <span class="pficon pficon-error-circle-o"></span>
+    <span>You have selected {{item.dependenciesOf[0].productName}} which requires {{item.productName}}</span>
+    </div>
+  </div>
+  <!-- <div>
+    <div class="message-container error-message" ng-show="!confCtrl.isDisabled
+      && (checkboxModel.jdk.isNotDetected() || checkboxModel.jdk.isInvalidVersionDetected())
+      && (checkboxModel.devstudio.selectedOption == 'install' || checkboxModel.jbosseap.selectedOption == 'install') && platform == 'darwin'">
+      <span class="pficon pficon-error-circle-o"></span>
+      <span>You have selected
+        <span ng-show="checkboxModel.devstudio.selectedOption != 'install' && checkboxModel.jbosseap.selectedOption == 'install'">{{checkboxModel.jbosseap.productName}}</span>
+        <span ng-show="checkboxModel.devstudio.selectedOption == 'install'">{{checkboxModel.devstudio.productName}}</span>
+        which requires Java SE version {{checkboxModel.jdk.minimumVersion}} or higher to run installation. Due to licence limitations we may not install Java for you.
+        Please <span ng-show="checkboxModel.jdk.isInvalidVersionDetected()">uninstall detected Java SE, </span>install JDK version {{checkboxModel.jdk.minimumVersion}} downloaded from
+        <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and restart Installer to continue.</span>
+    </div>
+  </div> -->
+</div>

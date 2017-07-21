@@ -71,14 +71,16 @@ class ConfirmController {
     let nodes = graph.overallOrder() ;
     let checkboxModel = this.sc.checkboxModel;
     for (let node of nodes) {
+      checkboxModel[node].dependenciesOf = [];
       checkboxModel[node].references=0;
     }
     for (let node of nodes) {
       function watchComponent (){
         let installer = checkboxModel[node];
         if(installer.isSelected()) {
-          for(let dep of graph.dependenciesOf(node)) {
+          for(let dep of this.graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
+            installer.dependenciesOf.push(depInstaller);
             if(depInstaller.references==0 && depInstaller.isNotDetected()) {
               depInstaller.selectedOption = 'install';
             }
