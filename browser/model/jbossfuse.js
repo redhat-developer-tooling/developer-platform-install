@@ -73,14 +73,14 @@ class FusePlatformInstall extends InstallableItem {
     return Promise.resolve().then(()=> {
       return installer.writeFile(this.installConfigFile, installGenerator(this.installerDataSvc.fuseplatformDir()));
     }).then(()=> {
-        return this.headlessEapInstall(installer);
+      return this.headlessEapInstall(installer);
     }).then(()=> {
-        return this.headlessInstall(installer);
+      return this.headlessInstall(installer);
     }).then(()=> {
       this.ipcRenderer.on('installComplete', (event, arg)=> {
         if(arg == 'all') {
           let devstudio = this.installerDataSvc.getInstallable('devstudio');
-          if(devstudio.installed()) {
+          if(devstudio.installed) {
             devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
           }
         }
