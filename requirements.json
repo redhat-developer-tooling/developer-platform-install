@@ -10,31 +10,31 @@
     "platform": {
       "win32": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-windows-amd64.exe?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/windows-amd64/minishift.exe",
-        "fileName": "minishift_3_0_0_GA.exe",
-        "sha256sum": "4f51b5b6bc8fc93bda5d25f5f58f213a8165b6c0e0f2b77dbb53ae6da4966068",
-        "version": "3.0.0.GA",
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
+        "fileName": "minishift_3_1_0_RC_1.exe",
+        "sha256sum": "c3f8b4e0922a0594afbd280c4812be19162e4c860670d680054c94bca1df3a6b",
+        "version": "3.1.0.RC.1",
         "requires": ["cygwin","hyperv||virtualbox"],
         "installAfter": "cygwin"
       },
       "darwin": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-darwin-amd64?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/darwin-amd64/minishift",
-        "fileName": "minishift_3_0_0_GA",
-        "sha256sum": "1aad3cc784f312568357c9d3e1a2111ceedac884c59e0953b06aea45de49bb25",
-        "version": "3.0.0.GA",
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
+        "fileName": "minishift_3_1_0_RC_1",
+        "sha256sum": "99be990a6e4a5390677b71f512ee541fbae4f2fde58bc453b9ab0d19519704ed",
+        "version": "3.1.0.RC.1",
         "requires": ["virtualbox"],
         "installAfter": "virtualbox"
       },
       "linux": {
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.0-minishift-linux-amd64?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/09-May-2017.cdk-3.0.0/linux-amd64/minishift",
-        "fileName": "minishift_3_0_0_GA",
-        "sha256sum": "b754554190756fb3142998b67cd046174f7e0ae9f2d287d673481e20d9482060",
-        "version": "3.0.0.GA",
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
+        "fileName": "minishift_3_1_0_RC_1",
+        "sha256sum": "fa29abd2db6c48a0245be2c4401b4ed9ec6d0525b8c908b9c4f6d9bc253985d7",
+        "version": "3.1.0.RC.1",
         "requires": ["kvm"],
         "installAfter": "virtualbox"
       }
