@@ -98,8 +98,8 @@
     "requires": ["devstudio"]
   },
   "fuseplatform": {
-    "name": "Red Hat JBoss Fuse Integration Platform on JBoss EAP",
-    "description": "An agile, lightweight and modern integration platform",
+    "name": "Red Hat JBoss Fuse on JBoss EAP",
+    "description": "An agile, lightweight and modern integration platform (installed on JBoss EAP)",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/jbossfuse",
     "bundle": "no",
@@ -126,7 +126,7 @@
     "requires": ["jdk"]
   },
   "fuseplatformkaraf": {
-    "name": "Red Hat JBoss Fuse Integration Platform on Apache Karaf",
+    "name": "Red Hat JBoss Fuse on Apache Karaf",
      "description": "An agile, lightweight and modern integration platform (installed on Apache Karaf package)",
      "vendor": "Red Hat, Inc.",
      "modulePath": "model/jbossfusekaraf",
