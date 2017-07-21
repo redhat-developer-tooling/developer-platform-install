@@ -35,8 +35,8 @@ module.exports = function(gulp, reqs) {
 
   gulp.task('unzip-7zip', function() {
     return gulp.src(zaZip)
-        .pipe(unzip({ filter : function(entry) { return minimatch(entry.path, '**/7za.exe'); } }))
-        .pipe(gulp.dest(config.buildFolderRoot));
+      .pipe(unzip({ filter : function(entry) { return minimatch(entry.path, '**/7za.exe'); } }))
+      .pipe(gulp.dest(config.buildFolderRoot));
   });
 
   gulp.task('unzip-7zip-extra', function(cb) {
@@ -99,7 +99,7 @@ module.exports = function(gulp, reqs) {
   });
 
   gulp.task('package-bundle', function(cb) {
-    runSequence('package-simple', 'clean-old-cache', 'prefetch', 'prefetch-cygwin-packages', 'cleanup', 'package', cb);
+    runSequence('package-simple', 'clean-old-cache', 'prefetch', 'prefetch-cygwin-packages', 'cleanup', 'package', 'cleanup-dist', cb);
   });
 
   // Create both installers
@@ -172,4 +172,8 @@ module.exports = function(gulp, reqs) {
       { force: false });
   });
 
+  gulp.task('cleanup-dist', function() {
+    return del([bundled7z, zaExe, zaSfx, zaElectronPackage],
+      { force: false });
+  });
 };
