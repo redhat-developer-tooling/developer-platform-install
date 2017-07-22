@@ -341,9 +341,10 @@ describe('InstallerDataService', function() {
       svc.setupDone(fakeProgress, 'jdk');
       svc.setupDone(fakeProgress, 'vbox');
 
-      expect(spy).calledTwice;
+      expect(spy).calledThrice;
       expect(spy).calledWith('installComplete', 'jdk');
       expect(spy).calledWith('installComplete', 'vbox');
+      expect(spy).calledWith('installComplete', 'all');
     });
 
     it('setupDone should switch to final page when all installs have finished', function() {

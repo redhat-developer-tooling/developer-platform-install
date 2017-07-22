@@ -19,6 +19,7 @@ import InstallableItem from 'browser/model/installable-item';
 import JbosseapAutoInstallGenerator from 'browser/model/jbosseap-autoinstall';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 describe('jbosseap installer', function() {
@@ -40,6 +41,8 @@ describe('jbosseap installer', function() {
       jdk:{
         name: 'OpenJDK'
       }
+    }, {
+      version: 'X.0.0'
     }));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
@@ -242,65 +245,13 @@ describe('jbosseap installer', function() {
 
     it('should call success callback when installation is finished successfully', function() {
       sandbox.stub(Installer.prototype, 'writeFile').resolves();
-      sandbox.stub(installer, 'postJDKInstall').resolves();
+      sandbox.stub(installer, 'headlessInstall').resolves();
       sandbox.stub(Installer.prototype, 'succeed');
 
       return installer.installAfterRequirements(
         fakeProgress, function() {}, function() {}
       ).then(()=>{
         expect(Installer.prototype.succeed).to.be.calledWith(true);
-      });
-    });
-
-    describe('postJDKInstall', function() {
-      let helper, stubInstall, eventSpy;
-
-      beforeEach(function() {
-        helper = new Installer('jbosseap', fakeProgress, success, failure);
-        stubInstall = sandbox.stub(installer, 'headlessInstall').resolves(true);
-        eventSpy = installer.ipcRenderer.on;
-      });
-
-      it('should wait for JDK install to complete', function() {
-        return installer.postJDKInstall(helper, true)
-          .then(() => {
-            expect(eventSpy).calledOnce;
-          });
-      });
-
-      it('should wait for JDK install to complete and ignore other installed components', function() {
-        installer.ipcRenderer.on = sinon.stub();
-        installer.ipcRenderer.on.onFirstCall().yields({}, 'cdk');
-        sandbox.stub(fakeInstall, 'isInstalled').returns(false);
-        installer.postJDKInstall(helper, true);
-        expect(installer.ipcRenderer.on).has.been.called;
-        expect(stubInstall).has.not.been.called;
-      });
-
-      it('should call headlessInstall if JDK is installed', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-        });
-      });
-
-      it('should reject promise if headlessInstall fails', function() {
-        sandbox.stub(fakeInstall, 'isInstalled').returns(true);
-        installer.headlessInstall.restore();
-        stubInstall = sandbox.stub(installer, 'headlessInstall').rejects('Error');
-        return installer.postJDKInstall(
-          helper
-        ).then(() => {
-          expect.fail();
-        }).catch((error)=> {
-          expect(eventSpy).not.called;
-          expect(stubInstall).calledOnce;
-          expect(error.name).to.be.equal('Error');
-        });
       });
     });
 
@@ -330,6 +281,29 @@ describe('jbosseap installer', function() {
             expect(spy).calledOnce;
             expect(spy).calledWith(javaPath, javaOpts);
           });
+      });
+    });
+
+    it('should call runtime detection configuration after all installers finished and devstudio is installed', function() {
+      sandbox.stub(installer, 'headlessInstall').resolves();
+      sandbox.stub(installer, 'writeFile').resolves();
+      installer.ipcRenderer = new EventEmitter();
+      sandbox.spy(installer.ipcRenderer, 'on');
+      let devStudio = {
+        installed: false,
+        configureRuntimeDetection: sinon.stub()
+      };
+      installer.installerDataSvc.getInstallable.restore();
+      sandbox.stub(installer.installerDataSvc, 'getInstallable').returns(devStudio);
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        expect(installer.ipcRenderer.on).calledWith('installComplete');
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        devStudio.installed = true;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).calledOnce;
       });
     });
   });

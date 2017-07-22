@@ -43,16 +43,14 @@ class FusePlatformInstallKaraf extends InstallableItem {
           resolve();
         });
     }).then(()=> {
-      let devstudio = this.installerDataSvc.getInstallable('devstudio');
-      if(devstudio.installed) {
-        devstudio.configureRuntimeDetection('fuse-platform-on-karaf', this.installerDataSvc.fuseplatformkarafDir());
-      } else {
-        this.ipcRenderer.on('installComplete', (event, arg)=> {
-          if(arg == 'fusetools') {
+      this.ipcRenderer.on('installComplete', (event, arg)=> {
+        if(arg == 'all') {
+          let devstudio = this.installerDataSvc.getInstallable('devstudio');
+          if(devstudio.installed) {
             devstudio.configureRuntimeDetection('fuse-platform-on-karaf', this.installerDataSvc.fuseplatformkarafDir());
           }
-        });
-      }
+        }
+      });
       installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);

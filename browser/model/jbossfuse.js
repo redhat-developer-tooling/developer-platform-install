@@ -73,83 +73,57 @@ class FusePlatformInstall extends InstallableItem {
     return Promise.resolve().then(()=> {
       return installer.writeFile(this.installConfigFile, installGenerator(this.installerDataSvc.fuseplatformDir()));
     }).then(()=> {
-      return this.postJDKInstall(installer);
+      return this.headlessEapInstall(installer);
     }).then(()=> {
-      let devstudio = this.installerDataSvc.getInstallable('devstudio');
-      if(devstudio.installed) {
-        devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
-      } else {
-        this.ipcRenderer.on('installComplete', (event, arg)=> {
-          if(arg == 'fusetools') {
+      return this.headlessInstall(installer);
+    }).then(()=> {
+      this.ipcRenderer.on('installComplete', (event, arg)=> {
+        if(arg == 'all') {
+          let devstudio = this.installerDataSvc.getInstallable('devstudio');
+          if(devstudio.installed) {
             devstudio.configureRuntimeDetection('fuse-platform-on-eap', this.installerDataSvc.fuseplatformDir());
           }
-        });
-      }
+        }
+      });
+
       installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);
     });
   }
 
-  postJDKInstall(installer) {
-    return new Promise((resolve, reject) => {
-      let jdkInstall = this.installerDataSvc.getInstallable(JdkInstall.KEY);
-      if (jdkInstall.isInstalled()) {
-        return Promise.resolve().then(()=> {
-          return this.headlessEapInstall(installer);
-        }).then(()=> {
-          return this.headlessInstall(installer);
-        }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      } else {
-        Logger.info(this.keyName + ' - JDK has not finished installing, listener created to be called when it has.');
-        this.ipcRenderer.on('installComplete', (event, arg) => {
-          if (arg == JdkInstall.KEY) {
-            return Promise.resolve().then(()=> {
-              return this.headlessEapInstall(installer);
-            }).then(()=> {
-              return this.headlessInstall(installer);
-            }).then((res) => {
-              resolve(res);
-            }).catch((err) => {
-              reject(err);
-            });
-          }
-        });
-      }
-    });
-  }
-
   headlessInstall(installer) {
     Logger.info(this.keyName + ' - headlessInstall() called');
-    let javaOpts = [
-      '-DTRACE=true',
+    return installer.execFile(this.javaPath, this.installArgs, this.installOptions);
+  }
+
+  get installOptions() {
+    return {cwd: this.installerDataSvc.fuseplatformDir()};
+  }
+
+  get installArgs() {
+    return [
       '-jar',
       this.downloadedFile
     ];
-    let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts, {cwd: this.installerDataSvc.fuseplatformDir()}
-    );
-
-    return res;
   }
 
   headlessEapInstall(installer) {
     Logger.info(this.keyName + ' - headlessEapInstall() called');
-    let javaOpts = [
+    return installer.execFile(this.javaPath, this.eapInstallArgs);
+  }
+
+  get eapInstallArgs() {
+    return [
       '-DTRACE=true',
       '-jar',
       this.jbeap.downloadedFile,
       this.installConfigFile
     ];
-    let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts
-    );
+  }
 
-    return res;
+  get javaPath() {
+    return path.join(this.installerDataSvc.jdkDir(), 'bin', 'java');
   }
 }
 
