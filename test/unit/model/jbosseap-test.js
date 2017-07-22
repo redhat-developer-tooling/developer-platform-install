@@ -40,6 +40,8 @@ describe('jbosseap installer', function() {
       jdk:{
         name: 'OpenJDK'
       }
+    }, {
+      version: 'X.0.0'
     }));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');

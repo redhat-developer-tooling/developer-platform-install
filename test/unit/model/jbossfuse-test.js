@@ -53,6 +53,8 @@ describe('fuseplatform installer', function() {
       devstudio:{
         name: 'Red Hat JBoss Developer Studio'
       }
+    }, {
+      version: 'X.0.0'
     }));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
