@@ -6,23 +6,21 @@ import { default as sinonChai } from 'sinon-chai';
 import fs from 'fs-extra';
 import mockfs from 'mock-fs';
 import path from 'path';
-import Util from 'browser/model/helpers/util';
 import FusePlatformInstall from 'browser/model/jbossfuse';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
-import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
 import InstallableItem from 'browser/model/installable-item';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 describe('fuseplatform installer', function() {
   let installerDataSvc;
   let infoStub, errorStub, sandbox, installer, sha256Stub;
-  let downloadUrl = 'http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/fuse-eap-installer-6.3.0.redhat-187.jar';
   let fakeInstall = {
     isInstalled: function() { return false; },
     isSkipped: function() { return true; }
@@ -164,30 +162,23 @@ describe('fuseplatform installer', function() {
   describe('installation', function() {
 
     let fsextra = require('fs-extra');
-    let stubCopy;
 
     beforeEach(function() {
-      stubCopy = sandbox.stub(Installer.prototype, 'copyFile').resolves();
+      sandbox.stub(Installer.prototype, 'copyFile').resolves();
     });
 
-    describe('on windows', function() {
-      beforeEach(function() {
-        sandbox.stub(Platform, 'getOS').returns('win32');
-      });
+    it('should not start until devstudio has finished installing', function() {
+      let installerDataSvc = stubDataService();
+      installer.ipcRenderer = { on: function() {} };
+      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
+      let item2 = new InstallableItem('devstudio', 'url', 'installFile', 'targetFolderName', installerDataSvc);
+      item2.thenInstall(installer);
 
-      it('should not start until devstudio has finished installing', function() {
-        let installerDataSvc = stubDataService();
-        installer.ipcRenderer = { on: function() {} };
-        let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-        let item2 = new InstallableItem('devstudio', 'url', 'installFile', 'targetFolderName', installerDataSvc);
-        item2.thenInstall(installer);
+      installer.install(fakeProgress, success, failure);
 
-        installer.install(fakeProgress, success, failure);
-
-        expect(installSpy).not.called;
-        expect(fakeProgress.setStatus).to.have.been.calledOnce;
-        expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for Red Hat JBoss Developer Studio to finish installation');
-      });
+      expect(installSpy).not.called;
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for Red Hat JBoss Developer Studio to finish installation');
     });
 
     it('should install once devstudio has finished', function() {
@@ -225,18 +216,56 @@ describe('fuseplatform installer', function() {
 
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
-        let downloadedFile = path.join(installerDataSvc.tempDir(), files.platform.fileName);
-        let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
-        let javaOpts = [
-          '-jar',
-          downloadedFile
-        ];
-
         return installer.headlessInstall(helper)
           .then(() => {
             expect(spy).calledOnce;
-            expect(spy).calledWith(javaPath, javaOpts, { cwd: 'installationFolder/fuseplatform', maxBuffer: 2097152 });
+            expect(spy).calledWith(installer.javaPath, installer.installArgs, sinon.match(installer.installOptions));
           });
+      });
+    });
+
+    describe('headlessEapInstall', function() {
+      let helper;
+      let child_process = require('child_process');
+
+      beforeEach(function() {
+        helper = new Installer('fuseplatform', fakeProgress, success, failure);
+        sandbox.stub(child_process, 'execFile').yields();
+        sandbox.stub(fs, 'appendFile').yields();
+      });
+
+      it('should perform headless install into the installation folder', function() {
+        let spy = sandbox.spy(helper, 'execFile');
+
+        return installer.headlessEapInstall(helper)
+          .then(() => {
+            expect(spy).calledOnce;
+            expect(spy).calledWith(installer.javaPath, installer.eapInstallArgs);
+          });
+      });
+    });
+
+    it('should call runtime detection configuration after all installers finished and devstudio is installed', function() {
+      sandbox.stub(installer, 'headlessEapInstall').resolves();
+      sandbox.stub(installer, 'headlessInstall').resolves();
+      sandbox.stub(installer, 'writeFile').resolves();
+      installer.ipcRenderer = new EventEmitter();
+      sandbox.spy(installer.ipcRenderer, 'on');
+      let devStudio = {
+        installed: false,
+        configureRuntimeDetection: sinon.stub()
+      };
+      installer.installerDataSvc.getInstallable.restore();
+      sandbox.stub(installer.installerDataSvc, 'getInstallable').returns(devStudio);
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        expect(installer.ipcRenderer.on).calledWith('installComplete');
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        devStudio.installed = true;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).calledOnce;
       });
     });
   });

@@ -19,6 +19,7 @@ import InstallableItem from 'browser/model/installable-item';
 import JbosseapAutoInstallGenerator from 'browser/model/jbosseap-autoinstall';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 describe('jbosseap installer', function() {
@@ -280,6 +281,29 @@ describe('jbosseap installer', function() {
             expect(spy).calledOnce;
             expect(spy).calledWith(javaPath, javaOpts);
           });
+      });
+    });
+
+    it('should call runtime detection configuration after all installers finished and devstudio is installed', function() {
+      sandbox.stub(installer, 'headlessInstall').resolves();
+      sandbox.stub(installer, 'writeFile').resolves();
+      installer.ipcRenderer = new EventEmitter();
+      sandbox.spy(installer.ipcRenderer, 'on');
+      let devStudio = {
+        installed: false,
+        configureRuntimeDetection: sinon.stub()
+      };
+      installer.installerDataSvc.getInstallable.restore();
+      sandbox.stub(installer.installerDataSvc, 'getInstallable').returns(devStudio);
+      return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        expect(installer.ipcRenderer.on).calledWith('installComplete');
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).not.called;
+        devStudio.installed = true;
+        installer.ipcRenderer.emit('installComplete', 'installComplete', 'all');
+        expect(devStudio.configureRuntimeDetection).calledOnce;
       });
     });
   });

@@ -30,9 +30,6 @@ class DevstudioInstall extends InstallableItem {
     progress.setStatus('Installing');
     this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
     let installer = new Installer(this.keyName, progress, success, failure);
-    if(fs.existsSync(this.bundledFile)) {
-      this.downloadedFile = this.bundledFile;
-    }
     Logger.info(this.keyName + ' - Generate devstudio auto install file content');
     let data = this.installGenerator.fileContent();
     Logger.info(this.keyName + ' - Generate devstudio auto install file content SUCCESS');

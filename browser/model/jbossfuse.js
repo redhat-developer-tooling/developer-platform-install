@@ -94,30 +94,36 @@ class FusePlatformInstall extends InstallableItem {
 
   headlessInstall(installer) {
     Logger.info(this.keyName + ' - headlessInstall() called');
-    let javaOpts = [
+    return installer.execFile(this.javaPath, this.installArgs, this.installOptions);
+  }
+
+  get installOptions() {
+    return {cwd: this.installerDataSvc.fuseplatformDir()};
+  }
+
+  get installArgs() {
+    return [
       '-jar',
       this.downloadedFile
     ];
-    let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts, {cwd: this.installerDataSvc.fuseplatformDir()}
-    );
-
-    return res;
   }
 
   headlessEapInstall(installer) {
     Logger.info(this.keyName + ' - headlessEapInstall() called');
-    let javaOpts = [
+    return installer.execFile(this.javaPath, this.eapInstallArgs);
+  }
+
+  get eapInstallArgs() {
+    return [
       '-DTRACE=true',
       '-jar',
       this.jbeap.downloadedFile,
       this.installConfigFile
     ];
-    let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts
-    );
+  }
 
-    return res;
+  get javaPath() {
+    return path.join(this.installerDataSvc.jdkDir(), 'bin', 'java');
   }
 }
 
