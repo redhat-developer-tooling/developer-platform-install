@@ -6,10 +6,10 @@
     "modulePath": "model/cdk",
     "installable": true,
     "detectable": false,
+    "bundle": "yes",
     "targetFolderName": "cdk",
     "platform": {
       "win32": {
-        "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
         "fileName": "minishift_3_1_0_RC_1.exe",
@@ -19,7 +19,6 @@
         "installAfter": "cygwin"
       },
       "darwin": {
-        "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
         "fileName": "minishift_3_1_0_RC_1",
@@ -29,7 +28,6 @@
         "installAfter": "virtualbox"
       },
       "linux": {
-        "bundle": "yes",
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
         "fileName": "minishift_3_1_0_RC_1",
@@ -208,11 +206,11 @@
     "modulePath": "model/virtualbox",
     "installable": true,
     "detectable": true,
+    "bundle": "no",
     "targetFolderName": "virtualbox",
     "installAfter": "jdk",
     "platform": {
       "win32": {
-        "bundle": "no",
         "url": "https://developers.redhat.com/redirect/to/virtualbox-windows-5.1.22.download",
         "fileName": "virtualbox_5.1.22.exe",
         "sha256sum": "e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93",
@@ -221,7 +219,6 @@
         "virusTotalReport": "https://virustotal.com/en/file/e36883bb27653aabe20ca0cbf140b2aa19573fc989c47e3cce7986dc544b0e93/analysis/"
       },
       "darwin": {
-        "bundle": "no",
         "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.1.22.download",
         "fileName": "virtualbox_5.1.22.dmg",
         "sha256sum": "405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa",
@@ -230,7 +227,6 @@
         "virusTotalReport": "https://virustotal.com/en/file/405cbb3795f95fb74a216293d1160b2adfb264a43476e1366e3c897e0efa36aa/analysis/"
       },
       "linux": {
-        "bundle": "no",
         "url": "http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
         "fileName": "VirtualBox-5.1-5.1.22_115126_fedora25-1.x86_64.rpm",
         "sha256sum": "c112cddf30c3b6f20958f6212fc114c13c8c5ce82caed3d3892d1e6a7bd66a88",
@@ -262,9 +258,9 @@
     "name": "7zip",
     "description": "7Zip Command Line Version",
     "vendor": "Igor Pavlov",
+    "bundle": "tools",
     "platform": {
       "win32": {
-        "bundle": "tools",
         "version": "9.20",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
         "fileName": "7zip.zip",
@@ -276,9 +272,9 @@
     "name": "7zipextra",
     "description": "7Zip Extra: SFXs for installers",
     "vendor": "Igor Pavlov",
+    "bundle": "tools",
     "platform": {
       "win32": {
-        "bundle": "tools",
         "version": "9.20",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
         "fileName": "7zip-extra.7z",
@@ -293,6 +289,7 @@
     "modulePath": "model/kompose",
     "installable": true,
     "detectable": false,
+    "bundle": "no",
     "targetFolderName": "kompose",
     "version": "0.6.0 Technology Preview",
     "platform": {
