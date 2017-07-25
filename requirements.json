@@ -294,22 +294,22 @@
     "installable": true,
     "detectable": false,
     "targetFolderName": "kompose",
-    "version": "0.6.0 Technology Preview",
+    "version": "1.0.0 Technology Preview",
     "platform": {
       "win32": {
-        "url": "https://developers.redhat.com/redirect/to/kompose-windows-0.6.0.download",
-        "fileName": "kompose-0.6.0.TP-windows-amd64.exe",
-        "sha256sum": "2b641b12c3e8c1aae1b63b0d32dedc4e4128fd906c752893050a0f7a549f83fa"
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-windows-amd64.exe",
+        "fileName": "kompose-1.0.0.TP-windows-amd64.exe",
+        "sha256sum": "f06c1156cbc427e83e08840fc352639086b142f02ded45c3381f5bc5dd5ee57d"
       },
       "darwin": {
-        "url": "https://developers.redhat.com/redirect/to/kompose-macos-0.6.0.download",
-        "fileName": "kompose-0.6.0.TP-darwin-amd64",
-        "sha256sum": "fe2253f3535226e27e22d137a04c6383175f38822c1389d7ee043ad243320200"
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-darwin-amd64",
+        "fileName": "kompose-1.0.0.TP-darwin-amd64",
+        "sha256sum": "f987bb6405203379fc9da5903e34a089cb125e14ed10195f25a635c471c0ef97"
       },
       "linux": {
-        "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v0.6.0/kompose-linux-amd64",
-        "fileName": "kompose-0.6.0.TP-linux-amd64",
-        "sha256sum": "1597d3ef7b663d38b3758eceeec36951c0d99449b7949b61f0355157003b9094"
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-linux-amd64",
+        "fileName": "kompose-1.0.0.TP-linux-amd64",
+        "sha256sum": "ddcd239d497ed55d799f902f98e91ce8a3e89b226384cdc3f6c38f57b16f0582"
       }
     }
   }
