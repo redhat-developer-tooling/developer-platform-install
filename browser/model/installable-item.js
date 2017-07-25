@@ -17,8 +17,6 @@ class InstallableItem {
     this.productName = requirement.name;
     this.productVersion = requirement.version;
     this.productDesc = requirement.description;
-    this.detectable = requirement.detectable;
-    this.installable = requirement.installable;
     this.targetFolderName = targetFolderName;
     this.installerDataSvc = installerDataSvc;
     this.existingInstall = false;

@@ -20,6 +20,7 @@ class HypervInstall extends InstallableItem {
           this.addOption('detected', '', '', detected);
         }
         this.hypervstatus = detected;
+        this.hidden = this.hypervstatus === undefined;
         this.selectedOption = 'detected';
         return Promise.resolve(detected);
       }).then((detected)=> {
@@ -45,6 +46,14 @@ class HypervInstall extends InstallableItem {
 
   isConfigured() {
     return Platform.OS == 'win32' && this.option.detected != undefined;
+  }
+
+  isDetected() {
+    if (Platform.getOS() === 'win32') {
+      return this.hypervstatus || this.hypervstatus === false;
+    } else {
+      return false;
+    }
   }
 
   isSkipped() {

@@ -1,7 +1,7 @@
-<div>
-  <div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-hide="item === undefined" ng-class="{'zero-border':item.isDetected() || (item.installable === false && item.detectable === true && item.selectedOption === 'detected')}">
+<div ng-hide="item === undefined || item.hidden === true">
+  <div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':item.isDetected()}">
     <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
-         ng-class="{'dotted-panel':item.isDetected() || (item.installable === false && item.detectable === true && item.selectedOption === 'detected')}">
+         ng-class="{'dotted-panel':item.isDetected()}">
          <div class="checkbox-container verticalLine">
            <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
          </div>
@@ -34,12 +34,12 @@
   <div class="help-block" ng-show="item.messages.info !== undefined && !item.isDetected()">
     <span class="pficon pficon-info"></span>
     <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[0]}}</span>
-    <a type="button" class="pointer" ng-click="confCtrl.download(item.messages.info.link ? item.messages.info.link : item.downloadUrl)">
+    <a type="button" class="pointer" ng-click="openUrl(item.messages.info.link ? item.messages.info.link : item.downloadUrl)">
       {{item.messages.info.linkDescription}}</a>
     <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[1]}}</span>
   </div>
 
-  <div class="message-container error-message" ng-show="filtered.length > 0 && !item.isConfigured() && !confCtrl.isDisabled">
+  <div class="message-container error-message" ng-show="filtered.length > 0 && !item.isConfigured()">
     <span class="pficon pficon-error-circle-o"></span>
     <span>You have selected
       <ng-repeat ng-repeat="dep in filtered = (item.dependenciesOf | filter: {selectedOption: 'install'} | limitTo:1)">
@@ -47,7 +47,7 @@
       </ng-repeat> which requires {{item.productName}} version {{item.minimumVersion}} or higher.</span>
       <span ng-show="item.messages.dependency !== undefined">
         <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[0]}}</span>
-        <a type="button" class="pointer" ng-click="confCtrl.download(item.messages.dependency.link ? item.messages.dependency.link : item.downloadUrl)">
+        <a type="button" class="pointer" ng-click="openUrl(item.messages.dependency.link ? item.messages.dependency.link : item.downloadUrl)">
           {{item.messages.dependency.linkDescription}}</a>
         <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[1]}}</span>
       </span>

@@ -197,10 +197,18 @@ class JdkInstall extends InstallableItem {
   }
 
   isConfigured() {
-    if (Platform.OS === 'darwin') {
-      return this.isDetected() && this.option['detected'].valid;
+    if (Platform.getOS() === 'darwin') {
+      return this.isDetected() && this.option.detected && this.option.detected.valid;
     }
     return super.isConfigured();
+  }
+
+  isDetected() {
+    if (Platform.getOS() === 'darwin') {
+      return true;
+    } else {
+      return super.isDetected();
+    }
   }
 
   isNotDetected() {
