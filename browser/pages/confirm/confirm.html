@@ -146,7 +146,7 @@
       <component-panel item="checkboxModel.jdk"></component-panel>
     </div>
 
-    <div class="message-container error-message" ng-show="!checkboxModel.jdk.isConfigured() && checkboxModel.devstudio.selectedOption == 'install' && platform === 'win32'">
+    <!-- <div class="message-container error-message" ng-show="!checkboxModel.jdk.isConfigured() && checkboxModel.devstudio.selectedOption == 'install' && platform === 'win32'">
       <span class="pficon pficon-error-circle-o"></span>
       <span>You are required to install OpenJDK because you have selected Red Hat JBoss Developer Studio and that requires Java VM version 1.8.0 or higher to run installation.</span>
     </div>
@@ -160,7 +160,7 @@
         which requires Java SE version {{checkboxModel.jdk.minimumVersion}} or higher to run installation. Due to licence limitations we may not install Java for you.
         Please <span ng-show="checkboxModel.jdk.isInvalidVersionDetected()">uninstall detected Java SE, </span>install JDK version {{checkboxModel.jdk.minimumVersion}} downloaded from
         <a type="button" class="pointer" ng-click="confCtrl.download(checkboxModel.jdk.downloadUrl)">this location</a> and restart Installer to continue.</span>
-    </div>
+    </div> -->
 
     <!-- CDK -->
     <div id="cdk-panel" class="panel panel-default panel2pxborder" ng-hide="checkboxModel.cdk === undefined" ng-class="{'zero-border':checkboxModel.cdk.hasOption('detected')}">
