@@ -17,6 +17,8 @@ class InstallableItem {
     this.productName = requirement.name;
     this.productVersion = requirement.version;
     this.productDesc = requirement.description;
+    this.detectable = requirement.detectable;
+    this.installable = requirement.installable;
     this.targetFolderName = targetFolderName;
     this.installerDataSvc = installerDataSvc;
     this.existingInstall = false;
@@ -53,6 +55,8 @@ class InstallableItem {
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;
     this.references = 0;
+
+    this.messages = require('./messages.json')[this.keyName];
   }
 
   getProductName() {

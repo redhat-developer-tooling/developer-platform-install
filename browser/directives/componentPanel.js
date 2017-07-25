@@ -2,6 +2,7 @@
 
 function componentPanel() {
   return {
+    controller: 'ConfirmController as confCtrl',
     restrict: 'E',
     replace: true,
     scope: {
