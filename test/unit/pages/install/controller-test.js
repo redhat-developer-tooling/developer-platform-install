@@ -400,7 +400,7 @@ describe('Install controller', function() {
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
       installCtrl.productVersion('virtualbox');
       expect(InstallableItem.prototype.downloadInstaller).calledOnce;
-      expect(installCtrl.productVersion('virtualbox')).to.equal('5.1.22');
+      expect(installCtrl.productVersion('virtualbox')).to.equal('5.1.24');
     });
 
     it('productdesc', function() {
