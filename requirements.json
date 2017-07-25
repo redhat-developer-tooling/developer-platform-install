@@ -78,7 +78,7 @@
     "requires": ["jdk"]
   },
   "fusetools": {
-    "name": "Red Hat JBoss Fuse Tools",
+    "name": "Red Hat JBoss Fuse Tooling",
     "description": "A certified Eclipse-based integrated development environment (IDE) for Fuse",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/devstudio",
