@@ -49,7 +49,7 @@ class JdkInstall extends InstallableItem {
           resolve();
         });
       });
-    } else if(!this.secondDetection) {
+    } else if(!this.secondDetection || Platform.OS !== 'win32' ) {
       this.secondDetection = true;
       promise = Promise.resolve().then(()=>{
         if(Platform.OS == 'win32') {
