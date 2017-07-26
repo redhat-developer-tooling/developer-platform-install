@@ -54,7 +54,7 @@ class InstallableItem {
     this.authRequired = authRequired;
     this.references = 0;
 
-    this.messages = require('./messages.json')[this.keyName];
+    this.messages = requirement.messages;
   }
 
   getProductName() {

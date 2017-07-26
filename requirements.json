@@ -126,7 +126,13 @@
         "fileName": "",
         "sha256sum": "",
         "version": "1.8.0",
-        "virusTotalReport": ""
+        "virusTotalReport": "",
+        "messages": {
+          "dependency": {
+            "message": "Due to licence limitations we may not install Java for you. Please install JDK version 1.8.0 downloaded from this location and restart the Installer to continue.",
+            "linkDescription": "this location"
+          }
+        }
       },
       "linux": {
         "name": "OpenJDK",
@@ -189,6 +195,13 @@
     "detectable": false,
     "targetFolderName": "kompose",
     "version": "1.0.0 Technology Preview",
+    "messages": {
+      "info": {
+        "message": "For additional information and documentation visit http://kompose.io",
+        "link": "http://kompose.io",
+        "linkDescription": "http://kompose.io"
+      }
+    },
     "platform": {
       "win32": {
         "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-windows-amd64.exe",
@@ -221,6 +234,13 @@
     "revision": "112440",
     "virusTotalReport": "",
     "vendor": "Microsoft, Inc.",
+    "messages": {
+      "info": {
+        "message": "Follow these steps to install and enable Microsoft Hyper-V on Windows 10",
+        "link": "https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw",
+        "linkDescription": "these steps"
+      }
+    },
     "platform": {
       "win32": {}
     }
@@ -235,6 +255,28 @@
     "bundle": "no",
     "targetFolderName": "virtualbox",
     "installAfter": "jdk",
+    "messages": {
+      "dependency": {
+        "message": "Please uninstall detected Oracle VirtualBox and restart Installer to continue."
+      },
+      "misc": {
+        "vtxDisabledWin": {
+          "message": "Please enable hardware virtualization support in BIOS for your platform.",
+          "type": "error",
+          "isVisible": "!installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install') && process.platform === 'win32'"
+        },
+        "vtxDisabledDawin": {
+          "message": "Please enable hardware virtualization for your platform.",
+          "type": "error",
+          "isVisible": "installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install') && process.platform === 'darwin'"
+        },
+        "vtxUndefined": {
+          "message": "Please make sure hardware virtualization is enabled on your platform if supported.",
+          "type": "warning",
+          "isVisible": "!installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === undefined && installerDataSvc.getInstallable('cdk').selectedOption == 'install'"
+        }
+      }
+    },
     "platform": {
       "win32": {
         "url": "http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1.24-117012-Win.exe",

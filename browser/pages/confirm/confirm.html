@@ -13,21 +13,6 @@
 
     <div ng-repeat="item in checkboxModel">
       <component-panel item="item"></component-panel>
-
-      <div class="message-container error-message" ng-show="item.keyName === 'virtualbox' && !confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install') && platform === 'win32'">
-        <span class="pficon pficon-error-circle-o"></span>
-        <span>Please enable hardware virtualization support in BIOS for your platform.</span>
-      </div>
-
-      <div class="message-container error-message" ng-show="item.keyName === 'virtualbox' && !confCtrl.isDisabled && checkboxModel.virtualbox.virtualizationEnabled === false && (checkboxModel.cdk.selectedOption == 'install' || checkboxModel.virtualbox.selectedOption == 'install') && platform === 'darwin'">
-        <span class="pficon pficon-error-circle-o"></span>
-        <span>Please enable hardware virtualization for your platform.</span>
-      </div>
-
-      <div class="message-container warning-message" ng-show="item.keyName === 'virtualbox' && !confCtrl.isDisabled && !checkboxModel.hyperv.isConfigured() && checkboxModel.virtualbox.virtualizationEnabled === undefined && checkboxModel.cdk.selectedOption == 'install'">
-        <span class="pficon pficon-warning-triangle-o"></span>
-        <span>Please make sure hardware virtualization is enabled on your platform if supported.</span>
-      </div>
     </div>
   </form>
 

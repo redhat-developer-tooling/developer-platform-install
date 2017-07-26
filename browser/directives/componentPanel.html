@@ -52,4 +52,12 @@
         <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[1]}}</span>
       </span>
   </div>
+
+  <div ng-repeat="message in item.messages.misc">
+    <div ng-show="evaluateCondition(message.isVisible)" class="message-container" ng-class="{'error-message': message.type === 'error', 'warning-message': message.type === 'warning'}">
+      <span ng-show="message.type === 'error'" class="pficon pficon-error-circle-o"></span>
+      <span ng-show="message.type === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+      <span>{{message.message}}</span>
+    </div>
+  </div>
 </div>
