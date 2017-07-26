@@ -246,6 +246,11 @@ UI tests located in 'test/ui'. To run all UI tests:
 
     npm run ui-test
 
+Developing Angular protractor UI tests
+--------------------------------------
+
+UI tests use [protractor 'browser' global object](http://www.protractortest.org/#/api?view=ProtractorBrowser) and [Jasmine testing framework](https://jasmine.github.io/api/2.6/global).
+
 Running System (e2e) tests
 --------------------------
 
