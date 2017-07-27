@@ -17,7 +17,6 @@ function componentPanel() {
     scope: {
       item: '='
     },
-    transclude: true,
     templateUrl: 'directives/componentPanel.html'
   };
 }
