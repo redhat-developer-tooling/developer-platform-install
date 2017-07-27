@@ -14,18 +14,18 @@
             <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
               <div class="help-block">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <span>Newer than required!</span>
+                <span id="{{item.keyName}}-newer-message">Newer than required!</span>
               </div>
             </div>
             <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
               <div class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
-                <span>Older than required!</span>
+                <span id="{{item.keyName}}-older-message">Older than required!</span>
               </div>
             </div>
           </div>
         </div>
-        <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span><span id="{{item.keyName}-version" class="product-version">{{item.version}}</span>
+        <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span><span id="{{item.keyName}}-version" class="product-version">{{item.version}}</span>
         <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
       </div>
     </div>

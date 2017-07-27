@@ -18,8 +18,8 @@ delete requirements.hyperv;
 
 const messages = {
   detected: 'Using detected version',
-  older: 'Older than recommended!',
-  newer: 'Newer than recommended!'
+  older: 'Older than required!',
+  newer: 'Newer than required!'
 };
 
 describe('Confirm page', function() {
@@ -63,7 +63,7 @@ describe('Confirm page', function() {
             requirements[key].installedNote = element(By.id(key + '-installed-note'));
             requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
             requirements[key].newerMessage = element(By.id(key + '-newer-message'));
-            requirements[key].olderError = element(By.id(key + '-older-error'));
+            requirements[key].olderWarning = element(By.id(key + '-older-warning'));
             requirements[key].olderMessage = element(By.id(key + '-older-message'));
           }
         }
@@ -76,7 +76,7 @@ describe('Confirm page', function() {
 
     //scoll down and select Java if it is deselected by default so that all panels appear on install screen
     afterAll(function() {
-      let checkbox = requirements.jdk.panel.all(By.model('checkboxModel.jdk.selectedOption')).first();
+      let checkbox = requirements.jdk.panel.all(By.model('item.selectedOption')).first();
       browser.executeScript('window.scrollTo(0,10000);').then(function() {
         return checkbox.isEnabled().then(function(enabled) {
           if (enabled) {
@@ -151,9 +151,9 @@ function testComponentPanel(key) {
         expect(component.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
       });
 
-      it('older versions should come with an error', function() {
-        expect(component.olderError.isPresent()).toBe(true);
-        expect(component.olderError.getAttribute('class')).toMatch('has-error');
+      it('older versions should come with a warning', function() {
+        expect(component.olderWarning.isPresent()).toBe(true);
+        expect(component.olderWarning.getAttribute('class')).toMatch('has-warning');
         expect(component.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
       });
     }
