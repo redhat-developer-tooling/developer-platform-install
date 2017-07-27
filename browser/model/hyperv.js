@@ -48,14 +48,6 @@ class HypervInstall extends InstallableItem {
     return Platform.OS == 'win32' && this.option.detected != undefined;
   }
 
-  isDetected() {
-    if (Platform.getOS() === 'win32') {
-      return this.hypervstatus || this.hypervstatus === false;
-    } else {
-      return false;
-    }
-  }
-
   isSkipped() {
     if (Platform.OS === 'win32') {
       return super.isSkipped();
