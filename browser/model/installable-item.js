@@ -53,6 +53,8 @@ class InstallableItem {
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;
     this.references = 0;
+
+    this.messages = requirement.messages;
   }
 
   getProductName() {
