@@ -168,12 +168,12 @@
         "name": "OpenJDK",
         "installable": true,
         "bundle": "yes",
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
-        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "fileName": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
-        "version": "1.8.0_131",
-        "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.141/2.b16/win/java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
+        "fileName": "java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
+        "sha256sum": "03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205",
+        "version": "1.8.0_141",
+        "virusTotalReport": "https://virustotal.com/en/file/03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205/analysis/1501216078/"
       },
       "darwin": {
         "name": "Oracle Java",
@@ -190,12 +190,12 @@
         "name": "OpenJDK",
         "bundle": "yes",
         "installable": true,
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi?workflow=direct",
-        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.131/1.b11/win/java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "fileName": "java-1.8.0-openjdk-1.8.0.131-1.b11.redhat.windows.x86_64.msi",
-        "sha256sum": "8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559",
-        "version": "1.8.0_131",
-        "virusTotalReport": "https://virustotal.com/en/file/8cad7ee221e5491f73abd422ff25e5ea2ac08e3844df69fdb1dce5af5db08559/analysis/1493101480/"
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi?workflow=direct",
+        "url": "http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.141/2.b16/win/java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
+        "fileName": "java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
+        "sha256sum": "03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205",
+        "version": "1.8.0_141",
+        "virusTotalReport": "https://virustotal.com/en/file/03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205/analysis/1501216078/"
       }
     }
   },
