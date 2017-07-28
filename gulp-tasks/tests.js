@@ -8,6 +8,46 @@ var yargs = require('yargs');
 var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
 module.exports = function(gulp) {
+
+  function createMocha() {
+    return new mochaa({
+      recursive: true,
+      compilers: 'js:babel-core/register',
+      env: {
+        NODE_PATH: '.'
+      },
+      grep: yargs.argv.grep,
+      g: yargs.argv.g,
+      reporter: yargs.argv.reporter,
+      istanbul: {
+        report: yargs.argv.report || 'lcov'
+      }
+    });
+  }
+
+  gulp.task('unit-test-1by1', function() {
+    return globby('test/unit/**/*.js', {root: '.'}).then(function(files) {
+      files.reduce((promises, file) => {
+        return promises.then(function() {
+          return new Promise(function(resolve) {
+            gulp.src([file], {
+              read: false
+            }).pipe(mocha({
+              recursive: false,
+              compilers: 'js:babel-core/register',
+              env: {
+                NODE_PATH: '.'
+              },
+              grep: yargs.argv.grep,
+              g: yargs.argv.g,
+              reporter: yargs.argv.reporter
+            })).on('end', resolve);
+          });
+        });
+      }, Promise.resolve());
+    });
+  });
+
   gulp.task('unit-test', function() {
     return gulp.src([yargs.argv['spec-file'] || 'test/unit/**/*.js'], {
       read: false
