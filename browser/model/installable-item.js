@@ -44,7 +44,7 @@ class InstallableItem {
 
     this.isCollapsed = true;
     this.option = new Set();
-    this.selectedOption = 'install';
+    this.selectedOption = requirement.defaultOption ? requirement.defaultOption : 'install';
 
     this.downloader = null;
     this.downloadFolder = this.installerDataSvc.tempDir();
