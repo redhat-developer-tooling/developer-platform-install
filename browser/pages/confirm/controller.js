@@ -77,17 +77,17 @@ class ConfirmController {
       checkboxModel[node].references=0;
     }
     for (let node of nodes) {
-      let watchComponent = () => {
+      function watchComponent(newv, oldv) {
         let installer = checkboxModel[node];
         if(installer.isSelected()) {
-          for(let dep of this.graph.dependenciesOf(node)) {
+          for(let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
             if(depInstaller.references === 0 && depInstaller.isNotDetected()) {
               depInstaller.selectedOption = 'install';
             }
             depInstaller.references++;
           }
-        } else {
+        } else if(!installer.isSelected() && oldv === 'install') {
           for(let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
             depInstaller.references--;
@@ -96,7 +96,7 @@ class ConfirmController {
             }
           }
         }
-      };
+      }
       this.sc.$watch(`checkboxModel.${node}.selectedOption`, watchComponent);
     }
   }

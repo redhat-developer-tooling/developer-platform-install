@@ -35,6 +35,7 @@
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
     "useDownload": false,
+    "defaultOption": "detected",
     "requires": ["devstudio"]
   },
   "fuseplatform": {
@@ -63,6 +64,7 @@
       }
     },
     "useDownload": true,
+    "defaultOption": "detected",
     "requires": ["jdk"]
   },
   "fuseplatformkaraf": {
@@ -80,6 +82,7 @@
      "fileName": "jboss-fuse-karaf-6.3.0.redhat-187.zip",
      "sha256sum": "4ef481bb22f4a9c688d03f46374917e0f2548229f94ebd817c33817baf203b0c",
      "useDownload": true,
+     "defaultOption": "detected",
      "requires": ["jdk"]
   },
   "jbosseap": {
@@ -97,6 +100,7 @@
     "fileName": "jboss-eap-7.0.0-installer.jar",
     "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
     "version": "7.0.0.GA",
+    "defaultOption": "detected",
     "requires": ["jdk"]
   },
   "jdk": {

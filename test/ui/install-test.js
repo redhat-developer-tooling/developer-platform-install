@@ -8,7 +8,7 @@ let loadMetadata = require('../../browser/services/metadata');
 let requirements = loadMetadata(require(path.join(rootPath, 'requirements.json')), process.platform);
 
 for (var key in requirements) {
-  if (requirements[key].bundle === 'tools') {
+  if (requirements[key].bundle === 'tools' || requirements[key].defaultOption && requirements[key].defaultOption === 'detected') {
     delete requirements[key];
   }
 }
@@ -19,8 +19,7 @@ describe('Installation page', function() {
 
   beforeAll(function() {
     browser.ignoreSynchronization = true;
-    browser.setLocation('install')
-    .then(function() {
+    browser.setLocation('install').then(function() {
       for (var key in requirements) {
         requirements[key].name = requirements[key].name.toUpperCase();
         requirements[key].panel = element(By.id(key + '-progress'));
