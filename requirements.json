@@ -263,7 +263,7 @@
         "vtxDisabledWin": {
           "message": "Please enable hardware virtualization support in BIOS for your platform.",
           "type": "error",
-          "isVisible": "process.platform === 'win32' && !installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install')"
+          "isVisible": "process.platform === 'win32' && installerDataSvc.getInstallable('hyperv') && !installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install')"
         },
         "vtxDisabledDawin": {
           "message": "Please enable hardware virtualization for your platform.",
@@ -273,7 +273,7 @@
         "vtxUndefined": {
           "message": "Please make sure hardware virtualization is enabled on your platform if supported.",
           "type": "warning",
-          "isVisible": "!installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === undefined && installerDataSvc.getInstallable('cdk').selectedOption == 'install'"
+          "isVisible": "installerDataSvc.getInstallable('hyperv') && !installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === undefined && installerDataSvc.getInstallable('cdk').selectedOption == 'install'"
         }
       }
     },

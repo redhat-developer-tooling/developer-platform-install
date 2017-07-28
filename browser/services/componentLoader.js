@@ -113,7 +113,7 @@ class ComponentLoader {
             let orDeps = dep.split('||');
             for(let orDep of orDeps) {
               let installable = svc.getInstallable(orDep);
-              if(installable.isConfigured() || installable.isSelected()) {
+              if(installable.isDetected()) {
                 graph.addDependency(key, orDep);
                 break;
               }
