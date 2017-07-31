@@ -221,7 +221,7 @@ class JdkInstall extends InstallableItem {
 
   isDisabled() {
     return !this.hasOption('detected') && (this.references > 0)
-    || this.hasOption('detected') && !this.option.detected.valid && (this.references > 0)
+    || this.hasOption('detected') && !this.option.detected.valid
     || this.hasOption('detected') && this.option.detected.valid && this.openJdkMsi
     || Platform.OS === 'darwin';
   }
