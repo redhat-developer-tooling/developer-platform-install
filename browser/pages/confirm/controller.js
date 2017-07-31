@@ -52,7 +52,6 @@ class ConfirmController {
     }).then(
       ()=> this.setIsDisabled()
     ).catch((error)=> {
-      Logger.error(error);
       this.setIsDisabled();
     });
   }
@@ -71,15 +70,19 @@ class ConfirmController {
     let nodes = graph.overallOrder() ;
     let checkboxModel = this.sc.checkboxModel;
     for (let node of nodes) {
+      checkboxModel[node].dependenciesOf = [];
+      for(let dependant of this.graph.dependantsOf(node)) {
+        checkboxModel[node].dependenciesOf.push(checkboxModel[dependant]);
+      }
       checkboxModel[node].references=0;
     }
     for (let node of nodes) {
-      function watchComponent (){
+      let watchComponent = () => {
         let installer = checkboxModel[node];
         if(installer.isSelected()) {
-          for(let dep of graph.dependenciesOf(node)) {
+          for(let dep of this.graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
-            if(depInstaller.references==0 && depInstaller.isNotDetected()) {
+            if(depInstaller.references === 0 && depInstaller.isNotDetected()) {
               depInstaller.selectedOption = 'install';
             }
             depInstaller.references++;
@@ -88,7 +91,7 @@ class ConfirmController {
           for(let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
             depInstaller.references--;
-            if(depInstaller.references==0) {
+            if(depInstaller.references === 0) {
               depInstaller.selectedOption = 'detected';
             }
           }

@@ -1,62 +1,4 @@
 {
-  "cdk": {
-    "name": "Red Hat Container Development Kit",
-    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
-    "vendor": "Red Hat, Inc.",
-    "modulePath": "model/cdk",
-    "installable": true,
-    "detectable": false,
-    "bundle": "yes",
-    "targetFolderName": "cdk",
-    "platform": {
-      "win32": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
-        "fileName": "minishift_3_1_0_RC_1.exe",
-        "sha256sum": "c3f8b4e0922a0594afbd280c4812be19162e4c860670d680054c94bca1df3a6b",
-        "version": "3.1.0.RC.1",
-        "requires": ["cygwin","hyperv||virtualbox"],
-        "installAfter": "cygwin"
-      },
-      "darwin": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
-        "fileName": "minishift_3_1_0_RC_1",
-        "sha256sum": "99be990a6e4a5390677b71f512ee541fbae4f2fde58bc453b9ab0d19519704ed",
-        "version": "3.1.0.RC.1",
-        "requires": ["virtualbox"],
-        "installAfter": "virtualbox"
-      },
-      "linux": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
-        "fileName": "minishift_3_1_0_RC_1",
-        "sha256sum": "fa29abd2db6c48a0245be2c4401b4ed9ec6d0525b8c908b9c4f6d9bc253985d7",
-        "version": "3.1.0.RC.1",
-        "requires": ["kvm"],
-        "installAfter": "virtualbox"
-      }
-    }
-  },
-  "cygwin": {
-    "name": "Cygwin",
-    "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
-    "vendor": "Community Project",
-    "modulePath": "model/cygwin",
-    "installable": true,
-    "detectable": true,
-    "bundle": "always",
-    "targetFolderName": "cygwin",
-    "installAfter": "virtualbox",
-    "url": "https://cygwin.com/setup-x86_64.exe",
-    "fileName": "cygwin_2.8.2.exe",
-    "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
-    "version": "2.8.2",
-    "virusTotalReport": "https://virustotal.com/en/file/062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214/analysis/",
-    "platform": {
-      "win32": {}
-    }
-  },
   "devstudio": {
     "name": "Red Hat JBoss Developer Studio",
     "description": "A certified Eclipse-based integrated development environment (IDE)",
@@ -184,7 +126,13 @@
         "fileName": "",
         "sha256sum": "",
         "version": "1.8.0",
-        "virusTotalReport": ""
+        "virusTotalReport": "",
+        "messages": {
+          "dependency": {
+            "message": "Due to licence limitations we may not install Java for you. Please install JDK version 1.8.0 downloaded from this location and restart the Installer to continue.",
+            "linkDescription": "this location"
+          }
+        }
       },
       "linux": {
         "name": "OpenJDK",
@@ -199,6 +147,104 @@
       }
     }
   },
+  "cdk": {
+    "name": "Red Hat Container Development Kit",
+    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/cdk",
+    "installable": true,
+    "detectable": false,
+    "bundle": "yes",
+    "targetFolderName": "cdk",
+    "platform": {
+      "win32": {
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/windows-amd64/minishift.exe",
+        "fileName": "minishift_3_1_0_RC_1.exe",
+        "sha256sum": "c3f8b4e0922a0594afbd280c4812be19162e4c860670d680054c94bca1df3a6b",
+        "version": "3.1.0.RC.1",
+        "requires": ["cygwin","hyperv||virtualbox"],
+        "installAfter": "cygwin"
+      },
+      "darwin": {
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/darwin-amd64/minishift",
+        "fileName": "minishift_3_1_0_RC_1",
+        "sha256sum": "99be990a6e4a5390677b71f512ee541fbae4f2fde58bc453b9ab0d19519704ed",
+        "version": "3.1.0.RC.1",
+        "requires": ["virtualbox"],
+        "installAfter": "virtualbox"
+      },
+      "linux": {
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Jul-2017.3.1.0-rc.1/linux-amd64/minishift",
+        "fileName": "minishift_3_1_0_RC_1",
+        "sha256sum": "fa29abd2db6c48a0245be2c4401b4ed9ec6d0525b8c908b9c4f6d9bc253985d7",
+        "version": "3.1.0.RC.1",
+        "requires": ["kvm"],
+        "installAfter": "virtualbox"
+      }
+    }
+  },
+  "kompose": {
+    "name": "Kompose",
+    "description": "A tool to translate a Docker Compose file into Kubernetes or OpenShift resources",
+    "vendor": "Kubernetes Incubator",
+    "modulePath": "model/kompose",
+    "installable": true,
+    "detectable": false,
+    "targetFolderName": "kompose",
+    "version": "1.0.0 Technology Preview",
+    "messages": {
+      "info": {
+        "message": "For additional information and documentation visit http://kompose.io",
+        "link": "http://kompose.io",
+        "linkDescription": "http://kompose.io"
+      }
+    },
+    "platform": {
+      "win32": {
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-windows-amd64.exe",
+        "fileName": "kompose-1.0.0.TP-windows-amd64.exe",
+        "sha256sum": "f06c1156cbc427e83e08840fc352639086b142f02ded45c3381f5bc5dd5ee57d"
+      },
+      "darwin": {
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-darwin-amd64",
+        "fileName": "kompose-1.0.0.TP-darwin-amd64",
+        "sha256sum": "f987bb6405203379fc9da5903e34a089cb125e14ed10195f25a635c471c0ef97"
+      },
+      "linux": {
+        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-linux-amd64",
+        "fileName": "kompose-1.0.0.TP-linux-amd64",
+        "sha256sum": "ddcd239d497ed55d799f902f98e91ce8a3e89b226384cdc3f6c38f57b16f0582"
+      }
+    }
+  },
+  "hyperv": {
+    "name": "Microsoft Hyper-V",
+    "description": "Microsoft Windows Virtualization Platform",
+    "modulePath": "model/hyperv",
+    "installable": false,
+    "detectable": true,
+    "bundle": "no",
+    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "",
+    "revision": "112440",
+    "virusTotalReport": "",
+    "vendor": "Microsoft, Inc.",
+    "messages": {
+      "info": {
+        "message": "Follow these steps to install and enable Microsoft Hyper-V on Windows 10",
+        "link": "https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw",
+        "linkDescription": "these steps"
+      }
+    },
+    "platform": {
+      "win32": {}
+    }
+  },
   "virtualbox": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
@@ -209,6 +255,28 @@
     "bundle": "no",
     "targetFolderName": "virtualbox",
     "installAfter": "jdk",
+    "messages": {
+      "dependency": {
+        "message": "Please uninstall detected Oracle VirtualBox and restart Installer to continue."
+      },
+      "misc": {
+        "vtxDisabledWin": {
+          "message": "Please enable hardware virtualization support in BIOS for your platform.",
+          "type": "error",
+          "isVisible": "process.platform === 'win32' && installerDataSvc.getInstallable('hyperv') && !installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install')"
+        },
+        "vtxDisabledDawin": {
+          "message": "Please enable hardware virtualization for your platform.",
+          "type": "error",
+          "isVisible": "process.platform === 'darwin' && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === false && (installerDataSvc.getInstallable('cdk').selectedOption == 'install' || installerDataSvc.getInstallable('virtualbox').selectedOption == 'install')"
+        },
+        "vtxUndefined": {
+          "message": "Please make sure hardware virtualization is enabled on your platform if supported.",
+          "type": "warning",
+          "isVisible": "installerDataSvc.getInstallable('hyperv') && !installerDataSvc.getInstallable('hyperv').isConfigured() && installerDataSvc.getInstallable('virtualbox').virtualizationEnabled === undefined && installerDataSvc.getInstallable('cdk').selectedOption == 'install'"
+        }
+      }
+    },
     "platform": {
       "win32": {
         "url": "http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1.24-117012-Win.exe",
@@ -236,20 +304,21 @@
       }
     }
   },
-  "hyperv": {
-    "name": "Microsoft Hyper-V",
-    "description": "Microsoft Windows Virtualization Platform",
-    "modulePath": "model/hyperv",
-    "installable": false,
+  "cygwin": {
+    "name": "Cygwin",
+    "description": "A distribution of popular GNU and other Open Source tools running on Microsoft Windows",
+    "vendor": "Community Project",
+    "modulePath": "model/cygwin",
+    "installable": true,
     "detectable": true,
-    "bundle": "no",
-    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
-    "fileName": "",
-    "sha256sum": "",
-    "version": "",
-    "revision": "112440",
-    "virusTotalReport": "",
-    "vendor": "Microsoft, Inc.",
+    "bundle": "always",
+    "targetFolderName": "cygwin",
+    "installAfter": "virtualbox",
+    "url": "https://cygwin.com/setup-x86_64.exe",
+    "fileName": "cygwin_2.8.2.exe",
+    "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
+    "version": "2.8.2",
+    "virusTotalReport": "https://virustotal.com/en/file/062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214/analysis/",
     "platform": {
       "win32": {}
     }
@@ -279,34 +348,6 @@
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
         "fileName": "7zip-extra.7z",
         "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757"
-      }
-    }
-  },
-  "kompose": {
-    "name": "Kompose",
-    "description": "A tool to translate a Docker Compose file into Kubernetes or OpenShift resources",
-    "vendor": "Kubernetes Incubator",
-    "modulePath": "model/kompose",
-    "installable": true,
-    "detectable": false,
-    "bundle": "no",
-    "targetFolderName": "kompose",
-    "version": "1.0.0 Technology Preview",
-    "platform": {
-      "win32": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-windows-amd64.exe",
-        "fileName": "kompose-1.0.0.TP-windows-amd64.exe",
-        "sha256sum": "f06c1156cbc427e83e08840fc352639086b142f02ded45c3381f5bc5dd5ee57d"
-      },
-      "darwin": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-darwin-amd64",
-        "fileName": "kompose-1.0.0.TP-darwin-amd64",
-        "sha256sum": "f987bb6405203379fc9da5903e34a089cb125e14ed10195f25a635c471c0ef97"
-      },
-      "linux": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-linux-amd64",
-        "fileName": "kompose-1.0.0.TP-linux-amd64",
-        "sha256sum": "ddcd239d497ed55d799f902f98e91ce8a3e89b226384cdc3f6c38f57b16f0582"
       }
     }
   }

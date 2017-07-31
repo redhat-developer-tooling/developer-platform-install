@@ -1,0 +1,63 @@
+<div ng-hide="item === undefined || item.hidden === true">
+  <div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':item.isDetected()}">
+    <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
+         ng-class="{'dotted-panel':item.isDetected()}">
+         <div class="checkbox-container verticalLine">
+           <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+         </div>
+      <div class="product-container">
+        <div class="warnings-in-panel">
+          <span id="{{item.keyName}}-installed-note" class="installed-note" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+            <i class="fa fa-check"></i> Using detected version {{item.option.detected.version}}
+          </span>
+          <div ng-show="item.hasOption('detected')">
+            <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
+              <div class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <span id="{{item.keyName}}-newer-message">Newer than required!</span>
+              </div>
+            </div>
+            <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
+              <div class="help-block">
+              <span class="pficon pficon-warning-triangle-o"></span>
+                <span id="{{item.keyName}}-older-message">Older than required!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span><span id="{{item.keyName}}-version" class="product-version">{{item.version}}</span>
+        <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="help-block" ng-show="item.messages.info !== undefined && !item.isDetected()">
+    <span class="pficon pficon-info"></span>
+    <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[0]}}</span>
+    <a type="button" class="pointer" ng-click="openUrl(item.messages.info.link ? item.messages.info.link : item.downloadUrl)">
+      {{item.messages.info.linkDescription}}</a>
+    <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[1]}}</span>
+  </div>
+
+  <div class="message-container error-message" ng-show="filtered.length > 0 && !item.isConfigured()">
+    <span class="pficon pficon-error-circle-o"></span>
+    <span>You have selected
+      <ng-repeat ng-repeat="dep in filtered = (item.dependenciesOf | filter: {selectedOption: 'install'} | limitTo:1)">
+        <span>{{dep.productName}},</span>
+      </ng-repeat> which requires {{item.productName}} version {{item.minimumVersion}} or higher.</span>
+      <span ng-show="item.messages.dependency !== undefined">
+        <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[0]}}</span>
+        <a type="button" class="pointer" ng-click="openUrl(item.messages.dependency.link ? item.messages.dependency.link : item.downloadUrl)">
+          {{item.messages.dependency.linkDescription}}</a>
+        <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[1]}}</span>
+      </span>
+  </div>
+
+  <div ng-repeat="message in item.messages.misc">
+    <div ng-show="evaluateCondition(message.isVisible)" class="message-container" ng-class="{'error-message': message.type === 'error', 'warning-message': message.type === 'warning'}">
+      <span ng-show="message.type === 'error'" class="pficon pficon-error-circle-o"></span>
+      <span ng-show="message.type === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+      <span>{{message.message}}</span>
+    </div>
+  </div>
+</div>

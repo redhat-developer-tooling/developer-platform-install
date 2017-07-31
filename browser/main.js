@@ -12,6 +12,7 @@ import startCtrl from './pages/start/controller';
 import pathValidator from './directives/pathValidator';
 import progressBar from './directives/progressBar';
 import breadcrumb from './directives/breadcrumb';
+import componentPanel from './directives/componentPanel';
 import InstallerDataService from './services/data';
 import Request from './services/request';
 import ComponentLoader from './services/componentLoader';
@@ -30,6 +31,7 @@ let mainModule =
     .factory('request', Request.factory)
     .value('electron', Electron)
     .directive(progressBar.name, progressBar)
+    .directive(componentPanel.name, componentPanel)
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {

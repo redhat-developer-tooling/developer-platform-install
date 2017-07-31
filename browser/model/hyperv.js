@@ -20,6 +20,7 @@ class HypervInstall extends InstallableItem {
           this.addOption('detected', '', '', detected);
         }
         this.hypervstatus = detected;
+        this.hidden = this.hypervstatus === undefined;
         this.selectedOption = 'detected';
         return Promise.resolve(detected);
       }).then((detected)=> {

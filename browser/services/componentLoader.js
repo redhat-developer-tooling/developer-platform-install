@@ -113,7 +113,10 @@ class ComponentLoader {
             let orDeps = dep.split('||');
             for(let orDep of orDeps) {
               let installable = svc.getInstallable(orDep);
-              if(installable.isConfigured() || installable.isSelected()) {
+              let req = svc.getRequirementByName(orDep);
+              // temp solution for conditional dependency resolution
+              // would work for hyperv || virtualbox but not in general
+              if(installable.isValidVersionDetected() || req.installable === true) {
                 graph.addDependency(key, orDep);
                 break;
               }
