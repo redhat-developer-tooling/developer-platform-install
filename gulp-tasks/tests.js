@@ -9,22 +9,6 @@ var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
 module.exports = function(gulp) {
 
-  function createMocha() {
-    return new mochaa({
-      recursive: true,
-      compilers: 'js:babel-core/register',
-      env: {
-        NODE_PATH: '.'
-      },
-      grep: yargs.argv.grep,
-      g: yargs.argv.g,
-      reporter: yargs.argv.reporter,
-      istanbul: {
-        report: yargs.argv.report || 'lcov'
-      }
-    });
-  }
-
   gulp.task('unit-test-1by1', function() {
     return globby('test/unit/**/*.js', {root: '.'}).then(function(files) {
       files.reduce((promises, file) => {
