@@ -208,12 +208,12 @@
     },
     "platform": {
       "win32": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-windows-amd64.exe",
+        "url": "https://developers.redhat.com/redirect/to/kompose-windows-1.0.0.download",
         "fileName": "kompose-1.0.0.TP-windows-amd64.exe",
         "sha256sum": "f06c1156cbc427e83e08840fc352639086b142f02ded45c3381f5bc5dd5ee57d"
       },
       "darwin": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.0.0/kompose-darwin-amd64",
+        "url": "https://developers.redhat.com/redirect/to/kompose-macos-1.0.0.download",
         "fileName": "kompose-1.0.0.TP-darwin-amd64",
         "sha256sum": "f987bb6405203379fc9da5903e34a089cb125e14ed10195f25a635c471c0ef97"
       },
@@ -283,7 +283,7 @@
     },
     "platform": {
       "win32": {
-        "url": "http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1.24-117012-Win.exe",
+        "url": "https://developers.redhat.com/redirect/to/virtualbox-windows-5.1.24.download",
         "fileName": "virtualbox_5.1.24.exe",
         "sha256sum": "c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a",
         "version": "5.1.24",
@@ -291,7 +291,7 @@
         "virusTotalReport": "https://virustotal.com/en/file/c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a/analysis/"
       },
       "darwin": {
-        "url": "http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1.24-117012-OSX.dmg",
+        "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.1.24.download",
         "fileName": "virtualbox_5.1.24.dmg",
         "sha256sum": "5ac1a7b53d35cfde01a17a87ff2361bee37f4afe197d8e7f02239967b183d9f0",
         "version": "5.1.24",
