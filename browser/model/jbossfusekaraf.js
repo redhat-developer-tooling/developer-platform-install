@@ -2,7 +2,9 @@
 
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
+import Logger from '../services/logger';
 let fs = require('fs');
+let fse = require('fs-extra');
 let path = require('path');
 let unzip = require('unzip-stream');
 let mkdirp = require('mkdirp');
@@ -42,6 +44,17 @@ class FusePlatformInstallKaraf extends InstallableItem {
         }).on('close', ()=> {
           resolve();
         });
+    }).then(()=> {
+      let users = path.join(this.installerDataSvc.fuseplatformkarafDir(), 'etc', 'users.properties');
+      let result = Promise.resolve();
+      if(fse.existsSync(users)) {
+        const user = 'admin=admin,admin,manager,viewer,Monitor, Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser';
+        result = fse.appendFile(users, user).catch((error)=>{
+          Logger.error(this.keyName + ' - error occured during admin password configuration');
+          Logger.error(this.keyName + ` - ${error}`);
+        });
+      }
+      return result;
     }).then(()=> {
       this.ipcRenderer.on('installComplete', (event, arg)=> {
         if(arg == 'all') {
