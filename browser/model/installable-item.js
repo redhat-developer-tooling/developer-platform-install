@@ -5,7 +5,8 @@ import Logger from '../services/logger';
 import path from 'path';
 import fs from 'fs-extra';
 import Downloader from './helpers/downloader';
-let remote = require('electron').remote;
+import {remote} from 'electron';
+import mkdirp from 'mkdirp';
 
 let ipcRenderer = require('electron').ipcRenderer;
 
@@ -47,8 +48,10 @@ class InstallableItem {
     this.selectedOption = requirement.defaultOption ? requirement.defaultOption : 'install';
 
     this.downloader = null;
-    this.downloadFolder = this.installerDataSvc.tempDir();
-    this.downloadedFile = path.join(this.installerDataSvc.tempDir(), fileName);
+    this.downloadFolder = path.join(this.installerDataSvc.localAppData(), 'cache');
+    mkdirp.sync(this.downloadFolder);
+    this.downloadedFile = path.join(this.downloadFolder, fileName);
+
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;

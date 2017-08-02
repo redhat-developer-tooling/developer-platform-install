@@ -189,6 +189,19 @@ class InstallerDataService {
     return this.tmpDir;
   }
 
+  localAppData() {
+    return Platform.identify({
+      win32: ()=> {
+        return path.resolve(path.join(Platform.ENV.APPDATA, '..', 'Local', 'RedHat', 'DevSuite'));
+      }, darwin: ()=> {
+        return path.resolve(path.join('~/Library/Application Support/', 'RedHat', 'DevSuite'));
+      }, default: ()=> {
+        return this.tempDir();
+      }
+    });
+  }
+
+
   isDownloading() {
     return this.downloading;
   }
