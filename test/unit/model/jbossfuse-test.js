@@ -65,6 +65,7 @@ describe('fuseplatform installer', function() {
     ds.getUsername.returns('user');
     ds.getPassword.returns('passwd');
     ds.devstudioDir.returns('installationFolder/devstudio');
+    ds.localAppData.restore();
     return ds;
   }
 
@@ -113,7 +114,7 @@ describe('fuseplatform installer', function() {
 
   it('should download fuseplatform installer to temporary folder with configured filename', function() {
     expect(new FusePlatformInstall(installerDataSvc, 'fuseplatform', files).downloadedFile).to.equal(
-      path.join('tempDirectory', files.platform.fileName));
+      path.join(installerDataSvc.localAppData(), 'cache', files.platform.fileName));
   });
 
   describe('installer download', function() {
@@ -139,7 +140,7 @@ describe('fuseplatform installer', function() {
 
       expect(streamSpy).to.have.been.calledTwice;
       expect(spy).to.have.been.calledTwice;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', files.platform.fileName));
+      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', files.platform.fileName));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {

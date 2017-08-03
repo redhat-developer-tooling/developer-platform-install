@@ -80,7 +80,7 @@ describe('InstallerDataService', function() {
     });
 
     it('should set default values correctly', function() {
-      expect(svc.tmpDir).to.equal(os.tmpdir());
+      expect(svc.tempDir()).to.equal(os.tmpdir());
 
       expect(svc.username).to.equal('');
       expect(svc.password).to.equal('');

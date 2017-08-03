@@ -27,6 +27,7 @@ describe('CDK installer', function() {
 
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
+  installerDataSvc.localAppData.restore();
   installerDataSvc.tempDir.returns('temporaryFolder');
   installerDataSvc.installDir.returns('installFolder');
   installerDataSvc.getUsername.returns('user');
@@ -121,10 +122,10 @@ describe('CDK installer', function() {
         }
       }
     },
-      {
-        createCwd: false,
-        createTmp: false
-      });
+    {
+      createCwd: false,
+      createTmp: false
+    });
     installer = new CDKInstall(installerDataSvc, 'folderName', cdkUrl, 'installFile.exe', 'sha1');
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
@@ -241,9 +242,9 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
           expect(Installer.prototype.exec).to.have.been.calledWith(
-              path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=virtualbox',
-              {PATH:''}
-            );
+            path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=virtualbox',
+            {PATH:''}
+          );
           expect(installer.createEnvironment).to.have.been.called;
         });
       });
@@ -256,9 +257,9 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
           expect(Installer.prototype.exec).to.have.been.calledWith(
-              path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=hyperv',
-              {PATH:''}
-            );
+            path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=hyperv',
+            {PATH:''}
+          );
           expect(installer.createEnvironment).to.have.been.called;
         });
       });

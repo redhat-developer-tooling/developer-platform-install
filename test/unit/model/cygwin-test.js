@@ -37,6 +37,7 @@ describe('Cygwin installer', function() {
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.cygwinDir.returns('install/Cygwin');
   installerDataSvc.getInstallable.returns(fakeInstallable);
+  installerDataSvc.localAppData.restore();
 
   let fakeProgress;
 
@@ -91,7 +92,7 @@ describe('Cygwin installer', function() {
 
   it('should download cygwin installer to temporary folder as ssh-rsync.zip', function() {
     expect(new CygwinInstall(installerDataSvc, 'cygwin', 'url', 'cygwin.exe', 'sha').downloadedFile).to.equal(
-      path.join('tempDirectory', 'cygwin.exe'));
+      path.join(installerDataSvc.localAppData(), 'cache', 'cygwin.exe'));
   });
 
   describe('installer download', function() {
@@ -116,7 +117,7 @@ describe('Cygwin installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'cygwin.exe'));
+      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'cygwin.exe'));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {

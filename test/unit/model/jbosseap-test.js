@@ -54,6 +54,7 @@ describe('jbosseap installer', function() {
     ds.getUsername.returns('user');
     ds.getPassword.returns('passwd');
     ds.devstudioDir.returns('installationFolder/devstudio');
+    ds.localAppData.restore();
     return ds;
   }
 
@@ -114,7 +115,7 @@ describe('jbosseap installer', function() {
 
   it('should download jbosseap installer to temporary folder with configured filename', function() {
     expect(new JbosseapInstall(installerDataSvc, 'jbosseap', 'url', 'jbosseap.jar').downloadedFile).to.equal(
-      path.join('tempDirectory', 'jbosseap.jar'));
+      path.join(installerDataSvc.localAppData(), 'cache', 'jbosseap.jar'));
   });
 
   it('should remove an existing folder with the same name', function() {
@@ -150,7 +151,7 @@ describe('jbosseap installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'jbosseap.jar'));
+      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'jbosseap.jar'));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
@@ -267,7 +268,7 @@ describe('jbosseap installer', function() {
 
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
-        let downloadedFile = path.join(installerDataSvc.tempDir(), 'jbosseap.jar');
+        let downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'jbosseap.jar');
         let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',
