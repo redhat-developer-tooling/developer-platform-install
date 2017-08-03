@@ -54,6 +54,11 @@ class VirtualBoxInstall extends InstallableItem {
   isDisabled() {
     return this.hasOption('detected') || this.references > 0;
   }
+
+  get hidden() {
+    let hv = this.installerDataSvc.getInstallable('hyperv');
+    return hv && hv.isDetected();
+  }
 }
 
 class VirtualBoxInstallWindows extends VirtualBoxInstall {
