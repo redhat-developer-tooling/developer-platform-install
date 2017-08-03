@@ -131,6 +131,7 @@
         "sha256sum": "",
         "version": "1.8.0",
         "virusTotalReport": "",
+        "defaultOption": "detected",
         "messages": {
           "dependency": {
             "message": "Due to licence limitations we may not install Java for you. Please install JDK version 1.8.0 downloaded from this location and restart the Installer to continue.",

@@ -125,6 +125,13 @@ class FusePlatformInstall extends InstallableItem {
   get javaPath() {
     return path.join(this.installerDataSvc.jdkDir(), 'bin', 'java');
   }
+
+  isConfigurationValid() {
+    let jdk = this.installerDataSvc.getInstallable('jdk');
+    return jdk.isConfigured()
+      && this.isConfigured()
+      || this.isSkipped();
+  }
 }
 
 function installGenerator(jbosseapInstallDir) {
