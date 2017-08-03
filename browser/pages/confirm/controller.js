@@ -83,7 +83,7 @@ class ConfirmController {
         if(installer.isSelected()) {
           for(let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
-            if(depInstaller.references === 0 && depInstaller.isNotDetected()) {
+            if(depInstaller.isInstallable && depInstaller.references === 0 && depInstaller.isNotDetected()) {
               depInstaller.selectedOption = 'install';
             }
             depInstaller.references++;

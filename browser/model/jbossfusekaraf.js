@@ -70,6 +70,13 @@ class FusePlatformInstallKaraf extends InstallableItem {
       return Promise.reject(error);
     });
   }
+
+  isConfigurationValid() {
+    let jdk = this.installerDataSvc.getInstallable('jdk');
+    return jdk.isConfigured()
+      && this.isConfigured()
+      || this.isSkipped();
+  }
 }
 
 function fromJson({installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum}) {
