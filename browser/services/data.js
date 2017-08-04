@@ -34,18 +34,23 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
-    this.requirements = loadMetadata(requirements, Platform.getOS());
-    // filter download-manager urls and replace host name with stage
-    // host name provided in environment variable
+    this.loadRequirements(requirements);
+  }
+
+  loadRequirements(requirements) {
+    let reqs = loadMetadata(requirements, Platform.getOS());
     let stageHost = Platform.ENV['DM_STAGE_HOST'];
     if(stageHost) {
-      for (let variable in this.requirements) {
-        let dmUrl = this.requirements[variable].dmUrl;
+      // filter download-manager urls and replace host name with stage
+      // host name provided in environment variable
+      for (let variable in reqs) {
+        let dmUrl = reqs[variable].dmUrl;
         if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
-          this.requirements[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
+          reqs[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
         }
       }
     }
+    this.requirements = reqs;
   }
 
   setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
@@ -102,6 +107,11 @@ class InstallerDataService {
     for (const item of items) {
       this.addItemToInstall(item.keyName, item);
     }
+  }
+
+  clearItemsToInstall() {
+    this.installableItems.clear();
+    this.toInstall.clear();
   }
 
   getInstallable(key) {

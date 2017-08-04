@@ -440,19 +440,8 @@ footer {
 
   .centered {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -50px;
-  }
-
-  .detection-msg {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: 70px;
-    margin-left: -269px;
-    color: #000000;
+    width: 92%;
+    top: 40%;
   }
 
     .installation-note .med-spinner {
