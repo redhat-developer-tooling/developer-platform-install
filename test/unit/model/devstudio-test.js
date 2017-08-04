@@ -37,7 +37,7 @@ describe('devstudio installer', function() {
         name: 'OpenJDK'
       }
     };
-    let packageJson = {version: "X.0.0-GA"};
+    let packageJson = {version: 'X.0.0-GA'};
     let ds = sinon.stub(new InstallerDataService({}, reqsJson, packageJson));
     ds.getRequirementByName.restore();
     ds.tempDir.returns('tempDirectory');
@@ -48,6 +48,7 @@ describe('devstudio installer', function() {
     ds.getInstallable.returns(fakeInstall);
     ds.getUsername.returns('user');
     ds.getPassword.returns('passwd');
+    ds.localAppData.restore();
     return ds;
   }
 
@@ -100,7 +101,7 @@ describe('devstudio installer', function() {
 
   it('should download devstudio installer to temporary folder with configured filename', function() {
     expect(new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', 'url', 'devstudio.jar').downloadedFile).to.equal(
-      path.join('tempDirectory', 'devstudio.jar'));
+      path.join(installerDataSvc.localAppData(), 'cache', 'devstudio.jar'));
   });
 
   describe('installer download', function() {
@@ -126,7 +127,7 @@ describe('devstudio installer', function() {
 
       expect(streamSpy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'devstudio.jar'));
+      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'devstudio.jar'));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {
@@ -257,7 +258,7 @@ describe('devstudio installer', function() {
 
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
-        let downloadedFile = path.join(installerDataSvc.tempDir(), 'devstudio.jar');
+        let downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'devstudio.jar');
         let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',
@@ -267,10 +268,10 @@ describe('devstudio installer', function() {
         ];
 
         return installer.headlessInstall(helper)
-        .then(() => {
-          expect(spy).calledOnce;
-          expect(spy).calledWith(javaPath, javaOpts);
-        });
+          .then(() => {
+            expect(spy).calledOnce;
+            expect(spy).calledWith(javaPath, javaOpts);
+          });
       });
     });
   });

@@ -37,6 +37,7 @@ describe('Virtualbox installer', function() {
   installerDataSvc.tempDir.returns('tempDirectory');
   installerDataSvc.installDir.returns('installationFolder');
   installerDataSvc.virtualBoxDir.returns('installationFolder/virtualbox');
+  installerDataSvc.localAppData.restore();
 
   let fakeProgress;
 
@@ -90,7 +91,7 @@ describe('Virtualbox installer', function() {
 
   it('should download virtualbox installer to temporary folder with name configured file name', function() {
     expect(new VirtualBoxInstall(installerDataSvc, 'virtualbox', 'url', 'virtualbox.exe', 'sha', 'ver', 'rev').downloadedFile).to.equal(
-      path.join(installerDataSvc.tempDir(), 'virtualbox.exe'));
+      path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
   });
 
   describe('installer download', function() {
@@ -113,7 +114,7 @@ describe('Virtualbox installer', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join('tempDirectory', 'virtualbox.exe'));
+      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
@@ -133,13 +134,14 @@ describe('Virtualbox installer', function() {
   });
 
   describe('installation', function() {
-    let downloadedFile = path.join('tempDirectory', 'virtualbox.exe');
+    let downloadedFile;
     let helper;
 
     describe('on macos', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('macOS');
+        downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
         installer = new VirtualBoxInstallDarwin(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
@@ -155,6 +157,7 @@ describe('Virtualbox installer', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
+        downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
         installer = new VirtualBoxInstallWindows(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
