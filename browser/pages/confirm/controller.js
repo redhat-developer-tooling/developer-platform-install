@@ -23,6 +23,7 @@ class ConfirmController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
+    let that = this;
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -30,6 +31,22 @@ class ConfirmController {
         $scope.checkboxModel[key].validateVersion();
       });
     }
+
+    menu.append(new MenuItem({
+      label: 'SelectAll',
+      click: () => {
+        that.selectAll();
+        that.sc.$apply();
+      }
+    }));
+
+    menu.append(new MenuItem({
+      label: 'ClearAll',
+      click: () => {
+        that.clearAll();
+        that.sc.$apply();
+      }
+    }));
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
@@ -43,6 +60,24 @@ class ConfirmController {
         this.sc.$apply();
       });
     });
+  }
+
+  selectAll() {
+    let checkboxModel = this.sc.checkboxModel;
+    for (let node in checkboxModel) {
+      if (node === 'hyperv' || (Platform.OS === 'darwin' && node === 'jdk')) {
+        checkboxModel[node].selectedOption = 'detected';
+      } else {
+        checkboxModel[node].selectedOption = 'install';
+      }
+    }
+  }
+
+  clearAll() {
+    let checkboxModel = this.sc.checkboxModel;
+    for (let node in checkboxModel) {
+      checkboxModel[node].selectedOption = 'detected';
+    }
   }
 
   initPage() {
