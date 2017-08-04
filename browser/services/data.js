@@ -195,7 +195,7 @@ class InstallerDataService {
         let appData = Platform.ENV.APPDATA ? path.join(Platform.ENV.APPDATA, '..', 'Local', 'RedHat', 'DevSuite') : this.tempDir();
         return path.resolve(appData);
       }, darwin: ()=> {
-        return path.resolve(path.join('~/Library/Application Support/', 'RedHat', 'DevSuite'));
+        return path.resolve(path.join('~', 'Library', 'Application Support', 'RedHat', 'DevSuite'));
       }, default: ()=> {
         return this.tempDir();
       }
