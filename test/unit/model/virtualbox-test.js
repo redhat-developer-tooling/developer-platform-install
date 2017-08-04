@@ -134,7 +134,7 @@ describe('Virtualbox installer', function() {
   });
 
   describe('installation', function() {
-    let downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
+    let downloadedFile = path.resolve(path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
     let helper;
 
     describe('on macos', function() {
