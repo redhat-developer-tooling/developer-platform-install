@@ -134,13 +134,14 @@ describe('Virtualbox installer', function() {
   });
 
   describe('installation', function() {
-    let downloadedFile = path.resolve(path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
+    let downloadedFile;
     let helper;
 
     describe('on macos', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('macOS');
+        downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
         installer = new VirtualBoxInstallDarwin(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });
@@ -156,6 +157,7 @@ describe('Virtualbox installer', function() {
       beforeEach(function() {
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('win32');
+        downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
         installer = new VirtualBoxInstallWindows(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
         installer.ipcRenderer = {on: function() {}};
       });

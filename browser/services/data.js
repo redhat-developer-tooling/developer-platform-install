@@ -190,16 +190,18 @@ class InstallerDataService {
   }
 
   localAppData() {
-    return Platform.identify({
+    let appData = Platform.identify({
       win32: ()=> {
-        let appData = Platform.ENV.APPDATA ? path.join(Platform.ENV.APPDATA, '..', 'Local', 'RedHat', 'DevSuite') : this.tempDir();
-        return path.resolve(appData);
+        let appDataPath = Platform.ENV.APPDATA;
+        return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : this.tempDir();
       }, darwin: ()=> {
-        return path.resolve(path.join('~', 'Library', 'Application Support', 'RedHat', 'DevSuite'));
+        let homePath = Platform.ENV.HOME;
+        return homePath ? path.join(homePath , 'Library', 'Application Support', 'RedHat', 'DevSuite') : this.tempDir();
       }, default: ()=> {
         return this.tempDir();
       }
     });
+    return path.resolve(appData);
   }
 
 
