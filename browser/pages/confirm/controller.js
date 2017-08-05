@@ -31,6 +31,34 @@ class ConfirmController {
       });
     }
 
+    const selectAllLabel = 'Select All Components';
+
+    menu.insert(0, new MenuItem({
+      label: selectAllLabel,
+      click: ()=> {
+        this.sc.$apply(this.selectAll.bind(this));
+      }
+    }));
+
+    const deselectAllLabel = 'Deselect All Components';
+
+
+    menu.insert(1, new MenuItem({
+      label: deselectAllLabel,
+      click: ()=> {
+        this.sc.$apply(this.deselectAll.bind(this));
+      }
+    }));
+
+    menu.insert(2, new MenuItem({
+      label: deselectAllLabel,
+      type: 'separator'
+    }));
+
+    $scope.$on('$destroy', ()=>{
+      restoreMenu();
+    })
+
     $scope.isConfigurationValid = this.isConfigurationValid;
 
     $scope.$watch('$viewContentLoaded', ()=>{
@@ -43,6 +71,23 @@ class ConfirmController {
         this.sc.$apply();
       });
     });
+  }
+
+  selectAll() {
+    let checkboxModel = this.sc.checkboxModel;
+    for (let key in checkboxModel) {
+      let node = checkboxModel[key];
+      if (node.isInstallable && node.isNotDetected()) {
+        node.selectedOption = 'install';
+      }
+    }
+  }
+
+  deselectAll() {
+    let checkboxModel = this.sc.checkboxModel;
+    for (let key in checkboxModel) {
+      checkboxModel[key].selectedOption = 'detected';
+    }
   }
 
   initPage() {
