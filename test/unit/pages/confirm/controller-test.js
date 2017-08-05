@@ -15,6 +15,10 @@ require('browser/main');
 
 chai.use(sinonChai);
 
+global.menu = {insert(){}};
+global.MenuItem = function () {};
+global.restoreMenu = function() {};
+
 describe('ConfirmController', function() {
 
   beforeEach(function() {
