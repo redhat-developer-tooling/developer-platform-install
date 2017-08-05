@@ -23,7 +23,6 @@ class ConfirmController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
-    let that = this;
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -32,21 +31,33 @@ class ConfirmController {
       });
     }
 
-    menu.append(new MenuItem({
-      label: 'SelectAll',
-      click: () => {
-        that.selectAll();
-        that.sc.$apply();
+    const selectAllLabel = 'Select All Components';
+
+    menu.insert(0, new MenuItem({
+      label: selectAllLabel,
+      click: ()=> {
+        this.sc.$apply(this.selectAll.bind(this));
       }
     }));
 
-    menu.append(new MenuItem({
-      label: 'ClearAll',
-      click: () => {
-        that.clearAll();
-        that.sc.$apply();
+    const deselectAllLabel = 'Deselect All Components';
+
+
+    menu.insert(1, new MenuItem({
+      label: deselectAllLabel,
+      click: ()=> {
+        this.sc.$apply(this.deselectAll.bind(this));
       }
     }));
+
+    menu.insert(2, new MenuItem({
+      label: deselectAllLabel,
+      type: 'separator'
+    }));
+
+    $scope.$on('$destroy', ()=>{
+      restoreMenu();
+    })
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
@@ -64,19 +75,18 @@ class ConfirmController {
 
   selectAll() {
     let checkboxModel = this.sc.checkboxModel;
-    for (let node in checkboxModel) {
-      if (node === 'hyperv' || (Platform.OS === 'darwin' && node === 'jdk')) {
-        checkboxModel[node].selectedOption = 'detected';
-      } else {
-        checkboxModel[node].selectedOption = 'install';
+    for (let key in checkboxModel) {
+      let node = checkboxModel[key];
+      if (node.installable && node.isNotDetected()) {
+        node.selectedOption = 'install';
       }
     }
   }
 
-  clearAll() {
+  deselectAll() {
     let checkboxModel = this.sc.checkboxModel;
-    for (let node in checkboxModel) {
-      checkboxModel[node].selectedOption = 'detected';
+    for (let key in checkboxModel) {
+      checkboxModel[key].selectedOption = 'detected';
     }
   }
 

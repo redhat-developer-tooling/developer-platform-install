@@ -12,7 +12,7 @@ const { Menu, MenuItem } = remote;
 
 let rightClickPosition = null;
 
-const menu = new Menu();
+var menu;
 const toggleDevToolsItem = new MenuItem({
   label: 'Toggle Development Tools',
   accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
@@ -26,11 +26,17 @@ const inspectElementItem = new MenuItem({
     remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
   }
 });
-menu.append(toggleDevToolsItem);
-menu.append(inspectElementItem);
+
+restoreMenu();
 
 window.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   rightClickPosition = {x: e.x, y: e.y};
   menu.popup(remote.getCurrentWindow());
 }, false);
+
+function restoreMenu() {
+  menu = new Menu();
+  menu.append(toggleDevToolsItem);
+  menu.append(inspectElementItem);
+}
