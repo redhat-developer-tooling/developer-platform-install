@@ -77,7 +77,7 @@ class ConfirmController {
     let checkboxModel = this.sc.checkboxModel;
     for (let key in checkboxModel) {
       let node = checkboxModel[key];
-      if (node.installable && node.isNotDetected()) {
+      if (node.isInstallable && node.isNotDetected()) {
         node.selectedOption = 'install';
       }
     }
