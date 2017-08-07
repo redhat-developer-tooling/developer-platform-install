@@ -205,7 +205,7 @@ footer {
   #login-section {
     float: left;
     width: 50%;
-    margin-top: 15%;
+    margin-top: 12%;
   }
 
     #accountForm {
@@ -302,11 +302,23 @@ footer {
               /* width: auto;  /* This doesn't work, just fix for unknown width elements */
             }
 
+            .forgot-password {
+              margin-right: 121px;
+            }
+
+            .last-field {
+              margin-bottom: 5px;
+            }
+
     #welcome-text {
       padding-right: 2.5%;
-      margin-top: 15%;
+      margin-top: 12%;
     }
 
+    #welcome-text > p {
+      line-height: 16px;
+      margin-bottom: 16px;
+    }
 
   .product-container {
     padding-left: 10px;
