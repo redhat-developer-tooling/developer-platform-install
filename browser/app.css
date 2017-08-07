@@ -222,8 +222,9 @@ footer {
       }
 
       .login-form-error-container {
-        float: right;
+        float: left;
         width: 296px;
+        margin-left: 116px;
       }
 
       .login-form-label {
@@ -311,7 +312,7 @@ footer {
             }
 
     #welcome-text {
-      padding-right: 2.5%;
+      padding-right: 7%;
       margin-top: 12%;
     }
 
