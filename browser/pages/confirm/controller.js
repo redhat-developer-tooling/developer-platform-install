@@ -166,7 +166,8 @@ class ConfirmController {
 
   // Prep the install location path for each product, then go to the next page.
   install() {
-    if (this.sc.checkboxModel.hyperv && this.sc.checkboxModel.hyperv.isConfigured()) {
+    let checkboxModel = this.sc.checkboxModel;
+    if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
       this.loader.removeComponent('virtualbox');
     } else {
       this.loader.removeComponent('hyperv');
@@ -184,7 +185,38 @@ class ConfirmController {
 
     this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.installerDataSvc.setup(...possibleComponents);
-    this.router.go('install');
+
+    this.router.go(this.getNextPage());
+  }
+
+  isAccountRequired() {
+    let checkboxModel = this.sc.checkboxModel;
+    let required = false;
+    for (const key in checkboxModel) {
+      required = checkboxModel.hasOwnProperty(key)
+        && checkboxModel[key].authRequired
+        && checkboxModel[key].selectedOption == 'install';
+      if(required) {
+        break;
+      }
+    }
+    return required;
+  }
+
+  getNextPage () {
+    if(this.isAccountRequired()) {
+      return 'account';
+    } else {
+      return 'install';
+    }
+  }
+
+  getNextButtonName () {
+    if(this.isAccountRequired()) {
+      return 'Next';
+    } else {
+      return 'Download & Install';
+    }
   }
 
   setIsDisabled() {
@@ -224,12 +256,14 @@ class ConfirmController {
   }
 
   isAtLeastOneSelected() {
+    let selected = false;
     for (var [, value] of this.installerDataSvc.allInstallables()) {
-      if(!value.isSkipped()) {
-        return true;
+      selected = !value.isSkipped();
+      if(selected) {
+        break;
       }
     }
-    return false;
+    return selected;
   }
 
   exit() {

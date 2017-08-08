@@ -103,7 +103,7 @@ footer {
         }
 
       .login-title {
-        margin-top: 100px;
+        margin-top: 60px;
         margin-left: 25px;
       }
 
@@ -149,7 +149,7 @@ footer {
           float: left;
           text-align: center;
           color: #d1d1d1;
-          width: 25%;
+          width: 19.5%;
           position: relative;
           padding-top: 15px;
         }
@@ -175,9 +175,37 @@ footer {
             background: #0088ce;
           }
 
+  .about-section {
+    width:100%;
+    padding: 2% 5% 0% 5%;
+    position: relative;
+  }
+
+    .about-subsection {
+      width: 33%;
+      float: left;
+      padding: 12px;
+      position: relative;
+    }
+
+    .about-name {
+      color: #c00;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 5% 0% 5% 0%;
+    }
+
+    .about-img {
+      display: block;
+      margin: 0 auto;
+    }
+
   #login-section {
     float: left;
     width: 50%;
+    margin-top: 12%;
   }
 
     #accountForm {
@@ -194,8 +222,9 @@ footer {
       }
 
       .login-form-error-container {
-        float: right;
+        float: left;
         width: 296px;
+        margin-left: 116px;
       }
 
       .login-form-label {
@@ -234,7 +263,7 @@ footer {
 
           #account-form-btn-text {
             vertical-align: super;
-            margin-right: 11px;
+            margin-right: 13px;
           }
 
             .spinner {
@@ -274,14 +303,23 @@ footer {
               /* width: auto;  /* This doesn't work, just fix for unknown width elements */
             }
 
-            .has-spinner.btn.active .spinner {
-              width: 24px;
+            .forgot-password {
+              margin-right: 121px;
+            }
+
+            .last-field {
+              margin-bottom: 5px;
             }
 
     #welcome-text {
-      padding-right: 2.5%;
+      padding-right: 7%;
+      margin-top: 12%;
     }
 
+    #welcome-text > p {
+      line-height: 16px;
+      margin-bottom: 16px;
+    }
 
   .product-container {
     padding-left: 10px;
@@ -292,7 +330,7 @@ footer {
     color: #c00;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 22px;
+    font-size: x-large;
   }
 
   .product-version {
@@ -316,10 +354,6 @@ footer {
 
   .pointer {
     cursor: pointer;
-  }
-
-  #loginButton {
-    margin-bottom: 3px;
   }
 
   .btn-rightside {
@@ -372,6 +406,10 @@ footer {
 
   .back-btn {
     right: 150px;
+  }
+
+  .back-btn-spacer-account {
+    right: 320px;
   }
 
   .back-btn-spacer {
@@ -590,7 +628,7 @@ footer {
 
   .verticalLine {
     border-right: 2px solid #dddddd;
-    margin-right: 5px;
+    margin-right: 6%;
   }
 
   .checkbox-container {

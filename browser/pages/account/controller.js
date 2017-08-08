@@ -1,6 +1,7 @@
 'use strict';
 
 import Util from '../../model/helpers/util';
+import Logger from '../../services/logger';
 
 class AccountController {
 
@@ -22,6 +23,8 @@ class AccountController {
   }
 
   login() {
+    this.isLoginBtnClicked = true;
+    this.resetLoginErrors();
     let req = {
       method: 'GET',
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
@@ -78,7 +81,7 @@ class AccountController {
     if (result.status == 200 && result.data == true) {
       this.installerDataSvc.setCredentials(this.username, this.password);
       this.isLoginBtnClicked = false;
-      this.router.go('location');
+      this.router.go('install');
       this.authFailed = false;
     } else if (result.status == 200 && result.data == false) {
       this.tandcNotSigned = true;
@@ -103,6 +106,16 @@ class AccountController {
     this.timeout(()=>{
       this.scope.$apply();
     });
+  }
+
+  exit() {
+    Logger.info('Closing the installer window');
+    this.electron.remote.getCurrentWindow().close();
+  }
+
+  back() {
+    Logger.info('Going back a page');
+    this.router.go('confirm');
   }
 }
 
