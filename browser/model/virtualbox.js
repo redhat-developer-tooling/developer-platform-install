@@ -245,7 +245,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     //let timestamp = new Date().toJSON().replace(/:/g,'')
     let volumeName = `virtualbox-${this.version}`;
     let shellScript = [
-      `hdiutil attach -mountpoint /Volumes/${volumeName}  ${dmgFile}`,
+      `hdiutil attach -mountpoint /Volumes/${volumeName}  '${dmgFile}'`,
       `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`
     ].join(';');
     let osaScript = [
