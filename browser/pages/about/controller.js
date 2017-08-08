@@ -5,6 +5,7 @@ class AboutController {
   constructor($state, $scope, electron) {
     this.router = $state;
     this.scope = $scope;
+    this.scope.background = true;
     this.electron = electron;
     $scope.version = electron.remote.app.getVersion();
   }
