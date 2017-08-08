@@ -202,6 +202,11 @@ footer {
       margin: 0 auto;
     }
 
+    .about-background {
+      background-image: url(images/about-background.svg);
+      background-size: 100%;
+    }
+
   #login-section {
     float: left;
     width: 50%;
