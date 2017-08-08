@@ -19,8 +19,16 @@ class DevstudioAutoInstallGenerator {
     if(additionalLocations) {
       additionalLocations = ',' + additionalLocations.trim();
     }
+    let shortcuts;
     if (additionalIus) {
       additionalIus = ',' + additionalIus.trim();
+      shortcuts = ['<com.izforge.izpack.panels.ShortcutPanel id="shortcut"/>'];
+    } else {
+      shortcuts = ['<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
+        '<programGroup name="Red Hat JBoss Developer Studio ' + devstudioVersion + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + devstudioVersion + '" encoding="" group="false" icon="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + devstudioVersion + '" target="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.exe')) + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + esc(path.join(devstudioInstallDir, 'studio')) + '"/>',
+        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + devstudioVersion + '" encoding="" group="true" icon="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + devstudioVersion + '" target="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.exe')) + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + esc(path.join(devstudioInstallDir, 'studio')) + '"/>',
+        '</com.izforge.izpack.panels.ShortcutPanel>'];
     }
     let temp =
       [
@@ -46,11 +54,7 @@ class DevstudioAutoInstallGenerator {
         '<com.jboss.devstudio.core.installer.CreateLinkPanel id="createlink">',
         '<jrelocation>' + esc(path.join(jdkInstallDir, 'bin', 'java' + exeSuffix)) + '</jrelocation>',
         '</com.jboss.devstudio.core.installer.CreateLinkPanel>',
-        '<com.izforge.izpack.panels.ShortcutPanel id="shortcut">',
-        '<programGroup name="Red Hat JBoss Developer Studio ' + devstudioVersion + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + devstudioVersion + '" encoding="" group="false" icon="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + devstudioVersion + '" target="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.exe')) + '" terminal="" terminalOptions="" tryexec="" type="3" url="" usertype="0" workingDirectory="' + esc(path.join(devstudioInstallDir, 'studio')) + '"/>',
-        '<shortcut KdeSubstUID="false" categories="" commandLine="" createForAll="false" description="Start Red Hat JBoss Developer Studio ' + devstudioVersion + '" encoding="" group="true" icon="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.ico')) + '" iconIndex="0" initialState="1" mimetype="" name="Red Hat JBoss Developer Studio ' + devstudioVersion + '" target="' + esc(path.join(devstudioInstallDir, 'studio', 'devstudio.exe')) + '" terminal="" terminalOptions="" tryexec="" type="1" url="" usertype="0" workingDirectory="' + esc(path.join(devstudioInstallDir, 'studio')) + '"/>',
-        '</com.izforge.izpack.panels.ShortcutPanel>',
+        ...shortcuts,
         '<com.jboss.devstudio.core.installer.ShortcutPanelPatch id="shortcutpatch"/>',
         '<com.izforge.izpack.panels.SimpleFinishPanel id="finish"/>',
         '</AutomatedInstallation>'
