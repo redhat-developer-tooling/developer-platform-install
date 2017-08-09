@@ -404,7 +404,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add neither warning nor error for recomended version', function() {
-      installer.option['detected'].version = '5.1.24';
+      installer.option['detected'].version = '5.1.22';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
