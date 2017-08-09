@@ -86,7 +86,7 @@
         "installAfter": "cygwin"
       },
       "darwin": {
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.1.0-1-minishift-darwin-amd64?workflow=direct ",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.1.0-1-minishift-darwin-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/03-Aug-2017.cdk-3.1.0/darwin-amd64/minishift",
         "fileName": "minishift_3_1_0__1_GA",
         "sha256sum": "59edb7905d796e1a8ce63f2e7f96c645937a3b77fa8a1e078c6b689e051ddd5d",
