@@ -244,7 +244,7 @@
     "messages": {
       "info": {
         "message": "Follow these steps to install and enable Microsoft Hyper-V on Windows 10",
-        "link": "https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/2.4/html/installation_guide/installing_container_development_kit_on_microsoft_windows#windows-add-sw",
+        "link": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v",
         "linkDescription": "these steps"
       }
     },
