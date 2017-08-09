@@ -57,7 +57,7 @@ class ConfirmController {
 
     $scope.$on('$destroy', ()=>{
       restoreMenu();
-    })
+    });
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
@@ -221,9 +221,9 @@ class ConfirmController {
 
   setIsDisabled() {
     // Uncomment the timeout to see the initial disabled view.
-    this.timeout( () => {
+    this.timeout(() => {
       // Switch this boolean flag when the app is done looking for existing installations.
-      this.isDisabled = !this.isDisabled;
+      this.isDisabled = false;
       this.numberOfExistingInstallations = 0;
       // Count the number of existing installations.
       for (var [, value] of this.installerDataSvc.allInstallables()) {
@@ -239,10 +239,7 @@ class ConfirmController {
       } else {
         this.installedSearchNote = '';
       }
-
-      // Call the digest cycle so that the view gets updated.
-      this.sc.$apply();
-    });
+    }, true);
   }
 
   isConfigurationValid() {
