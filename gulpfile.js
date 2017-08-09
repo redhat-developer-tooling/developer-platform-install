@@ -38,7 +38,7 @@ gulp.task('transpile:app', function() {
 
   var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
     'uninstaller/*', 'requirements.json'], {base: '.'}
-	).pipe(gulp.dest('transpiled'));
+  ).pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
 });
@@ -102,7 +102,14 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url = reqs['devstudio'].url + '/content.json';
+      let url;
+      if(reqs['devstudio'].url.endsWith('/')) {
+        url = reqs['devstudio'].url + '/content.json';
+      } else {
+        url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
+      }
+
+      console.log(url);
       request(url, (err, response, body)=>{
         if (err) {
           reject(err);
