@@ -11,7 +11,7 @@ let mkdirp = require('mkdirp');
 
 class FusePlatformInstallKaraf extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
-    super(FusePlatformInstallKaraf.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
+    super(FusePlatformInstallKaraf.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
     this.sha256 = sha256sum;
     this.addOption('install', this.version, '', true);
   }
