@@ -21,7 +21,7 @@ html {
   z-index: 6;
 }
 
-footer {
+.footer {
   bottom: 0;
   height: 66px;
   width: 100%;
@@ -224,6 +224,18 @@ footer {
 
       .login-form-input-container {
         float: right;
+      }
+
+      .image {
+        float: right;
+        position: relative;
+        left: -35px;
+      }
+
+      .welcome-panel {
+        position: relative;
+        top: -10px;
+        padding-left: 152px;
       }
 
       .login-form-error-container {
