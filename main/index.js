@@ -70,7 +70,13 @@ app.on('ready', function() {
 
   // Load the index.html of the app
   mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
-  mainWindow.bundleTempFolder = process.argv.length > 1 ? process.argv[1].replace(/^--/, '') : undefined;
+
+  // only for windows where 7zip pass location where self extracting archive
+  // was unpacked
+  if (process.platform === 'win32') {
+    mainWindow.bundleTempFolder = process.argv.length > 1 ? process.argv[1].replace(/^--/, '') : undefined;
+  }
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
