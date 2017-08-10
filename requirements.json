@@ -201,7 +201,7 @@
      "installAfter": "jdk",
      "requires": "jdk",
      "version": "6.3.0.GA",
-     "dmUrl": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/jboss-fuse-karaf-6.3.0.redhat-187.zip",
+     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-fuse-karaf-6.3.0.redhat-187.zip?workflow=direct",
      "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/jboss-fuse-karaf-6.3.0.redhat-187.zip",
      "fileName": "jboss-fuse-karaf-6.3.0.redhat-187.zip",
      "sha256sum": "4ef481bb22f4a9c688d03f46374917e0f2548229f94ebd817c33817baf203b0c",
