@@ -28,6 +28,10 @@ class DevstudioInstall extends InstallableItem {
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
+    //this workaround for fuse tooling install problems
+    if(fs.existsSync(this.bundledFile)) {
+      this.downloadedFile = this.bundledFile;
+    }
     this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
     let installer = new Installer(this.keyName, progress, success, failure);
     Logger.info(this.keyName + ' - Generate devstudio auto install file content');
