@@ -249,7 +249,6 @@ describe('fuseplatform installer', function() {
     it('should call runtime detection configuration after all installers finished and devstudio is installed', function() {
       sandbox.stub(installer, 'headlessEapInstall').resolves();
       sandbox.stub(installer, 'headlessInstall').resolves();
-      sandbox.stub(installer, 'writeFile').resolves();
       installer.ipcRenderer = new EventEmitter();
       sandbox.spy(installer.ipcRenderer, 'on');
       let devStudio = {

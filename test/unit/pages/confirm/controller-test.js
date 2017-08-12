@@ -15,7 +15,7 @@ require('browser/main');
 
 chai.use(sinonChai);
 
-global.menu = {insert(){}};
+global.menu = {insert() {}};
 global.MenuItem = function () {};
 global.restoreMenu = function() {};
 
@@ -319,7 +319,6 @@ describe('ConfirmController', function() {
     it('should return false if at least one component selected for installation is not configured correctly', function() {
       let cdk = confirmController.installerDataSvc.getInstallable('cdk');
       sandbox.stub(cdk, 'isConfigurationValid').returns(false);
-      sandbox.stub(ConfirmController.prototype, 'cdkIsConfigured').returns(false);
       expect(confirmController.isConfigurationValid()).to.be.false;
     });
   });
