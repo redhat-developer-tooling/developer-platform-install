@@ -2,33 +2,8 @@
 
 let template = [
   {
-    label: 'name',
+    label: 'File',
     submenu: [
-      {
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
       {
         role: 'quit'
       }
@@ -63,20 +38,6 @@ let template = [
       },
       {
         role: 'selectall'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Speech',
-        submenu: [
-          {
-            role: 'startspeaking'
-          },
-          {
-            role: 'stopspeaking'
-          }
-        ]
       }
     ]
   },
@@ -116,36 +77,23 @@ let template = [
     role: 'window',
     submenu: [
       {
-        label: 'Close',
-        accelerator: 'CmdOrCtrl+W',
-        role: 'close'
-      },
-      {
         label: 'Minimize',
         accelerator: 'CmdOrCtrl+M',
         role: 'minimize'
       },
       {
-        label: 'Zoom',
-        role: 'zoom'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Bring All to Front',
-        role: 'front'
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
       }
     ]
   },
   {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click () { require('electron').shell.openExternal('http://electron.atom.io'); }
-      }
-    ]
+    label: 'Help',
+    accelerator: 'f1',
+    click: () => {
+      require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+    }
   }
 ];
 

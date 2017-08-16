@@ -62,6 +62,9 @@ app.on('ready', function() {
     template[0].label = app.getName();
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+  } else {
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
   }
 
   // Some processing is required to make sure local file can be opened in browser
