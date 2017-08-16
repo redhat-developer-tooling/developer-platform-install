@@ -27,6 +27,18 @@ const inspectElementItem = new MenuItem({
   }
 });
 
+const separator = new MenuItem({
+  type: 'separator'
+});
+
+const help = new MenuItem({
+  label: 'Help',
+  accelerator: 'f1',
+  click: () => {
+    require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+  }
+});
+
 restoreMenu();
 
 window.addEventListener('contextmenu', (e) => {
@@ -39,4 +51,6 @@ function restoreMenu() {
   menu = new Menu();
   menu.append(toggleDevToolsItem);
   menu.append(inspectElementItem);
+  menu.append(separator);
+  menu.append(help);
 }
