@@ -27,7 +27,7 @@ class InstallableItem {
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
-
+    this.size = requirement.size;
     this.selected = true;
     this.version = requirement.version;
 
@@ -70,6 +70,10 @@ class InstallableItem {
       return this.option[this.selectedOption].version;
     }
     return this.productVersion;
+  }
+
+  getProductSize() {
+    return this.size;
   }
 
   getProductDesc() {
