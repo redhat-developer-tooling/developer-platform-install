@@ -24,10 +24,10 @@
           <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
           <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
-            <strong id="existingFolderStatus" class="help-block">
+            <span id="existingFolderStatus" class="help-block">
               <span class="pficon pficon-warning-triangle-o"></span>
               The selected folder already exists, some files might be overwritten.
-            </strong>
+            </span>
           </div>
 
           <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists">
