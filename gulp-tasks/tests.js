@@ -62,7 +62,7 @@ module.exports = function(gulp) {
 
   gulp.task('protractor-run', ['webdriver-update'], function(cb) {
     yargs.string(['virtualbox', 'hyperv', 'cygwin', 'jdk', 'targetFolder']);
-    assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VBOX');
+    assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VIRTUALBOX');
     assignArgument('hyperv', 'PDKI_TEST_INSTALLED_HYPERV');
     assignArgument('cygwin', 'PDKI_TEST_INSTALLED_CYGWIN');
     assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
