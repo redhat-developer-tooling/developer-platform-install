@@ -1,13 +1,14 @@
 'use strict';
 
 import mainModule from './main';
+import { remote } from 'electron';
 
 angular.element(document).ready(function() {
   angular.bootstrap(document, [mainModule.name], { strictDi: true });
 });
 
 // Importing this adds a right-click menu with 'Inspect Element' option
-const { remote } = require('electron');
+const {BrowserWindow} = require('electron').remote;
 const { Menu, MenuItem } = remote;
 
 let rightClickPosition = null;
