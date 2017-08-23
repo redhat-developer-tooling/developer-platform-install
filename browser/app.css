@@ -342,6 +342,11 @@ footer {
     padding-left: 5px;
   }
 
+  .product-info {
+    padding-left: 5px;
+    color: #9c9c9c;
+  }
+
   .btn-style-link {
     color: #00a8e1;
     background-color: #FFFFFF;

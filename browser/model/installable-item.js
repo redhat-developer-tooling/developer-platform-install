@@ -7,6 +7,7 @@ import fs from 'fs-extra';
 import Downloader from './helpers/downloader';
 import {remote} from 'electron';
 import mkdirp from 'mkdirp';
+import humanize from 'humanize';
 
 let ipcRenderer = require('electron').ipcRenderer;
 
@@ -27,7 +28,7 @@ class InstallableItem {
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
-    this.size = requirement.size;
+    this.size = humanize.filesize(requirement.size);
     this.selected = true;
     this.version = requirement.version;
 
@@ -70,10 +71,6 @@ class InstallableItem {
       return this.option[this.selectedOption].version;
     }
     return this.productVersion;
-  }
-
-  getProductSize() {
-    return this.size;
   }
 
   getProductDesc() {
