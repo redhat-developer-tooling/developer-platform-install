@@ -226,6 +226,18 @@ footer {
         float: right;
       }
 
+      .image {
+        float: right;
+        position: relative;
+        left: -35px;
+      }
+
+      .welcome-panel {
+        position: relative;
+        top: -10px;
+        padding-left: 152px;
+      }
+
       .login-form-error-container {
         float: left;
         width: 296px;

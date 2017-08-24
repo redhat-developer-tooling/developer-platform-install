@@ -1,34 +1,11 @@
 'use strict';
 
+import openAboutWindow from './index';
+
 let template = [
   {
-    label: 'name',
+    label: 'File',
     submenu: [
-      {
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
       {
         role: 'quit'
       }
@@ -63,20 +40,6 @@ let template = [
       },
       {
         role: 'selectall'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Speech',
-        submenu: [
-          {
-            role: 'startspeaking'
-          },
-          {
-            role: 'stopspeaking'
-          }
-        ]
       }
     ]
   },
@@ -125,18 +88,13 @@ let template = [
         accelerator: 'CmdOrCtrl+M',
         role: 'minimize'
       },
-      {
-        label: 'Zoom',
-        role: 'zoom'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Bring All to Front',
-        role: 'front'
-      }
     ]
+  },
+  {
+    label: 'About',
+    click: () => {
+      openAboutWindow();
+    }
   },
   {
     role: 'help',
