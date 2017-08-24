@@ -1,0 +1,58 @@
+<header>
+  <div class="login-title">
+    <img class="branding-title" src="images/RHDSP.svg"/><span class="login-title-post-text"></span>
+  </div>
+</header>
+
+<main>
+  <form name="accountForm" id="aboutForm">
+    <div class="about-section">
+      <p>Welcome to Red Hat Development Suite! The best of Red Hat development tools,
+        integrated together, in one easy to install bundle.
+      </p>
+      <p>This installer will help
+        you install Red Hat JBoss Developer Studio with a full development environment
+        for container based development using Red Hat Enterprise Linux and OpenShift.
+      </p>
+      <div class="about-subsection">
+        <div>
+          <img class="about-img" src="images/static_startinminutes.png" width="160" height="160">
+        </div>
+        <div class="about-name">START DEVELOPING IN MINUTES</div>
+        <div>
+          <p>A single installer handles all of the prerequisites and interdependencies
+            for you, so that with just a few clicks you can have a world-class development environment.</p>
+        </div>
+      </div>
+      <div class="about-subsection">
+        <div>
+          <img class="about-img" src="images/static_enterprisecontainerdev.png" width="160" height="160">
+        </div>
+        <div class="about-name">ENTERPRISE READY CONTAINER DEVELOPMENT</div>
+        <div>
+          <p>Easily create enterprise-ready containerized solutions and microservices,
+            powered by Kubernetes and OpenShift 3 and running on Red Hat Enterprise Linux.</p>
+        </div>
+      </div>
+      <div class="about-subsection">
+        <div>
+          <img class="about-img" src="images/static_powerwithchoice.png" width="160" height="160">
+        </div>
+        <div class="about-name">POWER WITH CHOICE</div>
+        <div>
+          <p>Pick and choose the tools and technologies you want, confident that the necessary integrations and dependencies will be handled and resolved for you.</p>
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
+
+<footer id="footer-navigation" class="no-background-color">
+  <div class="form-group pull-right form-buttons">
+    <button id="aboutNextButton" type="button" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="aboutForm"
+        ng-click="welcomeCtrl.next()" autofocus>
+      <span id="about-form-btn-text">Next</span>
+    </button>
+  </div>
+  <span class="footer-version">Version: {{version}}</span>
+</footer>

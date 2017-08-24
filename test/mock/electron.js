@@ -22,7 +22,9 @@ function electron() {
       showOpenDialog() {}
     },
     app: {
-      getVersion() {}
+      getVersion() {
+        return "2.1.0-GA";
+      }
     }
   };
   let shell = {

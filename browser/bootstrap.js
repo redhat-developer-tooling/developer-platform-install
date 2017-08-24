@@ -8,7 +8,7 @@ angular.element(document).ready(function() {
 });
 
 // Importing this adds a right-click menu with 'Inspect Element' option
-const {BrowserWindow} = require('electron').remote;
+const { BrowserWindow } = require('electron').remote;
 const { Menu, MenuItem } = remote;
 
 let rightClickPosition = null;
@@ -28,6 +28,33 @@ const inspectElementItem = new MenuItem({
   }
 });
 
+function openAboutWindow() {
+
+  let aboutWindow = new BrowserWindow({
+    parent: remote.getCurrentWindow(),
+    modal: true,
+    useContentSize: true,
+    width: 565,
+    height: 355,
+    'autoHideMenuBar': true,
+    resizable: false,
+    show: false
+  });
+  let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
+
+  // Load the about.html of the app
+  aboutWindow.loadURL(`file://${baseLocation}/about.html`);
+  aboutWindow.setMenu(null);
+  aboutWindow.once('ready-to-show', () => {
+    aboutWindow.show();
+  });
+}
+
+const aboutItem = new MenuItem({
+  label: 'About',
+  click: openAboutWindow
+});
+
 const separator = new MenuItem({
   type: 'separator'
 });
@@ -40,6 +67,16 @@ const help = new MenuItem({
   }
 });
 
+function restoreMenu() {
+  menu = new Menu();
+  menu.append(toggleDevToolsItem);
+  menu.append(inspectElementItem);
+  menu.append(separator);
+  menu.append(help);
+  menu.append(separator);
+  menu.append(aboutItem);
+}
+
 restoreMenu();
 
 window.addEventListener('contextmenu', (e) => {
@@ -47,11 +84,3 @@ window.addEventListener('contextmenu', (e) => {
   rightClickPosition = {x: e.x, y: e.y};
   menu.popup(remote.getCurrentWindow());
 }, false);
-
-function restoreMenu() {
-  menu = new Menu();
-  menu.append(toggleDevToolsItem);
-  menu.append(inspectElementItem);
-  menu.append(separator);
-  menu.append(help);
-}
