@@ -1,4 +1,5 @@
 'use strict';
+let humanize = require('humanize');
 
 let path = require('path');
 
@@ -57,6 +58,7 @@ describe('Confirm page', function confimPage() {
           requirements[key].panel = element(By.id(key + '-panel'));
           requirements[key].nameElement = element(By.id(key + '-name'));
           requirements[key].versionElement = element(By.id(key + '-version'));
+          requirements[key].sizeElement = element(By.id(key + '-size'));                    
           requirements[key].descriptionElement = element(By.id(key + '-description'));
 
           if(key === 'virtualbox') {
@@ -133,6 +135,11 @@ function testComponentPanel(key) {
       expect(component.versionElement.isDisplayed()).toBe(true);
       expect(component.versionElement.getText()).toEqual(component.version);
     });
+
+    it('should display a correct size', function() {
+      expect(component.sizeElement.isDisplayed()).toBe(true);
+      expect(component.sizeElement.getText()).toEqual(humanize.filesize(component.size));
+    }); 
 
     it('should display a correct description', function() {
       expect(component.descriptionElement.isDisplayed()).toBe(true);
