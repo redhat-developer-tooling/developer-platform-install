@@ -43,6 +43,7 @@
     "humanize": "0.0.9",
     "humanize-duration": "3.10.1",
     "mkdirp": "0.5.1",
+    "openpgp": "2.5.9",
     "ng-focus-if": "1.0.7",
     "patternfly": "3.26.5",
     "pify": "3.0.0",
