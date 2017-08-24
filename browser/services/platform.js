@@ -39,7 +39,7 @@ class Platform {
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled"').then((stdout)=>{
+        return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled;[Environment]::Exit(0);"').then((stdout)=>{
           let result = Promise.resolve();
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
@@ -101,7 +101,7 @@ class Platform {
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)('PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-Hypervisor | foreach{$_.state}"').then((stdout) => {
+        return pify(child_process.exec)('PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-Hypervisor | foreach{$_.state}; [Environment]::Exit(0);"').then((stdout) => {
           let result = Promise.resolve();
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
@@ -137,7 +137,7 @@ class Platform {
     return Platform.identify({
       win32: ()=> {
         let disk = path.parse(location).root.charAt(0);
-        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\").FreeSpace }"`).then((stdout) => {
+        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\").FreeSpace; [Environment]::Exit(0);}"`).then((stdout) => {
           return Promise.resolve(Number.parseInt(stdout));
         }).catch(()=>{
           return Promise.resolve();
@@ -206,7 +206,7 @@ class Platform {
 
   static getUserPath_win32() {
     return pify(child_process.exec)(
-      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\')"'
+      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\')[Environment]::Exit(0);"'
     ).then(result=> Promise.resolve(result.replace(/\r?\n/g, '')));
   }
 
