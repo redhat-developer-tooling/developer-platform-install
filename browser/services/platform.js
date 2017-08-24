@@ -206,7 +206,7 @@ class Platform {
 
   static getUserPath_win32() {
     return pify(child_process.exec)(
-      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\')[Environment]::Exit(0);"'
+      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\');[Environment]::Exit(0);"'
     ).then(result=> Promise.resolve(result.replace(/\r?\n/g, '')));
   }
 
