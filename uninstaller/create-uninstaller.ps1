@@ -1,5 +1,4 @@
-﻿
-$targetLocation = $args[0]
+﻿$targetLocation = $args[0]
 $timeStamp = $args[1]
 $versionString = $args[2]
 
@@ -21,3 +20,4 @@ New-ItemProperty -Path $devsuiteItem -Name InstallDate -Value $installDate
 New-ItemProperty -Path $devsuiteItem -Name Publisher -Value "RedHat, Inc."
 New-ItemProperty -Path $devsuiteItem -Name UninstallString -Value $uninstallString
 New-ItemProperty -Path $devsuiteItem -Name DisplayIcon -Value $uninstallIcon
+[Environment]::Exit(0);
