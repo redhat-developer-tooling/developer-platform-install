@@ -15,7 +15,8 @@
     "sha256sum": "59560c89b76f57ee72d9bd20bac047146f6f369fb42fba94ebaccd65c71209f5",
     "version": "11.0.0.GA",
     "useDownload": true,
-    "requires": ["jdk"]
+    "requires": ["jdk"],
+    "size": "676729978.88"
   },
   "jdk": {
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
@@ -33,6 +34,7 @@
         "fileName": "java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
         "sha256sum": "03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205",
         "version": "1.8.0_141",
+        "size": "108003328",
         "virusTotalReport": "https://virustotal.com/en/file/03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205/analysis/1501216078/"
       },
       "darwin": {
@@ -44,6 +46,7 @@
         "fileName": "",
         "sha256sum": "",
         "version": "1.8.0",
+        "size": "249141657.6",
         "virusTotalReport": "",
         "defaultOption": "detected",
         "messages": {
@@ -62,6 +65,7 @@
         "fileName": "java-1.8.0-openjdk-1.8.0.141-2.b16.redhat.windows.x86_64.msi",
         "sha256sum": "03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205",
         "version": "1.8.0_141",
+        "size": "108003328",
         "virusTotalReport": "https://virustotal.com/en/file/03d659a682125b2d69d5b5d055e3b6a2d0dc59a453d9299f968b0324974cd205/analysis/1501216078/"
       }
     }
@@ -82,6 +86,7 @@
         "fileName": "minishift_3_1_0__1_GA.exe",
         "sha256sum": "298e4ee23768d470f2dfb4865a2d5e193cdc9efb7d289e9505f47cbd854d16b0",
         "version": "3.1.0-1.GA",
+        "size": "395994726.4",
         "requires": ["cygwin","hyperv||virtualbox"],
         "installAfter": "cygwin"
       },
@@ -91,6 +96,7 @@
         "fileName": "minishift_3_1_0__1_GA",
         "sha256sum": "59edb7905d796e1a8ce63f2e7f96c645937a3b77fa8a1e078c6b689e051ddd5d",
         "version": "3.1.0-1.GA",
+        "size": "395994726.4",
         "requires": ["virtualbox"],
         "installAfter": "virtualbox"
       },
@@ -100,6 +106,7 @@
         "fileName": "minishift_3_1_0__1_GA",
         "sha256sum": "c709569e1c03971de1f715747acf0839d71fd25b3b4076f3b231d06a6c00fe4e",
         "version": "3.1.0-1.GA",
+        "size": "394264576",
         "requires": ["kvm"],
         "installAfter": "virtualbox"
       }
@@ -114,6 +121,7 @@
     "detectable": false,
     "targetFolderName": "kompose",
     "version": "1.0.0 Technology Preview",
+    "size": "46944747.52",
     "messages": {
       "info": {
         "message": "For additional information and documentation visit http://kompose.io",
@@ -154,6 +162,7 @@
     "fileName": "devstudio-11.0.0.GA-installer-standalone.jar",
     "sha256sum": "",
     "version": "11.0.0.GA",
+    "size": "676331520",
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
     "useDownload": false,
@@ -171,6 +180,7 @@
     "installAfter": "jdk",
     "requires": "jdk",
     "version": "6.3.0.GA",
+    "size": "415634554.88",
     "sha256sum": "",
     "file": {
       "platform": {
@@ -201,6 +211,7 @@
      "installAfter": "jdk",
      "requires": "jdk",
      "version": "6.3.0.GA",
+     "size": "785781882.88",
      "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-fuse-karaf-6.3.0.redhat-187.zip?workflow=direct",
      "url": "http://download-node-02.eng.bos.redhat.com/released/JBossFuse/6.3.0/jboss-fuse-karaf-6.3.0.redhat-187.zip",
      "fileName": "jboss-fuse-karaf-6.3.0.redhat-187.zip",
@@ -224,6 +235,7 @@
     "fileName": "jboss-eap-7.0.0-installer.jar",
     "sha256sum": "8c4432464414ab986d0aa4c6b0faee94b797cf1f66949dd98496ca0ae54d7d35",
     "version": "7.0.0.GA",
+    "size": "184549376",
     "defaultOption": "detected",
     "requires": ["jdk"]
   },
@@ -290,6 +302,7 @@
         "fileName": "virtualbox_5.1.24.exe",
         "sha256sum": "c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a",
         "version": "5.1.24",
+        "size": "123731968",
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a/analysis/"
       },
@@ -298,6 +311,7 @@
         "fileName": "virtualbox_5.1.24.dmg",
         "sha256sum": "5ac1a7b53d35cfde01a17a87ff2361bee37f4afe197d8e7f02239967b183d9f0",
         "version": "5.1.24",
+        "size": "94581555.2",
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/5ac1a7b53d35cfde01a17a87ff2361bee37f4afe197d8e7f02239967b183d9f0/analysis/"
       },
@@ -306,6 +320,7 @@
         "fileName": "VirtualBox-5.1-5.1.24_117012_fedora25-1.x86_64.rpm",
         "sha256sum": "459269bddb94e6d91a6925ea1642f911b30fddcbe7f12c21e891271351db9644",
         "version": "5.1.24",
+        "size": "71827456",
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/459269bddb94e6d91a6925ea1642f911b30fddcbe7f12c21e891271351db9644/analysis/1500980721/"
       }
@@ -325,6 +340,7 @@
     "fileName": "cygwin_2.8.2.exe",
     "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
     "version": "2.8.2",
+    "size": "928768",
     "virusTotalReport": "https://virustotal.com/en/file/062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214/analysis/",
     "platform": {
       "win32": {}
@@ -338,6 +354,7 @@
     "platform": {
       "win32": {
         "version": "9.20",
+        "size": "394264576",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
         "fileName": "7zip.zip",
         "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
@@ -352,6 +369,7 @@
     "platform": {
       "win32": {
         "version": "9.20",
+        "size": "520192",
         "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
         "fileName": "7zip-extra.7z",
         "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757"
