@@ -75,7 +75,7 @@ class CygwinInstall extends InstallableItem {
     if(fs.existsSync(localPackages)) {
       cygwinArgs = cygwinArgs + ` -L -l ${localPackages}`;
     }
-    let startProcess = `$p = Start-Process -ErrorAction stop -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFileEscaped}' -ArgumentList '${cygwinArgs}'; exit $p.ExitCode;`;
+    let startProcess = `$p = Start-Process -ErrorAction stop -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFileEscaped}' -ArgumentList '${cygwinArgs}'; ;[Environment]::Exit($p.ExitCode);`;
     let powershellCommand = `powershell -Command "${startProcess}"`;
 
     return installer.copyFile(
