@@ -3,14 +3,15 @@
 import Logger from './logger';
 import Platform from '../services/platform';
 import loadMetadata from '../services/metadata';
-let os = require('os');
-let path = require('path');
-let fs = require('fs');
-let fsExtra = require('fs-extra');
-let electron = require('electron');
-let mkdirp = require('mkdirp');
-let pify = require('pify');
-let child_process = require('child_process');
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import fsExtra from 'fs-extra';
+import electron from 'electron';
+import mkdirp from 'mkdirp';
+import pify from 'pify';
+import child_process from'child_process';
+
 
 class InstallerDataService {
   constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
@@ -196,7 +197,7 @@ class InstallerDataService {
         return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : this.tempDir();
       }, darwin: ()=> {
         let homePath = Platform.ENV.HOME;
-        return homePath ? path.join(homePath , 'Library', 'Application Support', 'RedHat', 'DevSuite') : this.tempDir();
+        return homePath ? path.join(homePath, 'Library', 'Application Support', 'RedHat', 'DevSuite') : this.tempDir();
       }, default: ()=> {
         return this.tempDir();
       }
