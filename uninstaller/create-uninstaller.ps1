@@ -9,6 +9,8 @@ $uninstallIcon = "$targetLocation\uninstaller\uninstall.ico"
 $uninstallString = "powershell -ExecutionPolicy ByPass -File $targetLocation\uninstaller\uninstall.ps1 $timeStamp"
 $installDate = Get-Date -Format yyyyMMdd
 
+Get-ChildItem $uninstallItem | where-object { ($_.PSChildName -like "DevelopmentSuite*" -and (Get-ItemProperty -Path $_.PSPath -Name InstallLocation).InstallLocation -like "$targetLocation") } | ForEach-Object {Remove-Item -Path $_.PSPath }
+
 New-Item -Path "$uninstallItem" -Name "DevelopmentSuite$timeStamp"
 New-ItemProperty -Path $devsuiteItem -Name DisplayName -Value "Red Hat Development Suite"
 New-ItemProperty -Path $devsuiteItem -Name DisplayVersion -Value $versionString
