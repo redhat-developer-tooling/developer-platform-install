@@ -93,13 +93,13 @@ for On-line and Bundle Installers.
 in bash terminal
 
         touch ~/.bash_profile
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 
    then restart bash to pick up changes in your environment
 
 4. Install nodejs using nvm command
 
-        nvm install 3.6.1
+        nvm install v6.11.2
 
 5. Clone installer repository
 
