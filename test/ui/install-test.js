@@ -66,7 +66,7 @@ describe('Installation page', function() {
 
       it('should each display a correct component description', function() {
         for (var key in requirements) {
-          let productDesc = requirements[key].descriptionPane.element(By.tagName('div').last());
+          let productDesc = requirements[key].descriptionPane.element(By.id('productDescription'));
           expect(productDesc.isDisplayed()).toBe(true);
           expect(productDesc.getText()).toEqual(requirements[key].description);
         }
