@@ -25,6 +25,7 @@ describe('Installation page', function() {
         requirements[key].panel = element(By.id(key + '-progress'));
         requirements[key].descriptionPane = requirements[key].panel.element(By.className('progress-description'));
         requirements[key].progress = requirements[key].panel.element(By.className('progress-bar'));
+        requirements[key].statusPane = requirements[key].panel.element(By.className('progress-status'));
       }
     });
   });
@@ -65,9 +66,16 @@ describe('Installation page', function() {
 
       it('should each display a correct component description', function() {
         for (var key in requirements) {
-          let productDesc = requirements[key].descriptionPane.element(By.tagName('div'));
+          let productDesc = requirements[key].descriptionPane.element(By.tagName('div').last());
           expect(productDesc.isDisplayed()).toBe(true);
           expect(productDesc.getText()).toEqual(requirements[key].description);
+        }
+      });
+
+      it('should each display a correct component status', function() {
+        for (var key in requirements) {
+          let status = requirements[key].statusPane.element(By.tagName('div'));
+          expect(status.isDisplayed()).toBe(true);
         }
       });
     });

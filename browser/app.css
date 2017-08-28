@@ -670,4 +670,9 @@ footer {
     /*text-overflow: ellipsis;*/
     white-space: nowrap;
   }
+
+  .progress-status {
+    display: block;
+    padding-bottom: 10px;
+  }
 }
