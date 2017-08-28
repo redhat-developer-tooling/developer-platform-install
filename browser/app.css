@@ -672,7 +672,7 @@ footer {
   }
 
   .progress-status {
-    display: block;
-    padding-bottom: 10px;
+    display: inline-block;
+    padding-bottom: 5px;
   }
 }

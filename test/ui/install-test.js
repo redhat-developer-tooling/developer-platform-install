@@ -74,8 +74,7 @@ describe('Installation page', function() {
 
       it('should each display a correct component status', function() {
         for (var key in requirements) {
-          let status = requirements[key].statusPane.element(By.tagName('div'));
-          expect(status.isDisplayed()).toBe(true);
+          expect(requirements[key].statusPane.isDisplayed()).toBe(true);
         }
       });
     });
