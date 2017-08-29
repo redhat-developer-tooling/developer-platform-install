@@ -7,7 +7,6 @@ import DevstudioAutoInstallGenerator from './devstudio-autoinstall';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
-import JdkInstall from './jdk-install';
 import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
