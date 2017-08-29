@@ -8,7 +8,6 @@ import JbosseapAutoInstallGenerator from './jbosseap-autoinstall';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
-import JdkInstall from './jdk-install';
 
 class JbosseapInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
