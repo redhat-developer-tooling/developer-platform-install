@@ -445,7 +445,7 @@ describe('Install controller', function() {
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
       installCtrl.status('virtualbox');
       expect(InstallableItem.prototype.downloadInstaller).calledOnce;
-      expect(installCtrl.status('virtualbox')).to.equal('Download failed');
+      expect(installCtrl.status('virtualbox')).to.equal('Download Failed');
     });
   });
 });
