@@ -10,7 +10,6 @@ import Downloader from './helpers/downloader';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
-import JdkInstall from './jdk-install';
 
 class FusePlatformInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, file) {
