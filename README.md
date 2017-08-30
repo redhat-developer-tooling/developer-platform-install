@@ -227,6 +227,10 @@ parameter like shown below
 
     npm test -- --report cobertura
 
+Running unit tests one by one for each installer module
+
+    gulp unit-test-1by1
+
 Debugging unit tests
 --------------------
 
