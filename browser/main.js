@@ -17,7 +17,6 @@ import breadcrumb from './directives/breadcrumb';
 import componentPanel from './directives/componentPanel';
 import InstallerDataService from './services/data';
 import Request from './services/request';
-import ComponentLoader from './services/componentLoader';
 import Electron from 'electron';
 import request from 'request';
 
