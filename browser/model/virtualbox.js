@@ -119,8 +119,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(this.keyName, progress, success, failure);
-    return installer.execFile(
-      this.downloadedFile, ['--extract', '-path', this.installerDataSvc.virtualBoxDir(), '--silent']
+    return installer.exec(
+      [`"${this.downloadedFile}"`, '--extract', '-path', `"${this.installerDataSvc.virtualBoxDir()}"`, '--silent'].join(' ')
     ).then(() => {
       return this.configure(installer);
     }).then(() => {
@@ -151,16 +151,16 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   installMsi(installer, resolve, reject) {
     installer.progress.setStatus('Installing');
     let msiFile = path.join(this.installerDataSvc.virtualBoxDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
-    return installer.execFile('msiexec', [
+    return installer.exec(['msiexec',
       '/i',
-      msiFile,
-      'INSTALLDIR=' + this.installerDataSvc.virtualBoxDir(),
+      `"${msiFile}"`,
+      `INSTALLDIR="${this.installerDataSvc.virtualBoxDir()}"`,
       'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
       '/qn',
       '/norestart',
       '/Liwe',
-      path.join(this.installerDataSvc.installDir(), 'vbox.log')
-    ]).then((res) => {
+      `"${path.join(this.installerDataSvc.installDir(), 'vbox.log')}"`
+    ].join(' ')).then((res) => {
       // msiexec logs are in UCS-2
       Util.findText(path.join(this.installerDataSvc.installDir(), 'vbox.log'), 'CopyDir: DestDir=', 'ucs2').then((result)=>{
         let regexTargetDir = /CopyDir: DestDir=(.*),.*/;

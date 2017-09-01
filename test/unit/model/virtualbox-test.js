@@ -166,20 +166,21 @@ describe('Virtualbox installer', function() {
         sandbox.stub(child_process, 'execFile').yields('done');
 
         let data = [
+          `"${downloadedFile}"`,
           '--extract',
           '-path',
-          installerDataSvc.virtualBoxDir(),
+          `"${installerDataSvc.virtualBoxDir()}"`,
           '--silent'
         ];
 
-        let spy = sandbox.spy(Installer.prototype, 'execFile');
+        let spy = sandbox.spy(Installer.prototype, 'exec');
         let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
         item2.setInstallComplete();
         item2.thenInstall(installer);
         installer.install(fakeProgress, success, failure);
 
         expect(spy).to.have.been.called;
-        expect(spy).calledWith(downloadedFile, data);
+        expect(spy).calledWith(data.join(' '));
       });
 
       it('setup should wait for all downloads to complete', function() {
@@ -223,24 +224,25 @@ describe('Virtualbox installer', function() {
         });
 
         it('should execute the msi installer', function() {
-          let spy = sandbox.spy(Installer.prototype, 'execFile');
+          let spy = sandbox.spy(Installer.prototype, 'exec');
 
           let msiFile = path.join(installerDataSvc.virtualBoxDir(), 'VirtualBox-' + version + '-r' + revision + '-MultiArch_amd64.msi');
           let opts = [
+            'msiexec',
             '/i',
-            msiFile,
-            'INSTALLDIR=' + installerDataSvc.virtualBoxDir(),
+            `"${msiFile}"`,
+            `INSTALLDIR="${installerDataSvc.virtualBoxDir()}"`,
             'ADDLOCAL=VBoxApplication,VBoxNetwork,VBoxNetworkAdp',
             '/qn',
             '/norestart',
             '/Liwe',
-            path.join(installerDataSvc.installDir(), 'vbox.log')
+            `"${path.join(installerDataSvc.installDir(), 'vbox.log')}"`
           ];
 
           installer.installMsi(helper, resolve, reject);
 
           expect(spy).to.have.been.calledOnce;
-          expect(spy).to.have.been.calledWith('msiexec', opts);
+          expect(spy).to.have.been.calledWith(opts.join(' '));
         });
 
         it('should add virtualbox target install folder to user PATH environment variable', function() {
