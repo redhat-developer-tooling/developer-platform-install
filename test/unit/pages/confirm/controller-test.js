@@ -338,4 +338,30 @@ describe('ConfirmController', function() {
     });
   });
 
+  describe('selectAll', function() {
+    beforeEach(inject(context));
+    it('should not select detected components', function() {
+      let kompose = confirmController.sc.checkboxModel.kompose;
+      kompose.addOption('detected', '1.0.0', 'location', true);
+      kompose.selectedOption = 'detected';
+      confirmController.selectAll();
+      expect(kompose.selectedOption).equals('detected');
+    });
+
+    it('should select all installable components', function() {
+      let kompose = confirmController.sc.checkboxModel.kompose;
+      confirmController.selectAll();
+      expect(kompose.selectedOption).equals('install');
+    });
+  });
+
+  describe('deselectAll', function() {
+    beforeEach(inject(context));
+    it('should deselect all detected components', function() {
+      confirmController.deselectAll();
+      for (let installer of installerDataSvc.allInstallables().values()) {
+        expect(installer.selectedOption).equals('detected');
+      }
+    });
+  });
 });
