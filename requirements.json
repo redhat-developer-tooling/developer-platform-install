@@ -162,7 +162,6 @@
     "fileName": "devstudio-11.0.0.GA-installer-standalone.jar",
     "sha256sum": "",
     "version": "11.0.0.GA",
-    "size": "676331520",
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
     "useDownload": false,
