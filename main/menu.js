@@ -90,10 +90,15 @@ let template = [
   },
   {
     label: 'Help',
-    accelerator: 'f1',
-    click: () => {
-      require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
-    }
+    submenu: [
+      {
+        label: 'Documentation',
+        accelerator: 'f1',
+        click: () => {
+          require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+        }
+      }
+    ]
   }
 ];
 

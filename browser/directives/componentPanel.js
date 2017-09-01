@@ -11,6 +11,10 @@ function componentPanel() {
         let evaluate = new Function('installerDataSvc', 'return ' + content);
         return evaluate(installerDataSvc);
       };
+
+      $scope.parseNumber = function(string) {
+        return parseFloat(string);
+      };
     }]),
     restrict: 'E',
     replace: true,
