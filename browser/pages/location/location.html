@@ -1,51 +1,52 @@
 <header>
   <breadcrumb></breadcrumb>
-  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12">
-  <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
-    <div id="location-form-container">
-      <p id="location-form-instructions" class="location-form-elements">
-        This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
-        <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
-        folder or use the default location.
-      </p>
-      <p id="location-form-note" class="location-form-elements">
-        Note: You can NOT choose the folder again once components start to get installed.
-      </p>
-      <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
-        <div class="location-browse-container">
-          <label for="location-browse-input-folder" class="location-browse-label">
-            Select the installation folder
-          </label>
-          <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
-                 ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
-          <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
+<main>
+  <div class="col-sm-12 bottom-spacer">
+    <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
+      <div id="location-form-container">
+        <p id="location-form-instructions" class="location-form-elements">
+          This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
+          <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
+          folder or use the default location.
+        </p>
+        <p id="location-form-note" class="location-form-elements">
+          Note: You can NOT choose the folder again once components start to get installed.
+        </p>
+        <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
+          <div class="location-browse-container">
+            <label for="location-browse-input-folder" class="location-browse-label">
+              Select the installation folder
+            </label>
+            <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
+                  ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
+            <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
-          <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
-            <span id="existingFolderStatus" class="help-block">
-              <span class="pficon pficon-warning-triangle-o"></span>
-              The selected folder already exists, some files might be overwritten.
-            </span>
-          </div>
+            <div ng-show="!locationForm.folder.$invalid && locCtrl.folderExists" class="has-warning">
+              <span id="existingFolderStatus" class="help-block">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                The selected folder already exists, some files might be overwritten.
+              </span>
+            </div>
 
-          <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists">
-            <strong id="createFolderStatus" class="help-block">
-              <span class="pficon pficon-info"></span>
-              The selected folder will be created.
-            </strong>
-          </div>
+            <div ng-show="!locationForm.folder.$invalid && !locCtrl.folderExists">
+              <strong id="createFolderStatus" class="help-block">
+                <span class="pficon pficon-info"></span>
+                The selected folder will be created.
+              </strong>
+            </div>
 
-          <div ng-show="locationForm.folder.$error" class="help-block has-error">
-            <ng-messages for="locationForm.folder.$error">
-              <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
-            </ng-messages>
+            <div ng-show="locationForm.folder.$error" class="help-block has-error">
+              <ng-messages for="locationForm.folder.$error">
+                <ng-messages-include src="pages/location/messages.html"></ng-messages-include>
+              </ng-messages>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </main>
 
 <footer class="no-background-color">

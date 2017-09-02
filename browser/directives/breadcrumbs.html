@@ -1,5 +1,8 @@
-<ul class="breadcrumbs">
-  <li ng-repeat="state in $navItems | filter:show" ng-class="[{ 'active' : isCurrent(state) }, { 'end' : $last }]">
-    <span>{{state.data.displayName}}</span>
-  </li>
-</ul>
+<div class="fix-breadcrumb">
+  <ul class="breadcrumbs">
+    <li ng-repeat="state in $navItems | filter:show" ng-class="[{ 'active' : isCurrent(state) }, { 'end' : $last }]">
+      <span>{{state.data.displayName}}</span>
+    </li>
+  </ul>
+  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
+</div>

@@ -385,13 +385,14 @@ footer {
   }
 
   .bottom-spacer {
+    padding-top: 100px;
     padding-bottom: 100px;
   }
 
   .footer-version {
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 16px;
+    left: 16px;
   }
 
   .footer-border{
@@ -674,5 +675,14 @@ footer {
   .progress-status {
     display: inline-block;
     padding-bottom: 5px;
+  }
+
+  .fix-breadcrumb {
+    border: 1px solid white;
+    background: white;
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    padding-bottom: 40px;
   }
 }
