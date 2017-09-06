@@ -19,6 +19,7 @@ class JdkInstall extends InstallableItem {
     this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.openJdkMsi = false;
+    this.secondDetection = false;
   }
 
   static get KEY() {
@@ -33,64 +34,79 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
+
     let versionRegex = /version\s"(\d+\.\d+\.\d+)_.*"/;
     let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
-    return Promise.resolve().then(()=>{
-      if(Platform.OS == 'win32') {
-        return this.findMsiInstalledJava();
-      } else if(Platform.OS == 'darwin') {
-        return this.findDarwinJava();
-      } else {
-        return Promise.resolve('');
-      }
-    }).then((output)=>{
-      this.openJdkMsi = output.length>0;
-      return Util.executeCommand('java -version', 2);
-    }).then((output) => {
-      return new Promise((resolve, reject) => {
-        let version = versionRegex.exec(output);
-        if (version && version.length > 1) {
-          this.addOption('detected', version[1], '', true);
-          this.option['detected'].version = version[1];
-          this.selected = false;
-          this.selectedOption = 'detected';
-          this.validateVersion();
-          if(this.option['detected'].valid) {
-            this.selectedOption = 'detected';
-          } else if(Platform.OS !== 'darwin') {
-            this.selectedOption = 'install';
-          }
-          resolve(true);
-        } else {
-          reject('No java detected');
-        }
+    let promise = Promise.resolve();
+    if(this.secondDetection && this.hasOption('detected') && Platform.OS == 'win32') {
+      promise = new Promise((resolve)=> {
+        Util.folderContains(path.join(this.option.detected.location, 'bin'), [Platform.OS == 'win32' ? 'java.exe' : 'java']).then(resolve).catch((error)=>{
+          console.error(error);
+          this.selectedOption = 'install';
+          delete this.option.detected;
+          resolve();
+        });
       });
-    }).then(() => {
-      return Util.executeCommand(command, 2);
-    }).then((output) => {
-      let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
-      this.openJdk = output.includes('OpenJDK');
-      var t = locationRegex.exec(output);
-      if(t && t.length > 1) {
-        this.option['detected'].location = t[1];
-      } else {
-        return Promise.reject('Cannot detect Java home folder');
-      }
-    }).catch((error) => {
-      Logger.info(this.keyName + ' - Detection failed with error');
-      Logger.info(this.keyName + ' - ' + error);
-      if(this.option.detected) {
-        delete this.option.detected;
-      }
-      if(Platform.OS !== 'darwin' ) {
-        this.selectedOption = 'install';
-      } else {
-        this.selectedOption = 'detected';
-      }
-      return Promise.resolve();
-    });
+    } else if(!this.secondDetection || Platform.OS !== 'win32' ) {
+      this.secondDetection = true;
+      promise = Promise.resolve().then(()=>{
+        if(Platform.OS == 'win32') {
+          return this.findMsiInstalledJava();
+        } else if(Platform.OS == 'darwin') {
+          return this.findDarwinJava();
+        } else {
+          return Promise.resolve('');
+        }
+      }).then((output)=>{
+        this.openJdkMsi = output.length>0;
+        return Util.executeCommand('java -version', 2);
+      }).then((output) => {
+        return new Promise((resolve, reject) => {
+          let version = versionRegex.exec(output);
+          if (version && version.length > 1) {
+            this.addOption('detected', version[1], '', true);
+            this.option['detected'].version = version[1];
+            this.selected = false;
+            this.selectedOption = 'detected';
+            this.validateVersion();
+            if(this.option['detected'].valid) {
+              this.selectedOption = 'detected';
+            } else if(Platform.OS !== 'darwin') {
+              this.selectedOption = 'install';
+            }
+            resolve(true);
+          } else {
+            reject('No java detected');
+          }
+        });
+      }).then(() => {
+        return Util.executeCommand(command, 2);
+      }).then((output) => {
+        let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
+        this.openJdk = output.includes('OpenJDK');
+        var t = locationRegex.exec(output);
+        if(t && t.length > 1) {
+          this.option['detected'].location = t[1];
+        } else {
+          return Promise.reject('Cannot detect Java home folder');
+        }
+      }).catch((error) => {
+        Logger.info(this.keyName + ' - Detection failed with error');
+        Logger.info(this.keyName + ' - ' + error);
+        if(this.option.detected) {
+          delete this.option.detected;
+        }
+        if(Platform.OS !== 'darwin' ) {
+          this.selectedOption = 'install';
+        } else {
+          this.selectedOption = 'detected';
+        }
+        return Promise.resolve();
+      });
+    }
+    return promise;
   }
 
   getMsiSearchScriptLocation() {
