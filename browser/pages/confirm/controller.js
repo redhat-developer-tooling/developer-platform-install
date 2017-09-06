@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-import Logger from '../../services/logger';
-import Platform from '../../services/platform';
-import ComponentLoader from '../../services/componentLoader';
+import Logger from "../../services/logger";
+import Platform from "../../services/platform";
+import ComponentLoader from "../../services/componentLoader";
+import humanize from "humanize";
 
 class ConfirmController {
-
   constructor($scope, $state, $timeout, installerDataSvc, electron) {
     this.router = $state;
     this.sc = $scope;
@@ -14,59 +14,68 @@ class ConfirmController {
     this.electron = electron;
     this.loader = new ComponentLoader(installerDataSvc);
     this.loader.loadComponents();
-    this.installedSearchNote = '';
+    this.installedSearchNote = "";
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
-
+    this.diskSize = 0;
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
 
-    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
+    for (let [key,value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
-      $scope.$watch(`checkboxModel.${key}.selectedOption`, function watchInstallSelectionChange() {
-        $scope.checkboxModel[key].validateVersion();
-      });
+      $scope.$watch(
+        `checkboxModel.${key}.selectedOption`,
+        function watchInstallSelectionChange() {
+          $scope.checkboxModel[key].validateVersion();
+        }
+      );
     }
 
-    const selectAllLabel = 'Select All Components';
+    const selectAllLabel = "Select All Components";
+    menu.insert(
+      0,
+      new MenuItem({
+        label: selectAllLabel,
+        click: () => {
+          this.sc.$apply(this.selectAll.bind(this));
+        }
+      })
+    );
 
-    menu.insert(0, new MenuItem({
-      label: selectAllLabel,
-      click: ()=> {
-        this.sc.$apply(this.selectAll.bind(this));
-      }
-    }));
+    const deselectAllLabel = "Deselect All Components";
+    menu.insert(
+      1,
+      new MenuItem({
+        label: deselectAllLabel,
+        click: () => {
+          this.sc.$apply(this.deselectAll.bind(this));
+        }
+      })
+    );
 
-    const deselectAllLabel = 'Deselect All Components';
+    menu.insert(
+      2,
+      new MenuItem({
+        label: deselectAllLabel,
+        type: "separator"
+      })
+    );
 
-
-    menu.insert(1, new MenuItem({
-      label: deselectAllLabel,
-      click: ()=> {
-        this.sc.$apply(this.deselectAll.bind(this));
-      }
-    }));
-
-    menu.insert(2, new MenuItem({
-      label: deselectAllLabel,
-      type: 'separator'
-    }));
-
-    $scope.$on('$destroy', ()=>{
+    $scope.$on("$destroy", () => {
       restoreMenu();
     });
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
-    $scope.$watch('$viewContentLoaded', ()=>{
+    $scope.$watch("$viewContentLoaded", () => {
       this.initPage();
     });
 
-    this.electron.remote.getCurrentWindow().addListener('focus', ()=> {
-      this.timeout( () => {
+    this.electron.remote.getCurrentWindow().addListener("focus", () => {
+      this.timeout(() => {
         this.activatePage();
         this.sc.$apply();
       });
@@ -78,7 +87,7 @@ class ConfirmController {
     for (let key in checkboxModel) {
       let node = checkboxModel[key];
       if (node.isInstallable && node.isNotDetected()) {
-        node.selectedOption = 'install';
+        node.selectedOption = "install";
       }
     }
   }
@@ -86,59 +95,65 @@ class ConfirmController {
   deselectAll() {
     let checkboxModel = this.sc.checkboxModel;
     for (let key in checkboxModel) {
-      checkboxModel[key].selectedOption = 'detected';
+      checkboxModel[key].selectedOption = "detected";
     }
   }
 
   initPage() {
-    return this.detectInstalledComponents().then(()=> {
-      this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
-      this.installWatchers();
-      return Promise.resolve();
-    }).then(
-      ()=> this.setIsDisabled()
-    ).catch((error)=> {
-      this.setIsDisabled();
-    });
+    return this.detectInstalledComponents()
+      .then(() => {
+        this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
+        this.setDiskSpace();
+        this.installWatchers();
+        return Promise.resolve();
+      })
+      .then(() => this.setIsDisabled())
+      .catch(error => {
+        this.setIsDisabled();
+      });
   }
 
   activatePage() {
-    return this.detectInstalledComponents().then(
-      ()=> this.setIsDisabled()
-    ).catch((error)=> {
-      Logger.error(error);
-      this.setIsDisabled();
-    });
+    return this.detectInstalledComponents()
+      .then(() => this.setIsDisabled())
+      .catch(error => {
+        Logger.error(error);
+        this.setIsDisabled();
+      });
   }
 
   installWatchers() {
     let graph = this.graph;
-    let nodes = graph.overallOrder() ;
+    let nodes = graph.overallOrder();
     let checkboxModel = this.sc.checkboxModel;
     for (let node of nodes) {
       checkboxModel[node].dependenciesOf = [];
-      for(let dependant of this.graph.dependantsOf(node)) {
+      for (let dependant of this.graph.dependantsOf(node)) {
         checkboxModel[node].dependenciesOf.push(checkboxModel[dependant]);
       }
-      checkboxModel[node].references=0;
+      checkboxModel[node].references = 0;
     }
     for (let node of nodes) {
       function watchComponent(newv, oldv) {
         let installer = checkboxModel[node];
-        if(installer.isSelected()) {
-          for(let dep of graph.dependenciesOf(node)) {
+        if (installer.isSelected()) {
+          for (let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
-            if(depInstaller.isInstallable && depInstaller.references === 0 && depInstaller.isNotDetected()) {
-              depInstaller.selectedOption = 'install';
+            if (
+              depInstaller.isInstallable &&
+              depInstaller.references === 0 &&
+              depInstaller.isNotDetected()
+            ) {
+              depInstaller.selectedOption = "install";
             }
             depInstaller.references++;
           }
-        } else if(!installer.isSelected() && oldv === 'install') {
-          for(let dep of graph.dependenciesOf(node)) {
+        } else if (!installer.isSelected() && oldv === "install") {
+          for (let dep of graph.dependenciesOf(node)) {
             let depInstaller = checkboxModel[dep];
             depInstaller.references--;
-            if(depInstaller.references === 0) {
-              depInstaller.selectedOption = 'detected';
+            if (depInstaller.references === 0) {
+              depInstaller.selectedOption = "detected";
             }
           }
         }
@@ -148,9 +163,10 @@ class ConfirmController {
   }
 
   detectInstalledComponents() {
-    if(!this.isDisabled) {
+    if (!this.isDisabled) {
       this.isDisabled = true;
-      this.installedSearchNote = ' The system is checking if you have any installed components.';
+      this.installedSearchNote =
+        " The system is checking if you have any installed components.";
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
@@ -168,14 +184,26 @@ class ConfirmController {
   install() {
     let checkboxModel = this.sc.checkboxModel;
     if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
-      this.loader.removeComponent('virtualbox');
+      this.loader.removeComponent("virtualbox");
     } else {
-      this.loader.removeComponent('hyperv');
+      this.loader.removeComponent("hyperv");
     }
 
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fuseplatform', 'fuseplatformkaraf'];
+    let possibleComponents = [
+      "virtualbox",
+      "jdk",
+      "devstudio",
+      "jbosseap",
+      "cygwin",
+      "cdk",
+      "kompose",
+      "fuseplatform",
+      "fuseplatformkaraf"
+    ];
     for (let i = 0; i < possibleComponents.length; i++) {
-      let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
+      let component = this.installerDataSvc.getInstallable(
+        possibleComponents[i]
+      );
       if (component) {
         possibleComponents[i] = component.getLocation();
       } else {
@@ -183,7 +211,7 @@ class ConfirmController {
       }
     }
 
-    this.electron.remote.getCurrentWindow().removeAllListeners('focus');
+    this.electron.remote.getCurrentWindow().removeAllListeners("focus");
     this.installerDataSvc.setup(...possibleComponents);
 
     this.router.go(this.getNextPage());
@@ -193,29 +221,45 @@ class ConfirmController {
     let checkboxModel = this.sc.checkboxModel;
     let required = false;
     for (const key in checkboxModel) {
-      required = checkboxModel.hasOwnProperty(key)
-        && checkboxModel[key].authRequired
-        && checkboxModel[key].selectedOption == 'install';
-      if(required) {
+      required =
+        checkboxModel.hasOwnProperty(key) &&
+        checkboxModel[key].authRequired &&
+        checkboxModel[key].selectedOption == "install";
+      if (required) {
         break;
       }
     }
     return required;
   }
 
-  getNextPage () {
-    if(this.isAccountRequired()) {
-      return 'account';
+  setDiskSpace() {
+    let checkboxModel = this.sc.checkboxModel;
+    let finalSize = parseFloat(this.diskSize);
+    for (let key in checkboxModel) {
+      if (
+        checkboxModel.hasOwnProperty(key) &&
+        checkboxModel[key].size &&
+        checkboxModel[key].selectedOption == "install"
+      ) {
+        finalSize += parseFloat(checkboxModel[key].size);
+      }
+    }
+    return humanize.filesize(finalSize);
+  }
+
+  getNextPage() {
+    if (this.isAccountRequired()) {
+      return "account";
     } else {
-      return 'install';
+      return "install";
     }
   }
 
-  getNextButtonName () {
-    if(this.isAccountRequired()) {
-      return 'Next';
+  getNextButtonName() {
+    if (this.isAccountRequired()) {
+      return "Next";
     } else {
-      return 'Download & Install';
+      return "Download & Install";
     }
   }
 
@@ -227,17 +271,19 @@ class ConfirmController {
       this.numberOfExistingInstallations = 0;
       // Count the number of existing installations.
       for (var [, value] of this.installerDataSvc.allInstallables()) {
-        if (value.hasOption('detected')) {
+        if (value.hasOption("detected")) {
           ++this.numberOfExistingInstallations;
         }
       }
 
       if (this.numberOfExistingInstallations == 1) {
-        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
+        this.installedSearchNote = `  We found ${this
+          .numberOfExistingInstallations} installed component`;
       } else if (this.numberOfExistingInstallations > 1) {
-        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
+        this.installedSearchNote = `  We found ${this
+          .numberOfExistingInstallations} installed components`;
       } else {
-        this.installedSearchNote = '';
+        this.installedSearchNote = "";
       }
     }, true);
   }
@@ -245,7 +291,7 @@ class ConfirmController {
   isConfigurationValid() {
     let result = true;
     for (let [, value] of this.installerDataSvc.allInstallables().entries()) {
-      if(! (result = value.isConfigurationValid())) {
+      if (!(result = value.isConfigurationValid())) {
         break;
       }
     }
@@ -256,7 +302,7 @@ class ConfirmController {
     let selected = false;
     for (var [, value] of this.installerDataSvc.allInstallables()) {
       selected = !value.isSkipped();
-      if(selected) {
+      if (selected) {
         break;
       }
     }
@@ -264,17 +310,23 @@ class ConfirmController {
   }
 
   exit() {
-    Logger.info('Closing the installer window');
+    Logger.info("Closing the installer window");
     this.electron.remote.getCurrentWindow().close();
   }
 
   back() {
-    Logger.info('Going back a page');
-    this.electron.remote.getCurrentWindow().removeAllListeners('focus');
-    this.router.go('location');
+    Logger.info("Going back a page");
+    this.electron.remote.getCurrentWindow().removeAllListeners("focus");
+    this.router.go("location");
   }
 }
 
-ConfirmController.$inject = ['$scope', '$state', '$timeout', 'installerDataSvc', 'electron'];
+ConfirmController.$inject = [
+  "$scope",
+  "$state",
+  "$timeout",
+  "installerDataSvc",
+  "electron"
+];
 
 export default ConfirmController;
