@@ -15,7 +15,6 @@ class CDKInstall extends InstallableItem {
 
     this.sha256 = sha256sum;
     this.addOption('install', this.version, '', true);
-    this.selected = false;
   }
 
   static get KEY() {

@@ -54,7 +54,6 @@ class JdkInstall extends InstallableItem {
         if (version && version.length > 1) {
           this.addOption('detected', version[1], '', true);
           this.option['detected'].version = version[1];
-          this.selected = false;
           this.selectedOption = 'detected';
           this.validateVersion();
           if(this.option['detected'].valid) {
