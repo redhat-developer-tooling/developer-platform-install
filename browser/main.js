@@ -19,6 +19,7 @@ import InstallerDataService from './services/data';
 import Request from './services/request';
 import Electron from 'electron';
 import request from 'request';
+import humanize from 'humanize';
 
 let mainModule =
   angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages', 'focus-if'])
@@ -84,6 +85,13 @@ let mainModule =
             displayName: 'Get Started'
           }
         });
-    }]);
+    }])
+    .filter('humanize', function(){
+      return function(text){
+        if(text){
+          return humanize.filesize(text);
+        };
+      };
+    });
 
 export default mainModule;

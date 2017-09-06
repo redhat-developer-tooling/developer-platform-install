@@ -61,16 +61,31 @@ class ConfirmController {
 
     $scope.isConfigurationValid = this.isConfigurationValid;
 
-    $scope.$watch('$viewContentLoaded', ()=>{
-      this.initPage();
-    });
+    $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
-    this.electron.remote.getCurrentWindow().addListener('focus', ()=> {
-      this.timeout( () => {
-        this.activatePage();
-        this.sc.$apply();
-      });
-    });
+    this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+
+    $scope.updateTotalDownloadSize = () => {
+      let checkboxModel = this.sc.checkboxModel;
+      let finalSize = 0;
+      for (let key in checkboxModel) {
+        if (checkboxModel[key].size && checkboxModel[key].selectedOption == 'install') {
+          finalSize += checkboxModel[key].size;
+        }
+      }
+      return finalSize;
+    };
+
+    $scope.updateTotalDiskSpace = () => {
+      let checkboxModel = this.sc.checkboxModel;
+      let totalDownloadSize = $scope.updateTotalDownloadSize();
+      for (let key in checkboxModel) {
+        if (checkboxModel[key].installSize && checkboxModel[key].selectedOption == 'install') {
+          totalDownloadSize += checkboxModel[key].installSize;
+        }
+      }
+      return totalDownloadSize;
+    };
   }
 
   selectAll() {
