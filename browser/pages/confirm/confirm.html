@@ -1,26 +1,23 @@
 <header>
   <breadcrumb></breadcrumb>
-  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12 bottom-spacer" >
-  <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
-
-    <p class="installation-note has-spinner" ng-show="confCtrl.numberOfExistingInstallations>0">
-      <span class="pficon-info"></span>{{confCtrl.installedSearchNote}}
-    </p>
-
-    <p id="instructions" class="installation-note">Select the components to install</p>
-
-    <div ng-repeat="item in checkboxModel">
-      <component-panel item="item"></component-panel>
-    </div>
-  </form>
-
-  <div id="detection-info" class="centered has-spinner" ng-show="confCtrl.isDisabled" ng-class="{'active':confCtrl.isDisabled}">
-    <div class="spinner spinner-lg spinner-bgcolour"></div>
-    <div class="detection-msg">
-        <h3>{{confCtrl.installedSearchNote}}</h3>
+<main>
+  <div class="col-sm-12 bottom-spacer">
+    <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
+      <p class="installation-note has-spinner" ng-show="confCtrl.numberOfExistingInstallations>0">
+        <span class="pficon-info"></span>{{confCtrl.installedSearchNote}}
+      </p>
+      <p id="instructions" class="installation-note">Select the components to install</p>
+      <div ng-repeat="item in checkboxModel">
+        <component-panel item="item"></component-panel>
+      </div>
+    </form>
+    <div id="detection-info" class="centered has-spinner" ng-show="confCtrl.isDisabled" ng-class="{'active':confCtrl.isDisabled}">
+      <div class="spinner spinner-lg spinner-bgcolour"></div>
+      <div class="detection-msg">
+          <h3>{{confCtrl.installedSearchNote}}</h3>
+      </div>
     </div>
   </div>
 </main>

@@ -1,12 +1,10 @@
 <header>
   <breadcrumb></breadcrumb>
-  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
 <main>
-  <div class="col-sm-12">
+  <div class="col-sm-12 bottom-spacer">
     <div id="login-section" class="verticalLine" >
-
       <form name="accountForm" id="accountForm" class="form-horizontal" ng-submit="acctCtrl.login()">
         <img class="login-form-input-container form-group" style="margin-right:90px;margin-bottom:27px;" width="220px" src="images/RHDP_logo_RGB_default.svg"/>
         <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
@@ -25,40 +23,40 @@
           <a class="forgot-password" id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">Forgot password?</a>
         </div>
       </form>
-    </div>
+      <div class="form-group has-error login-form-error-container">
+          <div id="invalidLoginError" ng-show="acctCtrl.authFailed && !accountForm.username.$error.required && !accountForm.password.$error.required" class="help-block form-group has-error">
+            <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
+          </div>
+          <div ng-show="acctCtrl.isInvalid(accountForm.username) && acctCtrl.isValid(accountForm.password)" class="help-block form-group has-error">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your username.</strong>
+          </div>
+          <div ng-show="acctCtrl.isInvalid(accountForm.password) && acctCtrl.isValid(accountForm.username)" class="help-block form-group has-error">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your password.</strong>
+          </div>
+          <div ng-show="acctCtrl.isInvalid(accountForm.username) && acctCtrl.isInvalid(accountForm.password)" class="help-block form-group has-error">
+            <span class="pficon pficon-error-circle-o"></span>
+            <strong>Please enter your username and password.</strong>
+          </div>
+          <div id="tcError" ng-show="acctCtrl.tandcNotSigned" class="help-block form-group has-error">
+            <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="tcMessage">Terms and Conditions for CDK have not been signed.</strong>
+          </div>
+          <div id="httpError" ng-show="acctCtrl.httpError" class="help-block form-group has-error">
+            <span id="NetworkErrorIcon" class="pficon pficon-error-circle-o"></span>
+            <strong id="httpErrorMessage">Cannot access developers.redhat.com, please check your internet connection.</strong>
+          </div>
+          <div id="loginInProgress" ng-show="acctCtrl.isLoginBtnClicked" class="form-group active has-spinner">
+            <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span><strong>Logging in</strong>
+          </div>
+        </div>
+      </div>
     <div id="welcome-text">
       <p>
         Enter your <a href="" id="dev-rh-link" ng-click="acctCtrl.gotoDRH()">developers.redhat.com</a> username and password to install (you can <a id="registerLink" href="" ng-click="acctCtrl.createAccount()">register here</a>).
       </p>
-    </div>
-  </div>
-  <div class="form-group has-error login-form-error-container">
-    <div id="invalidLoginError" ng-show="acctCtrl.authFailed && !accountForm.username.$error.required && !accountForm.password.$error.required" class="help-block form-group has-error">
-      <span id="invalidLoginIcon" class="pficon pficon-error-circle-o"></span>
-      <strong id="invalidLoginMessage">Invalid account information, please try again.</strong>
-    </div>
-    <div ng-show="acctCtrl.isInvalid(accountForm.username) && acctCtrl.isValid(accountForm.password)" class="help-block form-group has-error">
-      <span class="pficon pficon-error-circle-o"></span>
-      <strong>Please enter your username.</strong>
-    </div>
-    <div ng-show="acctCtrl.isInvalid(accountForm.password) && acctCtrl.isValid(accountForm.username)" class="help-block form-group has-error">
-      <span class="pficon pficon-error-circle-o"></span>
-      <strong>Please enter your password.</strong>
-    </div>
-    <div ng-show="acctCtrl.isInvalid(accountForm.username) && acctCtrl.isInvalid(accountForm.password)" class="help-block form-group has-error">
-      <span class="pficon pficon-error-circle-o"></span>
-      <strong>Please enter your username and password.</strong>
-    </div>
-    <div id="tcError" ng-show="acctCtrl.tandcNotSigned" class="help-block form-group has-error">
-      <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
-      <strong id="tcMessage">Terms and Conditions for CDK have not been signed.</strong>
-    </div>
-    <div id="httpError" ng-show="acctCtrl.httpError" class="help-block form-group has-error">
-      <span id="NetworkErrorIcon" class="pficon pficon-error-circle-o"></span>
-      <strong id="httpErrorMessage">Cannot access developers.redhat.com, please check your internet connection.</strong>
-    </div>
-    <div id="loginInProgress" ng-show="acctCtrl.isLoginBtnClicked" class="form-group active has-spinner">
-      <span class="spinner spinner-xs spinner-inline"><i class="icon-spin icon-refresh"></i></span><strong>Logging in</strong>
     </div>
   </div>
 </main>

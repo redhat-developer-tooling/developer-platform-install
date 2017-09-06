@@ -1,17 +1,13 @@
 <header>
   <breadcrumb></breadcrumb>
-  <img class="branding" src="images/logo_RHD_RGB_default.svg"/>
 </header>
 
-<main class="col-sm-12">
-  <div class="col-sm-12">
-    <h3>Installation Details</h3>
-    <ng-repeat ng-repeat="progress in data">
-      <div>
-        <progress-bar progress="progress">
-        </progress-bar>
-      </div>
-    </ng-repeat>
+<main>
+  <div class="col-sm-12 bottom-spacer">
+    <p class="installation-note">Installation Details</p>
+    <div ng-repeat="progress in data">
+      <progress-bar progress="progress"></progress-bar>
+    </div>
   </div>
 </main>
 
