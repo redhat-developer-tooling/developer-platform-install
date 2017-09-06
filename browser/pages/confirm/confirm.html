@@ -16,13 +16,14 @@
     <div id="detection-info" class="centered has-spinner" ng-show="confCtrl.isDisabled" ng-class="{'active':confCtrl.isDisabled}">
       <div class="spinner spinner-lg spinner-bgcolour"></div>
       <div class="detection-msg">
-          <h3>{{confCtrl.installedSearchNote}}</h3>
+        <h3>{{confCtrl.installedSearchNote}}</h3>
       </div>
     </div>
   </div>
 </main>
 
 <footer id="footer-navigation" class="no-background-color">
+  <span class="size-footer" ng-show="confCtrl.isAtLeastOneSelected()">Total Install Size:&nbsp;<span id="install-size-footer">{{updateTotalDiskSpace() | humanize}}</span></span>
   <div class="footer-border"></div>
   <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="confirmForm"
           ng-click="confCtrl.exit()">Cancel</button>
