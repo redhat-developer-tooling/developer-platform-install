@@ -81,6 +81,41 @@ function testPage(common = require('./common')) {
     });
   }
 
+  it('should select all additional components', function(done) {
+    let items = process.env.PDKI_TEST_ADDITIONAL_ITEMS;
+    let keys = [];
+    if (items) {
+      let split = items.split(',');
+      for (let item of split) {
+        item = item.trim();
+        if (reqs[item]) {
+          keys.push(item);
+        } else if (item === 'all') {
+          keys = Object.keys(reqs);
+          break;
+        }
+      }
+
+      if (keys.length < 1) {
+        done();
+      }
+
+      let promises = [];
+      for (let key of keys) {
+        promises.push(reqs[key].checkbox.isEnabled().then((enabled) => {
+          reqs[key].checkbox.isSelected().then((selected) => {
+            if (!selected && enabled) {
+              clickElement(reqs[key].checkbox);
+            }
+          });
+        }));
+      }
+      Promise.all(promises).then(() => { done(); });
+    } else {
+      done();
+    }
+  });
+
   it('should not allow to continue if an error is present', function() {
     if (common.error) {
       expect(nextButton.isEnabled()).toBe(false);
@@ -102,6 +137,10 @@ function testPage(common = require('./common')) {
       });
     }
   });
+}
+
+function clickElement(elem) {
+  return browser.executeScript('arguments[0].click()', elem);
 }
 
 
