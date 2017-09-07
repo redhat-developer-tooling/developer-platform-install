@@ -275,4 +275,56 @@ describe('devstudio installer', function() {
       });
     });
   });
+
+  describe('configureRuntimeDetection', function() {
+
+    let fsextra = require('fs-extra');
+
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(fsextra, 'existsSync').returns(true);
+
+      });
+
+      it('should use windows specific location for runtime_locations.properties file', function() {
+        sandbox.stub(fsextra, 'appendFile').resolves();
+        return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
+          expect(fsextra.existsSync).calledOnce;
+          expect(fsextra.existsSync).to.have.been.calledWith(path.join(installer.installerDataSvc.devstudioDir(), 'studio', 'runtime_locations.properties'));
+        });
+      });
+
+      it('should log errors if it cannot modify the runtime_locations.properties file', function() {
+        sandbox.stub(fsextra, 'appendFile').rejects();
+        return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
+          expect(errorStub).called;
+        });
+      });
+    });
+
+    describe('on macos', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(fsextra, 'existsSync').returns(true);
+
+      });
+
+      it('should use windows specific location for runtime_locations.properties file', function() {
+        sandbox.stub(fsextra, 'appendFile').resolves();
+        return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
+          expect(fsextra.existsSync).calledOnce;
+          expect(fsextra.existsSync).to.have.been.calledWith(path.join(installer.installerDataSvc.devstudioDir(), 'studio/devstudio.app/Contents/Eclipse', 'runtime_locations.properties'));
+        });
+      });
+
+      it('should log errors if it cannot modify the runtime_locations.properties file', function() {
+        sandbox.stub(fsextra, 'appendFile').rejects();
+        return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
+          expect(errorStub).called;
+        });
+      });
+    });
+
+  });
 });

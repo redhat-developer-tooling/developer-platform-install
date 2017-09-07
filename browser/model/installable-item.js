@@ -28,7 +28,6 @@ class InstallableItem {
     this.downloaded = false;
     this.installed = false;
     this.size = requirement.size;
-    this.selected = true;
     this.version = requirement.version;
 
     this.detected = false;
