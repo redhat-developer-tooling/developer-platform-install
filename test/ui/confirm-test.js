@@ -48,7 +48,7 @@ describe('Confirm page', function confimPage() {
 
   describe('after detection', function() {
 
-    let footer, cancelButton, backButton;
+    let footer, cancelButton, backButton, installSizeFooter;
 
     beforeAll(function() {
       browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
@@ -73,6 +73,7 @@ describe('Confirm page', function confimPage() {
         footer = element(By.id('footer-navigation'));
         cancelButton = element(By.id('confirm-cancel-btn'));
         backButton = element(By.id('confirm-back-btn'));
+        installSizeFooter = element(By.className('size-footer'));
       });
     });
 
@@ -112,6 +113,19 @@ describe('Confirm page', function confimPage() {
       for (let key in requirements) {
         expect(requirements[key].panel.isDisplayed()).toBe(true);
       }
+    });
+
+    it('should display a total install size', function() {
+      expect(installSizeFooter.isEnabled()).toBe(true);
+      let finalSize = 0;
+      for (var key in requirements) {
+        if(requirements[key].defaultOption && requirements[key].defaultOption === 'detected' || key == 'virtualbox'){
+          continue;
+        } else {
+          finalSize += parseFloat(requirements[key].size);
+        }
+      };
+      expect(installSizeFooter.element(By.id('install-size-footer')).getText()).toEqual(humanize.filesize(finalSize)); 
     });
 
     describe('components', function() {
