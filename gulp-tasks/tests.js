@@ -61,12 +61,13 @@ module.exports = function(gulp) {
   });
 
   gulp.task('protractor-run', ['webdriver-update'], function(cb) {
-    yargs.string(['virtualbox', 'hyperv', 'cygwin', 'jdk', 'targetFolder']);
+    yargs.string(['virtualbox', 'hyperv', 'cygwin', 'jdk', 'targetFolder', 'additionalItems']);
     assignArgument('virtualbox', 'PDKI_TEST_INSTALLED_VIRTUALBOX');
     assignArgument('hyperv', 'PDKI_TEST_INSTALLED_HYPERV');
     assignArgument('cygwin', 'PDKI_TEST_INSTALLED_CYGWIN');
     assignArgument('jdk', 'PDKI_TEST_INSTALLED_JDK');
     assignArgument('targetFolder', 'PDKI_TEST_TARGET_FOLDER');
+    assignArgument('additionalItems', 'PDKI_TEST_ADDITIONAL_ITEMS');
 
     gulp.src(['../test/ui/**/*.js'])
       .pipe(angularProtractor({
