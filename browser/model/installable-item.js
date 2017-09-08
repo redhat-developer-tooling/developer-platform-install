@@ -62,7 +62,6 @@ class InstallableItem {
           this.downloaded = stat && (stat.size == requirement.size);
         } catch (error) {
           Logger.info(`${this.keyName} - fstat function failure ${error}`);
-          console.log(error);
         }
       }
     }
