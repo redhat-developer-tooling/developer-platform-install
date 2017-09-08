@@ -7,7 +7,6 @@ import fs from 'fs-extra';
 import Downloader from './helpers/downloader';
 import {remote} from 'electron';
 import mkdirp from 'mkdirp';
-import humanize from 'humanize';
 
 let ipcRenderer = require('electron').ipcRenderer;
 
@@ -28,7 +27,7 @@ class InstallableItem {
     this.useDownload = true;
     this.downloaded = false;
     this.installed = false;
-    this.size = humanize.filesize(requirement.size);
+    this.size = requirement.size;
     this.version = requirement.version;
 
     this.detected = false;

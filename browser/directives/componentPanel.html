@@ -26,7 +26,10 @@
           </div>
         </div>
         <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span>
-        <span id="{{item.keyName}}-version" class="product-info">{{item.version}}</span><span ng-show="parseNumber(item.size) > 0"><span class="product-info">|</span><span id="{{item.keyName}}-size" class="product-info">{{item.size}}</span></span>
+        <span id="{{item.keyName}}-version" class="product-info">{{item.version}}</span>
+        <span ng-show="parseNumber(item.size) > 0">
+          <span class="product-info">|</span><span id="{{item.keyName}}-size" class="product-info">{{item.size | humanize}}</span>
+        </span>
         <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
       </div>
     </div>

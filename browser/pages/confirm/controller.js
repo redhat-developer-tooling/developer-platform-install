@@ -71,6 +71,17 @@ class ConfirmController {
         this.sc.$apply();
       });
     });
+
+    $scope.updateTotalDiskSpace = () => {
+      let checkboxModel = this.sc.checkboxModel;
+      let finalSize = 0;
+      for (let key in checkboxModel) {
+        if (checkboxModel[key].size && checkboxModel[key].selectedOption == 'install') {
+          finalSize += checkboxModel[key].size;
+        }
+      }
+      return finalSize;
+    };
   }
 
   selectAll() {
