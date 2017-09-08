@@ -53,6 +53,20 @@ class InstallableItem {
     mkdirp.sync(this.downloadFolder);
     this.downloadedFile = path.join(this.downloadFolder, fileName);
 
+    if(fs.existsSync(this.bundledFile)) {
+      this.downloaded = true;
+    } else {
+      if(fs.existsSync(this.downloadedFile)) {
+        try {
+          let stat = fs.statSync(this.downloadedFile);
+          this.downloaded = stat && (stat.size == requirement.size);
+        } catch (error) {
+          Logger.info(`${this.keyName} - fstat function failure ${error}`);
+          console.log(error);
+        }
+      }
+    }
+
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
     this.authRequired = authRequired;
