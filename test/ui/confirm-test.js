@@ -28,11 +28,11 @@ describe('Confirm page', function confimPage() {
 
   beforeAll(function() {
     browser.setLocation('confirm')
-    .then(function() {
-      confirmForm = element(By.id('confirmForm'));
-      detectionInfo = element(By.id('detection-info'));
-      nextButton = element(By.id('confirm-install-btn'));
-    });
+      .then(function() {
+        confirmForm = element(By.id('confirmForm'));
+        detectionInfo = element(By.id('detection-info'));
+        nextButton = element(By.id('confirm-install-btn'));
+      });
   });
 
   it('should activate component detection on load', function() {
@@ -48,32 +48,33 @@ describe('Confirm page', function confimPage() {
 
   describe('after detection', function() {
 
-    let footer, cancelButton, backButton;
+    let footer, cancelButton, backButton, installSizeFooter;
 
     beforeAll(function() {
       browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
-      .then(function() {
-        for (let key in requirements) {
-          requirements[key].name = requirements[key].name.toUpperCase();
-          requirements[key].panel = element(By.id(key + '-panel'));
-          requirements[key].nameElement = element(By.id(key + '-name'));
-          requirements[key].versionElement = element(By.id(key + '-version'));
-          requirements[key].sizeElement = element(By.id(key + '-size'));
-          requirements[key].descriptionElement = element(By.id(key + '-description'));
+        .then(function() {
+          for (let key in requirements) {
+            requirements[key].name = requirements[key].name.toUpperCase();
+            requirements[key].panel = element(By.id(key + '-panel'));
+            requirements[key].nameElement = element(By.id(key + '-name'));
+            requirements[key].versionElement = element(By.id(key + '-version'));
+            requirements[key].sizeElement = element(By.id(key + '-size'));
+            requirements[key].descriptionElement = element(By.id(key + '-description'));
 
-          if(key === 'virtualbox') {
-            requirements[key].installedNote = element(By.id(key + '-installed-note'));
-            requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
-            requirements[key].newerMessage = element(By.id(key + '-newer-message'));
-            requirements[key].olderWarning = element(By.id(key + '-older-warning'));
-            requirements[key].olderMessage = element(By.id(key + '-older-message'));
+            if(key === 'virtualbox') {
+              requirements[key].installedNote = element(By.id(key + '-installed-note'));
+              requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
+              requirements[key].newerMessage = element(By.id(key + '-newer-message'));
+              requirements[key].olderWarning = element(By.id(key + '-older-warning'));
+              requirements[key].olderMessage = element(By.id(key + '-older-message'));
+            }
           }
-        }
 
-        footer = element(By.id('footer-navigation'));
-        cancelButton = element(By.id('confirm-cancel-btn'));
-        backButton = element(By.id('confirm-back-btn'));
-      });
+          footer = element(By.id('footer-navigation'));
+          cancelButton = element(By.id('confirm-cancel-btn'));
+          backButton = element(By.id('confirm-back-btn'));
+          installSizeFooter = element(By.className('size-footer'));
+        });
     });
 
     //scoll down and select Java if it is deselected by default so that all panels appear on install screen
@@ -112,6 +113,17 @@ describe('Confirm page', function confimPage() {
       for (let key in requirements) {
         expect(requirements[key].panel.isDisplayed()).toBe(true);
       }
+    });
+
+    it('should display a total install size', function() {
+      expect(installSizeFooter.isEnabled()).toBe(true);
+      let finalSize = 0;
+      for (var key in requirements) {
+        if(requirements[key].defaultOption === undefined || requirements[key].defaultOption === 'install') {
+          finalSize += parseFloat(requirements[key].size);
+        }
+      }
+      expect(installSizeFooter.element(By.id('install-size-footer')).getText()).toEqual(humanize.filesize(finalSize));
     });
 
     describe('components', function() {

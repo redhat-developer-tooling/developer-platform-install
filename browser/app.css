@@ -414,7 +414,7 @@ footer {
   }
 
   .back-btn {
-    right: 150px;
+    right: 140px;
     margin-right: calc(-1 * (100vw - 100%));
   }
 
@@ -423,7 +423,7 @@ footer {
   }
 
   .back-btn-spacer {
-    right: 210px;
+    right: 200px;
   }
 
   .go-btn {
@@ -684,5 +684,13 @@ footer {
     z-index: 2;
     width: 100%;
     padding-bottom: 40px;
+  }
+
+  .size-footer {
+    position: absolute;
+    bottom: 20px;
+    padding-right: 150px;
+    right: 150px;
+    color: #9c9c9c;
   }
 }
