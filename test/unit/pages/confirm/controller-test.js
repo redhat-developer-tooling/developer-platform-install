@@ -364,4 +364,14 @@ describe('ConfirmController', function() {
       }
     });
   });
+
+  describe('updateTotalDiskSpace', function() {
+    beforeEach(inject(context));
+    it('should calculate total install disk space for selected components', function() {
+      confirmController.deselectAll();
+      let kompose = confirmController.sc.checkboxModel.kompose;
+      kompose.selectedOption = 'install';
+      expect(confirmController.sc.updateTotalDiskSpace()).equals(kompose.size + kompose.installSize);
+    });
+  });
 });
