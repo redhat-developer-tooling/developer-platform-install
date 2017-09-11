@@ -385,8 +385,8 @@ footer {
   }
 
   .bottom-spacer {
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 70px;
+    padding-bottom: 80px;
   }
 
   .footer-version {
@@ -683,7 +683,7 @@ footer {
     position: fixed;
     z-index: 2;
     width: 100%;
-    padding-bottom: 40px;
+    padding-bottom: 15px;
   }
 
   .size-footer {
@@ -692,5 +692,21 @@ footer {
     padding-right: 150px;
     right: 150px;
     color: #9c9c9c;
+  }
+
+  .selection-desc {
+    padding-top: 30px;
+    position: fixed;
+    width: 100%;
+    padding-bottom: 16px;
+    background: #fff;
+  }
+
+  .info-color {
+    color: #0088ce;
+  }
+
+  .form-padding {
+    padding-top: 49px;
   }
 }
