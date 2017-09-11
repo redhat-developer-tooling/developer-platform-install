@@ -4,11 +4,10 @@
 
 <main>
   <div class="col-sm-12 bottom-spacer">
-    <form name="confirmForm" id="confirmForm" class="form-horizontal" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
-      <p class="installation-note has-spinner" ng-show="confCtrl.numberOfExistingInstallations>0">
-        <span class="pficon-info"></span>{{confCtrl.installedSearchNote}}
-      </p>
-      <p id="instructions" class="installation-note">Select the components to install</p>
+    <div class="selection-desc has-spinner" ng-show="confCtrl.numberOfExistingInstallations>0">
+      <span class="pficon-info info-color"></span><strong>&nbsp;{{confCtrl.installedSearchNote}}.&nbsp;<span id="instructions">Select any additional components to install.</span></strong>
+    </div>
+    <form name="confirmForm" id="confirmForm" class="form-horizontal form-padding" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
       <div ng-repeat="item in checkboxModel">
         <component-panel item="item"></component-panel>
       </div>
