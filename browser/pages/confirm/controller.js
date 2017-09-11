@@ -248,11 +248,17 @@ class ConfirmController {
       }
 
       if (this.numberOfExistingInstallations == 1) {
-        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component`;
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed component.`;
       } else if (this.numberOfExistingInstallations > 1) {
-        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components`;
+        this.installedSearchNote = `  We found ${this.numberOfExistingInstallations} installed components.`;
       } else {
         this.installedSearchNote = '';
+      }
+
+      if (this.numberOfExistingInstallations == 0) {
+        this.installInstructions = 'Select components to install.';
+      } else if (this.numberOfExistingInstallations > 0) {
+        this.installInstructions = 'Select any additional components to install.';
       }
     }, true);
   }
