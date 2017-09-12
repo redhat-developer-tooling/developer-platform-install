@@ -7,6 +7,7 @@ import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Platform from '../services/platform';
 import fs from 'fs-extra';
+import os from 'os';
 
 class CygwinInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -70,17 +71,19 @@ class CygwinInstall extends InstallableItem {
     rootFolder = rootFolder
       .replace(/'/g, '\'\'');
 
-    let cygwinArgs = `--no-admin --quiet-mode --only-site -l ${packagesFolder} --site http://mirrors.xmission.com/cygwin --root ${rootFolder} --categories Base --packages openssh,rsync`;
+    let cygwinArgs = `--no-admin --quiet-mode --only-site -l "${packagesFolder}" --site http://mirrors.xmission.com/cygwin --root "${rootFolder}" --categories Base --packages openssh,rsync`;
     let localPackages = path.join(this.bundleFolder, 'packages');
     if(fs.existsSync(localPackages)) {
       cygwinArgs = cygwinArgs + ` -L -l ${localPackages}`;
     }
-    let startProcess = `$p = Start-Process -ErrorAction stop -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFileEscaped}' -ArgumentList '${cygwinArgs}'; ;[Environment]::Exit($p.ExitCode);`;
-    let powershellCommand = `powershell -Command "${startProcess}"`;
+    let startProcess = `$p = Start-Process -ErrorAction stop -WindowStyle hidden -PassThru -wait -FilePath '${originalExecFileEscaped}' -ArgumentList '${cygwinArgs}';[Environment]::Exit($p.ExitCode);`;
+    let powershellCommand = `powershell -ExecutionPolicy ByPass -File "${path.join(os.tmpdir(), 'rd-devsuite-cygwin-install.ps1')}"`;
 
     return installer.copyFile(
       this.downloadedFile, originalExecFile, true
     ).then(()=>{
+      return Util.writeFile(path.join(os.tmpdir(), 'rd-devsuite-cygwin-install.ps1'), startProcess);
+    }).then(()=> {
       return installer.exec(powershellCommand);
     }).then(() => {
       return Platform.addToUserPath([path.join(this.installerDataSvc.cygwinDir(), 'bin')]);

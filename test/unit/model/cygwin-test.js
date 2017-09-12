@@ -171,6 +171,7 @@ describe('Cygwin installer', function() {
     it('should set progress to "Installing"', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Util, 'writeFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
 
       return installer.installAfterRequirements(fakeProgress, success, failure).then(() => {
@@ -182,6 +183,7 @@ describe('Cygwin installer', function() {
     it('should run the cygwin.exe installer with correct parameters', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Util, 'writeFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
 
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
@@ -192,11 +194,11 @@ describe('Cygwin installer', function() {
     it('should run the cygwin.exe installer with local packages if they present', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Util, 'writeFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
       sandbox.stub(fs, 'existsSync').returns(true);
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
-        let localPackages = path.join(installer.bundleFolder, 'packages');
-        expect(Installer.prototype.exec).to.have.been.calledWithMatch(`-L -l ${localPackages}`);
+        expect(Installer.prototype.exec).to.have.been.calledWithMatch('powershell');
       });
     });
 
@@ -213,6 +215,7 @@ describe('Cygwin installer', function() {
       sandbox.stub(Installer.prototype, 'exec').resolves(true);
       sandbox.stub(Installer.prototype, 'execFile').resolves(true);
       sandbox.stub(Installer.prototype, 'copyFile').resolves(true);
+      sandbox.stub(Util, 'writeFile').resolves(true);
       sandbox.stub(Platform, 'addToUserPath').resolves(true);
       installer.installAfterRequirements(fakeProgress, function() {
         expect(Installer.prototype.copyFile).to.be.calledWith(
