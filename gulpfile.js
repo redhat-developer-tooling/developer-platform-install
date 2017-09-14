@@ -51,6 +51,11 @@ gulp.task('create-modules-link', function() {
     }));
 });
 
+gulp.task('electron-rebuild', function(cb) {
+  var electronrebuild = path.join('node_modules', '.bin', 'electron-rebuild');
+  exec(electronrebuild, common.createExecCallback(cb, true));
+});
+
 // clean dist/ AND prefetch-dependencies/ folder
 gulp.task('clean-all', ['clean'], function() {
   return del([config.prefetchFolder], { force: true });
@@ -76,7 +81,7 @@ gulp.task('create-dist-dir', function(cb) {
   return mkdirp(config.buildFolderPath, cb);
 });
 
-gulp.task('generate', ['create-modules-link', 'update-requirements'], function(cb) {
+gulp.task('generate', ['create-modules-link', 'update-requirements', 'electron-rebuild'], function(cb) {
   var electronVersion = pjson.devDependencies['electron'];
   var cmd = path.join('node_modules', '.bin') + path.sep + 'electron-packager transpiled ' + config.artifactName + ' --platform=' + config.artifactPlatform + ' --arch=' + config.artifactArch;
   cmd += ' --version=' + electronVersion + ' --out="' + config.buildFolderPath + '" --overwrite --asar.unpack=**/browser/**/*.ps1 --asar.unpackDir="browser/model/helpers/win32/*"';
@@ -94,7 +99,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements'], function(c
 // default task
 gulp.task('default', ['run']);
 
-gulp.task('run', ['update-requirements', 'create-modules-link'], function(cb) {
+gulp.task('run', ['update-requirements', 'create-modules-link', 'electron-rebuild'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled', common.createExecCallback(cb));
 });
 

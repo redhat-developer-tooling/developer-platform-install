@@ -22,6 +22,8 @@
         <div class="login-form-input-container form-group">
           <a class="forgot-password" id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">Forgot password?</a>
         </div>
+        <input class="remember-me" type="checkbox" ng-model = "acctCtrl.rememberMe">
+        <label class="remember-me-label">Remember me</label>
       </form>
       <div class="form-group has-error login-form-error-container">
           <div id="invalidLoginError" ng-show="acctCtrl.authFailed && !accountForm.username.$error.required && !accountForm.password.$error.required" class="help-block form-group has-error">
