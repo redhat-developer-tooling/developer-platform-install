@@ -91,6 +91,18 @@ footer {
     padding-bottom: 35px;
   }
 
+  .remember-me {
+    position: relative;
+    top: 166px;
+    right: -172px;
+  }
+
+  .remember-me-label {
+    position: relative;
+    top: 164px;
+    right: -172px;
+  }
+
   .branding {
     width: 180px;
     position: absolute;
@@ -306,7 +318,7 @@ footer {
   }
 
   .forgot-password {
-    margin-right: 121px;
+    margin-right: 0px;
   }
 
   .last-field {
