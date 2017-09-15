@@ -162,7 +162,7 @@ describe('JDK installer', function() {
       it('should select openjdk for installation if older than supported java version detected', function() {
         mockDetectedJvm('1.7.0_1');
         return jdk.detectExistingInstall().then(()=>{
-          expect(jdk.selectedOption).to.be.equal('install');
+          expect(jdk.hasOption('install')).to.be.equal(true);
         });
       });
 
@@ -199,7 +199,7 @@ describe('JDK installer', function() {
           Util.executeCommand.rejects();
           return jdk.detectExistingInstall();
         }).then(()=>{
-          expect(jdk.selectedOption).equals('install');
+          expect(jdk.hasOption('install')).equals(true);
           expect(jdk.option['detected']).to.equal(undefined);
         });
       });
@@ -212,6 +212,7 @@ describe('JDK installer', function() {
 
       it('should not select jdk for installation if no java detected', function() {
         mockDetectedJvm('');
+        jdk.selectedOption = 'detected';
         return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
         });
