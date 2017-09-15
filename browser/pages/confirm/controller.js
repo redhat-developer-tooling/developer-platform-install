@@ -63,7 +63,7 @@ class ConfirmController {
 
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
-    this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+    this.electron.remote.getCurrentWindow().addListener('focus', ()=>this.timeout(this.activatePage.bind(this), true));
 
     $scope.updateTotalDownloadSize = () => {
       let checkboxModel = this.sc.checkboxModel;
