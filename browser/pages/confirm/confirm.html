@@ -5,7 +5,7 @@
 <main>
   <div class="col-sm-12 bottom-spacer">
     <div class="selection-desc has-spinner">
-      <span class="pficon-info info-color" ng-show="confCtrl.numberOfExistingInstallations>0"></span><strong><span ng-show="confCtrl.numberOfExistingInstallations>0">&nbsp;{{confCtrl.installedSearchNote}}&nbsp;</span><span id="instructions">{{confCtrl.installInstructions}}</span></strong>
+      <span class="pficon-info info-color" ng-show="confCtrl.numberOfExistingInstallations>0 && !confCtrl.isDisabled"></span><strong><span ng-show="confCtrl.numberOfExistingInstallations>0 && !confCtrl.isDisabled">&nbsp;{{confCtrl.installedSearchNote}}&nbsp;</span><span ng-show="!confCtrl.isDisabled" id="instructions">{{confCtrl.installInstructions}}</span></strong>
     </div>
     <form name="confirmForm" id="confirmForm" class="form-horizontal form-padding" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
       <div ng-repeat="item in checkboxModel">
