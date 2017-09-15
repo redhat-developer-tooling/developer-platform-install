@@ -58,8 +58,6 @@ class JdkInstall extends InstallableItem {
           this.validateVersion();
           if(this.option['detected'].valid) {
             this.selectedOption = 'detected';
-          } else if(Platform.OS !== 'darwin') {
-            this.selectedOption = 'install';
           }
           resolve(true);
         } else {
@@ -82,11 +80,6 @@ class JdkInstall extends InstallableItem {
       Logger.info(this.keyName + ' - ' + error);
       if(this.option.detected) {
         delete this.option.detected;
-      }
-      if(Platform.OS !== 'darwin' ) {
-        this.selectedOption = 'install';
-      } else {
-        this.selectedOption = 'detected';
       }
       return Promise.resolve();
     });
