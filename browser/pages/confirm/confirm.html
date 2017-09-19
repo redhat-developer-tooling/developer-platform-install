@@ -17,7 +17,7 @@
             <div ng-repeat="component in downloadComp" class="summary-info">
               <span class="pficon pficon-ok"></span>
               <strong>{{component.productName}}</strong><span class="product-info">| {{component.productVersion}}</span>
-              <strong class="pull-right">Downloaded</strong>
+              <strong class="pull-right">{{component.downloaded? 'Downloaded': 'Not Downloaded'}}</strong>
             </div>
           </div>
         </div>
