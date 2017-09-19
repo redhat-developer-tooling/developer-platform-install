@@ -147,7 +147,7 @@ footer {
     float: left;
     text-align: center;
     color: #d1d1d1;
-    width: 19.5%;
+    width: 15.85%;
     position: relative;
     padding-top: 15px;
   }
@@ -708,5 +708,10 @@ footer {
 
   .form-padding {
     padding-top: 49px;
+  }
+
+  .summary-info {
+    margin-bottom: 5px;
+    padding: 10px;
   }
 }
