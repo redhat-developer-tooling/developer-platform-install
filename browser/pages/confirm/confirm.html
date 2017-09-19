@@ -3,33 +3,36 @@
 </header>
 
 <main>
-  <div class="col-sm-12 bottom-spacer">
-    <div class="selection-desc has-spinner">
-      <span class="pficon-info info-color" ng-show="confCtrl.numberOfExistingInstallations>0 && !confCtrl.isDisabled"></span><strong><span ng-show="confCtrl.numberOfExistingInstallations>0 && !confCtrl.isDisabled">&nbsp;{{confCtrl.installedSearchNote}}&nbsp;</span><span ng-show="!confCtrl.isDisabled" id="instructions">{{confCtrl.installInstructions}}</span></strong>
-    </div>
-    <form name="confirmForm" id="confirmForm" class="form-horizontal form-padding" ng-submit="confCtrl.install()" ng-class="{'is-disabled':confCtrl.isDisabled}">
-      <div ng-repeat="item in checkboxModel">
-        <component-panel item="item"></component-panel>
-      </div>
-    </form>
-    <div id="detection-info" class="centered has-spinner" ng-show="confCtrl.isDisabled" ng-class="{'active':confCtrl.isDisabled}">
-      <div class="spinner spinner-lg spinner-bgcolour"></div>
-      <div class="detection-msg">
-        <h3>{{confCtrl.installedSearchNote}}</h3>
+  <div class="bottom-spacer container-fluid container-cards-pf">
+    <div class="row row-cards-pf" style="
+      padding-top: 48px">
+      <div class="col-xs-12 col-sm-6">
+        <div class="card-pf" style="height: 364px;">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title" style="height: 17px;">
+              Summary
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <div ng-repeat="component in downloadComp" class="summary-info">
+              <span class="pficon pficon-ok"></span>
+              <strong>{{component.productName}}</strong><span class="product-info">| {{component.productVersion}}</span>
+              <strong class="pull-right">Downloaded</strong>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </main>
 
 <footer id="footer-navigation" class="no-background-color">
-  <span class="size-footer" ng-show="confCtrl.isAtLeastOneSelected()">Total Install Size:&nbsp;<span id="install-size-footer">{{updateTotalDiskSpace() | humanize}}</span></span>
   <div class="footer-border"></div>
-  <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="confirmForm"
-          ng-click="confCtrl.exit()">Cancel</button>
-  <button type="button" id="confirm-back-btn" class="footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm"
-    ng-class="{'back-btn-spacer': !confCtrl.isAccountRequired(), 'back-btn': confCtrl.isAccountRequired()}" ng-disabled="confCtrl.isDisabled"
-          ng-click="confCtrl.back()">Back</button>
-  <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm"
-          ng-disabled="!confCtrl.isConfigurationValid() || confCtrl.isDisabled" autofocus
-          ng-class="{'btn-med-size': confCtrl.isAccountRequired()}">{{confCtrl.getNextButtonName()}}</button>
+  <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left"
+    form="confirmForm" ng-click="confCtrl.exit()">Cancel</button>
+  <button type="button" id="confirm-back-btn" class="footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm" ng-class="{'back-btn-spacer': !confCtrl.isAccountRequired(), 'back-btn': confCtrl.isAccountRequired()}"
+    ng-disabled="confCtrl.isDisabled" ng-click="confCtrl.back()">Back</button>
+  <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm" ng-click="confCtrl.next()"
+    autofocus ng-class="{'btn-med-size': confCtrl.isAccountRequired()}">{{confCtrl.getNextButtonName()}}</button>
 </footer>
