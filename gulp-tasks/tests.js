@@ -4,6 +4,7 @@ var angularProtractor = require('gulp-angular-protractor'),
   path = require('path'),
   globby = require('globby');
 
+var open = require('gulp-open');
 var yargs = require('yargs');
 var buildFolder = path.join('dist', process.platform + '-' + process.arch);
 
@@ -47,7 +48,9 @@ module.exports = function(gulp) {
       istanbul: {
         report: yargs.argv.report || 'lcov'
       }
-    }));
+    })).on('end', function() {
+      gulp.src(path.join('coverage', 'lcov-report', 'index.html')).pipe(open());
+    });
   });
 
   gulp.task('webdriver-update', function(cb) {
