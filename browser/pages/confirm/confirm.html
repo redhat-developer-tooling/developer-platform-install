@@ -22,7 +22,7 @@
 </main>
 
 <footer id="footer-navigation" class="no-background-color">
-  <span class="size-footer" ng-show="confCtrl.isAtLeastOneSelected()">Total Install Size:&nbsp;<span id="install-size-footer">{{updateTotalDiskSpace() | humanize}}</span></span>
+  <span class="size-footer" ng-show="confCtrl.isAtLeastOneSelected()">Total disk space required:&nbsp;<span id="install-size-footer">{{updateTotalDiskSpace() | humanize}}</span></span>
   <div class="footer-border"></div>
   <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="confirmForm"
           ng-click="confCtrl.exit()">Cancel</button>
