@@ -112,7 +112,7 @@ class ConfirmController {
       return Promise.resolve();
     }).then(
       ()=> this.setIsDisabled()
-    ).catch((error)=> {
+    ).catch(()=> {
       this.setIsDisabled();
     });
   }
@@ -138,7 +138,7 @@ class ConfirmController {
       checkboxModel[node].references=0;
     }
     for (let node of nodes) {
-      function watchComponent(newv, oldv) {
+      this.sc.$watch(`checkboxModel.${node}.selectedOption`, function watchComponent(newv, oldv) {
         let installer = checkboxModel[node];
         if(installer.isSelected()) {
           for(let dep of graph.dependenciesOf(node)) {
@@ -157,8 +157,7 @@ class ConfirmController {
             }
           }
         }
-      }
-      this.sc.$watch(`checkboxModel.${node}.selectedOption`, watchComponent);
+      });
     }
   }
 

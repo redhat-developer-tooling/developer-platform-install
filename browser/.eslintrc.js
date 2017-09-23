@@ -3,6 +3,9 @@ module.exports = {
         "browser": true
     },
     "globals": {
-      "angular": true
+      "angular": true,
+      "menu": true,
+      "MenuItem": true,
+      "restoreMenu": true
     }
 };
