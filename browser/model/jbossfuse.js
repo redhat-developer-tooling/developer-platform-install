@@ -20,15 +20,15 @@ class FusePlatformInstall extends InstallableItem {
     this.jbeap.bundledFile = path.join(this.bundleFolder, this.jbeap.fileName);
     this.jbeap.downloadedFile = path.join(this.downloadFolder, this.jbeap.fileName);
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbosseap640-autoinstall.xml');
+    this.totalDownloads = 2;
   }
 
   static get KEY() {
     return 'fuseplatform';
   }
 
-  downloadInstaller(progress, success, failure) {
-    let totalDownloads = 2;
-    this.downloader = new Downloader(progress, success, failure, totalDownloads);
+  downloadInstaller(progress, success, failure, downloader) {
+    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads);
     let username = this.installerDataSvc.getUsername(),
       password = this.installerDataSvc.getPassword();
 

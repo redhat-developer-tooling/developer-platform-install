@@ -72,6 +72,7 @@ class InstallableItem {
     this.references = 0;
 
     this.messages = requirement.messages;
+    this.totalDownloads = 1;
   }
 
   getProductName() {
@@ -129,8 +130,8 @@ class InstallableItem {
     //to be overriden
   }
 
-  downloadInstaller(progress, success, failure) {
-    this.downloader = new Downloader(progress, success, failure);
+  downloadInstaller(progress, success, failure, downloader) {
+    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads);
     if(fs.existsSync(this.bundledFile)) {
       this.downloadedFile = this.bundledFile;
       this.downloader.closeHandler();
@@ -180,12 +181,18 @@ class InstallableItem {
 
   install(progress, success, failure) {
     if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
+      progress.productName = this.productName;
+      progress.productVersion = this.productVersion;
+      progress.$timeout();
       this.installAfterRequirements(progress, success, failure);
     } else {
       let name = this.getInstallAfter().productName;
       progress.setStatus(`Waiting for ${name} to finish installation`);
       this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
+          progress.productName = this.productName;
+          progress.productVersion = this.productVersion;
+          progress.$timeout();
           this.installAfterRequirements(progress, success, failure);
         }
       });
