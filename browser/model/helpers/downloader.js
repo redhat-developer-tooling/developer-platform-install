@@ -19,6 +19,7 @@ class Downloader {
     this.downloads = new Map();
     this.userAgentString = '';
     this.received = 0;
+    this.downloaded = 0;
     this.lastTime = 0;
     if(remote) {
       this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
@@ -40,9 +41,8 @@ class Downloader {
 
   responseHandler(response) {
     let tempSize = response.headers['content-length'];
-    if (tempSize !== undefined && parseInt(tempSize) > 0) {
+    if (tempSize && parseInt(tempSize) > 0) {
       this.downloadSize += parseInt(tempSize);
-
       if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
         this.progress.setTotalDownloadSize(this.downloadSize);
       }
@@ -92,7 +92,7 @@ class Downloader {
     if(this.downloads.get(file)) {
       this.downloads.get(file)['failure'] = false;
     }
-    if(--this.totalDownloads == 0 ) {
+    if(this.totalDownloads == ++this.downloaded ) {
       this.success();
     }
   }
