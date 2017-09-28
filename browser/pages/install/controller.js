@@ -3,6 +3,7 @@
 import Logger from '../../services/logger';
 import duration from 'humanize-duration';
 import humanize from 'humanize';
+import Downloader from '../../model/helpers/downloader';
 
 class InstallController {
   constructor($scope, $timeout, installerDataSvc) {
@@ -12,56 +13,72 @@ class InstallController {
     this.failedDownloads = new Set();
 
     this.data = {};
-    for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let itemProgress = new ProgressState(key, value.getProductName(), value.getProductVersion(), value.getProductDesc(), this.$scope, this.$timeout);
+    this.totalDownloads = 0;
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      if(!value.isSkipped()) {
+        this.totalDownloads += value.totalDownloads;
+      }
+    }
+    this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
+    this.data.p = this.itemProgress;
+    this.downloader = new Downloader(this.itemProgress,
+      ()=> {
+        this.installerDataSvc.downloading = false;
+        this.processInstall();
+      },
+      (error) => {
+        Logger.error('Download filed with: ' + error);
+        this.itemProgress.setStatus('Download Failed');
+        this.failedDownloads.add(this.downloader);
+      },
+      this.totalDownloads
+    );
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(value.isSkipped()) {
-        this.installerDataSvc.setupDone(itemProgress, key);
+        this.installerDataSvc.setupDone(this.itemProgress, key);
       } else {
-        this.data[key] = itemProgress;
-        this.processInstallable(key, value, itemProgress);
+        this.processInstallable(key, value);
       }
     }
     this.$scope.data = this.data;
   }
 
-  processInstallable(key, value, itemProgress) {
+  processInstallable(key, value) {
     if(value.isDownloadRequired()) {
-      this.triggerDownload(key, value, itemProgress);
-    } else {
-      this.triggerInstall(key, value, itemProgress);
+      this.triggerDownload(key, value);
     }
   }
 
-  triggerDownload(installableKey, installableValue, progress) {
+  triggerDownload(installableKey, installableValue) {
     this.installerDataSvc.startDownload(installableKey);
-    installableValue.downloadInstaller(progress,
-      () => {
-        this.installerDataSvc.downloadDone(progress, installableKey);
-      },
-      (error) => {
-        Logger.error(installableKey + ' failed to download: ' + error);
-        progress.setStatus('Download Failed');
-        this.failedDownloads.add(installableValue);
-      }
+    installableValue.downloadInstaller(
+      this.itemProgress,
+      undefined,
+      undefined,
+      this.downloader
     );
   }
 
   downloadAgain() {
     Logger.info('Restarting download');
-    let dlCopy = new Set(this.failedDownloads);
     this.closeDownloadAgainDialog();
-    dlCopy.forEach((value)=>{
-      value.restartDownload();
-    });
+    this.downloader.restartDownload();
   }
 
   closeDownloadAgainDialog() {
     this.failedDownloads.clear();
   }
 
+  processInstall() {
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      if(!value.isSkipped()) {
+        this.triggerInstall(key, value, this.itemProgress);
+      }
+    }
+  }
+
   triggerInstall(installableKey, installableValue, progress) {
     this.installerDataSvc.startInstall(installableKey);
-
     installableValue.install(progress,
       () => {
         this.installerDataSvc.installDone(progress, installableKey);
@@ -70,34 +87,6 @@ class InstallController {
         Logger.error(installableKey + ' failed to install: ' + error);
       }
     );
-  }
-
-  productName(key) {
-    return this.data[key].productName;
-  }
-
-  productVersion(key) {
-    return this.data[key].productVersion;
-  }
-
-  productDesc(key) {
-    return this.data[key].productDesc;
-  }
-
-  current(key) {
-    return this.data[key].current;
-  }
-
-  label(key) {
-    return this.data[key].label;
-  }
-
-  show(key) {
-    return !this.installerDataSvc.getInstallable(key).isSkipped();
-  }
-
-  status(key) {
-    return this.data[key].status;
   }
 }
 
