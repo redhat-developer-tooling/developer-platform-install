@@ -11,16 +11,28 @@ class ConfirmController {
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
-    this.installedSearchNote = '';
-    this.isDisabled = false;
-    this.numberOfExistingInstallations = 0;
-
-    this.installables = {};
     $scope.checkboxModel = {};
-    $scope.platform = Platform.OS;
-    $scope.detectionStyle = false;
-    $scope.virtualization = true;
     $scope.downloadComp = this.detectDownloadedComponents();
+
+    $scope.updateTotalDownloadSize = () => {
+      let totalDownloadSize = 0;
+      for (let value of this.installerDataSvc.allInstallables().values()) {
+        if(value.size && value.selectedOption == 'install') {
+            totalDownloadSize += value.size;
+          }
+      }
+      return totalDownloadSize;
+    };
+
+    $scope.updateTotalDiskSpace = () => {
+      let totalInstallSize = 0;
+      for (let value of this.installerDataSvc.allInstallables().values()) {
+        if(value.installSize && value.selectedOption == 'install') {
+            totalInstallSize += value.installSize;
+          }
+        }
+      return totalInstallSize;
+    };
   }
 
   detectDownloadedComponents() {
@@ -43,12 +55,10 @@ class ConfirmController {
   }
 
   isAccountRequired() {
-    let checkboxModel = this.sc.checkboxModel;
     let required = false;
-    for (const key in checkboxModel) {
-      required = checkboxModel.hasOwnProperty(key)
-        && checkboxModel[key].authRequired
-        && checkboxModel[key].selectedOption == 'install';
+    for (let value of this.installerDataSvc.allInstallables().values()) {
+      required = value.authRequired
+        && value.selectedOption == 'install';
       if(required) {
         break;
       }

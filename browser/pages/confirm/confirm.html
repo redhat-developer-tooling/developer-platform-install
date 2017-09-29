@@ -4,20 +4,30 @@
 
 <main>
   <div class="bottom-spacer container-fluid container-cards-pf">
-    <div class="row row-cards-pf" style="
-      padding-top: 48px">
-      <div class="col-xs-12 col-sm-6">
-        <div class="card-pf" style="height: 364px;">
-          <div class="card-pf-heading">
-            <h2 class="card-pf-title" style="height: 17px;">
-              Summary
+    <div class="row row-cards-pf" style="padding-top: 10px;margin-left: 50px;">
+      <div class="col-xs-12 col-sm-12">
+        <div class="card-pf" style="margin-top: 10px;">
+          <div class="confirm-heading">
+            <h2 id="confirm-summary-title" class="card-pf-title inline">
+              Confirmation Summary
             </h2>
+            <div class="size-summary pull-right">
+              <span id="confirm-download-size" class="size-note">Total Download Size:&nbsp;</span><strong id="download-size-header">{{updateTotalDownloadSize() | humanize}}</strong>
+              <div class="install-desc">
+                <span id="confirm-install-size" class="size-note">Total Install Size:&nbsp;</span><strong id="install-size-header">{{updateTotalDiskSpace() | humanize}}</strong>
+              </div>
+            </div>
+            <div class="info-color">
+              <i class="pficon-info" aria-hidden="true"></i>
+              <span id="confirm-note">Please verify the confirmation summary. Click <b>Next</b> to begin installation.</span>
+            </div>
           </div>
-          <div class="card-pf-body">
-            <div ng-repeat="component in downloadComp" class="summary-info">
-              <span class="pficon pficon-ok"></span>
-              <strong>{{component.productName}}</strong><span class="product-info">| {{component.productVersion}}</span>
-              <strong class="pull-right">{{component.downloaded? 'Downloaded': 'Not Downloaded'}}</strong>
+          <div class="card-pf-body confirm-margin">
+            <div ng-repeat="component in downloadComp | orderBy: '-downloaded'" class="summary-info" id="{{component.keyName}}-info"
+            >
+              <span ng-class="{'pficon pficon-ok': component.downloaded, 'fa fa-download info-color': !component.downloaded}"></span>
+              <strong id="{{component.keyName}}-name">&nbsp;{{component.productName}}</strong><span id="{{component.keyName}}-version" class="product-info">| {{component.productVersion}}</span>
+              <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.downloaded? 'Previously Downloaded': 'Selected to download'}}</strong>
             </div>
           </div>
         </div>
