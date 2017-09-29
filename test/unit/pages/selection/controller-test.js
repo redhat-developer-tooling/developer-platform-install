@@ -6,7 +6,7 @@ import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
-import ConfirmController from 'browser/pages/confirm/controller';
+import SelectionController from 'browser/pages/selection/controller';
 
 import fs from 'fs';
 
@@ -19,7 +19,7 @@ global.menu = {insert() {}};
 global.MenuItem = function () {};
 global.restoreMenu = function() {};
 
-describe('ConfirmController', function() {
+describe('SelectionController', function() {
 
   beforeEach(function() {
     sandbox.stub(Logger, 'getIpcRenderer').returns({send() {}});
@@ -36,7 +36,7 @@ describe('ConfirmController', function() {
   let $watch;
   let $controller;
   let $scope;
-  let confirmController;
+  let selectionController;
   let installerDataSvc;
 
   let context = function context(_$controller_, _$rootScope_, _$state_, _$timeout_, _installerDataSvc_) {
@@ -51,14 +51,14 @@ describe('ConfirmController', function() {
     sandbox.spy(_$state_, 'go');
     installerDataSvc.setup();
 
-    confirmController = $controller('ConfirmController', {
+    selectionController = $controller('SelectionController', {
       $scope,
       $state: _$state_,
       $timeout: function timeoutStub(callback) { callback(); },
       installerDataSvc,
       electron
     });
-    sandbox.spy(confirmController, 'setIsDisabled');
+    sandbox.spy(selectionController, 'setIsDisabled');
     for (let installer of installerDataSvc.allInstallables().values()) {
       sandbox.stub(installer, 'detectExistingInstall').resolves();
     }
@@ -80,44 +80,44 @@ describe('ConfirmController', function() {
       });
 
       it('installs watchers to track components selected for install', function() {
-        expect($watch.callCount).to.be.equal(confirmController.installerDataSvc.allInstallables().size+1);
+        expect($watch.callCount).to.be.equal(selectionController.installerDataSvc.allInstallables().size+1);
       });
 
       it('unlock user interface after detection ends without errors', function() {
-        return confirmController.initPage().then(function() {
-          expect(confirmController.setIsDisabled).to.be.called;
+        return selectionController.initPage().then(function() {
+          expect(selectionController.setIsDisabled).to.be.called;
         });
       });
 
       it('unlock user interface after detection ends with errors', function() {
         installerDataSvc.getInstallable('cdk').detectExistingInstall.rejects('error');
-        return confirmController.initPage().then(function() {
-          expect(confirmController.setIsDisabled).to.be.called;
+        return selectionController.initPage().then(function() {
+          expect(selectionController.setIsDisabled).to.be.called;
         });
       });
 
       it('shows appropriate message when detection is in progress', function() {
-        confirmController.initPage();
-        expect(confirmController.installedSearchNote).includes('checking');
+        selectionController.initPage();
+        expect(selectionController.installedSearchNote).includes('checking');
       });
 
       it('counts and present one detected component', function() {
-        confirmController.sc.checkboxModel.kompose.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.kompose.option.detected = { valid: true };
-        return confirmController.initPage().then(function() {
-          expect(confirmController.numberOfExistingInstallations).equals(1);
-          expect(confirmController.installedSearchNote).includes(' 1 ');
+        selectionController.sc.checkboxModel.kompose.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.kompose.option.detected = { valid: true };
+        return selectionController.initPage().then(function() {
+          expect(selectionController.numberOfExistingInstallations).equals(1);
+          expect(selectionController.installedSearchNote).includes(' 1 ');
         });
       });
 
       it('counts and presents number of detected components', function() {
-        confirmController.sc.checkboxModel.kompose.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.kompose.option.detected = { valid: true };
-        confirmController.sc.checkboxModel.jdk.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.jdk.option.detected = { valid: true };
-        return confirmController.initPage().then(function() {
-          expect(confirmController.numberOfExistingInstallations).equals(2);
-          expect(confirmController.installedSearchNote).includes(' 2 ');
+        selectionController.sc.checkboxModel.kompose.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.kompose.option.detected = { valid: true };
+        selectionController.sc.checkboxModel.jdk.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.jdk.option.detected = { valid: true };
+        return selectionController.initPage().then(function() {
+          expect(selectionController.numberOfExistingInstallations).equals(2);
+          expect(selectionController.installedSearchNote).includes(' 2 ');
         });
       });
     });
@@ -126,15 +126,15 @@ describe('ConfirmController', function() {
   describe('activatePage', function() {
     beforeEach(inject(context));
     it('unlock user interface after detection ends without errors', function() {
-      return confirmController.activatePage().then(function() {
-        expect(confirmController.setIsDisabled).to.be.called;
+      return selectionController.activatePage().then(function() {
+        expect(selectionController.setIsDisabled).to.be.called;
       });
     });
 
     it('unlock user interface after detection ends with errors', function() {
       installerDataSvc.getInstallable('cdk').detectExistingInstall.rejects('error');
-      return confirmController.activatePage().then(function() {
-        expect(confirmController.setIsDisabled).to.be.called;
+      return selectionController.activatePage().then(function() {
+        expect(selectionController.setIsDisabled).to.be.called;
       });
     });
   });
@@ -150,9 +150,9 @@ describe('ConfirmController', function() {
           el[1]();
         }
       });
-      return confirmController.detection.then(function() {
-        confirmController.install();
-        expect(confirmController.router.go).calledOnce;
+      return selectionController.detection.then(function() {
+        selectionController.install();
+        expect(selectionController.router.go).calledOnce;
       });
     });
   });
@@ -164,8 +164,8 @@ describe('ConfirmController', function() {
     beforeEach(inject(context));
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {
 
-      return confirmController.initPage().then(function() {
-        expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
+      return selectionController.initPage().then(function() {
+        expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && (el[0] == 'checkboxModel.jbosseap.selectedOption'
@@ -174,9 +174,9 @@ describe('ConfirmController', function() {
             el[1]();
           }
         });
-        confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.fusetools.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.devstudio.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.fusetools.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && (el[0] == 'checkboxModel.jbosseap.selectedOption'
@@ -185,16 +185,16 @@ describe('ConfirmController', function() {
             el[1]('detected', 'install');
           }
         });
-        expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('detected');
+        expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('detected');
       });
     });
 
     it('should select openjdk if jbosseap or devstudio selected', function() {
-      return confirmController.initPage().then(function() {
-        expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.devstudio.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.jbosseap.selectedOption).equals('detected');
-        confirmController.sc.checkboxModel.jbosseap.selectedOption = 'install';
+      return selectionController.initPage().then(function() {
+        expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.devstudio.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.jbosseap.selectedOption).equals('detected');
+        selectionController.sc.checkboxModel.jbosseap.selectedOption = 'install';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
@@ -202,8 +202,8 @@ describe('ConfirmController', function() {
             el[1]('install', 'install'); // the same does angular avter initialization
           }
         });
-        confirmController.sc.checkboxModel.devstudio.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.devstudio.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
@@ -211,53 +211,53 @@ describe('ConfirmController', function() {
             el[1]('detected', 'install');
           }
         });
-        expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('detected');
+        expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('detected');
 
-        confirmController.sc.checkboxModel.devstudio.selectedOption = 'install';
+        selectionController.sc.checkboxModel.devstudio.selectedOption = 'install';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
             el[1]('install', 'detected');
           }
         });
-        expect(confirmController.sc.checkboxModel.jdk.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('install');
       });
     });
 
     it('should deselect cygwin and virtualbox if cdk deselected', function() {
-      return confirmController.initPage().then(function() {
-        expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
+      return selectionController.initPage().then(function() {
+        expect(selectionController.sc.checkboxModel.cygwin.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
             el[1]('install', 'detected');
           }
         });
-        confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
             el[1]('detected', 'install');
           }
         });
-        expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('detected');
-        expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('detected');
+        expect(selectionController.sc.checkboxModel.cygwin.selectedOption).equals('detected');
+        expect(selectionController.sc.checkboxModel.virtualbox.selectedOption).equals('detected');
       });
     });
 
     it('should select cygwin and virtualbox if cdk selected', function() {
-      return confirmController.initPage().then(function() {
-        expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.cdk.selectedOption).equals('install');
+      return selectionController.initPage().then(function() {
+        expect(selectionController.sc.checkboxModel.cygwin.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.cdk.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && 'checkboxModel.cdk.selectedOption') {
             el[1]();
           }
         });
-        confirmController.sc.checkboxModel.cdk.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
@@ -265,34 +265,34 @@ describe('ConfirmController', function() {
           }
         });
 
-        confirmController.sc.checkboxModel.cdk.selectedOption = 'install';
+        selectionController.sc.checkboxModel.cdk.selectedOption = 'install';
         $watch.args.forEach(function(el) {
           if(el[1].name == 'watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
             el[1]();
           }
         });
-        expect(confirmController.sc.checkboxModel.cygwin.selectedOption).equals('install');
-        expect(confirmController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.cygwin.selectedOption).equals('install');
+        expect(selectionController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
       });
     });
   });
 
   describe('back', function() {
     beforeEach(function() {
-      sandbox.stub(confirmController.router, 'go');
-      confirmController.back();
+      sandbox.stub(selectionController.router, 'go');
+      selectionController.back();
     });
 
     it('navigates to location page', function() {
-      expect(confirmController.router.go).calledWith('location');
+      expect(selectionController.router.go).calledWith('location');
     });
   });
 
   describe('exit', function() {
     it('exit closes active window', function() {
       sandbox.stub(electron.remote.currentWindow);
-      confirmController.exit();
+      selectionController.exit();
       expect(electron.remote.currentWindow.close).calledOnce;
     });
   });
@@ -301,56 +301,56 @@ describe('ConfirmController', function() {
     it('should return true if all components selected for install are configured correctly', function() {
       //JDK on mac only is configured properly when detected with a valid version
       if (Platform.getOS() === 'darwin') {
-        confirmController.sc.checkboxModel.jdk.selectedOption = 'detected';
-        confirmController.sc.checkboxModel.jdk.option.detected = { valid: true };
+        selectionController.sc.checkboxModel.jdk.selectedOption = 'detected';
+        selectionController.sc.checkboxModel.jdk.option.detected = { valid: true };
       }
-      confirmController.sc.checkboxModel.kompose.selectedOption = 'detected';
+      selectionController.sc.checkboxModel.kompose.selectedOption = 'detected';
 
-      expect(confirmController.isConfigurationValid()).to.be.true;
+      expect(selectionController.isConfigurationValid()).to.be.true;
     });
 
     it('should return false if nothing is selected for installation', function() {
       for (var installer of installerDataSvc.allInstallables().values()) {
         sandbox.stub(installer, 'isSkipped').returns(true);
       }
-      expect(confirmController.isConfigurationValid()).to.be.false;
+      expect(selectionController.isConfigurationValid()).to.be.false;
     });
 
     it('should return false if at least one component selected for installation is not configured correctly', function() {
-      let cdk = confirmController.installerDataSvc.getInstallable('cdk');
+      let cdk = selectionController.installerDataSvc.getInstallable('cdk');
       sandbox.stub(cdk, 'isConfigurationValid').returns(false);
-      expect(confirmController.isConfigurationValid()).to.be.false;
+      expect(selectionController.isConfigurationValid()).to.be.false;
     });
   });
 
   describe('download', function() {
     it('should open url in browser using electron.shell.openExternal', function() {
       sandbox.stub(electron.shell);
-      confirmController.download('url');
+      selectionController.download('url');
       expect(electron.shell.openExternal).calledOnce;
     });
   });
 
   describe('detectInstalledComponents', function() {
     it('should return existing promise if detection is already running', function() {
-      let detection = confirmController.detectInstalledComponents();
-      expect(detection).equals(confirmController.detectInstalledComponents());
+      let detection = selectionController.detectInstalledComponents();
+      expect(detection).equals(selectionController.detectInstalledComponents());
     });
   });
 
   describe('selectAll', function() {
     beforeEach(inject(context));
     it('should not select detected components', function() {
-      let kompose = confirmController.sc.checkboxModel.kompose;
+      let kompose = selectionController.sc.checkboxModel.kompose;
       kompose.addOption('detected', '1.0.0', 'location', true);
       kompose.selectedOption = 'detected';
-      confirmController.selectAll();
+      selectionController.selectAll();
       expect(kompose.selectedOption).equals('detected');
     });
 
     it('should select all installable components', function() {
-      let kompose = confirmController.sc.checkboxModel.kompose;
-      confirmController.selectAll();
+      let kompose = selectionController.sc.checkboxModel.kompose;
+      selectionController.selectAll();
       expect(kompose.selectedOption).equals('install');
     });
   });
@@ -358,7 +358,7 @@ describe('ConfirmController', function() {
   describe('deselectAll', function() {
     beforeEach(inject(context));
     it('should deselect all detected components', function() {
-      confirmController.deselectAll();
+      selectionController.deselectAll();
       for (let installer of installerDataSvc.allInstallables().values()) {
         expect(installer.selectedOption).equals('detected');
       }
@@ -368,10 +368,10 @@ describe('ConfirmController', function() {
   describe('updateTotalDiskSpace', function() {
     beforeEach(inject(context));
     it('should calculate total install disk space for selected components', function() {
-      confirmController.deselectAll();
-      let kompose = confirmController.sc.checkboxModel.kompose;
+      selectionController.deselectAll();
+      let kompose = selectionController.sc.checkboxModel.kompose;
       kompose.selectedOption = 'install';
-      expect(confirmController.sc.updateTotalDiskSpace()).equals(kompose.size + kompose.installSize);
+      expect(selectionController.sc.updateTotalDiskSpace()).equals(kompose.size + kompose.installSize);
     });
   });
 });
