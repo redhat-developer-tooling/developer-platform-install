@@ -61,13 +61,11 @@ describe('Confirm page', function confimPage() {
             requirements[key].sizeElement = element(By.id(key + '-size'));
             requirements[key].descriptionElement = element(By.id(key + '-description'));
 
-            if(key === 'virtualbox') {
-              requirements[key].installedNote = element(By.id(key + '-installed-note'));
-              requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
-              requirements[key].newerMessage = element(By.id(key + '-newer-message'));
-              requirements[key].olderWarning = element(By.id(key + '-older-warning'));
-              requirements[key].olderMessage = element(By.id(key + '-older-message'));
-            }
+            requirements[key].installedNote = element(By.id(key + '-installed-note'));
+            requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
+            requirements[key].newerMessage = element(By.id(key + '-newer-message'));
+            requirements[key].olderWarning = element(By.id(key + '-older-warning'));
+            requirements[key].olderMessage = element(By.id(key + '-older-message'));
           }
 
           footer = element(By.id('footer-navigation'));
@@ -106,7 +104,7 @@ describe('Confirm page', function confimPage() {
     });
 
     it('should state the instructions', function() {
-      expect(element(By.id('instructions')).getText()).toEqual('Select components to install.');
+      expect(element(By.id('instructions')).getText()).toMatch(/Select .*components to install\./);
     });
 
     it('should display a panel for each component', function() {
@@ -165,23 +163,21 @@ function testComponentPanel(key) {
       expect(component.descriptionElement.getText()).toEqual(component.description);
     });
 
-    if (key === 'virtualbox') {
-      it('detected installation message should be available', function() {
-        expect(component.installedNote.isPresent()).toBe(true);
-        expect(component.installedNote.getAttribute('innerHTML')).toMatch(messages.detected);
-      });
+    it('detected installation message should be available', function() {
+      expect(component.installedNote.isPresent()).toBe(true);
+      expect(component.installedNote.getAttribute('innerHTML')).toMatch(messages.detected);
+    });
 
-      it('newer versions should come with a warning', function() {
-        expect(component.newerWarning.isPresent()).toBe(true);
-        expect(component.newerWarning.getAttribute('class')).toMatch('has-warning');
-        expect(component.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
-      });
+    it('newer versions should come with a warning', function() {
+      expect(component.newerWarning.isPresent()).toBe(true);
+      expect(component.newerWarning.getAttribute('class')).toMatch('has-warning');
+      expect(component.newerMessage.getAttribute('innerHTML')).toEqual(messages.newer);
+    });
 
-      it('older versions should come with a warning', function() {
-        expect(component.olderWarning.isPresent()).toBe(true);
-        expect(component.olderWarning.getAttribute('class')).toMatch('has-warning');
-        expect(component.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
-      });
-    }
+    it('older versions should come with a warning', function() {
+      expect(component.olderWarning.isPresent()).toBe(true);
+      expect(component.olderWarning.getAttribute('class')).toMatch('has-warning');
+      expect(component.olderMessage.getAttribute('innerHTML')).toEqual(messages.older);
+    });
   });
 }
