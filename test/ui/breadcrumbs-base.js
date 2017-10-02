@@ -10,7 +10,7 @@ function describeBreadcrumbs(context) {
       breadcrumbs = element(By.className('breadcrumbs'));
     });
 
-    it('should appear on all but the login page', function() {
+    it('should appear on all but the initial page', function() {
       if (!presence) {
         expect(breadcrumbs.isPresent()).toBe(false);
       } else {
