@@ -11,7 +11,6 @@ class ConfirmController {
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
-    $scope.checkboxModel = {};
     $scope.downloadComp = this.detectDownloadedComponents();
 
     $scope.updateTotalDownloadSize = () => {
@@ -24,7 +23,7 @@ class ConfirmController {
       return totalDownloadSize;
     };
 
-    $scope.updateTotalDiskSpace = () => {
+    $scope.updateTotalInstallSize = () => {
       let totalInstallSize = 0;
       for (let value of this.installerDataSvc.allInstallables().values()) {
         if(value.installSize && value.selectedOption == 'install') {
@@ -44,10 +43,6 @@ class ConfirmController {
       this.downloadComp = downloadedComponents;
     }
     return this.downloadComp;
-  }
-
-  download(url) {
-    this.electron.shell.openExternal(url);
   }
 
   next() {
