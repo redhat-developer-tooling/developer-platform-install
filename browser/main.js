@@ -96,11 +96,11 @@ let mainModule =
           }
         });
     }])
-    .filter('humanize', function(){
-      return function(text){
-        if(text){
+    .filter('humanize', function() {
+      return function(text) {
+        if(text) {
           return humanize.filesize(text);
-        };
+        }
       };
     });
 
