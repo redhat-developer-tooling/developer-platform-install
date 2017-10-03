@@ -92,15 +92,14 @@ footer {
   }
 
   .remember-me {
-    position: relative;
-    top: 166px;
-    right: -172px;
+    float: left;
+  }
+
+  .remember-me-group {
+    width: 220px;
   }
 
   .remember-me-label {
-    position: relative;
-    top: 164px;
-    right: -172px;
   }
 
   .branding {
@@ -319,6 +318,11 @@ footer {
 
   .forgot-password {
     margin-right: 0px;
+    float: right;
+  }
+
+  .forgot-password-group {
+    width: 300px;
   }
 
   .last-field {

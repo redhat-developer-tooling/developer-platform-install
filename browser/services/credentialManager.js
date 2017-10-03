@@ -1,6 +1,7 @@
 import keytar from 'keytar';
 import path from 'path';
 import fs from 'fs-extra';
+import Platform from './platform';
 
 class TokenStore {
   static setItem(key, login, value) {
@@ -12,18 +13,15 @@ class TokenStore {
   }
 
   static getUserName() {
-    let dataFilePath = path.join(remote.app.getPath('userData'),'RedHat','DevelopmentSuite', 'settings.json');
-    console.log(fs.existsSync(dataFilePath));
+    let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
+    let username = '';
     if (fs.existsSync(dataFilePath)) {
       let data = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
       if (data.username) {
-        return data.username;
-      } else {
-        return "";
+        username = data.username;
       }
-    } else {
-      return "";
     }
+    return username;
   }
 }
 
