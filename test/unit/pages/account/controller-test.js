@@ -19,7 +19,7 @@ describe('Account controller', function() {
     scope = { '$apply': function() { } };
     base64 = { encode: function() {}};
     http = sandbox.stub().resolves('success');
-    controller = new AccountController({}, timeout, scope, http, base64, {}, electron);
+    controller = new AccountController({}, timeout, scope, http, base64, {password: '', username: ''}, electron);
   });
 
   afterEach(function() {

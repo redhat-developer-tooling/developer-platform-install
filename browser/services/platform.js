@@ -4,6 +4,7 @@ const child_process = require('child_process');
 const pify = require('pify');
 const path = require('path');
 const fs = require('fs-extra');
+import os from 'os';
 
 class Platform {
   static identify(map) {
@@ -249,6 +250,21 @@ class Platform {
       `"do shell script \\"${commands.join(' ')}\\" with administrator privileges"`
     ];
     return pify(child_process.exec)(osaScript.join(' '));
+  }
+
+  static localAppData() {
+    let appData = Platform.identify({
+      win32: ()=> {
+        let appDataPath = Platform.ENV.APPDATA;
+        return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : os.tmpdir();
+      }, darwin: ()=> {
+        let homePath = Platform.ENV.HOME;
+        return homePath ? path.join(homePath, 'Library', 'Application Support', 'RedHat', 'DevSuite') : os.tmpdir();
+      }, default: ()=> {
+        return os.tmpdir();
+      }
+    });
+    return path.resolve(appData);
   }
 }
 
