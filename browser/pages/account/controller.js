@@ -5,6 +5,7 @@ import fs from 'fs-extra';
 import mkdirp from 'mkdirp';
 import Util from '../../model/helpers/util';
 import Logger from '../../services/logger';
+import Platform from '../../services/platform';
 import TokenStore from '../../services/credentialManager';
 
 class AccountController {
@@ -23,8 +24,12 @@ class AccountController {
     this.isLoginBtnClicked = false;
     this.rememberMe = false;
     this.httpError = undefined;
-    this.password = this.installerDataSvc.password;
-    this.username = this.installerDataSvc.username;
+    this.password = '';
+    this.username = '';
+    $scope.$watch('$viewContentLoaded', ()=>{
+      this.password = this.installerDataSvc.password;
+      this.username = this.installerDataSvc.username;
+    });
   }
 
   login() {
@@ -90,7 +95,7 @@ class AccountController {
       this.authFailed = false;
       // Storing the password for next use
       if (this.rememberMe == true) {
-        let dataFilePath = path.join(remote.app.getPath('userData'),'RedHat','DevelopmentSuite');
+        let dataFilePath = Platform.localAppData();
         mkdirp.sync(dataFilePath);
         let data = {'username': this.username};
         fs.writeFileSync(path.join(dataFilePath, 'settings.json'), JSON.stringify(data));
