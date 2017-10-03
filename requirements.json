@@ -181,7 +181,8 @@
     "useDownload": false,
     "defaultOption": "detected",
     "requires": ["devstudio"],
-    "installSize": 76685312
+    "installSize": 76685312,
+    "size": 0
   },
   "fuseplatform": {
     "name": "Red Hat JBoss Fuse on JBoss EAP",

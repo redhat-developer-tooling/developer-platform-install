@@ -18,7 +18,9 @@ class InstallController {
     this.totalDownloads = 0;
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(!value.isSkipped()) {
-        this.totalDownloads += value.totalDownloads;
+        if(value.isDownloadRequired()) {
+          this.totalDownloads += value.totalDownloads;
+        }
         this.totalSize += value.size;
       }
     }
