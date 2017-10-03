@@ -419,7 +419,7 @@ footer {
   }
 
   .back-btn-spacer-account {
-    right: 320px;
+    right: 200px;
   }
 
   .back-btn-spacer {
@@ -507,6 +507,10 @@ footer {
   .panel-default {
     margin-bottom: 5px;
     margin-top: 20px;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
   }
 
   .panel .panel-normal {
@@ -708,5 +712,57 @@ footer {
 
   .form-padding {
     padding-top: 49px;
+  }
+
+  .progress {
+    height: 5px;
+    display: block;
+    width: 100%;
+    background-color: #acece6;
+    border-radius: 2px;
+    background-clip: padding-box;
+    margin: 0.5rem 0 1rem 0;
+  }
+
+  .progress-determinate {
+    /* width: 100%; */
+    animation: progress-bar-stripes 2s infinite steps(15);
+    position: absolute;
+    background-color: inherit;
+    top: 0;
+    bottom: 0;
+    background-color: #39a5dc;
+    transition: width .3s linear;
+  }
+
+  .install-info {
+    background-color: #e9f4e9;
+    color: #363636;
+    top: 15px;
+    position: relative;
+    padding: 11px;
+  }
+
+  .install-header {
+    display: flex;
+    width: 100%;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 1em 1.5em;
+    margin-top: 38px;
+    font-size: 14px;
+  }
+
+  .install-header-spinner {
+    margin-right: 10px;
+    color: #51aedd;
+  }
+
+  .progress-bar {
+    border-radius: 5px;
+  }
+
+  .install-fail-icon {
+    color: orange;
   }
 }

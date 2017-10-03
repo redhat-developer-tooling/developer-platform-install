@@ -4,23 +4,26 @@ import Logger from '../../services/logger';
 import duration from 'humanize-duration';
 import humanize from 'humanize';
 import Downloader from '../../model/helpers/downloader';
+import Platform from '../../services/platform';
 
 class InstallController {
-  constructor($scope, $timeout, installerDataSvc) {
+  constructor($scope, $timeout, installerDataSvc, electron) {
     this.$scope = $scope;
     this.$timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
+    this.electron = electron;
     this.failedDownloads = new Set();
-
+    this.totalSize = 0;
     this.data = {};
     this.totalDownloads = 0;
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(!value.isSkipped()) {
         this.totalDownloads += value.totalDownloads;
+        this.totalSize += value.size;
       }
     }
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
-    this.data.p = this.itemProgress;
+    this.data.progress = this.itemProgress;
     this.downloader = new Downloader(this.itemProgress,
       ()=> {
         this.installerDataSvc.downloading = false;
@@ -33,6 +36,7 @@ class InstallController {
       },
       this.totalDownloads
     );
+    this.itemProgress.setTotalDownloadSize(this.totalSize);
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(value.isSkipped()) {
         this.installerDataSvc.setupDone(this.itemProgress, key);
@@ -57,6 +61,12 @@ class InstallController {
       undefined,
       this.downloader
     );
+  }
+
+  platformDetect() {
+    if(Platform.OS == 'darwin') {
+      return true;
+    }
   }
 
   downloadAgain() {
@@ -87,6 +97,11 @@ class InstallController {
         Logger.error(installableKey + ' failed to install: ' + error);
       }
     );
+  }
+
+  exit() {
+    Logger.info('Closing the installer window');
+    this.electron.remote.getCurrentWindow().close();
   }
 }
 
@@ -146,7 +161,7 @@ class ProgressState {
 
       this.current = Math.round(this.currentAmount / this.totalSize * 100);
       this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
-      this.$timeout(()=>this.$scope.$apply());
+      this.$timeout();
     }
   }
 
@@ -170,10 +185,15 @@ class ProgressState {
       this.current = 0;
       this.label = 0 + '%';
       this.currentAmount = 0;
-      this.totalSize = 0;
+      //    this.totalSize = 0;
     }
     this.status = newStatus;
-    this.$timeout(()=>this.$scope.$apply());
+    this.$timeout();
+  }
+
+  setProductName(newName) {
+    this.productName = newName;
+    this.$timeout();
   }
 
   setComplete() {
@@ -185,7 +205,7 @@ class ProgressState {
   }
 }
 
-InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc'];
+InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc', 'electron'];
 
 export default InstallController;
 export { ProgressState };

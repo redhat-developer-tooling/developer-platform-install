@@ -4,9 +4,20 @@
 
 <main>
   <div class="col-sm-12 bottom-spacer">
-    <p class="installation-note">Installation Details</p>
+    <div class="install-header">
+      <span ng-class="{'fa fa-circle-o-notch fa-spin fa-3x fa-fw install-header-spinner': instCtrl.failedDownloads.size <= 0 ,
+                      'fa fa-exclamation-triangle fa-3x fa-fw install-fail-icon': instCtrl.failedDownloads.size > 0 }"></span>      
+      <div>
+        <strong class="header">Downloading & Installing</strong>
+        <p>We're fetching that content for you.</p>
+      </div>
+    </div>
     <div ng-repeat="progress in data">
       <progress-bar progress="progress"></progress-bar>
+    </div>
+    <div ng-show="instCtrl.platformDetect()" class="install-info">
+      <i class="fa fa-info-circle" aria-hidden="true"></i>
+      <span>&nbsp;MacOS may ask for your administrative password several times during installation.</span>
     </div>
   </div>
 </main>
@@ -34,3 +45,9 @@
     </div>
   </div>
 </div>
+
+<footer class="no-background-color">
+  <div class="footer-border"></div>
+  <button type="button" id="location-cancel-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="installForm"
+          ng-click="instCtrl.exit()">Cancel</button>
+</footer>

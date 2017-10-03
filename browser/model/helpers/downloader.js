@@ -3,6 +3,7 @@
 let request = require('request');
 let fs = require('fs-extra');
 
+import Path from 'path';
 import Hash from './hash';
 import Logger from '../../services/logger';
 import Util from './util';
@@ -19,10 +20,12 @@ class Downloader {
     this.downloads = new Map();
     this.userAgentString = '';
     this.received = 0;
+    this.downloaded = 0;
     this.lastTime = 0;
     if(remote) {
       this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
     }
+    this.root = Promise.resolve();
   }
 
   setWriteStream(stream) {
@@ -38,23 +41,23 @@ class Downloader {
     this.downloads.get(stream.path)['failure'] = true;
   }
 
-  responseHandler(response) {
-    let tempSize = response.headers['content-length'];
-    if (tempSize !== undefined && parseInt(tempSize) > 0) {
-      this.downloadSize += parseInt(tempSize);
-
-      if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
-        this.progress.setTotalDownloadSize(this.downloadSize);
-      }
-    }
+  responseHandler(file, response) {
+    this.progress.setProductName(Path.parse(file).name);
+    // let tempSize = response.headers['content-length'];
+    // if (tempSize && parseInt(tempSize) > 0) {
+    //   this.downloadSize += parseInt(tempSize);
+    //   if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
+    //     this.progress.setTotalDownloadSize(this.downloadSize);
+    //   }
+    // }
   }
 
   dataHandler(data) {
     this.currentSize += data.length;
-
-    if (Date.now() - this.lastTime > 500 || this.currentSize == this.downloadSize) {
+    let now = Date.now();
+    if (now - this.lastTime > 500) {
       this.progress.setCurrent(this.currentSize);
-      this.lastTime = Date.now();
+      this.lastTime = now;
     }
   }
 
@@ -92,7 +95,7 @@ class Downloader {
     if(this.downloads.get(file)) {
       this.downloads.get(file)['failure'] = false;
     }
-    if(--this.totalDownloads == 0 ) {
+    if(this.totalDownloads == ++this.downloaded ) {
       this.success();
     }
   }
@@ -100,26 +103,38 @@ class Downloader {
   download(options, file, sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path, {options, sha, 'failure': false});
-    request.get(this.setAdditionalOptions(options))
-      .on('error', this.errorHandler.bind(this, stream))
-      .on('response', this.responseHandler.bind(this))
-      .on('data', this.dataHandler.bind(this))
-      .on('end', this.endHandler.bind(this, stream))
-      .pipe(stream)
-      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
+    this.root = this.root.then(() => {
+      return new Promise((resolve)=>{
+        request.get(this.setAdditionalOptions(options))
+          .on('error', this.errorHandler.bind(this, stream))
+          .on('error', resolve)
+          .on('response', this.responseHandler.bind(this, file))
+          .on('data', this.dataHandler.bind(this))
+          .on('end', this.endHandler.bind(this, stream))
+          .pipe(stream)
+          .on('close', this.closeHandler.bind(this, stream.path, sha, options))
+          .on('close', resolve);
+      });
+    });
   }
 
   downloadAuth(options, username, password, file, sha) {
     let stream = this.writeStream;
     this.downloads.set(stream.path, {options, username, password, sha, 'failure': false});
-    request.get(this.setAdditionalOptions(options))
-      .auth(username, password)
-      .on('error', this.errorHandler.bind(this, stream))
-      .on('response', this.responseHandler.bind(this))
-      .on('data', this.dataHandler.bind(this))
-      .on('end', this.endHandler.bind(this, stream))
-      .pipe(stream)
-      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
+    this.root = this.root.then(() => {
+      return new Promise((resolve)=>{
+        request.get(this.setAdditionalOptions(options))
+          .auth(username, password)
+          .on('error', this.errorHandler.bind(this, stream))
+          .on('error', resolve)
+          .on('response', this.responseHandler.bind(this, file))
+          .on('data', this.dataHandler.bind(this))
+          .on('end', this.endHandler.bind(this, stream))
+          .pipe(stream)
+          .on('close', this.closeHandler.bind(this, stream.path, sha, options))
+          .on('close', resolve);
+      });
+    });
   }
 
   restartDownload() {

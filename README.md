@@ -278,20 +278,14 @@ For CI environment a powershell script is available in 'test/system/windows/runT
 This script launches the tests with elevated privileges and copy the
 installation logs into the $devsuiteFolder for archivation in CI environment.
 
-Debugging
----------
+Debugging in Chrome Developer Tools
+-----------------------------------
 
-Enable Chrome Developer tools in installer window
-
-    export PDKI_DEBUG=1
-    npm start
-
-or you can run installer with
+Run installer with
 
     npm start
 
-and then push Ctrl + Shift + I to show Chrome Developer Tools in current
-installer window
+and then push Ctrl + Shift + I to show Chrome Developer Tools in current installer window
 
 Testing online installer
 ------------------------
