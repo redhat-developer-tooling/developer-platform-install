@@ -139,24 +139,6 @@ describe('SelectionController', function() {
     });
   });
 
-  describe('install', function() {
-    beforeEach(function() {
-      sandbox.stub(Platform, 'getOS').returns('win32');
-    });
-    beforeEach(inject(context));
-    it('should navigate to install page', function() {
-      $watch.args.forEach(function(el) {
-        if(el[0] == '$viewContentLoaded') {
-          el[1]();
-        }
-      });
-      return selectionController.detection.then(function() {
-        selectionController.install();
-        expect(selectionController.router.go).calledOnce;
-      });
-    });
-  });
-
   describe('dependency resolution', function() {
     beforeEach(function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
@@ -362,16 +344,6 @@ describe('SelectionController', function() {
       for (let installer of installerDataSvc.allInstallables().values()) {
         expect(installer.selectedOption).equals('detected');
       }
-    });
-  });
-
-  describe('updateTotalDiskSpace', function() {
-    beforeEach(inject(context));
-    it('should calculate total install disk space for selected components', function() {
-      selectionController.deselectAll();
-      let kompose = selectionController.sc.checkboxModel.kompose;
-      kompose.selectedOption = 'install';
-      expect(selectionController.sc.updateTotalDiskSpace()).equals(kompose.size + kompose.installSize);
     });
   });
 });
