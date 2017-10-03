@@ -18,10 +18,11 @@ class InstallerDataService {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.installRoot = 'c:\\DevelopmentSuite';
+      this.defaultFolder = 'c:\\DevelopmentSuite';
     } else {
-      this.installRoot = '/Applications/DevelopmentSuite';
+      this.defaultFolder = '/Applications/DevelopmentSuite';
     }
+    this.installRoot = this.defaultFolder;
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
     this.packageConf = packageConf;
