@@ -147,7 +147,7 @@ footer {
     float: left;
     text-align: center;
     color: #d1d1d1;
-    width: 19.5%;
+    width: 15.84%;
     position: relative;
     padding-top: 15px;
   }
@@ -161,8 +161,7 @@ footer {
     border-radius: 50%;
     position: absolute;
     top: 0;
-    left: 50%;
-    margin-left: -5px;
+    left: 53%;
   }
 
   .breadcrumbs li.active {
@@ -423,7 +422,7 @@ footer {
   }
 
   .back-btn-spacer {
-    right: 183px;
+    right: 198px;
   }
 
   .go-btn {
@@ -683,7 +682,7 @@ footer {
     position: fixed;
     z-index: 2;
     width: 100%;
-    padding-bottom: 15px;
+    padding-bottom: 27px;
   }
 
   .size-footer {
@@ -708,5 +707,68 @@ footer {
 
   .form-padding {
     padding-top: 49px;
+  }
+
+  .summary-info {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fafafa;
+  }
+
+  .size-summary {
+    line-height: 1;
+    padding: 8px;
+    color: #8e8e8e;
+    margin: 5px 5px 0;
+    border-left: 3px solid #0088ce;
+  }
+
+  .confirm-heading {
+    position: fixed;
+    width: 794px;
+    background: #fff;
+    border-bottom: 2px solid #d1d1d1;
+    margin: 0 -15px 20px;
+    padding: 10px 5px 5px;
+    border-top: 2px solid #fafafa;
+  }
+
+  .inline {
+    display: inline-block;
+  }
+
+  .confirm-margin {
+    margin: 120px 0 0;
+  }
+
+  .install-desc {
+    display: block;
+    padding-top: 12px;
+  }
+
+  .size-note {
+    color: #a2a2a2
+  }
+
+  .label-note {
+    padding: 10px 10px;
+    border-radius: 2px;
+    background-color: #58b1df;
+  }
+
+  .confirm-note-color {
+    color: #3aa3d9
+  }
+
+  .confirm-layout {
+    background: #fff;
+    border-top: 2px solid transparent;
+    padding: 0 10px;
+    margin-top: 10px;
+  }
+
+  .confirm-card-margin {
+    margin-left: 50px;
+    margin-right: 50px;
   }
 }

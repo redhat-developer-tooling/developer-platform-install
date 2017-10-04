@@ -11,6 +11,7 @@ import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';
 import startCtrl from './pages/start/controller';
+import selectCtrl from './pages/selection/controller';
 import pathValidator from './directives/pathValidator';
 import progressBar from './directives/progressBar';
 import breadcrumb from './directives/breadcrumb';
@@ -29,6 +30,7 @@ let mainModule =
     .controller(confCtrl.name, confCtrl)
     .controller(instCtrl.name, instCtrl)
     .controller(startCtrl.name, startCtrl)
+    .controller(selectCtrl.name, selectCtrl)
     .value('requestMod', request)
     .factory('installerDataSvc', InstallerDataService.factory)
     .factory('request', Request.factory)
@@ -53,6 +55,14 @@ let mainModule =
             displayName: 'Target Folder'
           }
         })
+        .state('selection', {
+          url: '/selection',
+          controller: 'SelectionController as selectCtrl',
+          templateUrl: 'pages/selection/selection.html',
+          data: {
+            displayName: 'Selection'
+          }
+        })        
         .state('confirm', {
           url: '/confirm',
           controller: 'ConfirmController as confCtrl',
