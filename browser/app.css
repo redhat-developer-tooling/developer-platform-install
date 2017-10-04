@@ -682,7 +682,7 @@ footer {
     position: fixed;
     z-index: 2;
     width: 100%;
-    padding-bottom: 15px;
+    padding-bottom: 27px;
   }
 
   .size-footer {
@@ -725,7 +725,7 @@ footer {
 
   .confirm-heading {
     position: fixed;
-    width: 870px;
+    width: 780px;
     background: #fff;
     border-bottom: 2px solid #d1d1d1;
     margin: 0 -20px 20px;

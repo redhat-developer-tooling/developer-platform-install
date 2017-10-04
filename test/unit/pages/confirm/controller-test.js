@@ -57,8 +57,8 @@ describe('ConfirmController', function() {
   };
 
   describe('back', function() {
+    beforeEach(inject(context));
     beforeEach(function() {
-      sandbox.stub(confirmController.router, 'go');
       confirmController.back();
     });
 
@@ -75,11 +75,11 @@ describe('ConfirmController', function() {
     });
   });
 
-	describe('displayTotalInstallSize', function() {
+  describe('displayTotalInstallSize', function() {
     beforeEach(inject(context));
     it('should calculate total install size for selected components', function() {
-			let cdk = confirmController.installerDataSvc.getInstallable('cdk');
-    	for (let installer of installerDataSvc.allInstallables().values()) {
+      let cdk = confirmController.installerDataSvc.getInstallable('cdk');
+      for(let installer of installerDataSvc.allInstallables().values()) {
         expect(installer.selectedOption).equals('install');
       }
       expect(confirmController.sc.updateTotalInstallSize()).equals(cdk.installSize);
@@ -89,11 +89,11 @@ describe('ConfirmController', function() {
   describe('displayTotalDownloadSize', function() {
     beforeEach(inject(context));
     it('should calculate total download size for selected components', function() {
-			let cdk = confirmController.installerDataSvc.getInstallable('cdk');
-			for (let installer of installerDataSvc.allInstallables().values()) {
-				expect(installer.selectedOption).equals('install');
-				}
-			expect(confirmController.sc.updateTotalDownloadSize()).equals(cdk.size);
-		});
+      let cdk = confirmController.installerDataSvc.getInstallable('cdk');
+      for (let installer of installerDataSvc.allInstallables().values()) {
+        expect(installer.selectedOption).equals('install');
+      }
+      expect(confirmController.sc.updateTotalDownloadSize()).equals(cdk.size);
+    });
   });
 });

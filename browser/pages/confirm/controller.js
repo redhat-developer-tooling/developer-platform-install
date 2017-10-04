@@ -17,8 +17,8 @@ class ConfirmController {
       let totalDownloadSize = 0;
       for (let value of this.installerDataSvc.allInstallables().values()) {
         if(value.size && value.selectedOption == 'install') {
-            totalDownloadSize += value.size;
-          }
+          totalDownloadSize += value.size;
+        }
       }
       return totalDownloadSize;
     };
@@ -27,9 +27,9 @@ class ConfirmController {
       let totalInstallSize = 0;
       for (let value of this.installerDataSvc.allInstallables().values()) {
         if(value.installSize && value.selectedOption == 'install') {
-            totalInstallSize += value.installSize;
-          }
+          totalInstallSize += value.installSize;
         }
+      }
       return totalInstallSize;
     };
   }
