@@ -1,7 +1,12 @@
 'use strict';
 
+import path from 'path';
+import fs from 'fs-extra';
+import mkdirp from 'mkdirp';
 import Util from '../../model/helpers/util';
 import Logger from '../../services/logger';
+import Platform from '../../services/platform';
+import TokenStore from '../../services/credentialManager';
 
 class AccountController {
 
@@ -14,12 +19,17 @@ class AccountController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     $scope.version = electron.remote.app.getVersion();
-    this.username = '';
-    this.password = '';
     this.authFailed = false;
     this.tandcNotSigned = false;
     this.isLoginBtnClicked = false;
+    this.rememberMe = false;
     this.httpError = undefined;
+    this.password = '';
+    this.username = '';
+    $scope.$watch('$viewContentLoaded', ()=>{
+      this.password = this.installerDataSvc.password;
+      this.username = this.installerDataSvc.username;
+    });
   }
 
   login() {
@@ -83,6 +93,14 @@ class AccountController {
       this.isLoginBtnClicked = false;
       this.router.go('install');
       this.authFailed = false;
+      // Storing the password for next use
+      if (this.rememberMe == true) {
+        let dataFilePath = Platform.localAppData();
+        mkdirp.sync(dataFilePath);
+        let data = {'username': this.username};
+        fs.writeFileSync(path.join(dataFilePath, 'settings.json'), JSON.stringify(data));
+        TokenStore.setItem('login', this.username, this.password);
+      }
     } else if (result.status == 200 && result.data == false) {
       this.tandcNotSigned = true;
       this.isLoginBtnClicked = false;

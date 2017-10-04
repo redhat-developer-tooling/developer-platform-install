@@ -1,16 +1,18 @@
 'use strict';
 
-import Logger from './logger';
-import Platform from '../services/platform';
-import loadMetadata from '../services/metadata';
 import os from 'os';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import pify from 'pify';
+import keytar from 'keytar';
+import mkdirp from 'mkdirp';
+import Logger from './logger';
 import fsExtra from 'fs-extra';
 import electron from 'electron';
-import mkdirp from 'mkdirp';
-import pify from 'pify';
 import child_process from'child_process';
+import Platform from '../services/platform';
+import TokenStore from './credentialManager';
+import loadMetadata from '../services/metadata';
 
 
 class InstallerDataService {
@@ -27,8 +29,16 @@ class InstallerDataService {
     this.router = $state;
     this.packageConf = packageConf;
 
-    this.username = '';
+    this.username = TokenStore.getUserName();
     this.password = '';
+    if (this.username) {
+      let password = TokenStore.getItem('login', this.username);
+      password.then((pass) => {
+        if(pass && pass !=='') {
+          this.password = pass;
+        }
+      });
+    }
 
     this.installableItems = new Map();
     this.toDownload = new Set();
@@ -192,20 +202,8 @@ class InstallerDataService {
   }
 
   localAppData() {
-    let appData = Platform.identify({
-      win32: ()=> {
-        let appDataPath = Platform.ENV.APPDATA;
-        return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : this.tempDir();
-      }, darwin: ()=> {
-        let homePath = Platform.ENV.HOME;
-        return homePath ? path.join(homePath, 'Library', 'Application Support', 'RedHat', 'DevSuite') : this.tempDir();
-      }, default: ()=> {
-        return this.tempDir();
-      }
-    });
-    return path.resolve(appData);
+    return Platform.localAppData();
   }
-
 
   isDownloading() {
     return this.downloading;

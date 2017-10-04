@@ -19,7 +19,10 @@
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid"></span>-->
           <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
         </div>
-        <div class="login-form-input-container form-group">
+        <div class="login-form-input-container form-group remember-me-group">
+          <input class="remember-me" type="checkbox" ng-model = "acctCtrl.rememberMe"><span class="remember-me-label">Remember me</span>
+        </div>
+        <div class="login-form-input-container form-group forgot-password-group">
           <a class="forgot-password" id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">Forgot password?</a>
         </div>
       </form>

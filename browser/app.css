@@ -91,6 +91,17 @@ footer {
     padding-bottom: 35px;
   }
 
+  .remember-me {
+    float: left;
+  }
+
+  .remember-me-group {
+    width: 220px;
+  }
+
+  .remember-me-label {
+  }
+
   .branding {
     width: 180px;
     position: absolute;
@@ -306,7 +317,12 @@ footer {
   }
 
   .forgot-password {
-    margin-right: 121px;
+    margin-right: 0px;
+    float: right;
+  }
+
+  .forgot-password-group {
+    width: 300px;
   }
 
   .last-field {
