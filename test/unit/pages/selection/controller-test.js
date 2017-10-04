@@ -6,7 +6,6 @@ import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
 import ElectronMock from '../../../mock/electron';
-import SelectionController from 'browser/pages/selection/controller';
 
 import fs from 'fs';
 
