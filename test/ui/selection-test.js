@@ -106,7 +106,7 @@ describe('Selection page', function selectionPage() {
     });
 
     it('should state the instructions', function() {
-      expect(element(By.id('instructions')).getText()).toEqual('Select components to install.');
+      expect(element(By.id('instructions')).getText()).toMatch(/Select .*components to install\./);
     });
 
     it('should display a panel for each component', function() {
@@ -114,20 +114,6 @@ describe('Selection page', function selectionPage() {
         expect(requirements[key].panel.isDisplayed()).toBe(true);
       }
     });
-
-    // it('should display a total install size', function() {
-    //   expect(installSizeFooter.isEnabled()).toBe(true);
-    //   let finalSize = 0;
-    //   for (var key in requirements) {
-    //     if(requirements[key].defaultOption === undefined || requirements[key].defaultOption === 'install') {
-    //       finalSize += requirements[key].size;
-    //       if(requirements[key].installSize) {
-    //         finalSize += requirements[key].installSize;
-    //       }
-    //     }
-    //   }
-    //   expect(installSizeFooter.element(By.id('install-size-footer')).getText()).toEqual(humanize.filesize(finalSize));
-    // });
 
     describe('components', function() {
       for (let key in requirements) {
