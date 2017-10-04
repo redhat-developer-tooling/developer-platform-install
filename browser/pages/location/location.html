@@ -19,7 +19,7 @@
             <label for="location-browse-input-folder" class="location-browse-label">
               Select the installation folder
             </label>
-            <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
+            <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input" ng-blur="locCtrl.resetFolder()"
                   ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
             <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
