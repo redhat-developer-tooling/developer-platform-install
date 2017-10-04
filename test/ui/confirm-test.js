@@ -20,20 +20,20 @@ describe('Confirmation page', function() {
 
   beforeAll(function() {
     browser.setLocation('confirm')
-    .then(function() {
-      for (var key in requirements) {
-        requirements[key].summaryPane = element(By.id(key + '-info'));
-        requirements[key].downloadStatus = element(By.id(key + '-download-status'));
-        requirements[key].versionElement = element(By.id(key + '-version'));
-        requirements[key].nameElement = element(By.id(key + '-name'));
-      }
-      installsize = element(By.id('confirm-install-size'));
-      downloadSize = element(By.id('confirm-download-size'));
-      backButton = element(By.id('location-back-btn'));
-      nextButton = element(By.id('location-install-btn'));
-      confirmNote = element(By.id('confirm-note'));
-      summaryHeading = element(By.id('confirm-summary-title'));
-    });
+      .then(function() {
+        for (var key in requirements) {
+          requirements[key].summaryPane = element(By.id(key + '-info'));
+          requirements[key].downloadStatus = element(By.id(key + '-download-status'));
+          requirements[key].versionElement = element(By.id(key + '-version'));
+          requirements[key].nameElement = element(By.id(key + '-name'));
+        }
+        installsize = element(By.id('confirm-install-size'));
+        downloadSize = element(By.id('confirm-download-size'));
+        backButton = element(By.id('location-back-btn'));
+        nextButton = element(By.id('location-install-btn'));
+        confirmNote = element(By.id('confirm-note'));
+        summaryHeading = element(By.id('confirm-summary-title'));
+      });
   });
 
   it('should have confirmation summary title', function() {
@@ -49,8 +49,8 @@ describe('Confirmation page', function() {
     let totalDownloadSize = 0;
     let totalinstallSize = 0;
     for (var key in requirements) {
-    if(requirements[key].defaultOption === undefined || requirements[key].defaultOption === 'install') {
-      totalDownloadSize += requirements[key].size;
+      if(requirements[key].defaultOption === undefined || requirements[key].defaultOption === 'install') {
+        totalDownloadSize += requirements[key].size;
         if(requirements[key].installSize) {
           totalinstallSize += requirements[key].installSize;
         }
