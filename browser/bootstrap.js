@@ -51,7 +51,7 @@ function openAboutWindow() {
 }
 
 const aboutItem = new MenuItem({
-  label: 'About',
+  label: 'About Red Hat Development Suite',
   click: openAboutWindow
 });
 

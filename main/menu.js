@@ -99,14 +99,12 @@ let template = [
         click: () => {
           require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
         }
-      }
-    ]
-  },
-  {
-    label: 'About',
-    submenu: [
+      },
       {
-        label: 'About',
+        type: 'separator'
+      },
+      {
+        label: 'About Red Hat Development Suite',
         click: () => {
           openAboutWindow();
         }
