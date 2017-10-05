@@ -16,7 +16,7 @@ class ConfirmController {
     $scope.updateTotalDownloadSize = () => {
       let totalDownloadSize = 0;
       for (let value of this.installerDataSvc.allInstallables().values()) {
-        if(value.size && value.selectedOption == 'install') {
+        if(value.size && value.selectedOption == 'install' && !value.downloaded) {
           totalDownloadSize += value.size;
         }
       }
