@@ -73,7 +73,9 @@ class InstallerDataService {
     this.cdkBoxRoot = this.cdkRoot;
     this.ocBinRoot = path.join(this.cdkRoot, 'bin');
     this.cdkMarkerFile = path.join(this.cdkRoot, '.cdk');
+  }
 
+  setupTargetFolder() {
     if (!fs.existsSync(this.installRoot)) {
       mkdirp.sync(path.resolve(this.installRoot));
     }

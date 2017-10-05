@@ -179,7 +179,7 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.installerDataSvc.setup(...possibleComponents);
 
-    this.router.go(this.next());
+    this.next();
   }
 
   next() {
