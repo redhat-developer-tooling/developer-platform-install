@@ -215,6 +215,47 @@ footer {
     background-size: 100%;
   }
 
+  .aboutpage-background {
+    background-image: url(images/RCUE_About_BG.png);
+    background-size: 100%;
+  }
+
+  .about-heading {
+    position: relative;
+    color: #FFFFFF;
+    padding-left: 60px;
+    top: 50px;
+  }
+
+  .icon {
+    position: relative;
+    font-weight: normal;
+    line-height: 1;
+    color: #fafafa;
+    top: -4px;
+  }
+
+  .link {
+    color: #39a5dc;
+    position: relative;
+    text-decoration: none;
+    top: -9px;
+  }
+
+  .link-release {
+    color: #39a5dc;
+    position: relative;
+    text-decoration: none;
+    top: -8px;
+  }
+
+  .link-report {
+    color: #39a5dc;
+    position: relative;
+    text-decoration: none;
+    top: -7px;
+  }
+
   #login-section {
     float: left;
     width: 50%;
@@ -353,6 +394,33 @@ footer {
 
   .product-version {
     padding-left: 5px;
+  }
+
+  .image {
+    float: right;
+    position: relative;
+    left: 15px;
+   }
+
+  .version-panel {
+    position: relative;
+    color: #FFFFFF;
+    padding-left: 60px;
+    top: 66px;
+  }
+
+  .tradmark-panel {
+    position: relative;
+    color: #FFFFFF;
+    padding-left: 60px;
+    top: 110px;
+  }
+
+  .welcome-panel {
+    position: relative;
+    color: #FFFFFF;
+    top: 88px;
+    padding-left: 60px;
   }
 
   .product-info {

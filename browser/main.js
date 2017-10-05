@@ -5,7 +5,7 @@ import '@uirouter/angularjs';
 import 'angular-base64';
 import 'angular-messages';
 import 'ng-focus-if';
-import aboutCtrl from './pages/about/controller';
+import welcomeCtrl from './pages/welcome/controller';
 import acctCtrl from './pages/account/controller';
 import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
@@ -24,7 +24,7 @@ import humanize from 'humanize';
 
 let mainModule =
   angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages', 'focus-if'])
-    .controller(aboutCtrl.name, aboutCtrl)
+    .controller(welcomeCtrl.name, welcomeCtrl)
     .controller(acctCtrl.name, acctCtrl)
     .controller(locCtrl.name, locCtrl)
     .controller(confCtrl.name, confCtrl)
@@ -40,12 +40,12 @@ let mainModule =
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
-      $urlRouterProvider.otherwise('/about');
+      $urlRouterProvider.otherwise('/welcome');
       $stateProvider
-        .state('about', {
-          url: '/about',
-          controller: 'AboutController as aboutCtrl',
-          templateUrl: 'pages/about/about.html'
+        .state('welcome', {
+          url: '/welcome',
+          controller: 'WelcomeController as welcomeCtrl',
+          templateUrl: 'pages/welcome/welcome.html'
         })
         .state('location', {
           url: '/location',

@@ -19,7 +19,7 @@ describe('LocationController', function() {
   let electron = new ElectronMock();
   let $controller;
   let $rootScope;
-  let aboutController;
+  let welcomeController;
 
   ngModule.sharedInjector();
   before(ngModule('devPlatInstaller'));
@@ -27,7 +27,7 @@ describe('LocationController', function() {
   // The injector unwraps the underscores (_) from around the parameter names when matching
     $controller = _$controller_;
     $rootScope = _$rootScope_;
-    aboutController = $controller('AboutController', {
+    welcomeController = $controller('WelcomeController', {
       $state: _$state_,
       $scope: $rootScope,
       electron });
@@ -43,18 +43,18 @@ describe('LocationController', function() {
 
   it('openDevSuiteOverview opens external browser with devsuite page', function() {
     sandbox.stub(electron.shell, 'openExternal');
-    aboutController.openDevSuiteOverview();
+    welcomeController.openDevSuiteOverview();
     expect(electron.shell.openExternal).calledOnce;
   });
 
   describe('next', function() {
     beforeEach(function() {
-      sandbox.stub(aboutController.router, 'go');
-      aboutController.next();
+      sandbox.stub(welcomeController.router, 'go');
+      welcomeController.next();
     });
 
     it('navigates to account page', function() {
-      expect(aboutController.router.go).calledWith('location');
+      expect(welcomeController.router.go).calledWith('location');
     });
   });
 });

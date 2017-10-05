@@ -83,7 +83,7 @@ describe('LocationController', function() {
     });
 
     it('navigates to account page', function() {
-      expect(locationcontroller.router.go).calledWith('about');
+      expect(locationcontroller.router.go).calledWith('welcome');
     });
   });
 

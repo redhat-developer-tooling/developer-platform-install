@@ -1,5 +1,5 @@
 'use strict';
-import { app, ipcMain, BrowserWindow, dialog, Menu } from 'electron';
+import { app, ipcMain, BrowserWindow, dialog, Menu, globalShortcut } from 'electron';
 import * as logger from './logging';
 import template from './menu';
 
@@ -48,7 +48,9 @@ app.on('quit', function(event, exitCode) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-
+  globalShortcut.register('CmdOrCtrl+W',()=>{
+    BrowserWindow.getFocusedWindow().close();
+  });
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1010,
@@ -105,3 +107,27 @@ app.on('ready', function() {
     }
   });
 });
+
+function openAboutWindow() {
+
+  let aboutWindow = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    useContentSize: true,
+    width: 565,
+    height: 355,
+    'autoHideMenuBar': true,
+    resizable: false,
+    show: false
+  });
+  let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
+
+  // Load the about.html of the app
+  aboutWindow.loadURL(`file://${baseLocation}/../browser/about.html`);
+  aboutWindow.setMenu(null);
+  aboutWindow.once('ready-to-show', () => {
+    aboutWindow.show();
+  });
+}
+
+export default openAboutWindow;
