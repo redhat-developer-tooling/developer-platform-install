@@ -107,3 +107,27 @@ app.on('ready', function() {
     }
   });
 });
+
+function openAboutWindow() {
+
+  let aboutWindow = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    useContentSize: true,
+    width: 565,
+    height: 355,
+    'autoHideMenuBar': true,
+    resizable: false,
+    show: false
+  });
+  let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
+
+  // Load the about.html of the app
+  aboutWindow.loadURL(`file://${baseLocation}/../browser/about.html`);
+  aboutWindow.setMenu(null);
+  aboutWindow.once('ready-to-show', () => {
+    aboutWindow.show();
+  });
+}
+
+export default openAboutWindow;
