@@ -1,5 +1,5 @@
 'use strict';
-import { app, ipcMain, BrowserWindow, dialog, Menu } from 'electron';
+import { app, ipcMain, BrowserWindow, dialog, Menu, globalShortcut } from 'electron';
 import * as logger from './logging';
 import template from './menu';
 
@@ -48,7 +48,9 @@ app.on('quit', function(event, exitCode) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-
+  globalShortcut.register('CmdOrCtrl+W',()=>{
+    BrowserWindow.getFocusedWindow().close();
+  });
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1010,
