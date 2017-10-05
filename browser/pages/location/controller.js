@@ -27,7 +27,9 @@ class LocationController {
   }
 
   resetFolder() {
-    this.folder = this.installerDataSvc.defaultFolder;
+    if (!this.folder) {
+      this.folder = this.installerDataSvc.defaultFolder;
+    }
   }
 
   selectFolder() {

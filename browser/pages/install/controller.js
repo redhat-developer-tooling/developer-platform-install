@@ -10,6 +10,7 @@ class InstallController {
     this.$timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
     this.failedDownloads = new Set();
+    this.installerDataSvc.setupTargetFolder();
 
     this.data = {};
     for (var [key, value] of this.installerDataSvc.allInstallables().entries()) {
