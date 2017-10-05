@@ -49,7 +49,9 @@ module.exports = function(gulp) {
         report: yargs.argv.report || 'lcov'
       }
     })).on('end', function() {
-      gulp.src(path.join('coverage', 'lcov-report', 'index.html')).pipe(open());
+      if(yargs.argv['open-report']) {
+        gulp.src(path.join('coverage', 'lcov-report', 'index.html')).pipe(open());
+      }
     });
   });
 
