@@ -75,6 +75,7 @@
     "gulp-babel": "7.0.0",
     "gulp-concat": "2.6.1",
     "gulp-copy": "1.0.1",
+    "gulp-open": "^2.0.0",
     "gulp-rename": "1.2.2",
     "gulp-run": "1.7.1",
     "gulp-sourcemaps": "^2.4.1",
