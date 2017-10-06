@@ -11,7 +11,7 @@ class LocationController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-    this.folder = installerDataSvc.installDir();
+    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
@@ -23,7 +23,13 @@ class LocationController {
     for (var [, value] of this.installerDataSvc.allInstallables().entries()) {
       value.setOptionLocation('install', path.join(this.folder, value.targetFolderName));
     }
-    this.router.go('confirm');
+    this.router.go('selection');
+  }
+
+  resetFolder() {
+    if (!this.folder) {
+      this.folder = this.installerDataSvc.defaultFolder;
+    }
   }
 
   selectFolder() {
@@ -57,7 +63,7 @@ class LocationController {
   back() {
     Logger.info('Going back a page');
     this.installerDataSvc.installRoot = this.folder;
-    this.router.go('about');
+    this.router.go('welcome');
   }
 
 }

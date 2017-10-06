@@ -1,5 +1,7 @@
 'use strict';
 
+import openAboutWindow from './index';
+
 let template = [
   {
     label: 'File',
@@ -96,6 +98,15 @@ let template = [
         accelerator: 'f1',
         click: () => {
           require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'About Red Hat Development Suite',
+        click: () => {
+          openAboutWindow();
         }
       }
     ]

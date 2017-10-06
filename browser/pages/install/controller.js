@@ -14,6 +14,8 @@ class InstallController {
     this.electron = electron;
     this.failedDownloads = new Set();
     this.totalSize = 0;
+    this.installerDataSvc.setupTargetFolder();
+
     this.data = {};
     this.totalDownloads = 0;
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {

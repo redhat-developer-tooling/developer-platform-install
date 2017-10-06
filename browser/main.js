@@ -5,12 +5,13 @@ import '@uirouter/angularjs';
 import 'angular-base64';
 import 'angular-messages';
 import 'ng-focus-if';
-import aboutCtrl from './pages/about/controller';
+import welcomeCtrl from './pages/welcome/controller';
 import acctCtrl from './pages/account/controller';
 import locCtrl from './pages/location/controller';
 import confCtrl from './pages/confirm/controller';
 import instCtrl from './pages/install/controller';
 import startCtrl from './pages/start/controller';
+import selectCtrl from './pages/selection/controller';
 import pathValidator from './directives/pathValidator';
 import progressBar from './directives/progressBar';
 import breadcrumb from './directives/breadcrumb';
@@ -23,12 +24,13 @@ import humanize from 'humanize';
 
 let mainModule =
   angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages', 'focus-if'])
-    .controller(aboutCtrl.name, aboutCtrl)
+    .controller(welcomeCtrl.name, welcomeCtrl)
     .controller(acctCtrl.name, acctCtrl)
     .controller(locCtrl.name, locCtrl)
     .controller(confCtrl.name, confCtrl)
     .controller(instCtrl.name, instCtrl)
     .controller(startCtrl.name, startCtrl)
+    .controller(selectCtrl.name, selectCtrl)
     .value('requestMod', request)
     .factory('installerDataSvc', InstallerDataService.factory)
     .factory('request', Request.factory)
@@ -38,12 +40,12 @@ let mainModule =
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
-      $urlRouterProvider.otherwise('/about');
+      $urlRouterProvider.otherwise('/welcome');
       $stateProvider
-        .state('about', {
-          url: '/about',
-          controller: 'AboutController as aboutCtrl',
-          templateUrl: 'pages/about/about.html'
+        .state('welcome', {
+          url: '/welcome',
+          controller: 'WelcomeController as welcomeCtrl',
+          templateUrl: 'pages/welcome/welcome.html'
         })
         .state('location', {
           url: '/location',
@@ -53,6 +55,14 @@ let mainModule =
             displayName: 'Target Folder'
           }
         })
+        .state('selection', {
+          url: '/selection',
+          controller: 'SelectionController as selectCtrl',
+          templateUrl: 'pages/selection/selection.html',
+          data: {
+            displayName: 'Selection'
+          }
+        })        
         .state('confirm', {
           url: '/confirm',
           controller: 'ConfirmController as confCtrl',

@@ -1,5 +1,7 @@
 'use strict';
 
+const semver = require('semver');
+
 class AboutController {
 
   constructor($state, $scope, electron) {
@@ -10,12 +12,20 @@ class AboutController {
     $scope.version = electron.remote.app.getVersion();
   }
 
-  next() {
-    this.router.go('location');
+  get shortVersion() {
+    return `${semver.major(this.scope.version)}.${semver.minor(this.scope.version)}`;
   }
 
-  openDevSuiteOverview() {
-    this.electron.shell.openExternal('https://developers.redhat.com');
+  documentation() {
+    this.electron.shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+  }
+
+  release() {
+    this.electron.shell.openExternal(`https://access.redhat.com/documentation/en-us/red_hat_development_suite/${this.shortVersion}/html/release_notes_and_known_issues/`);
+  }
+
+  report() {
+    this.electron.shell.openExternal(`https://access.redhat.com/documentation/en-us/red_hat_development_suite/${this.shortVersion}/html/installation_guide/troubleshooting#reporting_an_issue`);
   }
 
 }

@@ -44,7 +44,7 @@ function checkRequirements() {
   minSizes['7zip-extra'] = 400 * 1024;
   minSizes['kompose'] = 400 * 1024;
   minSizes['fuseplatformkaraf']= 749 *1024;
-  
+
   console.log('-------------------------------');
   console.log('Checking download URLs');
   for (var key in data) {

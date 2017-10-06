@@ -1,0 +1,32 @@
+<header><breadcrumb></breadcrumb></header>
+
+<main>
+  <div class="col-sm-12 bottom-spacer">
+    <div class="selection-desc has-spinner">
+      <span class="pficon-info info-color" ng-show="selectCtrl.numberOfExistingInstallations>0"></span><strong><span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span><span id="instructions">{{selectCtrl.installInstructions}}</span></strong>
+    </div>
+    <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
+      <div ng-repeat="item in checkboxModel">
+        <component-panel item="item"></component-panel>
+      </div>
+    </form>
+    <div id="detection-info" class="centered has-spinner" ng-show="selectCtrl.isDisabled" ng-class="{'active':selectCtrl.isDisabled}">
+      <div class="spinner spinner-lg spinner-bgcolour"></div>
+      <div class="detection-msg">
+        <h3>{{selectCtrl.installedSearchNote}}</h3>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer id="footer-navigation" class="no-background-color">
+  <div class="footer-border"></div>
+  <button type="button" id="selection-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="selectionForm"
+          ng-click="selectCtrl.exit()">Cancel</button>
+  <button type="button" id="selection-back-btn" class="footer-btns btn-plain btn-med-size btn btn-lg back-btn" form="selectionForm"
+          ng-disabled="selectCtrl.isDisabled"
+          ng-click="selectCtrl.back()">Back</button>
+  <button type="submit" id="selection-install-btn" class="go-btn footer-btns btn btn-primary btn-lg btn-med-size" form="selectionForm"
+          ng-disabled="!selectCtrl.isConfigurationValid() || selectCtrl.isDisabled" autofocus
+          ng-click="selectCtrl.next()">Next</button>
+</footer>

@@ -83,7 +83,7 @@ describe('LocationController', function() {
     });
 
     it('navigates to account page', function() {
-      expect(locationcontroller.router.go).calledWith('about');
+      expect(locationcontroller.router.go).calledWith('welcome');
     });
   });
 
@@ -132,8 +132,8 @@ describe('LocationController', function() {
       expect(InstallableItem.prototype.setOptionLocation.callCount).to.be.equal(1);
     });
 
-    it('navigates to confirm page', function() {
-      expect(locationcontroller.router.go).calledWith('confirm');
+    it('navigates to selection page', function() {
+      expect(locationcontroller.router.go).calledWith('selection');
     });
   });
 

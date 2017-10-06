@@ -3,14 +3,14 @@
 function describeBreadcrumbs(context) {
   describe('Breadcrumbs', function() {
     let presence = context.pageName.toLowerCase() !== 'about';
-    let names = ['Target Folder', 'Confirmation', 'Account', 'Download & Install', 'Get Started'];
+    let names = ['Target Folder', 'Selection', 'Confirmation', 'Account', 'Download & Install', 'Get Started'];
     let breadcrumbs;
 
     beforeAll(function() {
       breadcrumbs = element(By.className('breadcrumbs'));
     });
 
-    it('should appear on all but the login page', function() {
+    it('should appear on all but the initial page', function() {
       if (!presence) {
         expect(breadcrumbs.isPresent()).toBe(false);
       } else {

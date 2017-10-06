@@ -142,6 +142,7 @@ describe('InstallerDataService', function() {
 
       it('should copy uninstaller powershell script to target install folder', function() {
         svc.setup();
+        svc.setupTargetFolder();
         expect(svc.copyUninstaller).calledOnce;
       });
 
@@ -149,13 +150,15 @@ describe('InstallerDataService', function() {
         fxExtraStub.yields('error');
         Logger.error.reset();
         svc.setup();
+        svc.setupTargetFolder();
         expect(Logger.error).calledOnce;
       });
 
-      it('should log sucess message if copy operation succed', function() {
+      it('should log sucess message if copy operation succeeded', function() {
         fxExtraStub.yields();
         Logger.info.reset();
         svc.setup();
+        svc.setupTargetFolder();
         expect(Logger.info).calledTwice;
       });
 
@@ -172,6 +175,7 @@ describe('InstallerDataService', function() {
           resolve();
         });
         svc.setup();
+        svc.setupTargetFolder();
         return result.then(()=>{
           expect(child_process.exec).to.be.called;
           expect(Logger.info).calledThrice;
@@ -192,6 +196,7 @@ describe('InstallerDataService', function() {
           resolve();
         });
         svc.setup();
+        svc.setupTargetFolder();
         return result.then(()=>{
           expect(child_process.exec).to.be.called;
         });

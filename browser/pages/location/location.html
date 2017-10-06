@@ -14,12 +14,12 @@
         <p id="location-form-note" class="location-form-elements">
           Note: You can NOT choose the folder again once components start to get installed.
         </p>
-        <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': confirmForm.folder.$invalid}">
+        <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': locationForm.folder.$invalid}">
           <div class="location-browse-container">
             <label for="location-browse-input-folder" class="location-browse-label">
               Select the installation folder
             </label>
-            <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input"
+            <input name="folder" type="text" id="location-browse-input-folder" class="location-browse-input" ng-blur="locCtrl.resetFolder()"
                   ng-init="locCtrl.checkFolder()" ng-change="locCtrl.checkFolder()" ng-model="locCtrl.folder" path-validator autofocus/>
             <button id="location-browse-btn" type="button" class="btn btn-primary location-browse-btn" ng-click="locCtrl.selectFolder()">Browse</button>
 
