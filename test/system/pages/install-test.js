@@ -1,6 +1,6 @@
 'use strict';
 
-const pageIndex = 4;
+const pageIndex = 5;
 const name = "Install Page";
 
 function setup(common = require('./common')) {
