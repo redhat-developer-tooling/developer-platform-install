@@ -13,6 +13,7 @@ import os from 'os';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
 import child_process from 'child_process';
+import TokenStore from 'browser/services/credentialManager';
 chai.use(sinonChai);
 
 
@@ -82,7 +83,7 @@ describe('InstallerDataService', function() {
     it('should set default values correctly', function() {
       expect(svc.tempDir()).to.equal(os.tmpdir());
 
-      expect(svc.username).to.equal('');
+      expect(svc.username).to.equal(TokenStore.getUserName());
       expect(svc.password).to.equal('');
 
       expect(svc.downloading).to.equal(false);

@@ -9,6 +9,7 @@ import InstallerDataService from 'browser/services/data';
 import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
+import ElectronMock from '../../../mock/electron';
 
 import fs from 'fs';
 chai.use(sinonChai);
@@ -110,7 +111,7 @@ describe('Install controller', function() {
     let vboxStub, doneStub;
 
     beforeEach(function() {
-      vboxStub = sandbox.stub(vbox, 'downloadInstaller').yields();
+      vboxStub = sandbox.stub(vbox, 'downloadInstaller');
       doneStub = sandbox.stub(installerDataSvc, 'downloadDone').returns();
     });
 
@@ -210,7 +211,7 @@ describe('Install controller', function() {
         let progress;
         beforeEach(function() {
           progress = new ProgressState();
-          progress.$timeout = sinon.stub().yields();
+          progress.$timeout = sinon.stub();
           progress.$scope = {$apply:sinon.stub()};
           progress.setTotalDownloadSize(1000);
           progress.setCurrent(100);
@@ -286,7 +287,7 @@ describe('Install controller', function() {
       let progress;
       beforeEach(function() {
         progress = new ProgressState();
-        progress.$timeout = sinon.stub().yields();
+        progress.$timeout = sinon.stub();
         progress.$scope = {$apply:sinon.stub()};
       });
       it('does nothing if status is the same', function() {
@@ -355,7 +356,7 @@ describe('Install controller', function() {
   });
 
   it('downloadAgain closes dialog with error and start download for failed installers', function() {
-    sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+    sandbox.stub(InstallableItem.prototype, 'downloadInstaller');
     sandbox.stub(InstallableItem.prototype, 'restartDownload').returns();
 
     let scopeStub = {
@@ -368,7 +369,7 @@ describe('Install controller', function() {
       callback && callback();
     };
 
-    let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
+    let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc, new ElectronMock());
     sandbox.spy(installCtrl, 'closeDownloadAgainDialog');
     installCtrl.downloadAgain();
     expect(InstallableItem.prototype.restartDownload).calledOnce;
@@ -386,7 +387,7 @@ describe('Install controller', function() {
       callback && callback();
     };
     it('productName', function() {
-      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
       expect(InstallableItem.prototype.downloadInstaller).calledOnce;
@@ -395,7 +396,7 @@ describe('Install controller', function() {
     });
 
     it('Productversion', function() {
-      sandbox.stub(InstallableItem.prototype, 'downloadInstaller').callsArgWith(2, 'timed out');
+      sandbox.stub(InstallableItem.prototype, 'downloadInstaller');
 
       let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc);
       installCtrl.productVersion('virtualbox');

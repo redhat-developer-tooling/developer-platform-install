@@ -183,17 +183,6 @@ describe('Virtualbox installer', function() {
         expect(spy).calledWith(data.join(' '));
       });
 
-      it('setup should wait for all downloads to complete', function() {
-        let spy = sandbox.spy(installer, 'installMsi');
-
-        installerDataSvc.downloading = true;
-
-        installer.configure(helper);
-
-        expect(fakeProgress.setStatus).calledWith('Waiting for all downloads to finish');
-        expect(spy).not.called;
-      });
-
       describe('configure', function() {
         it('should call installMsi if all downloads have finished', function() {
           let spy = sandbox.spy(installer, 'installMsi');

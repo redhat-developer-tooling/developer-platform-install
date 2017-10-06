@@ -33,6 +33,7 @@ class Downloader {
   }
 
   errorHandler(stream, err) {
+
     stream.close();
     this.failure(err);
     if (!this.downloads.get(stream.path)) {
@@ -116,6 +117,7 @@ class Downloader {
           .on('close', resolve);
       });
     });
+    return this.root;
   }
 
   downloadAuth(options, username, password, file, sha) {
@@ -135,6 +137,7 @@ class Downloader {
           .on('close', resolve);
       });
     });
+    return this.root;
   }
 
   restartDownload() {
@@ -152,6 +155,7 @@ class Downloader {
         }
       }
     }
+    return this.root;
   }
 
   setAdditionalOptions(options) {

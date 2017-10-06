@@ -128,7 +128,7 @@ const shortDuration = {
 };
 
 class ProgressState {
-  constructor(key, productName, productVersion, productDesc, $scope, $timeout, minValue=0, maxValue=100) {
+  constructor(key, productName, productVersion, productDesc, $scope, $timeout = function(){}, minValue=0, maxValue=100) {
     this.key = key;
     this.productName = productName;
     this.productVersion = productVersion;

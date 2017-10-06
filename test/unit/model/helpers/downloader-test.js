@@ -49,14 +49,6 @@ describe('Downloader', function() {
     expect(downloader.totalDownloads).to.equal(1);
   });
 
-  it('responseHandler should set the total download size', function() {
-    let response = { headers: { 'content-length': 1024 } };
-
-    downloader.responseHandler(response);
-
-    expect(downloader.downloadSize).to.equal(1024);
-  });
-
   it('dataHandler should update the progress once time threshold is reached', function() {
     fakeProgress.totalSize = 1024;
 
@@ -167,63 +159,103 @@ describe('Downloader', function() {
     let options3 = {url:'http://example.com/jdk1.zip'};
 
     it('should make a request with given options', function() {
-      let requestGetSpy = sandbox.spy(request, 'get');
+      let response = new PassThrough();
+      let requestGetSpy = sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('end');
+        });
+        return response;
+      });
       downloader.setWriteStream(new PassThrough());
-      downloader.download(options3);
-
-      expect(requestGetSpy).to.be.calledOnce;
-      expect(requestGetSpy).to.be.calledWith(options3);
+      downloader.download(options3).then(()=> {
+        expect(requestGetSpy).to.be.calledOnce;
+        expect(requestGetSpy).to.be.calledWith(options3);
+      });
     });
 
     it('should make a request with given url in options', function() {
-      let requestGetSpy = sandbox.spy(request, 'get');
+      let response = new PassThrough();
+      let requestGetSpy = sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('end');
+        });
+        return response;
+      });
       downloader.setWriteStream(new PassThrough());
-      downloader.download(options);
-
-      expect(requestGetSpy).to.be.calledOnce;
-      expect(requestGetSpy.args[0][0].hasOwnProperty('url')).to.be.true;
-      expect(requestGetSpy.args[0][0].url).to.be.equal(options);
+      downloader.download(options).then(()=> {
+        expect(requestGetSpy).to.be.calledOnce;
+        expect(requestGetSpy.args[0][0].hasOwnProperty('url')).to.be.true;
+        expect(requestGetSpy.args[0][0].url).to.be.equal(options);
+      });
     });
 
     it('should make a request with \'User-Agent\' header set', function() {
-      let requestGetSpy = sandbox.spy(request, 'get');
+      let response = new PassThrough();
+      let requestGetSpy = sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('end');
+        });
+        return response;
+      });
       downloader.setWriteStream(new PassThrough());
-      downloader.download(options);
-
-      expect(requestGetSpy).to.be.calledOnce;
-      expect(requestGetSpy.args[0][0].hasOwnProperty('headers')).to.be.true;
-      expect(requestGetSpy.args[0][0].headers.hasOwnProperty('User-Agent')).to.be.true;
-
+      let d = downloader.download(options);
+      d.then(()=> {
+        expect(requestGetSpy).to.be.calledOnce;
+        expect(requestGetSpy.args[0][0].hasOwnProperty('headers')).to.be.true;
+        expect(requestGetSpy.args[0][0].headers.hasOwnProperty('User-Agent')).to.be.true;
+      });
     });
 
     it('should call endHandler when end event is emitted', function() {
       let response = new Readable();
       response._read = function() {};
-      sandbox.stub(request, 'get').returns(response);
+      sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('end');
+        });
+        return response;
+      });
 
       let stream = new PassThrough();
       downloader.setWriteStream(stream);
       let endHandler = sandbox.stub(downloader, 'endHandler');
-      downloader.download(options);
-      response.emit('end');
+      let d = downloader.download(options);
 
-      expect(endHandler).to.be.calledOnce;
-      expect(endHandler).to.be.calledWith(stream);
+      d.then(()=> {
+        expect(endHandler).to.be.calledOnce;
+        expect(endHandler).to.be.calledWith(stream);
+      });
     });
 
-    it('should call errorHandler when error event is emitted', function() {
-      let response = new Readable();
-      sandbox.stub(request, 'get').returns(response);
+    it('should call errorHandler when error event is emitted and skip sucessHandler', function() {
+      let response = new PassThrough();
       let error = new Error('something bad happened');
+
+      sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('error', error);
+        });
+        return response;
+      });
 
       let stream = new Writable();
       downloader.setWriteStream(stream);
       let errorHandler = sandbox.stub(downloader, 'errorHandler');
-      downloader.download(options);
-      response.emit('error', error);
+      let successHandler = sandbox.stub(downloader, 'successHandler');
+      let p = downloader.download(options);
 
-      expect(errorHandler).to.be.calledOnce;
-      expect(errorHandler).to.be.calledWith(stream, error);
+      //response.emit('error', error);
+
+      return p.then(()=>{
+        expect(errorHandler).to.be.calledOnce;
+        expect(errorHandler).to.be.calledWith(stream, error);
+        expect(successHandler).to.have.not.been.called;
+      });
     });
 
     it('should save downloads in map', function() {
@@ -242,27 +274,6 @@ describe('Downloader', function() {
       stream['path'] = 'file2';
       downloader.download(options2, 'file2');
       expect(downloader.downloads.size).to.be.equal(2);
-    });
-
-    it('should not call sucessHandler after error event is emitted', function() {
-      let response = new Readable();
-      sandbox.stub(request, 'get').returns(response);
-      let error = new Error('something bad happened');
-
-      let stream = new Writable();
-      stream.close = function() {};
-      downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
-      downloader.setWriteStream(stream);
-      let errorHandler = sandbox.stub(downloader, 'errorHandler');
-      let successSpy = sandbox.spy(downloader, 'success');
-      downloader.download(options);
-      response.emit('error', error);
-      downloader.downloads.set('file1', {options: 'options', sha: 'sha', 'failure': false});
-      downloader.download(options2, 'file1');
-      downloader.closeHandler('file1');
-
-      expect(errorHandler).to.be.calledOnce;
-      expect(successSpy).to.have.not.been.called;
     });
 
     it('should call sucessHandler ony after all downloads are finished', function() {
@@ -301,43 +312,68 @@ describe('Downloader', function() {
     });
 
     it('should call authDownload for entries that requires authentication', function() {
-      let response = new EventEmitter();
-      sandbox.stub(request, 'get').returns(response);
-      response.auth = response.pipe = function() { return response; };
+
+      let response = new PassThrough();
       let error = new Error('something bad happened');
+
+      sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('error', error);
+        });
+        return response;
+      });
+
+      response.auth = sandbox.stub().callsFake(function() {
+        return response;
+      });
+
       let stream = new Writable();
       stream.close = function() {};
       stream.path = 'key';
-      downloader.setWriteStream(stream);
-      downloader.downloadAuth(options, 'username', 'password', 'key', 'sha');
-      response.emit('error', error);
-      stream.close = function() {};
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      sandbox.spy(downloader, 'downloadAuth');
-      downloader.restartDownload();
-      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
-      response.emit('close');
-      expect(downloader.downloadAuth).to.be.calledOnce;
-      expect(downloader.downloadAuth).to.be.calledWith(options, 'username', 'password', 'key', 'sha');
+      downloader.setWriteStream(stream);
+      let successHandler = sandbox.stub(downloader, 'successHandler');
+      let p = downloader.downloadAuth(options, 'username', 'password', 'key', 'sha');
+
+      return p.then(()=>{
+        sandbox.stub(downloader, 'downloadAuth');
+        downloader.restartDownload();
+        expect(downloader.downloadAuth).to.be.calledOnce;
+        expect(downloader.downloadAuth).to.be.calledWith(options, 'username', 'password', 'key', 'sha');
+      });
     });
 
     it('should call download method for entries that does not require authentication', function() {
-      let response = new Readable();
-      sandbox.stub(request, 'get').returns(response);
-      response.auth = function() { return response; };
+      let response = new PassThrough();
       let error = new Error('something bad happened');
+
+      sandbox.stub(request, 'get').callsFake(function() {
+        // deffer error emmition
+        Promise.resolve().then(function() {
+          response.emit('error', error);
+        });
+        return response;
+      });
+
+      response.auth = sandbox.stub().callsFake(function() {
+        return response;
+      });
+
       let stream = new Writable();
       stream.close = function() {};
       stream.path = 'key';
-      downloader.setWriteStream(stream);
-      downloader.download(options);
-      response.emit('error', error);
-      stream.close = function() {};
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      sandbox.stub(downloader, 'download');
-      downloader.restartDownload();
-      expect(downloader.download).to.be.calledOnce;
-      expect(downloader.download).to.be.calledWith(options);
+      downloader.setWriteStream(stream);
+      let successHandler = sandbox.stub(downloader, 'successHandler');
+      let p = downloader.download(options, 'username', 'password', 'key', 'sha');
+
+      return p.then(()=>{
+        sandbox.stub(downloader, 'download');
+        downloader.restartDownload();
+        expect(downloader.download).to.be.calledOnce;
+        expect(downloader.download).to.be.calledWith(options);
+      });
     });
 
     it('should not call download method for not failed downloads', function() {
