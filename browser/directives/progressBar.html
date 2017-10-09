@@ -1,10 +1,6 @@
 <div class="panel-default" id="{{progress.key}}-progress">
   <div class="panel-body">
     <div class="product-container">
-      <div class="progress-description">
-        <span class="product-name">{{progress.productName}}</span><span class="product-version">{{progress.productVersion}}</span>
-        <div id="productDescription">{{progress.productDesc}}</div>
-      </div>
       <div class="progress-status">
         <div ng-class="{'spinner spinner-xs spinner-inline' : progress.status == 'Installing' || progress.status == 'Downloading' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1,
                         'pficon pficon-ok': progress.status == 'Complete',
@@ -18,6 +14,10 @@
           style="width: {{progress.current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
           <span>{{progress.label}}</span>
         </div>
+      </div>
+      <div class="progress-description">
+        <span class="product-name">{{progress.productName}}</span><span class="product-version">{{progress.productVersion}}</span>
+        <div id="productDescription">{{progress.productDesc}}</div>
       </div>
     </div>
   </div>

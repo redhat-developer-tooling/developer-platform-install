@@ -5,11 +5,9 @@
 <main>
   <div class="col-sm-12 bottom-spacer">
     <div class="install-header">
-      <span ng-class="{'fa fa-circle-o-notch fa-spin fa-3x fa-fw install-header-spinner': instCtrl.failedDownloads.size <= 0 ,
-                      'fa fa-exclamation-triangle fa-3x fa-fw install-fail-icon': instCtrl.failedDownloads.size > 0 }"></span>      
       <div>
-        <strong class="header">Downloading & Installing</strong>
-        <p>We're fetching that content for you.</p>
+        <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
+        <p style="color: grey;">Currently gathering content</p>
       </div>
     </div>
     <div ng-repeat="progress in data">
