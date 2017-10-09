@@ -1,6 +1,6 @@
 'use strict';
 
-const pageIndex = 3;
+const pageIndex = 4;
 const name = "Login Page";
 
 const user = 'devsuite.test@gmail.com';

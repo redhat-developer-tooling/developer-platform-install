@@ -226,6 +226,11 @@ and raw coverage reports. The report format can be overridden with `--report`
 parameter like shown below
 
     npm test -- --report cobertura
+    
+To open html coverage report in your default browser after unit tests finished use 
+`--open-report` option
+
+    npm test -- --spec-file=test/unit/pages/**/*.js --open-report
 
 Running unit tests one by one for each installer module
 

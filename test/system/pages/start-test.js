@@ -1,6 +1,6 @@
 'use strict';
 
-const pageIndex = 5;
+const pageIndex = 6;
 const name = "Start Page";
 
 let closeButton, openStudioButton;

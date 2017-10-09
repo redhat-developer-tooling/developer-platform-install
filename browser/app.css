@@ -100,6 +100,7 @@ footer {
   }
 
   .remember-me-label {
+    padding: 5px;
   }
 
   .branding {
@@ -714,6 +715,7 @@ footer {
   }
 
   .error-message {
+
     color: red;
   }
 
