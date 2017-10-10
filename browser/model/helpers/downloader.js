@@ -24,6 +24,7 @@ class Downloader {
     if(remote) {
       this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
     }
+    this.root = Promise.resolve();
   }
 
   setWriteStream(stream) {
@@ -31,6 +32,7 @@ class Downloader {
   }
 
   errorHandler(stream, err) {
+
     stream.close();
     this.failure(err);
     if (!this.downloads.get(stream.path)) {
@@ -39,22 +41,17 @@ class Downloader {
     this.downloads.get(stream.path)['failure'] = true;
   }
 
-  responseHandler(response) {
-    let tempSize = response.headers['content-length'];
-    if (tempSize && parseInt(tempSize) > 0) {
-      this.downloadSize += parseInt(tempSize);
-      if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
-        this.progress.setTotalDownloadSize(this.downloadSize);
-      }
-    }
+  responseHandler(installer) {
+    this.progress.productVersion = installer ? installer.productVersion : '';
+    this.progress.setProductName(installer ? installer.productName : '');
   }
 
   dataHandler(data) {
     this.currentSize += data.length;
-
-    if (Date.now() - this.lastTime > 500 || this.currentSize == this.downloadSize) {
+    let now = Date.now();
+    if (now - this.lastTime > 500) {
       this.progress.setCurrent(this.currentSize);
-      this.lastTime = Date.now();
+      this.lastTime = now;
     }
   }
 
@@ -97,29 +94,43 @@ class Downloader {
     }
   }
 
-  download(options, file, sha) {
+  download(options, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {options, sha, 'failure': false});
-    request.get(this.setAdditionalOptions(options))
-      .on('error', this.errorHandler.bind(this, stream))
-      .on('response', this.responseHandler.bind(this))
-      .on('data', this.dataHandler.bind(this))
-      .on('end', this.endHandler.bind(this, stream))
-      .pipe(stream)
-      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
+    this.downloads.set(stream.path, {installer, options, sha, 'failure': false});
+    this.root = this.root.then(() => {
+      return new Promise((resolve)=>{
+        request.get(this.setAdditionalOptions(options))
+          .on('error', this.errorHandler.bind(this, stream))
+          .on('error', resolve)
+          .on('response', this.responseHandler.bind(this, installer))
+          .on('data', this.dataHandler.bind(this))
+          .on('end', this.endHandler.bind(this, stream))
+          .pipe(stream)
+          .on('close', this.closeHandler.bind(this, stream.path, sha, options))
+          .on('close', resolve);
+      });
+    });
+    return this.root;
   }
 
-  downloadAuth(options, username, password, file, sha) {
+  downloadAuth(options, username, password, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {options, username, password, sha, 'failure': false});
-    request.get(this.setAdditionalOptions(options))
-      .auth(username, password)
-      .on('error', this.errorHandler.bind(this, stream))
-      .on('response', this.responseHandler.bind(this))
-      .on('data', this.dataHandler.bind(this))
-      .on('end', this.endHandler.bind(this, stream))
-      .pipe(stream)
-      .on('close', this.closeHandler.bind(this, stream.path, sha, options));
+    this.downloads.set(stream.path, {installer, options, username, password, sha, 'failure': false});
+    this.root = this.root.then(() => {
+      return new Promise((resolve)=>{
+        request.get(this.setAdditionalOptions(options))
+          .auth(username, password)
+          .on('error', this.errorHandler.bind(this, stream))
+          .on('error', resolve)
+          .on('response', this.responseHandler.bind(this, installer))
+          .on('data', this.dataHandler.bind(this))
+          .on('end', this.endHandler.bind(this, stream))
+          .pipe(stream)
+          .on('close', this.closeHandler.bind(this, stream.path, sha, options))
+          .on('close', resolve);
+      });
+    });
+    return this.root;
   }
 
   restartDownload() {
@@ -131,12 +142,13 @@ class Downloader {
       if (value['failure'] && value.failure) {
         this.writeStream = fs.createWriteStream(key);
         if(value.hasOwnProperty('username')) {
-          this.downloadAuth(value.options, value.username, value.password, key, value.sha);
+          this.downloadAuth(value.options, value.username, value.password, key, value.sha, value.installer);
         } else {
-          this.download(value.options, key, value.sha);
+          this.download(value.options, key, value.sha, value.installer);
         }
       }
     }
+    return this.root;
   }
 
   setAdditionalOptions(options) {

@@ -44,7 +44,7 @@ describe('Confirmation page', function() {
     expect(confirmNote.isEnabled()).toBe(true);
   });
 
-  it('should display a total download & install  size', function() {
+  it('should display a total download & install size', function() {
     expect(installsize.isEnabled()).toBe(true);
     let totalDownloadSize = 0;
     let totalinstallSize = 0;

@@ -68,7 +68,7 @@ describe('JDK installer', function() {
     sandbox = sinon.sandbox.create();
     installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk.msi', 'sha');
     fakeProgress = sandbox.stub(new ProgressState());
-    fakeProgress.$timeout = sinon.stub().yields();
+    fakeProgress.$timeout = sinon.stub();
     fakeProgress.$scope = {$apply: function () {}};
   });
 

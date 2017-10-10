@@ -33,66 +33,6 @@ describe('Installation page', function() {
   breadcrumbBase.describeBreadcrumbs(context);
 
   it('should display progress panel for each component', function() {
-    for (var key in requirements) {
-      expect(requirements[key].panel.isDisplayed()).toBe(true);
-    }
-  });
-
-  describe('ProgressBar directive', function() {
-
-    describe('Description pane', function() {
-
-      it('should be displayed for each progress panel', function() {
-        for (var key in requirements) {
-          expect(requirements[key].descriptionPane.isDisplayed()).toBe(true);
-        }
-      });
-
-      it('should each display a correct component name', function() {
-        for (var key in requirements) {
-          let productName = requirements[key].descriptionPane.element(By.className('product-name'));
-          expect(productName.isDisplayed()).toBe(true);
-          expect(productName.getText()).toEqual(requirements[key].name);
-        }
-      });
-
-      it('should each display a correct component version', function() {
-        for (var key in requirements) {
-          let productVersion = requirements[key].descriptionPane.all(By.className('product-version')).first();
-          expect(productVersion.isDisplayed()).toBe(true);
-          expect(productVersion.getText()).toEqual(requirements[key].version);
-        }
-      });
-
-      it('should each display a correct component description', function() {
-        for (var key in requirements) {
-          let productDesc = requirements[key].descriptionPane.element(By.id('productDescription'));
-          expect(productDesc.isDisplayed()).toBe(true);
-          expect(productDesc.getText()).toEqual(requirements[key].description);
-        }
-      });
-
-      it('should each display a correct component status', function() {
-        for (var key in requirements) {
-          expect(requirements[key].statusPane.isDisplayed()).toBe(true);
-        }
-      });
-    });
-
-    describe('Progress bar', function() {
-
-      it('should be displayed for each progress panel', function() {
-        for (var key in requirements) {
-          expect(requirements[key].progress.isDisplayed()).toBe(true);
-        }
-      });
-
-      it('should each go from 0 to 100%', function() {
-        for (var key in requirements) {
-          expect(requirements[key].progress.getAttribute('aria-valuemin')).toEqual('0');
-          expect(requirements[key].progress.getAttribute('aria-valuemax')).toEqual('100');
-        }
-      });
-    });
+    expect(element(By.id('progress')).isDisplayed()).toBe(true);
   });
 });

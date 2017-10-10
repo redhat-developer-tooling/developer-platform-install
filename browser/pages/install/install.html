@@ -4,9 +4,18 @@
 
 <main>
   <div class="col-sm-12 bottom-spacer">
-    <p class="installation-note">Installation Details</p>
+    <div class="install-header">
+      <div>
+        <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
+        <p style="color: grey;">Currently gathering content</p>
+      </div>
+    </div>
     <div ng-repeat="progress in data">
       <progress-bar progress="progress"></progress-bar>
+    </div>
+    <div ng-show="instCtrl.platformDetect()" class="install-info">
+      <i class="fa fa-info-circle" aria-hidden="true"></i>
+      <span>&nbsp;MacOS may ask for your administrative password several times during installation.</span>
     </div>
   </div>
 </main>
@@ -34,3 +43,9 @@
     </div>
   </div>
 </div>
+
+<footer class="no-background-color">
+  <div class="footer-border"></div>
+  <button type="button" id="location-cancel-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="installForm"
+          ng-click="instCtrl.exit()">Cancel</button>
+</footer>
