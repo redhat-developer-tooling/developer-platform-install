@@ -390,7 +390,7 @@ footer {
     color: #c00;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: x-large;
+    font-size: large;
   }
 
   .product-version {
@@ -516,11 +516,11 @@ footer {
   }
 
   #locationForm {
-    margin-top: 8%;
+    padding: 100px 54px 0;
   }
 
   #location-form-container {
-    padding-right: 25%;
+    padding-right: 11%;
   }
 
   .location-form-elements {
@@ -854,7 +854,7 @@ footer {
     background: #fff;
     border-top: 2px solid transparent;
     padding: 0 10px;
-    margin-top: 10px;
+    margin-top: 40px;
   }
 
   .confirm-card-margin {
