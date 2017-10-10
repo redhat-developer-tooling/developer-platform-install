@@ -173,9 +173,9 @@ class InstallableItem {
     let ws = fs.createWriteStream(downloadedFile);
     this.downloader.setWriteStream(ws);
     if(user === undefined && pass === undefined ) {
-      this.downloader.download(url, downloadedFile, sha);
+      this.downloader.download(url, downloadedFile, sha, this);
     } else {
-      this.downloader.downloadAuth(url, user, pass, downloadedFile, sha);
+      this.downloader.downloadAuth(url, user, pass, downloadedFile, sha, this);
     }
   }
 

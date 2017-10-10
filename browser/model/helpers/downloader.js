@@ -3,7 +3,6 @@
 let request = require('request');
 let fs = require('fs-extra');
 
-import Path from 'path';
 import Hash from './hash';
 import Logger from '../../services/logger';
 import Util from './util';
@@ -42,15 +41,9 @@ class Downloader {
     this.downloads.get(stream.path)['failure'] = true;
   }
 
-  responseHandler(file, response) {
-    this.progress.setProductName(Path.parse(file).name);
-    // let tempSize = response.headers['content-length'];
-    // if (tempSize && parseInt(tempSize) > 0) {
-    //   this.downloadSize += parseInt(tempSize);
-    //   if (++this.received == this.totalDownloads && this.progress.totalSize == 0) {
-    //     this.progress.setTotalDownloadSize(this.downloadSize);
-    //   }
-    // }
+  responseHandler(installer) {
+    this.progress.productVersion = installer ? installer.productVersion : '';
+    this.progress.setProductName(installer ? installer.productName : '');
   }
 
   dataHandler(data) {
@@ -101,15 +94,15 @@ class Downloader {
     }
   }
 
-  download(options, file, sha) {
+  download(options, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {options, sha, 'failure': false});
+    this.downloads.set(stream.path, {installer, options, sha, 'failure': false});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
         request.get(this.setAdditionalOptions(options))
           .on('error', this.errorHandler.bind(this, stream))
           .on('error', resolve)
-          .on('response', this.responseHandler.bind(this, file))
+          .on('response', this.responseHandler.bind(this, installer))
           .on('data', this.dataHandler.bind(this))
           .on('end', this.endHandler.bind(this, stream))
           .pipe(stream)
@@ -120,16 +113,16 @@ class Downloader {
     return this.root;
   }
 
-  downloadAuth(options, username, password, file, sha) {
+  downloadAuth(options, username, password, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {options, username, password, sha, 'failure': false});
+    this.downloads.set(stream.path, {installer, options, username, password, sha, 'failure': false});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
         request.get(this.setAdditionalOptions(options))
           .auth(username, password)
           .on('error', this.errorHandler.bind(this, stream))
           .on('error', resolve)
-          .on('response', this.responseHandler.bind(this, file))
+          .on('response', this.responseHandler.bind(this, installer))
           .on('data', this.dataHandler.bind(this))
           .on('end', this.endHandler.bind(this, stream))
           .pipe(stream)
@@ -149,9 +142,9 @@ class Downloader {
       if (value['failure'] && value.failure) {
         this.writeStream = fs.createWriteStream(key);
         if(value.hasOwnProperty('username')) {
-          this.downloadAuth(value.options, value.username, value.password, key, value.sha);
+          this.downloadAuth(value.options, value.username, value.password, key, value.sha, value.installer);
         } else {
-          this.download(value.options, key, value.sha);
+          this.download(value.options, key, value.sha, value.installer);
         }
       }
     }
