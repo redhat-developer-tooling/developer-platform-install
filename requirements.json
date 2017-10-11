@@ -368,6 +368,21 @@
       "win32": {}
     }
   },
+  "che": {
+    "name": "Eclipse Che",
+    "description": "A developer workspace server and cloud IDE.",
+    "vendor": "Eclipse Foundation",
+    "modulePath": "model/che",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "installAfter": "jbosseap",
+    "url": "https://www.eclipse.org/che/",
+    "version": "5.0",
+    "size": 906771,
+    "installSize": 159215616,
+    "requires": ["cdk"]
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
