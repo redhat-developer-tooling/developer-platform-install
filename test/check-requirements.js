@@ -10,7 +10,7 @@ let count = 0;
 function checkRequirements() {
   for (let attribute in reqs) {
     // sha256 is not set for macOS Java SE
-    if(reqs[attribute].sha256sum !== '' && reqs[attribute].url) {
+    if(reqs[attribute].sha256sum !== '' && reqs[attribute].url && (reqs[attribute].useDownload == undefined || reqs[attribute].useDownload && reqs[attribute].useDownload == true)) {
       data[attribute] = reqs[attribute].url;
       count++;
     } else {
@@ -36,7 +36,7 @@ function checkRequirements() {
   fileNames['7zip-extra'] = '7-Zip';
   fileNames['kompose'] = 'kompose';
   fileNames['fuseplatformkaraf'] = 'karaf';
-  fileNames['devstuidocentraljbpm'] = 'devstudio-integration-stack';
+  fileNames['devstuidobpm'] = 'devstudio-integration-stack';
 
   console.log('-------------------------------');
   console.log('Checking download URLs');

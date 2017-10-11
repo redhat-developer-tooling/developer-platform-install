@@ -128,7 +128,7 @@
       "devstudio": { }
     }
   },
-  "devstuidocentraljbpm": {
+  "devstuidobpm": {
     "name": "JBoss Business Process and Rules Tools",
     "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
     "vendor": "Red Hat, Inc.",
@@ -551,6 +551,26 @@
     "platform": {
       "win32": {}
     },
+    "channel" : {
+      "containerDev": { }
+    }
+  },
+  "cdkcheaddon": {
+    "name": "Eclipse Che",
+    "description": "A developer workspace server and cloud IDE",
+    "vendor": "Eclipse Foundation",
+    "modulePath": "model/che",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "useDownload": false,
+    "installAfter": "devstuidobpm",
+    "url": "https://www.eclipse.org/che/",
+    "version": "5.0 Technology Preview",
+    "size": 0,
+    "defaultOption": "detected",
+    "installSize": 159215616,
+    "requires": ["cdk"],
     "channel" : {
       "containerDev": { }
     }
