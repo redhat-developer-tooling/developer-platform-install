@@ -145,18 +145,6 @@ describe('Cygwin installer', function() {
       installerDataSvc.getRequirementByName.returns(reqs.cygwin);
     });
 
-    it('should not start until virtualbox has finished installing', function() {
-      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-      let item2 = new InstallableItem('virtualbox', 'url', 'installFile', 'targetFolderName', installerDataSvc);
-      item2.thenInstall(installer);
-
-      installer.install(fakeProgress, success, failure);
-
-      expect(installSpy).not.called;
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for Oracle VirtualBox to finish installation');
-    });
-
     it('should install once virtualbox has finished', function() {
       let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstallable, 'isInstalled').returns(true);

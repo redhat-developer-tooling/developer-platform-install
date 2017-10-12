@@ -168,20 +168,6 @@ describe('fuseplatform installer', function() {
       sandbox.stub(Installer.prototype, 'copyFile').resolves();
     });
 
-    it('should not start until devstudio has finished installing', function() {
-      let installerDataSvc = stubDataService();
-      installer.ipcRenderer = { on: function() {} };
-      let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-      let item2 = new InstallableItem('devstudio', 'url', 'installFile', 'targetFolderName', installerDataSvc);
-      item2.thenInstall(installer);
-
-      installer.install(fakeProgress, success, failure);
-
-      expect(installSpy).not.called;
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for Red Hat JBoss Developer Studio to finish installation');
-    });
-
     it('should install once devstudio has finished', function() {
       let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstall, 'isInstalled').returns(true);
