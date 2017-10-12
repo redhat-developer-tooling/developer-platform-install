@@ -187,7 +187,6 @@ class InstallableItem {
       this.installAfterRequirements(progress, success, failure);
     } else {
       let name = this.getInstallAfter().productName;
-      progress.setStatus(`Waiting for ${name} to finish installation`);
       this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           progress.productName = this.productName;

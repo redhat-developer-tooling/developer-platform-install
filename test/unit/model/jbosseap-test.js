@@ -174,26 +174,6 @@ describe('jbosseap installer', function() {
 
     let fsextra = require('fs-extra');
 
-    describe('on windows', function() {
-      beforeEach(function() {
-        sandbox.stub(Platform, 'getOS').returns('win32');
-      });
-
-      it('should not start until JDK has finished installing', function() {
-        let installerDataSvc = stubDataService();
-        installer.ipcRenderer = { on: function() {} };
-        let installSpy = sandbox.spy(installer, 'installAfterRequirements');
-        let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
-        item2.thenInstall(installer);
-
-        installer.install(fakeProgress, success, failure);
-
-        expect(installSpy).not.called;
-        expect(fakeProgress.setStatus).to.have.been.calledOnce;
-        expect(fakeProgress.setStatus).to.have.been.calledWith('Waiting for OpenJDK to finish installation');
-      });
-    });
-
     it('should install once JDK has finished', function() {
       let stub = sandbox.stub(installer, 'installAfterRequirements').returns();
       sandbox.stub(fakeInstall, 'isInstalled').returns(true);
