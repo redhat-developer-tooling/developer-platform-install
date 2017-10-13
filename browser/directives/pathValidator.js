@@ -44,11 +44,12 @@ function pathValidator() {
       mCtrl.$validators['notSelected'] = isSelected;
       mCtrl.$validators['notAbsolute'] = isAbsolute;
       mCtrl.$validators['tooLong'] = validateLength;
-      mCtrl.$validators['hasSpaces'] = hasNoSpaces;
       if(Platform.OS == 'win32') {
         mCtrl.$validators['invalidAscii'] = validateAscii;
         mCtrl.$validators['invalidFormat'] = validateFormatWindows;
         mCtrl.$validators['invalidDisk'] = validateDisk;
+      } else {
+        mCtrl.$validators['hasSpaces'] = hasNoSpaces;
       }
     }
   };
