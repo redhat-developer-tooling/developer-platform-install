@@ -50,7 +50,9 @@ class InstallableItem {
 
     this.downloader = null;
     this.downloadFolder = path.join(this.installerDataSvc.localAppData(), 'cache');
-    mkdirp.sync(this.downloadFolder);
+    if(!fs.existsSync(this.downloadFolder)) {
+      mkdirp.sync(this.downloadFolder);
+    }
     this.downloadedFile = path.join(this.downloadFolder, fileName);
 
     if(fs.existsSync(this.bundledFile)) {
