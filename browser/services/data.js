@@ -20,7 +20,7 @@ class InstallerDataService {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.defaultFolder = 'c:\\DevelopmentSuite';
+      this.defaultFolder = 'c:\\Program Files\\DevelopmentSuite';
     } else {
       this.defaultFolder = '/Applications/DevelopmentSuite';
     }

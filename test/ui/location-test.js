@@ -4,7 +4,7 @@ let context = { pageName: 'Target Folder' };
 let path = require('path');
 let breadcrumbBase = require('./breadcrumbs-base');
 
-const defaultFolder = process.platform === 'win32' ? path.join('c:', 'DevelopmentSuite') : '/Applications/DevelopmentSuite';
+const defaultFolder = process.platform === 'win32' ? path.join('c:', 'Program Files','DevelopmentSuite') : '/Applications/DevelopmentSuite';
 
 describe('Location page', function() {
   let locationField, backButton, nextButton, cancelButton, browseButton;
@@ -126,9 +126,11 @@ describe('Location page', function() {
     it('should not allow a path with spaces', function() {
       locationField.sendKeys(defaultFolder + ' space');
 
-      expect(pathWithSpacesStatus.isDisplayed()).toBe(true);
-      expect(pathWithSpacesStatus.getAttribute('class')).toMatch('help-block has-error');
-      expect(nextButton.isEnabled()).toBe(false);
+      if (process.platform == 'darwin'){  
+        expect(pathWithSpacesStatus.isDisplayed()).toBe(true);
+        expect(pathWithSpacesStatus.getAttribute('class')).toMatch('help-block has-error');
+        expect(nextButton.isEnabled()).toBe(false);
+      }
     });
 
     it('should not allow a too long path', function() {

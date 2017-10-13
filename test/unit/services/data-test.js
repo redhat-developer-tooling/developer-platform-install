@@ -52,10 +52,10 @@ describe('InstallerDataService', function() {
   describe('initial state', function() {
 
     describe('on windows', function() {
-      it('should set installation folder to C:\\DevelopmentSuite', function() {
+      it('should set installation folder to c:\\Program Files\\DevelopmentSuite', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal('c:\\DevelopmentSuite');
+        expect(svc.installRoot).to.equal('c:\\Program Files\\DevelopmentSuite');
       });
     });
 
