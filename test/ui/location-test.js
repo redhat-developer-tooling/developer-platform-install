@@ -123,16 +123,6 @@ describe('Location page', function() {
       expect(nextButton.isEnabled()).toBe(false);
     });
 
-    it('should not allow a path with spaces', function() {
-      locationField.sendKeys(defaultFolder + ' space');
-
-      if (process.platform == 'darwin'){  
-        expect(pathWithSpacesStatus.isDisplayed()).toBe(true);
-        expect(pathWithSpacesStatus.getAttribute('class')).toMatch('help-block has-error');
-        expect(nextButton.isEnabled()).toBe(false);
-      }
-    });
-
     it('should not allow a too long path', function() {
       locationField.sendKeys(path.join(defaultFolder, 'thispathisgoingtobe', 'sodamnlongthatitisnotgoingto',
         'letme', 'proceedtotheactualinstallation', 'anddisplayanerror'));
