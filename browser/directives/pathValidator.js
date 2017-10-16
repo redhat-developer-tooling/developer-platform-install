@@ -48,8 +48,6 @@ function pathValidator() {
         mCtrl.$validators['invalidAscii'] = validateAscii;
         mCtrl.$validators['invalidFormat'] = validateFormatWindows;
         mCtrl.$validators['invalidDisk'] = validateDisk;
-      } else {
-        mCtrl.$validators['hasSpaces'] = hasNoSpaces;
       }
     }
   };
