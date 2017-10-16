@@ -17,12 +17,14 @@ class SelectionController {
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
+    this.isallSelected = false;
 
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
+    this.switchText = 'Select all components';
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -30,30 +32,6 @@ class SelectionController {
         $scope.checkboxModel[key].validateVersion();
       });
     }
-
-    const selectAllLabel = 'Select All Components';
-
-    menu.insert(0, new MenuItem({
-      label: selectAllLabel,
-      click: ()=> {
-        this.sc.$apply(this.selectAll.bind(this));
-      }
-    }));
-
-    const deselectAllLabel = 'Deselect All Components';
-
-
-    menu.insert(1, new MenuItem({
-      label: deselectAllLabel,
-      click: ()=> {
-        this.sc.$apply(this.deselectAll.bind(this));
-      }
-    }));
-
-    menu.insert(2, new MenuItem({
-      label: deselectAllLabel,
-      type: 'separator'
-    }));
 
     $scope.$on('$destroy', ()=>{
       restoreMenu();
@@ -66,21 +44,21 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
   }
 
-  selectAll() {
+  toggleSelectAll() {
     let checkboxModel = this.sc.checkboxModel;
     for (let key in checkboxModel) {
-      let node = checkboxModel[key];
-      if (node.isInstallable && node.isNotDetected()) {
-        node.selectedOption = 'install';
+      if(this.isallSelected) {
+        checkboxModel[key].selectedOption = 'detected';
+        this.switchText = 'Select all components.';
+      } else {
+        let node = checkboxModel[key];
+        if (node.isInstallable && node.isNotDetected()) {
+          node.selectedOption = 'install';
+        }
+        this.switchText = 'Deselect all components.';
       }
     }
-  }
-
-  deselectAll() {
-    let checkboxModel = this.sc.checkboxModel;
-    for (let key in checkboxModel) {
-      checkboxModel[key].selectedOption = 'detected';
-    }
+    this.isallSelected = !this.isallSelected;
   }
 
   initPage() {
@@ -151,10 +129,6 @@ class SelectionController {
       this.detection = Promise.all(detectors);
     }
     return this.detection;
-  }
-
-  download(url) {
-    this.electron.shell.openExternal(url);
   }
 
   // Prep the install location path for each product, then go to the next page.
