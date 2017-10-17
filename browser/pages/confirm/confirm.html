@@ -27,7 +27,7 @@
             >
               <span ng-class="{'pficon pficon-ok': component.downloaded, 'fa fa-download info-color': !component.downloaded}"></span>
               <strong id="{{component.keyName}}-name">&nbsp;{{component.productName}}</strong><span id="{{component.keyName}}-version" class="product-info">| {{component.productVersion}}</span>
-              <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.downloaded? 'Previously Downloaded': 'Selected to download'}}</strong>
+              <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.downloaded ? 'Previously downloaded' : 'Selected to download'}}</strong>
             </div>
           </div>
         </div>
