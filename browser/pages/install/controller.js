@@ -13,7 +13,7 @@ class InstallController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.failedDownloads = new Set();
-    this.totalSize = 0;
+    this.totalAmount = 0;
     this.installerDataSvc.setupTargetFolder();
 
     this.data = {};
@@ -23,7 +23,7 @@ class InstallController {
         if(value.isDownloadRequired()) {
           this.totalDownloads += value.totalDownloads;
         }
-        this.totalSize += value.size;
+        this.totalAmount += value.size;
       }
     }
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
@@ -40,7 +40,7 @@ class InstallController {
       },
       this.totalDownloads
     );
-    this.itemProgress.setTotalDownloadSize(this.totalSize);
+    this.itemProgress.setTotalAmount(this.totalAmount);
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(value.isSkipped()) {
         this.installerDataSvc.setupDone(this.itemProgress, key);
@@ -128,7 +128,7 @@ const shortDuration = {
 };
 
 class ProgressState {
-  constructor(key, productName, productVersion, productDesc, $scope, $timeout = function(){}, minValue=0, maxValue=100) {
+  constructor(key, productName, productVersion, productDesc, $scope, $timeout = function() {}, minValue=0, maxValue=100) {
     this.key = key;
     this.productName = productName;
     this.productVersion = productVersion;
@@ -140,7 +140,7 @@ class ProgressState {
     this.status = '';
     this.currentAmount = 0;
     this.lastAmount = 0;
-    this.totalSize = 0;
+    this.totalAmount = 0;
     this.min = minValue;
     this.max = maxValue;
     this.lastTime = Date.now();
@@ -149,12 +149,12 @@ class ProgressState {
     this.durationFormat.units = ['y', 'd', 'h', 'm'];
   }
 
-  setTotalDownloadSize(size) {
-    this.totalSize = size;
+  setTotalAmount(size) {
+    this.totalAmount = size;
   }
 
   setCurrent(newVal) {
-    if (newVal > this.currentAmount && newVal <= this.totalSize) {
+    if (newVal > this.currentAmount && newVal <= this.totalAmount) {
       this.lastAmount = this.currentAmount;
       this.currentAmount = newVal;
 
@@ -163,8 +163,8 @@ class ProgressState {
         this.durationFormat.units.push('s');
       }
 
-      this.current = Math.round(this.currentAmount / this.totalSize * 100);
-      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalSize) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
+      this.current = Math.round(this.currentAmount / this.totalAmount * 100);
+      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalAmount) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
       this.$timeout();
     }
   }
@@ -175,7 +175,7 @@ class ProgressState {
     this.lastTime = currentTime;
     this.averageSpeed = this.averageSpeed === 0 ? this.lastSpeed : smoothFactor * this.lastSpeed + (1 - smoothFactor) * this.averageSpeed;
 
-    return (this.totalSize - this.currentAmount) / this.averageSpeed;
+    return (this.totalAmount - this.currentAmount) / this.averageSpeed;
   }
 
   setStatus(newStatus) {
@@ -189,7 +189,7 @@ class ProgressState {
       this.current = 0;
       this.label = 0 + '%';
       this.currentAmount = 0;
-      //    this.totalSize = 0;
+      //    this.totalAmount = 0;
     }
     this.status = newStatus;
     this.$timeout();
