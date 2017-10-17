@@ -12,7 +12,7 @@ function setup(common = require('./common')) {
 
   nextButton = element(By.id('selection-install-btn'));
   backButton = element(By.id('selection-back-btn'));
-  browser.wait(protractor.ExpectedConditions.elementToBeClickable(backButton), 60000);
+  browser.wait(protractor.ExpectedConditions.elementToBeClickable(backButton), 90000);
 
   for (var key in reqs) {
     reqs[key].installedNote = element(By.id(key + '-installed-note'));
@@ -21,6 +21,12 @@ function setup(common = require('./common')) {
     reqs[key].newerWarning = element(By.id(key + '-newer-warning'));
     reqs[key].olderWarning = element(By.id(key + '-older-warning'));
   }
+
+  reqs.jdk.checkbox.isEnabled().then((enabled) => {
+    if (enabled) {
+      reqs.jdk.checkbox.click();
+    }
+  });
 }
 
 function testPage(common = require('./common')) {
@@ -62,7 +68,7 @@ function testPage(common = require('./common')) {
 
     it('should display a warning when a component is newer than recommended', function() {
       for (var key in expectedComponents) {
-        if (reqs[key].newerWarning && expectedComponents[key].installedVersion > expectedComponents[key].recommendedVersion) {
+        if (expectedComponents[key].recommendedVersion && expectedComponents[key].installedVersion > expectedComponents[key].recommendedVersion) {
           expect(reqs[key].newerWarning.isDisplayed()).toBe(true);
         }
       }
@@ -72,7 +78,7 @@ function testPage(common = require('./common')) {
       for (var key in expectedComponents) {
         if (expectedComponents[key].recommendedVersion) {
           let recommended = expectedComponents[key].recommendedVersion.match(/\d+\.\d+\.\d+/)[0];
-          if (reqs[key].newerWarning && expectedComponents[key].installedVersion < recommended) {
+          if (expectedComponents[key].installedVersion < recommended) {
             common.error = true;
             expect(reqs[key].olderWarning.isDisplayed()).toBe(true);
           }

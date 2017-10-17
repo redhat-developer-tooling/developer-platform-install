@@ -18,6 +18,9 @@ function setup() {
 
 function testPage() {
   it('should log in', function() {
+    usernameField.clear();
+    passwordField.clear();
+
     usernameField.sendKeys(user);
     passwordField.sendKeys(pass);
     loginButton.click();

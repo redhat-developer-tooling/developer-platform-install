@@ -2,11 +2,11 @@ param(
   [string]$binary="./dist/win32-x64/devsuite-1.1.0-GA-bundle-installer.exe",
   [string]$virtualbox,
   [string]$hyperv,
-  [string]$vagrant,
   [string]$cygwin,
   [string]$jdk,
   [string]$targetFolder,
-  [string]$bundle
+  [string]$bundle,
+  [string]$additionalItems
 )
 
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -33,7 +33,7 @@ if (-Not $myWindowsPrincipal.IsInRole($adminRole)) {
 $folder = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 Set-Location -Path $folder
 
-npm run system-test -- --binary $binary --virtualbox $virtualbox --hyperv $hyperv --vagrant $vagrant --cygwin $cygwin --jdk $jdk --targetFolder $targetFolder --bundle $bundle
+npm run system-test -- --binary $binary --virtualbox $virtualbox --hyperv $hyperv --cygwin $cygwin --jdk $jdk --targetFolder $targetFolder --bundle $bundle --additionalItems $additionalItems
 
 $logs = $folder + '\..\..\..\logs';
 $targetFolder = if ($targetFolder) { $targetFolder } else { "C:\DevelopmentSuite\" }

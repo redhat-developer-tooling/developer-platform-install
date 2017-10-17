@@ -3,24 +3,22 @@
 const pageIndex = 5;
 const name = "Install Page";
 
+let progress;
+
 function setup(common = require('./common')) {
   if (!common.error) {
-    browser.driver.wait(protractor.until.elementLocated(By.id(Object.keys(common.progressBars)[0] + '-progress')), 20000)
+    browser.driver.wait(protractor.until.elementLocated(By.id('progress')), 20000)
     .then(() => {
-      for (var key in common.progressBars) {
-        if (common.progressBars[key] === 'install') {
-          common.progressBars[key] = element(By.id(key + '-progress'));
-        }
-      }
+      progress = element(By.id('progress'));
     });
   }
 }
 
 function testPage(common = require('./common'), timeout = 45*60*1000) {
   if (!common.error) {
-    it('should display a progress bar for each selected component', function() {
+    it('should display a progress bar', function() {
       for (let key in common.progressBars) {
-        expect(common.progressBars[key].isDisplayed()).toBe(true);
+        expect(progress.isDisplayed()).toBe(true);
       }
     });
 
@@ -40,24 +38,22 @@ function testPage(common = require('./common'), timeout = 45*60*1000) {
             done();
           } else {
             //Check if something failed
-            for (var key in common.progressBars) {
-              common.progressBars[key].getText().then(function(text) {
-                if (text.indexOf('Failed') > -1) {
-                  clearInterval(check);
-                  let product = text.substring(0, text.indexOf('-'));
-                  fail(product + 'failed to install');
-                  done();
-                }
-              }).catch(function(error) {
-                if (error.message.indexOf('element is not attached') > -1) {
-                  browser.getCurrentUrl().then(function(url) {
-                    if (!url.endsWith('/start')) {
-                      throw error;
-                    }
-                  });
-                }
-              });
-            }
+            progress.getText().then(function(text) {
+              if (text.indexOf('Failed') > -1) {
+                clearInterval(check);
+                let product = text.substring(0, text.indexOf('-'));
+                fail(product + 'failed to install');
+                done();
+              }
+            }).catch(function(error) {
+              if (error.message.indexOf('element is not attached') > -1) {
+                browser.getCurrentUrl().then(function(url) {
+                  if (!url.endsWith('/start')) {
+                    throw error;
+                  }
+                });
+              }
+            });
           }
         });
       };
