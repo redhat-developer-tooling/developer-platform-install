@@ -1,6 +1,7 @@
 #
-$folder=$args[0]
-$timeStamp = $args[1]
+for ($i=0; $i -le $args.Count; $i++) {
+ $folder += $args[$i] + " "
+}
 
 $vboxInstalled = Test-Path  $folder'\..\virtualbox'
 $openjdkInstalled = Test-Path  $folder'\..\jdk8'
@@ -56,12 +57,12 @@ $subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinu
 if ($subfolders.Length -gt 0) {
   New-Item "$folder\..\temp" -type Directory -Force | Out-Null
   foreach ($item in $subfolders) {
-    robocopy $folder\..\temp $item /purge | Out-Null
+    robocopy "$folder\..\temp" "$item" /purge | Out-Null
   }
-  Get-ChildItem $folder\.. -Recurse | Remove-Item -Force
+  Get-ChildItem "$folder\.." -Recurse | Remove-Item -Force
 }
 
-Remove-Item $folder\..
+Remove-Item "$folder\.."
 
 echo 'DONE'
 
@@ -80,7 +81,7 @@ $pathFolders | foreach {
 [string] $delimitedFolders = $folderList -Join ';'
 [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, "User")
 
-Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
+#Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
 
 echo 'DONE'
 #Write-Host "Press any key to exit"
