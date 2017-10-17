@@ -173,7 +173,7 @@
     "installAfter": "devstudio",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.0.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.0.0.GA-build-product/2017-08-09_05-02-53-B748/all/devstudio-11.0.0.GA-installer-standalone.jar",
-    "fileName": "devstudio-11.0.0.GA-installer-standalone.jar",
+    "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
     "sha256sum": "",
     "version": "10.0.0.GA",
     "additionalLocation": "",
