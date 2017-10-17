@@ -330,7 +330,7 @@ describe('SelectionController', function() {
     it('should deselect all selected components', function() {
       selectionController.isAllSelected = false;
       selectionController.toggleSelectAll();
-      for (let installer of installerDataSvc.allInstallables().values()) {
+      for (let installer in selectionController.checkboxModel) {
         expect(installer.selectedOption).equals('detected');
       }
     });
