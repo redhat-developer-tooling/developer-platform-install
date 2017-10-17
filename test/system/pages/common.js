@@ -21,6 +21,11 @@ for (let key in reqs) {
   }
 }
 
+// remove virtualbox from hyperv tests
+if (expectedComponents['hyperv'] && expectedComponents['hyperv'].installedVersion) {
+  delete reqs['virtualbox'];
+}
+
 // find if some components are expected to be detected
 for (var key in expectedComponents) {
   if (expectedComponents[key].installedVersion) {
