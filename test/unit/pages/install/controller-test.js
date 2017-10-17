@@ -168,8 +168,8 @@ describe('Install controller', function() {
     describe('setTotalDownloadSize', function() {
       it('should set totalSize property value', function() {
         let progress = new ProgressState();
-        progress.setTotalDownloadSize(1000);
-        expect(progress.totalSize).to.be.equal(1000);
+        progress.setTotalAmount(1000);
+        expect(progress.totalAmount).to.be.equal(1000);
       });
     });
     describe('setCurrent', function() {
@@ -185,7 +185,7 @@ describe('Install controller', function() {
           progress = new ProgressState();
           progress.$timeout = sinon.stub();
           progress.$scope = {$apply:sinon.stub()};
-          progress.setTotalDownloadSize(1000);
+          progress.setTotalAmount(1000);
           progress.setCurrent(100);
         });
         it('current progress amount value', function() {
@@ -196,7 +196,7 @@ describe('Install controller', function() {
         });
         it('lable value', function() {
           expect(progress.label).to.have.string(
-            progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalSize) + ' (' + progress.current + '%)'
+            progress.sizeInKB(progress.currentAmount) + ' / ' + progress.sizeInKB(progress.totalAmount) + ' (' + progress.current + '%)'
           );
         });
         it('ETA to second', function() {
@@ -285,7 +285,7 @@ describe('Install controller', function() {
         progress = new ProgressState();
         progress.$timeout = sinon.stub();
         progress.$scope = {$apply:sinon.stub()};
-        progress.setTotalDownloadSize(1000);
+        progress.setTotalAmount(1000);
         progress.setCurrent(100);
         progress.setComplete();
       });
@@ -304,7 +304,7 @@ describe('Install controller', function() {
       beforeEach(function() {
         progress = new ProgressState();
         progress.lastTime = 100000;
-        progress.totalSize = 9000000;
+        progress.totalAmount = 9000000;
         progress.currentAmount = 400000;
         sandbox.stub(Date.prototype, 'getTime').returns(101000);
       });
