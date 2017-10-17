@@ -17,7 +17,7 @@ class SelectionController {
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
-    this.isallSelected = false;
+    this.isAllSelected = false;
 
     this.installables = {};
     $scope.checkboxModel = {};
@@ -47,7 +47,7 @@ class SelectionController {
   toggleSelectAll() {
     let checkboxModel = this.sc.checkboxModel;
     for (let key in checkboxModel) {
-      if(this.isallSelected) {
+      if(this.isAllSelected) {
         checkboxModel[key].selectedOption = 'detected';
         this.switchText = 'Select all components.';
       } else {
@@ -58,7 +58,7 @@ class SelectionController {
         this.switchText = 'Deselect all components.';
       }
     }
-    this.isallSelected = !this.isallSelected;
+    this.isAllSelected = !this.isAllSelected;
   }
 
   initPage() {
