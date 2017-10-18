@@ -429,4 +429,26 @@ describe('InstallableItem', function() {
       expect(item.isDisabled()).to.be.equal(false);
     });
   });
+
+  describe('getDownloadStatus', function() {
+    it('returns \'Selected to download\' if item is not downloaded before', function() {
+      item.downloaded = false;
+      item.size = 100;
+      expect(item.getDownloadStatus()).equals('Selected to download');
+    });
+    it('returns \'No download required\' if item download size is undefined', function() {
+      delete item.size;
+      expect(item.getDownloadStatus()).equals('No download required');
+    });
+    it('returns \'No download required\' if item download size equals 0', function() {
+      item.size = 0;
+      expect(item.getDownloadStatus()).equals('No download required');
+    });
+    it('returns \'Previously Downloaded\' if item is downloaded and size is more than 0', function() {
+      item.downloaded = true;
+      item.size = 100;
+      expect(item.getDownloadStatus()).equals('Previously Downloaded');
+    });
+  });
+
 });
