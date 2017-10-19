@@ -151,7 +151,7 @@ class Platform {
     return Platform.identify({
       win32: ()=> {
         let disk = path.parse(location).root.charAt(0);
-        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter \"deviceid=\`'${disk}:\`'\").FreeSpace; [Environment]::Exit(0);}"`).then((stdout) => {
+        return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter deviceid='''${disk}:''').FreeSpace;[Environment]::Exit(0);}"`).then((stdout) => {
           return Promise.resolve(Number.parseInt(stdout));
         }).catch(()=>{
           return Promise.resolve();
@@ -226,7 +226,7 @@ class Platform {
 
   static setUserPath_win32(newPath) {
     newPath = newPath.replace(/'/g, '\'\'');
-    let powershellCommand = `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable(\'Path\', \'${newPath}\', \'User\');[Environment]::Exit(0);"`
+    let powershellCommand = `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable('Path', '${newPath}', 'User');[Environment]::Exit(0);"`
       .replace(/`/g, '``');
     return pify(child_process.exec)(
       powershellCommand
