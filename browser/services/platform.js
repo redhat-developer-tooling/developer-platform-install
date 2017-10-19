@@ -37,6 +37,19 @@ class Platform {
     });
   }
 
+  static getHypervAdminsGroupName() {
+    return Platform.identify({
+      win32: function() {
+        return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(New-Object System.Security.Principal.SecurityIdentifier(\'S-1-5-32-578\')).Translate([System.Security.Principal.NTAccount]).Value;[Environment]::Exit(0);"').then((stdout)=>{
+          return stdout ? stdout.trim().replace('BUILTIN\\', '') : '';
+        }).catch(function() {});
+      },
+      default: function() {
+        return Promise.resolve();
+      }
+    });
+  }
+
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {

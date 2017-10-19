@@ -102,6 +102,50 @@ describe('Platform', function() {
 
   });
 
+  describe('getHypervAdminsGroupName', function() {
+    it('should return promise resolved to undefined for unsupported platforms', function() {
+      sandbox.stub(Platform, 'getOS').returns('OS2');
+      return Platform.getHypervAdminsGroupName().then((result) => {
+        expect(result).to.be.undefined;
+      });
+    });
+
+    describe('on windows', function() {
+
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+      });
+
+      it('should return promise resolved to stdout if there is no "BUILTIN\\" prefix', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Hyper-V Administrators');
+        return Platform.getHypervAdminsGroupName().then((result) => {
+          expect(result).to.be.equal('Hyper-V Administrators');
+        });
+      });
+
+      it('should return promise resolved to stdout with removed "BUILTIN\\" prefix', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'BUILTIN\\Hyper-V Administrators');
+        return Platform.getHypervAdminsGroupName().then((result) => {
+          expect(result).to.be.equal('Hyper-V Administrators');
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script prints nothing in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.getHypervAdminsGroupName().then((result) => {
+          expect(result).to.be.equal('');
+        });
+      });
+
+      it('should return promise resolved to undefined if powershell script execution failed', function() {
+        sandbox.stub(child_process, 'exec').yields('error', null);
+        return Platform.getHypervAdminsGroupName().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
+    });
+  });
+
   describe('isVirtualizationEnabled', function() {
 
     it('should return promise resolved to true for unsupported platforms', function() {
@@ -267,6 +311,13 @@ describe('Platform', function() {
           expect(result).to.be.undefined;
         });
       });
+
+      it('should return promise resolved to undefined if error occurs', function() {
+        sandbox.stub(child_process, 'exec').yields('Error', null);
+        return Platform.isHypervisorEnabled().then((result) => {
+          expect(result).to.be.undefined;
+        });
+      });
     });
   });
 
@@ -356,6 +407,14 @@ describe('Platform', function() {
         let location = 'C:\\DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
           expect(result).to.be.equal(248005160960);
+        });
+      });
+
+      it('should able to return error if path is not present', function() {
+        sandbox.stub(child_process, 'exec').yields('Error', undefined);
+        let location = 'c:\\DevelopmentSuite';
+        return Platform.getFreeDiskSpace(location).then((result) => {
+          expect(result).to.be.undefined;
         });
       });
     });
@@ -602,6 +661,12 @@ describe('Platform', function() {
           expect(result).to.be.equal('c:\\Users\\dev1');
         });
       });
+    });
+  });
+
+  describe('getEnv', function() {
+    it('returns process.env', function() {
+      expect(Platform.getEnv()).to.be.equal(process.env);
     });
   });
 });

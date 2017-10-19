@@ -285,8 +285,11 @@ describe('CDK installer', function() {
 
       it('should add current user to `Hyper-V Administrators` group when hyper-v is detected', function() {
         Installer.prototype.exec.restore();
+        child_process.exec.restore();
+        sandbox.stub(child_process, 'exec').yields(undefined, 'BUILTIN\\Hyper-V Administrators');
         sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
         Installer.prototype.exec.onCall(1).resolves();
+
         let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
         svc.addItemsToInstall(hyperv);
         hyperv.addOption('detected', '1.0.0', 'hyperv', true);
@@ -294,7 +297,8 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
           expect(Installer.prototype.exec).calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
-        }).catch(()=>{
+        }).catch((error)=>{
+          console.log(error);
           expect.fail();
         });
       });
