@@ -925,8 +925,6 @@ footer {
   }
 
   .action-badge {
-    color: #fff;
-    background-color: #26a69a;
     letter-spacing: .5px;
     font-size: 1rem;
     outline: 0;
@@ -936,9 +934,5 @@ footer {
     text-transform: uppercase;
     margin-right: 10px;
     float: right;
-  }
-
-  .action-badge.btn:hover, {
-    background-color: #2bbbad;
   }
 }
