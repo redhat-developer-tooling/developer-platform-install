@@ -304,14 +304,6 @@ describe('SelectionController', function() {
     });
   });
 
-  describe('download', function() {
-    it('should open url in browser using electron.shell.openExternal', function() {
-      sandbox.stub(electron.shell);
-      selectionController.download('url');
-      expect(electron.shell.openExternal).calledOnce;
-    });
-  });
-
   describe('detectInstalledComponents', function() {
     it('should return existing promise if detection is already running', function() {
       let detection = selectionController.detectInstalledComponents();
@@ -319,7 +311,7 @@ describe('SelectionController', function() {
     });
   });
 
-  describe('selectAll', function() {
+  describe('toggleSelectAll', function() {
     beforeEach(inject(context));
     it('should not select detected components', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
@@ -334,13 +326,10 @@ describe('SelectionController', function() {
       selectionController.selectAll();
       expect(kompose.selectedOption).equals('install');
     });
-  });
 
-  describe('deselectAll', function() {
-    beforeEach(inject(context));
-    it('should deselect all detected components', function() {
-      selectionController.deselectAll();
-      for (let installer of installerDataSvc.allInstallables().values()) {
+    it('should deselect all selected components', function() {
+      selectionController.clearAll();
+      for (let installer in selectionController.checkboxModel) {
         expect(installer.selectedOption).equals('detected');
       }
     });

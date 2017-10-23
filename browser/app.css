@@ -783,12 +783,13 @@ footer {
     color: #9c9c9c;
   }
 
-  .selection-desc {
-    padding-top: 30px;
+  .selection-info {
+    padding: 50px 7px 0 0;
     position: fixed;
-    width: 100%;
-    padding-bottom: 16px;
+    width: 93%;
+    padding-bottom: 24px;
     background: #fff;
+    line-height: 1px;
   }
 
   .info-color {
@@ -796,7 +797,7 @@ footer {
   }
 
   .form-padding {
-    padding-top: 49px;
+    padding-top: 80px;
   }
 
   .summary-info {
@@ -912,5 +913,26 @@ footer {
 
   .install-fail-icon {
     color: orange;
+  }
+
+  .switch-info {
+    padding: 8px;
+  }
+
+  .component-note {
+    padding-left: 25px;
+    padding-bottom: 10px;
+  }
+
+  .action-badge {
+    letter-spacing: .5px;
+    font-size: 1rem;
+    outline: 0;
+    border-radius: 2px;
+    line-height: 20px;
+    padding: 0 10px 2px;
+    text-transform: uppercase;
+    margin-right: 10px;
+    float: right;
   }
 }
