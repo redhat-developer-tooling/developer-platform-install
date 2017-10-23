@@ -317,19 +317,18 @@ describe('SelectionController', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
       kompose.addOption('detected', '1.0.0', 'location', true);
       kompose.selectedOption = 'detected';
-      selectionController.toggleSelectAll();
+      selectionController.selectAll();
       expect(kompose.selectedOption).equals('detected');
     });
 
     it('should select all installable components', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
-      selectionController.toggleSelectAll();
+      selectionController.selectAll();
       expect(kompose.selectedOption).equals('install');
     });
 
     it('should deselect all selected components', function() {
-      selectionController.isAllSelected = false;
-      selectionController.toggleSelectAll();
+      selectionController.clearAll();
       for (let installer in selectionController.checkboxModel) {
         expect(installer.selectedOption).equals('detected');
       }

@@ -784,10 +784,10 @@ footer {
   }
 
   .selection-info {
-    padding-top: 40px;
+    padding: 50px 7px 0 0;
     position: fixed;
-    width: 100%;
-    padding-bottom: 10px;
+    width: 93%;
+    padding-bottom: 24px;
     background: #fff;
     line-height: 1px;
   }
@@ -922,5 +922,23 @@ footer {
   .component-note {
     padding-left: 25px;
     padding-bottom: 10px;
+  }
+
+  .action-badge {
+    color: #fff;
+    background-color: #26a69a;
+    letter-spacing: .5px;
+    font-size: 1rem;
+    outline: 0;
+    border-radius: 2px;
+    line-height: 20px;
+    padding: 0 10px 2px;
+    text-transform: uppercase;
+    margin-right: 10px;
+    float: right;
+  }
+
+  .action-badge.btn:hover, {
+    background-color: #2bbbad;
   }
 }

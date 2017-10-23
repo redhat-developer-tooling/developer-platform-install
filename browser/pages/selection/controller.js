@@ -17,14 +17,12 @@ class SelectionController {
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
-    this.isAllSelected = false;
 
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
-    this.switchText = 'Select all components';
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -44,21 +42,20 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
   }
 
-  toggleSelectAll() {
-    let checkboxModel = this.sc.checkboxModel;
-    for (let key in checkboxModel) {
-      if(this.isAllSelected) {
-        checkboxModel[key].selectedOption = 'detected';
-        this.switchText = 'Select all components.';
-      } else {
-        let node = checkboxModel[key];
-        if (node.isInstallable && node.isNotDetected()) {
-          node.selectedOption = 'install';
-        }
-        this.switchText = 'Deselect all components.';
+  clearAll() {
+    for (let key in this.sc.checkboxModel) {
+      let node = this.sc.checkboxModel[key];
+      node.selectedOption = 'detected';
+    }
+  }
+
+  selectAll() {
+    for (let key in this.sc.checkboxModel) {
+      let node = this.sc.checkboxModel[key];
+      if (node.isInstallable && node.isNotDetected()) {
+        node.selectedOption = 'install';
       }
     }
-    this.isAllSelected = !this.isAllSelected;
   }
 
   initPage() {

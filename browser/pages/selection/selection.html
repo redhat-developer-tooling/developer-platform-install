@@ -2,18 +2,14 @@
 
 <main>
   <div class="col-sm-12 bottom-spacer">
-    <div class="selection-info has-spinner">
-      <div class="component-note">
-        <span class="pficon-info info-color" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
-        <strong>
-          <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
-          <span id="instructions">{{selectCtrl.installInstructions}}</span>
-        </strong>
-      </div>
-      <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="component-note">
-        <input type="checkbox" ng-click="selectCtrl.toggleSelectAll()" ng-model="isAllSelected">
-        <strong class="switch-info"> {{selectCtrl.switchText}} </strong>
-      </div>
+    <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="selection-info has-spinner">
+      <span class="fa fa-info-circle fa-lg" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
+      <strong>
+        <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
+        <span id="instructions">{{selectCtrl.installInstructions}}</span>
+      </strong>
+      <span class="action-badge btn" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()">Clear all</span>
+      <span class="action-badge btn" ng-click="selectCtrl.selectAll()">Select all</span>
     </div>
     <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
       <div ng-repeat="item in checkboxModel">
