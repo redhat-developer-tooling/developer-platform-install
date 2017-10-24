@@ -358,11 +358,11 @@
     "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.9.0.exe",
-    "sha256sum": "062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214",
-    "version": "2.9.0",
-    "size": 906771,
+    "sha256sum": "56f41491671bef8de546e2c9221e6a7ec51a2168a9ba28a0d10c25d15be60ab2",
+    "version": "2.9.0-3",
+    "size": 907795,
     "installSize": 159215616,
-    "virusTotalReport": "https://virustotal.com/en/file/062ab45437fed70071dd4cf1c9d6c584f3efbb3d64d60e4cfc4e74fd6b6de214/analysis/",
+    "virusTotalReport": "https://virustotal.com/en/file/56f41491671bef8de546e2c9221e6a7ec51a2168a9ba28a0d10c25d15be60ab2/analysis/",
     "platform": {
       "win32": {}
     }
