@@ -11,7 +11,7 @@
   "author": "Red Hat Developer Tooling Group",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://issues.jboss.org/projects/JBDS/summary"
+    "url": "https://github.com/redhat-developer-tooling/developer-platform-install/issues"
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
   "scripts": {
@@ -82,7 +82,7 @@
     "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.2.0",
     "gulp-zip": "4.0.0",
-    "istanbul": "0.4.5",
+    "istanbul": "1.1.0-alpha.1",
     "jasmine-core": "2.8.0",
     "jasmine-reporters": "2.2.1",
     "jsdom": "11.3.0",
