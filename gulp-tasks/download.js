@@ -27,6 +27,9 @@ function downloadFile(fromUrl, toFile, onFinish) {
     }
     previous = current;
   })
+  .on('error', (error)=>{
+    onFinish(error);
+  })
   .on('end', ()=>{
     if (previous == -1) {
       console.log('[INFO] \'' + toFile + '\' download started from \'' + fromUrl + '\'');
