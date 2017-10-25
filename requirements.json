@@ -138,14 +138,14 @@
     },
     "platform": {
       "win32": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.3.0/kompose-windows-amd64.exe",
+        "url": "https://developers.redhat.com/redirect/to/kompose-windows-1.3.0.download",
         "fileName": "kompose-1.3.0.TP-windows-amd64.exe",
         "sha256sum": "2af9fbcc05eafd2ca6d527fdb1cf1219df5ab1d145d856d1d6ea01f2fb4aa6ed",
         "size": 47578112,
         "installSize": 47578112
       },
       "darwin": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.3.0/kompose-darwin-amd64",
+        "url": "https://developers.redhat.com/redirect/to/kompose-macos-1.3.0.download",
         "fileName": "kompose-1.3.0.TP-darwin-amd64",
         "sha256sum": "878399716ddde73e03d204dadd76af73c30e8eda41d7df5815ddd76ff7193cb0",
         "size": 47245088,
