@@ -1,24 +1,20 @@
-<div class="panel-default" id="progress">
-  <div class="panel-body">
-    <div class="product-container">
-      <div class="progress-status">
-        <div ng-class="{'spinner spinner-xs spinner-inline' : progress.status == 'Installing' || progress.status == 'Downloading' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1,
-                        'pficon pficon-ok': progress.status == 'Complete',
-                        'pficon-error-circle-o': progress.status.indexOf('Failed') > -1}"></div>
-        <strong>{{progress.status}}</strong>
-      </div>
-      <div class="progress progress-label-top-right">
-        <div class="progress-bar"
-          ng-class="{'progress-determinate active': progress.status == 'Installing' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1, 'progress-bar-danger': progress.status.indexOf('Failed') > -1}"
-          role="progressbar" aria-valuenow="{{progress.current}}" aria-valuemin="{{progress.min}}" aria-valuemax="{{progress.max}}"
-          style="width: {{progress.current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
-          <span>{{progress.label}}</span>
-        </div>
-      </div>
-      <div class="progress-description">
-        <span class="product-name">{{progress.productName}}</span><span class="product-version">{{progress.productVersion}}</span>
-        <div id="productDescription">{{progress.productDesc}}</div>
-      </div>
+<div class="product-container" id="progress">
+  <div class="progress-status">
+    <div ng-class="{'spinner spinner-xs spinner-inline' : progress.status == 'Installing' || progress.status == 'Downloading' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1,
+                    'pficon pficon-ok': progress.status == 'Complete',
+                    'pficon-error-circle-o': progress.status.indexOf('Failed') > -1}"></div>
+    <strong>{{progress.status}}</strong>
+  </div>
+  <div class="progress progress-label-top-right">
+    <div class="progress-bar"
+      ng-class="{'progress-determinate active': progress.status == 'Installing' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1, 'progress-bar-danger': progress.status.indexOf('Failed') > -1}"
+      role="progressbar" aria-valuenow="{{progress.current}}" aria-valuemin="{{progress.min}}" aria-valuemax="{{progress.max}}"
+      style="width: {{progress.current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
+      <span>{{progress.label}}</span>
     </div>
+  </div>
+  <div class="progress-description">
+    <span class="product-name">{{progress.productName}}</span><span class="product-version">{{progress.productVersion}}</span>
+    <div id="productDescription">{{progress.productDesc}}</div>
   </div>
 </div>
