@@ -814,18 +814,28 @@ footer {
     position: fixed;
     width: 794px;
     background: #fff;
-    border-bottom: 2px solid #d1d1d1;
-    margin: 0 -15px 20px;
-    padding: 10px 5px 5px;
+    border-bottom: 4px solid #cde7f8;
+    margin: 0 -15px 0;
+    padding: 20px 5px 5px;
     border-top: 2px solid #fafafa;
+  }
+
+  .confirm-heading-title {
+    font-size: 16px;
+    font-weight: 700;
   }
 
   .inline {
     display: inline-block;
   }
 
-  .confirm-margin {
-    margin: 120px 0 0;
+  .confirm-summary-list {
+    padding: 110px 0 20px;
+  }
+
+  .confirm-summary-note {
+    padding: 10px 0 10px 0;
+    color: #0088ce;
   }
 
   .install-desc {
@@ -851,7 +861,7 @@ footer {
     background: #fff;
     border-top: 2px solid transparent;
     padding: 0 10px;
-    margin-top: 40px;
+    margin: 10px 50px 0 50px;
   }
 
   .confirm-card-margin {
