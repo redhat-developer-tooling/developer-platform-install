@@ -754,11 +754,7 @@ footer {
   }
 
   .progress-description {
-    margin-bottom: 10px;
     max-width: 100%;
-    overflow: hidden;
-    /*text-overflow: ellipsis;*/
-    white-space: nowrap;
   }
 
   .progress-status {
@@ -887,16 +883,9 @@ footer {
   .install-info {
     background-color: #e9f4e9;
     color: #363636;
-    top: 15px;
-    position: relative;
-    padding: 11px;
   }
 
   .install-header {
-    display: flex;
-    width: 100%;
-    -webkit-box-align: center;
-    align-items: center;
     padding: 1em 1.5em;
     margin-top: 38px;
     font-size: 14px;
@@ -924,7 +913,7 @@ footer {
     padding-bottom: 10px;
   }
 
-  .action-badge {
+  .btn-action {
     letter-spacing: .5px;
     font-size: 1rem;
     outline: 0;

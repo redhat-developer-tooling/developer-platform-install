@@ -103,6 +103,10 @@ class InstallController {
     );
   }
 
+  showLog() {
+    this.electron.shell.openItem(this.installerDataSvc.installRoot + '/install.log');
+  }
+
   exit() {
     Logger.info('Closing the installer window');
     this.electron.remote.getCurrentWindow().close();

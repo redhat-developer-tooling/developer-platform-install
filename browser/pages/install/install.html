@@ -5,17 +5,20 @@
 <main>
   <div class="col-sm-12 bottom-spacer">
     <div class="install-header">
-      <div>
-        <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
-        <p style="color: grey;">Currently gathering content</p>
+      <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
+      <p style="color: grey;">Currently gathering content</p>
+    </div>
+    <div class="alert install-info" ng-show="instCtrl.platformDetect()">
+      <span class="pficon pficon-info"></span>
+      <strong>MacOS may ask for your administrative password several times during installation.</strong>
+    </div>
+    <div class="panel-default">
+      <div class="panel-body">
+        <div ng-repeat="progress in data">
+          <progress-bar progress="progress"></progress-bar>
+          <div class="btn btn-danger btn-action" ng-click="instCtrl.showLog()" ng-show="progress.status.indexOf('Failed') > -1" data-toggle="tooltip" data-placement="bottom" title="Displays the log details." style="margin-top: -10px;">Details</div>
+        </div>
       </div>
-    </div>
-    <div ng-repeat="progress in data">
-      <progress-bar progress="progress"></progress-bar>
-    </div>
-    <div ng-show="instCtrl.platformDetect()" class="install-info">
-      <i class="fa fa-info-circle" aria-hidden="true"></i>
-      <span>&nbsp;MacOS may ask for your administrative password several times during installation.</span>
     </div>
   </div>
 </main>

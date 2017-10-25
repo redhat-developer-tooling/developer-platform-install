@@ -3,13 +3,13 @@
 <main>
   <div class="col-sm-12 bottom-spacer">
     <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="selection-info has-spinner">
-      <span class="fa fa-info-circle fa-lg" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
+      <span class="pficon pficon-info" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
       <strong>
         <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
         <span id="instructions">{{selectCtrl.installInstructions}}</span>
       </strong>
-      <span class="action-badge btn btn-default" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()">Clear all</span>
-      <span class="action-badge btn btn-default" ng-click="selectCtrl.selectAll()">Select all</span>
+      <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()">Clear all</span>
+      <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()">Select all</span>
     </div>
     <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
       <div ng-repeat="item in checkboxModel">
