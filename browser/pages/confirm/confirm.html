@@ -4,34 +4,29 @@
 
 <main>
   <div class="bottom-spacer container-fluid container-cards-pf">
-    <div class="row row-cards-pf confirm-card-margin">
-      <div class="col-xs-12 col-sm-12">
-        <div class="confirm-layout">
-          <div class="confirm-heading">
-            <h2 id="confirm-summary-title" class="card-pf-title inline">
-              Confirmation Summary
-            </h2>
-            <div class="size-summary pull-right">
-              <span id="confirm-download-size" class="size-note">Total Download Size:&nbsp;</span><strong id="download-size-header">{{updateTotalDownloadSize() | humanize}}</strong>
-              <div class="install-desc">
-                <span id="confirm-install-size" class="size-note">Total Install Size:&nbsp;</span><strong id="install-size-header">{{updateTotalInstallSize() | humanize}}</strong>
-              </div>
-            </div>
-            <div class="info-color">
-              <i class="pficon-info" aria-hidden="true"></i>
-              <span id="confirm-note">Please verify the confirmation summary. Click <b>{{confCtrl.getNextButtonName()}}</b> to begin installation.</span>
+    <div class="col-xs-12 col-sm-12">
+      <div class="confirm-layout">
+        <div class="confirm-heading">
+          <span id="confirm-summary-title" class="confirm-heading-title">Confirmation Summary</span>
+          <div class="size-summary pull-right">
+            <span id="confirm-download-size" class="size-note">Total Download Size:&nbsp;</span><strong id="download-size-header">{{updateTotalDownloadSize() | humanize}}</strong>
+            <div class="install-desc">
+              <span id="confirm-install-size" class="size-note">Total Install Size:&nbsp;</span><strong id="install-size-header">{{updateTotalInstallSize() | humanize}}</strong>
             </div>
           </div>
-          <div class="card-pf-body confirm-margin">
-            <div ng-repeat="component in downloadComp | orderBy: '-downloaded'" class="summary-info" id="{{component.keyName}}-info"
-            >
-              <span ng-class="{'pficon pficon-ok': component.downloaded, 'fa fa-download info-color': !component.downloaded}"></span>
-              <strong id="{{component.keyName}}-name">&nbsp;{{component.productName}}</strong><span id="{{component.keyName}}-version" class="product-info">| {{component.productVersion}}</span>
-              <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.getDownloadStatus()}}</strong>
-            </div>
+          <div class="confirm-summary-note">
+            <i class="pficon-info" aria-hidden="true"></i>
+            <span id="confirm-note">Please verify the confirmation summary. Click <b>{{confCtrl.getNextButtonName()}}</b> to begin installation.</span>
           </div>
         </div>
-
+        <div class="confirm-summary-list">
+          <div ng-repeat="component in downloadComp | orderBy: '-downloaded'" class="summary-info" id="{{component.keyName}}-info">
+            <span ng-class="{'pficon pficon-ok': component.downloaded, 'fa fa-download info-color': !component.downloaded}"></span>
+            <strong id="{{component.keyName}}-name">&nbsp;{{component.productName}}</strong>
+            <span id="{{component.keyName}}-version" class="product-info">| {{component.productVersion}}</span>
+            <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.getDownloadStatus()}}</strong>
+          </div>
+        </div>
       </div>
     </div>
   </div>
