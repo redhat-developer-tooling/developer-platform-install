@@ -21,13 +21,12 @@ class CDKInstall extends InstallableItem {
     return 'cdk';
   }
 
-  get minishiftExeLocation() {
+  get minishiftExe() {
     return path.join(this.installerDataSvc.ocDir(), Platform.OS === 'win32' ? 'minishift.exe' : 'minishift');
   }
 
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
-    let minishiftExe = this.minishiftExeLocation;
     let installer = new Installer(this.keyName, progress, success, failure);
     let ocExe;
     let ocExePattern = Platform.OS === 'win32' ? '/**/oc.exe' : '/**/oc';
@@ -35,11 +34,11 @@ class CDKInstall extends InstallableItem {
     let driverName = 'virtualbox';
     return Promise.resolve().then(()=> {
       if(this.downloadedFile.endsWith('.exe') || path.parse(this.downloadedFile).ext == '') {
-        return installer.copyFile(this.downloadedFile, minishiftExe);
+        return installer.copyFile(this.downloadedFile, this.minishiftExe);
       }
       return Promise.reject('Cannot process downloaded cdk distribution');
     }).then(()=> {
-      return Platform.makeFileExecutable(minishiftExe);
+      return Platform.makeFileExecutable(this.minishiftExe);
     }).then(()=> {
       let hv = this.installerDataSvc.getInstallable('hyperv');
       if (hv && hv.hasOption('detected')) {
@@ -52,10 +51,10 @@ class CDKInstall extends InstallableItem {
       }
     }).then(()=> {
       return installer.exec(
-        `${minishiftExe} stop`
+        `minishift stop`, {env: this.createEnvironment()}
       ).catch(()=>Promise.resolve());
     }).then(()=> {
-      return installer.exec(`${minishiftExe} setup-cdk --force --default-vm-driver=${driverName}`, this.createEnvironment());
+      return installer.exec(`minishift setup-cdk --force --default-vm-driver=${driverName}`, {env:this.createEnvironment()});
     }).then(()=> {
       return Platform.getUserHomePath();
     }).then((result)=> {
@@ -67,7 +66,7 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return Platform.makeFileExecutable(ocExe);
     }).then(()=> {
-      return Platform.addToUserPath([ocExe, minishiftExe]);
+      return Platform.addToUserPath([ocExe, this.minishiftExe]);
     }).then(()=> {
       return pify(fs.appendFile)(
         path.join(home, 'cdk'),
@@ -93,6 +92,8 @@ class CDKInstall extends InstallableItem {
     if(cygwinInstall) {
       newPath.push(cygwinInstall.getLocation());
     }
+
+    newPath.push(this.installerDataSvc.ocDir());
 
     if(oldPath.trim()) {
       newPath.push(oldPath);
