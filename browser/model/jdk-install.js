@@ -178,13 +178,13 @@ class JdkInstall extends InstallableItem {
     return [
       'msiexec',
       '/i',
-      this.downloadedFile,
-      `INSTALLDIR=${this.installerDataSvc.jdkDir().replace(/\^/g, '^^').replace(/&/g, '^&')}`,
+      `"${this.downloadedFile}"`,
+      `INSTALLDIR="${this.installerDataSvc.jdkDir().replace(/\^/g, '^^').replace(/&/g, '^&')}"`,
       'ADDLOCAL=jdk,update_notifier',
       '/qn',
       '/norestart',
       '/Lviwe',
-      path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')
+      `"${path.join(this.installerDataSvc.installDir().replace(/\^/g, '^^').replace(/&/g, '^&'), 'openjdk.log')}"`
     ];
   }
 
