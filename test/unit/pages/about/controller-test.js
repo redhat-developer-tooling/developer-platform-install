@@ -27,7 +27,6 @@ describe('About controller', function() {
       sandbox.stub(electron.shell);
       controller.documentation();
       expect(electron.shell.openExternal).calledOnce;
-      expect(electron.shell.openExternal).to.have.been.calledWith('https://access.redhat.com/documentation/en/red-hat-development-suite/');
     });
   });
 
@@ -36,7 +35,6 @@ describe('About controller', function() {
       sandbox.stub(electron.shell);
       controller.release();
       expect(electron.shell.openExternal).calledOnce;
-      expect(electron.shell.openExternal).to.have.been.calledWith(`https://access.redhat.com/documentation/en-us/red_hat_development_suite/2.1/html/release_notes_and_known_issues/`);
     });
   });
 
@@ -45,7 +43,6 @@ describe('About controller', function() {
       sandbox.stub(electron.shell);
       controller.report();
       expect(electron.shell.openExternal).calledOnce;
-      expect(electron.shell.openExternal).to.have.been.calledWith('https://access.redhat.com/documentation/en-us/red_hat_development_suite/2.1/html/installation_guide/troubleshooting#reporting_an_issue');
     });
   });
 });
