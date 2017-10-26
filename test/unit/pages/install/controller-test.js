@@ -53,7 +53,7 @@ describe('Install controller', function() {
   describe('constrution', function() {
     it('should process all installables', function() {
       let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      new InstallController({}, {}, installerDataSvc);
+      new InstallController({}, {}, installerDataSvc, new ElectronMock());
 
       expect(stub).calledOnce;
       expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
@@ -63,7 +63,7 @@ describe('Install controller', function() {
       let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
       sandbox.stub(vbox, 'isSkipped').returns(true);
-      new InstallController({}, {}, installerDataSvc);
+      new InstallController({}, {}, installerDataSvc, new ElectronMock());
       expect(stub).calledOnce;
     });
   });
@@ -87,14 +87,14 @@ describe('Install controller', function() {
     });
 
     it('should trigger download on not downloaded installables', function() {
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
 
       expect(dlStub).calledOnce;
       expect(dlStub).calledWith('virtualbox', vbox);
     });
 
     it('should not trigger download on already downloaded items', function() {
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
 
     });
   });
@@ -109,7 +109,7 @@ describe('Install controller', function() {
 
     it('data service should register the new downloads', function() {
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
 
       expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
@@ -121,7 +121,7 @@ describe('Install controller', function() {
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
       expect(vboxStub).calledOnce;
     });
   });
@@ -138,21 +138,21 @@ describe('Install controller', function() {
     it.skip('logs error in case of install failed', function() {
       vbox.install.restore();
       sandbox.stub(vbox, 'install').callsArgWith(2, 'Error');
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
       expect(errorStub).calledTwice;
     });
 
     it.skip('should call the installables install method', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
       expect(vboxStub).calledOnce;
     });
 
     it.skip('should call data services installDone when install finishes', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc);
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
 
       expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
@@ -173,18 +173,13 @@ describe('Install controller', function() {
       });
     });
     describe('setCurrent', function() {
-      it('should do nothing if new current progress value is the same', function() {
-        let progress = new ProgressState();
-        progress.$timeout = sandbox.stub().yields();
-        progress.setCurrent(0);
-        expect(progress.$timeout).to.be.not.called;
-      });
       describe('should update', function() {
         let progress;
         beforeEach(function() {
           progress = new ProgressState();
           progress.$timeout = sinon.stub();
           progress.$scope = {$apply:sinon.stub()};
+          progress.setStatus('Downloading');
           progress.setTotalAmount(1000);
           progress.setCurrent(100);
         });
@@ -291,12 +286,6 @@ describe('Install controller', function() {
       });
       it('sets status to "Complete"', function() {
         expect(progress.status).equals('Complete');
-      });
-      it('sets label to 100%', function() {
-        expect(progress.label).equals('');
-      });
-      it('sets current prcentage to 100',  function() {
-        expect(progress.current).equals(100);
       });
     });
     describe('calculateTime', function() {

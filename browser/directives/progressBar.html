@@ -7,7 +7,7 @@
   </div>
   <div class="progress progress-label-top-right">
     <div class="progress-bar"
-      ng-class="{'progress-determinate active': progress.status == 'Installing' || progress.status == 'Setting up' || progress.status.indexOf('Waiting') > -1 || progress.status.indexOf('Verifying') > -1, 'progress-bar-danger': progress.status.indexOf('Failed') > -1}"
+      ng-class="{'progress-bar-danger': progress.status.indexOf('Failed') > -1}"
       role="progressbar" aria-valuenow="{{progress.current}}" aria-valuemin="{{progress.min}}" aria-valuemax="{{progress.max}}"
       style="width: {{progress.current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
       <span>{{progress.label}}</span>

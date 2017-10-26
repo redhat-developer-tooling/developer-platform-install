@@ -12,6 +12,7 @@ class InstallController {
     this.$timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
+    this.electron.ipcRenderer.setMaxListeners(0);
     this.failedDownloads = new Set();
     this.totalAmount = 0;
     this.installerDataSvc.setupTargetFolder();
@@ -49,6 +50,16 @@ class InstallController {
       }
     }
     this.$scope.data = this.data;
+
+    this.electron.ipcRenderer.on('installComplete', (event, key)=>{
+      if(key == 'all') {
+        this.itemProgress.current = 100;
+        this.$timeout();
+        this.$timeout(()=>{
+          this.installerDataSvc.router.go('start');
+        },700);
+      }
+    });
   }
 
   processInstallable(key, value) {
@@ -84,6 +95,17 @@ class InstallController {
   }
 
   processInstall() {
+
+    let totalItems = 0;
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      if(!value.isSkipped()) {
+        totalItems++;
+      }
+    }
+    this.itemProgress.setStatus('Installing');
+    this.itemProgress.setTotalAmount(totalItems);
+    this.itemProgress.setCurrent(1);
+
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       if(!value.isSkipped()) {
         this.triggerInstall(key, value, this.itemProgress);
@@ -95,6 +117,7 @@ class InstallController {
     this.installerDataSvc.startInstall(installableKey);
     installableValue.install(progress,
       () => {
+        this.itemProgress.setCurrent(this.itemProgress.currentAmount+1);
         this.installerDataSvc.installDone(progress, installableKey);
       },
       (error) => {
@@ -158,7 +181,7 @@ class ProgressState {
   }
 
   setCurrent(newVal) {
-    if (newVal > this.currentAmount && newVal <= this.totalAmount) {
+    if (newVal <= this.totalAmount) {
       this.lastAmount = this.currentAmount;
       this.currentAmount = newVal;
 
@@ -167,8 +190,13 @@ class ProgressState {
         this.durationFormat.units.push('s');
       }
 
-      this.current = Math.round(this.currentAmount / this.totalAmount * 100);
-      this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalAmount) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
+      if (this.status === 'Downloading') {
+        this.current = Math.round(this.currentAmount / this.totalAmount * 100);
+        this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalAmount) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
+      } else if(this.status === 'Installing'){
+        this.current = Math.round((this.currentAmount-1) / this.totalAmount * 100);
+        this.label = this.currentAmount + ' out of ' + this.totalAmount ;
+      }
       this.$timeout();
     }
   }
@@ -183,18 +211,6 @@ class ProgressState {
   }
 
   setStatus(newStatus) {
-    if (newStatus === this.status) {
-      return;
-    }
-    if (newStatus !== 'Downloading') {
-      this.current = 100;
-      this.label = '';
-    } else {
-      this.current = 0;
-      this.label = 0 + '%';
-      this.currentAmount = 0;
-      //    this.totalAmount = 0;
-    }
     this.status = newStatus;
     this.$timeout();
   }

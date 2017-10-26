@@ -143,7 +143,6 @@ class Installer {
 
   succeed(done) {
     if (done) {
-      this.progress.setComplete();
       this.success();
     }
   }

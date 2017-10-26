@@ -343,13 +343,6 @@ describe('Installer', function() {
   });
 
   describe('succeed', function() {
-    it('should set progress to complete when the input is truthy', function() {
-      let spy = sandbox.spy(fakeProgress, 'setComplete');
-      installer.succeed(true);
-
-      expect(spy).to.have.been.calledOnce;
-    });
-
     it('should not succeed with a falsey input', function() {
       let spy = sandbox.spy(fakeProgress, 'setComplete');
       installer.succeed(false);
