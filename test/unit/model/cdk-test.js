@@ -242,8 +242,8 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
           expect(Installer.prototype.exec).to.have.been.calledWith(
-            path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=virtualbox',
-            {PATH:''}
+            'minishift setup-cdk --force --default-vm-driver=virtualbox',
+            {env:{PATH:''}}
           );
           expect(installer.createEnvironment).to.have.been.called;
         });
@@ -257,8 +257,8 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
           expect(Installer.prototype.exec).to.have.been.calledWith(
-            path.join('ocBinRoot', 'minishift.exe') + ' setup-cdk --force --default-vm-driver=hyperv',
-            {PATH:''}
+            'minishift setup-cdk --force --default-vm-driver=hyperv',
+            {env:{PATH:''}}
           );
           expect(installer.createEnvironment).to.have.been.called;
         });
@@ -323,7 +323,7 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
-          expect(Installer.prototype.exec).calledWith(`${installer.minishiftExeLocation} stop`);
+          expect(Installer.prototype.exec).calledWith('minishift stop');
         }).catch(()=>{
           expect.fail();
         });
@@ -405,12 +405,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox location added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':'path'});
-        let pathArray = ['virtualbox', 'path'];
+        let pathArray = ['virtualbox', 'ocBinRoot', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':''});
-        let pathArray = ['virtualbox'];
+        let pathArray = ['virtualbox', 'ocBinRoot'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
@@ -422,12 +422,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
-        let pathArray = ['virtualbox', 'cygwin', 'path'];
+        let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':''});
-        let pathArray = ['virtualbox', 'cygwin'];
+        let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
