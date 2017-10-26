@@ -129,7 +129,7 @@ class SelectionController {
   }
 
   // Prep the install location path for each product, then go to the next page.
-  install() {
+  next() {
     let checkboxModel = this.sc.checkboxModel;
     if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
       this.loader.removeComponent('virtualbox');
@@ -150,10 +150,6 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.installerDataSvc.setup(...possibleComponents);
 
-    this.next();
-  }
-
-  next() {
     this.router.go('confirm');
   }
 
