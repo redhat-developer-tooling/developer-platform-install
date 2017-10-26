@@ -34,11 +34,13 @@
         <h4 class="modal-title" id="myModalLabel">&nbsp;</h4>
       </div>
       <div class="modal-body">
-        <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
-        <strong id="tcMessage" class="error">Oops. Something went wrong</strong>
-        <p>The download failed. Please check if you have internet access,
-          connected to VPN, have correct configuration for proxy server.
-          Try to download again after problem is fixed.</p>
+        <div class="alert alert-danger">
+          <span id="tcIcon" class="pficon pficon-error-circle-o"></span>
+          <strong id="tcMessage">Hey there is a problem! Something went wrong.</strong>
+        </div>
+        <div>The download failed. Please check if you have internet access,
+          connected to VPN, or have correct configuration for proxy server.
+          Try to download again after the problem is fixed.</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="instCtrl.downloadAgain()">Download Again</button>
