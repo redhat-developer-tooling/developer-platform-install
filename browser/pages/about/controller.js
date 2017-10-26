@@ -17,7 +17,7 @@ class AboutController {
   }
 
   documentation() {
-    this.electron.shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+    this.electron.shell.openExternal(`https://access.redhat.com/documentation/en/red-hat-development-suite?version=${this.shortVersion}`);
   }
 
   release() {
@@ -25,7 +25,7 @@ class AboutController {
   }
 
   report() {
-    this.electron.shell.openExternal(`https://access.redhat.com/documentation/en-us/red_hat_development_suite/${this.shortVersion}/html/installation_guide/troubleshooting#reporting_an_issue`);
+    this.electron.shell.openExternal(`https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue`);
   }
 
 }
