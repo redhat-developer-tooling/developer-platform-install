@@ -353,17 +353,6 @@ describe('InstallerDataService', function() {
       expect(spy).calledWith('installComplete', 'all');
     });
 
-    it('setupDone should switch to final page when all installs have finished', function() {
-      let spy = sandbox.spy(svc.router, 'go');
-
-      svc.setupDone(fakeProgress, 'jdk');
-      svc.setupDone(fakeProgress, 'vbox');
-
-      expect(svc.installing).to.be.false;
-      expect(spy).calledOnce;
-      expect(spy).calledWith('start');
-    });
-
     it('setupDone should not log info message for skipped installer', function() {
       sandbox.stub(jdk, 'isSkipped').returns(true);
       Logger.info.reset();

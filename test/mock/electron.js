@@ -1,5 +1,7 @@
 'use strict';
 
+import EventEmitter from 'events';
+
 function electron() {
   let electronWindow = {
     close() {},
@@ -30,9 +32,11 @@ function electron() {
   let shell = {
     openExternal() {}
   };
+  let ipcRenderer = new EventEmitter();
   return {
     remote,
-    shell
+    shell,
+    ipcRenderer
   };
 }
 
