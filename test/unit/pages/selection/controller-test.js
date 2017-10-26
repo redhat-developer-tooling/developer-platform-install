@@ -334,4 +334,12 @@ describe('SelectionController', function() {
       }
     });
   });
+
+  describe('next', function() {
+    beforeEach(inject(context));
+    it('stould navidate to confirmation page', function() {
+      selectionController.next();
+      expect(selectionController.router.go).calledWith('confirm');
+    });
+  })
 });
