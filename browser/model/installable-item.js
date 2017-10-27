@@ -119,7 +119,7 @@ class InstallableItem {
   getDownloadStatus() {
     let status = 'No download required';
     if (this.size && this.size >= 0) {
-      status = this.downloaded ? 'Previously Downloaded' : 'Selected to download';
+      status = this.downloaded ? 'Previously downloaded' : 'Selected to download';
     }
     return status;
   }
