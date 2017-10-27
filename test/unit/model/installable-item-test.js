@@ -447,7 +447,7 @@ describe('InstallableItem', function() {
     it('returns \'Previously Downloaded\' if item is downloaded and size is more than 0', function() {
       item.downloaded = true;
       item.size = 100;
-      expect(item.getDownloadStatus()).equals('Previously Downloaded');
+      expect(item.getDownloadStatus()).equals('Previously downloaded');
     });
   });
 
