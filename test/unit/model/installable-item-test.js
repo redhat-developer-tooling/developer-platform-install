@@ -179,7 +179,7 @@ describe('InstallableItem', function() {
       installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying Existing Download');
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying previously downloaded components');
     });
 
     it('should not change progress status if current status is \'Downloading\'', function() {
