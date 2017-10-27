@@ -7,9 +7,15 @@ angular.element(document).ready(function() {
   angular.bootstrap(document, [mainModule.name], { strictDi: true });
 });
 
+// Determine version
+const semver = require('semver');
+let version = remote.app.getVersion();
+let shortVersion = `${semver.major(version)}.${semver.minor(version)}`;
+
 // Importing this adds a right-click menu with 'Inspect Element' option
-const { BrowserWindow } = require('electron').remote;
+const { BrowserWindow, TouchBar } = require('electron').remote;
 const { Menu, MenuItem } = remote;
+const {TouchBarLabel, TouchBarButton, TouchBarSpacer} = TouchBar;
 
 let rightClickPosition = null;
 
@@ -40,10 +46,35 @@ function openAboutWindow() {
     resizable: false,
     show: false
   });
+
+  const about = new TouchBarButton({
+    label: 'About',
+    click: () => {
+      require('electron').shell.openExternal(`https://access.redhat.com/documentation/en/red-hat-development-suite?version=${shortVersion}`);
+    }
+  });
+
+  const releaseNotes = new TouchBarButton({
+    label: 'Release Notes',
+    click: () => {
+      require('electron').shell.openExternal(`https://access.redhat.com/documentation/en-us/red_hat_development_suite/${shortVersion}/html/release_notes_and_known_issues/`);
+    }
+  });
+
+  const issues = new TouchBarButton({
+    label: 'Report Issues',
+    click: () => {
+      require('electron').shell.openExternal(`https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue`);
+    }
+  });
+
+  const touchBar = new TouchBar([about, releaseNotes, issues]);
+
   let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
 
   // Load the about.html of the app
   aboutWindow.loadURL(`file://${baseLocation}/about.html`);
+  aboutWindow.setTouchBar(touchBar);
   aboutWindow.setMenu(null);
   aboutWindow.once('ready-to-show', () => {
     aboutWindow.show();
