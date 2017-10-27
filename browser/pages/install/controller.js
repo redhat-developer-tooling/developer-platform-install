@@ -24,7 +24,9 @@ class InstallController {
         if(value.isDownloadRequired()) {
           this.totalDownloads += value.totalDownloads;
         }
-        this.totalAmount += value.size;
+        if(!value.downloaded) {
+          this.totalAmount += value.size;
+        }
       }
     }
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
