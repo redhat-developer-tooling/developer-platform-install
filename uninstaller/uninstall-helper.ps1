@@ -81,7 +81,7 @@ $pathFolders | foreach {
 [string] $delimitedFolders = $folderList -Join ';'
 [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, "User")
 
-#Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
+Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
 
 echo 'DONE'
 #Write-Host "Press any key to exit"
