@@ -2,6 +2,7 @@ import keytar from 'keytar';
 import path from 'path';
 import fs from 'fs-extra';
 import Platform from './platform';
+import localStorage from 'localStorage';
 
 class TokenStore {
   static setItem(key, login, value) {
