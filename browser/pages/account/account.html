@@ -23,7 +23,7 @@
           <a class="forgot-password" id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">Forgot password?</a>
         </div>
         <div class="login-form-input-container form-group remember-me-group">
-          <input class="remember-me" type="checkbox" ng-model = "acctCtrl.rememberMe"><span class="remember-me-label">Remember Me</span>
+          <input class="remember-me" id="rememberMe" type="checkbox" ng-model = "acctCtrl.rememberMe" ng-click="acctCtrl.save($event)"><span class="remember-me-label">Remember Me</span>
         </div>
       </form>
       <div class="form-group has-error login-form-error-container">
