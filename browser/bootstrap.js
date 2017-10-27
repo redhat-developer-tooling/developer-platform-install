@@ -47,8 +47,8 @@ function openAboutWindow() {
     show: false
   });
 
-  const about = new TouchBarButton({
-    label: 'About',
+  const documentation = new TouchBarButton({
+    label: 'Documentation',
     click: () => {
       require('electron').shell.openExternal(`https://access.redhat.com/documentation/en/red-hat-development-suite?version=${shortVersion}`);
     }
@@ -68,7 +68,14 @@ function openAboutWindow() {
     }
   });
 
-  const touchBar = new TouchBar([about, releaseNotes, issues]);
+  const closeDialogTouch = new TouchBarButton({
+    label: 'Close',
+    click: () => {
+      aboutWindow.close();
+    }
+  });
+
+  const touchBar = new TouchBar([documentation, releaseNotes, issues, new TouchBarSpacer({size: 'large'}), closeDialogTouch]);
 
   let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
 
@@ -97,6 +104,31 @@ const help = new MenuItem({
     require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
   }
 });
+
+const helpTouch = new TouchBarButton({
+  label: 'Help',
+  click: () => {
+    require('electron').shell.openExternal('https://access.redhat.com/documentation/en/red-hat-development-suite/');
+  }
+});
+
+const aboutTouch = new TouchBarButton({
+  label: 'About',
+  click: openAboutWindow
+});
+
+const exitTouch = new TouchBarButton({
+  label: 'Quit',
+  click: () => {
+    require('electron').remote.getCurrentWindow().close();
+  }
+});
+
+const versionLabel  = new TouchBarLabel({
+  label: `Version: ${version}`
+})
+
+remote.getCurrentWindow().setTouchBar(new TouchBar([exitTouch, new TouchBarSpacer({size: 'large'}), helpTouch, aboutTouch, new TouchBarSpacer({size: 'small'}), versionLabel]));
 
 function restoreMenu() {
   menu = new Menu();
