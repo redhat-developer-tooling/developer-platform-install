@@ -20,8 +20,8 @@
           </div>
         </div>
         <div class="confirm-summary-list">
-          <div ng-repeat="component in downloadComp | orderBy: '-downloaded'" class="summary-info" id="{{component.keyName}}-info">
-            <span ng-class="{'pficon pficon-ok': component.downloaded, 'fa fa-download info-color': !component.downloaded}"></span>
+          <div ng-repeat="component in downloadComp | orderBy: ['-downloaded','size']" class="summary-info" id="{{component.keyName}}-info">
+            <span ng-class="{'pficon pficon-ok': component.downloaded  || component.size == 0, 'fa fa-download info-color': !component.downloaded}"></span>
             <strong id="{{component.keyName}}-name">&nbsp;{{component.productName}}</strong>
             <span id="{{component.keyName}}-version" class="product-info">| {{component.productVersion}}</span>
             <strong id="{{component.keyName}}-download-status" class="pull-right">{{component.getDownloadStatus()}}</strong>
