@@ -63,10 +63,10 @@ class AccountController {
     this.tandcNotSigned = false;
   }
 
-  save(event) {
+  save() {
     let checkbox = document.getElementById('rememberMe');
     localStorage.setItem('rememberMe', checkbox.checked);
-    if (event.target.checked === false) {
+    if (!checkbox.checked) {
       let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
       if(fs.existsSync(dataFilePath)) {
         TokenStore.deleteItem('login', this.installerDataSvc.username);
