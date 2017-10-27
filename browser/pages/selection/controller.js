@@ -118,6 +118,7 @@ class SelectionController {
   detectInstalledComponents() {
     if(!this.isDisabled) {
       this.isDisabled = true;
+      this.timeout(()=>{});
       this.installedSearchNote = ' The system is checking if you have any installed components.';
       let detectors = [];
       for (var installer of this.installerDataSvc.allInstallables().values()) {
