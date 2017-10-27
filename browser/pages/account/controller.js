@@ -3,6 +3,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import mkdirp from 'mkdirp';
+import rimraf from 'rimraf';
 import Util from '../../model/helpers/util';
 import Logger from '../../services/logger';
 import Platform from '../../services/platform';
@@ -22,7 +23,7 @@ class AccountController {
     this.authFailed = false;
     this.tandcNotSigned = false;
     this.isLoginBtnClicked = false;
-    this.rememberMe = false;
+    this.rememberMe = this.installerDataSvc.rememberMe;
     this.httpError = undefined;
     this.password = '';
     this.username = '';
@@ -60,6 +61,18 @@ class AccountController {
     this.authFailed = false;
     this.httpError = undefined;
     this.tandcNotSigned = false;
+  }
+
+  save(event) {
+    let checkbox = document.getElementById('rememberMe');
+    localStorage.setItem('rememberMe', checkbox.checked);
+    if (event.target.checked === false) {
+      let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
+      if(fs.existsSync(dataFilePath)) {
+        TokenStore.deleteItem('login', this.installerDataSvc.username);
+        rimraf.sync(dataFilePath);
+      }
+    }
   }
 
   isInvalid(field) {

@@ -12,6 +12,10 @@ class TokenStore {
     return keytar.getPassword(key, login);
   }
 
+  static deleteItem(key, login) {
+    return keytar.deletePassword(key, login);
+  }
+
   static getUserName() {
     let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
     let username = '';
@@ -22,6 +26,10 @@ class TokenStore {
       }
     }
     return username;
+  }
+
+  static getStatus(){
+    return JSON.parse(localStorage.getItem('rememberMe'));
   }
 }
 

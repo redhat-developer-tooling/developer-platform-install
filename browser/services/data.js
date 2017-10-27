@@ -30,6 +30,7 @@ class InstallerDataService {
     this.packageConf = packageConf;
 
     this.username = TokenStore.getUserName();
+    this.rememberMe = TokenStore.getStatus();
     this.password = '';
     if (this.username) {
       let password = TokenStore.getItem('login', this.username);
