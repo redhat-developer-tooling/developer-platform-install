@@ -62,7 +62,7 @@ let mainModule =
           data: {
             displayName: 'Selection'
           }
-        })        
+        })
         .state('confirm', {
           url: '/confirm',
           controller: 'ConfirmController as confCtrl',
@@ -100,6 +100,8 @@ let mainModule =
       return function(text) {
         if(text) {
           return humanize.filesize(text);
+        } else {
+          return '0 MB';
         }
       };
     });
