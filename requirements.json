@@ -10,14 +10,14 @@
     "targetFolderName": "developer-studio",
     "installAfter": "jdk",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.1.0.GA-installer-standalone.jar?workflow=direct",
-    "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/",
+    "url": "https://devstudio.redhat.com/11/stable/builds/devstudio-11.1.0.GA-build-product/latest/all/devstudio-11.1.0.GA-installer-standalone.jar",
     "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
-    "sha256sum": "",
+    "sha256sum": "e53e8075968b4bff6019650aa54f716422db9c3a0193003c4af6cc3a0a6d6def",
     "version": "11.1.0.GA",
     "useDownload": true,
     "requires": ["jdk"],
-    "size": 676727735,
-    "installSize": 747143168
+    "size": 678757632,
+    "installSize": 840675328
   },
   "jdk": {
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
