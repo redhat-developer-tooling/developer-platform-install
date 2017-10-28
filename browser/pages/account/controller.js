@@ -23,14 +23,9 @@ class AccountController {
     this.authFailed = false;
     this.tandcNotSigned = false;
     this.isLoginBtnClicked = false;
-    this.rememberMe = this.installerDataSvc.rememberMe;
     this.httpError = undefined;
-    this.password = '';
-    this.username = '';
-    $scope.$watch('$viewContentLoaded', ()=>{
-      this.password = this.installerDataSvc.password;
-      this.username = this.installerDataSvc.username;
-    });
+    $scope.$on('$destroy', this.save.bind(this));
+    this.electron.remote.getCurrentWindow().addListener('blur', this.save.bind(this));
   }
 
   login() {
@@ -40,8 +35,8 @@ class AccountController {
       method: 'GET',
       url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
       auth: {
-        user: this.username,
-        pass: this.password,
+        user: this.installerDataSvc.username,
+        pass: this.installerDataSvc.password,
         sendImmediately: true
       },
       headers: {
@@ -64,14 +59,13 @@ class AccountController {
   }
 
   save() {
-    let checkbox = document.getElementById('rememberMe');
-    localStorage.setItem('rememberMe', checkbox.checked);
-    if (!checkbox.checked) {
-      let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
-      if(fs.existsSync(dataFilePath)) {
-        TokenStore.deleteItem('login', this.installerDataSvc.username);
-        rimraf.sync(dataFilePath);
-      }
+    TokenStore.localStorage.setItem('rememberMe', this.installerDataSvc.rememberMe);
+    if (this.installerDataSvc.rememberMe) {
+      TokenStore.localStorage.setItem('username', this.installerDataSvc.username);
+      TokenStore.setPassword(this.installerDataSvc.password);
+    } else {
+      TokenStore.removePassword();
+      TokenStore.localStorage.removeItem('username');
     }
   }
 
@@ -102,18 +96,10 @@ class AccountController {
   handleHttpSuccess(result) {
     this.httpError = undefined;
     if (result.status == 200 && result.data == true) {
-      this.installerDataSvc.setCredentials(this.username, this.password);
       this.isLoginBtnClicked = false;
+      this.electron.remote.getCurrentWindow().removeAllListeners('blur');
       this.router.go('install');
       this.authFailed = false;
-      // Storing the password for next use
-      if (this.rememberMe == true) {
-        let dataFilePath = Platform.localAppData();
-        mkdirp.sync(dataFilePath);
-        let data = {'username': this.username};
-        fs.writeFileSync(path.join(dataFilePath, 'settings.json'), JSON.stringify(data));
-        TokenStore.setItem('login', this.username, this.password);
-      }
     } else if (result.status == 200 && result.data == false) {
       this.tandcNotSigned = true;
       this.isLoginBtnClicked = false;
@@ -146,6 +132,7 @@ class AccountController {
 
   back() {
     Logger.info('Going back a page');
+    this.electron.remote.getCurrentWindow().removeAllListeners('blur');
     this.router.go('confirm');
   }
 }

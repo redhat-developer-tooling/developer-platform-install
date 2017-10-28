@@ -2,7 +2,9 @@ import keytar from 'keytar';
 import path from 'path';
 import fs from 'fs-extra';
 import Platform from './platform';
-import localStorage from 'localStorage';
+import {LocalStorage} from 'node-localstorage';
+
+let localStorage;
 
 class TokenStore {
   static setItem(key, login, value) {
@@ -18,19 +20,35 @@ class TokenStore {
   }
 
   static getUserName() {
-    let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
-    let username = '';
-    if (fs.existsSync(dataFilePath)) {
-      let data = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
-      if (data.username) {
-        username = data.username;
-      }
-    }
-    return username;
+    let username = TokenStore.localStorage.getItem('username');
+    return username ? username : '';
+  }
+
+  static setUserName(username) {
+    TokenStore.localStorage.setItem('username',username);
+  }
+
+  static getPassword() {
+    return TokenStore.getItem('RedHatDevelopmentSuite', 'password');
+  }
+
+  static setPassword(password) {
+    return TokenStore.setItem('RedHatDevelopmentSuite', 'password', password);
+  }
+
+  static removePassword() {
+    return TokenStore.deleteItem('RedHatDevelopmentSuite', 'password');
   }
 
   static getStatus(){
-    return JSON.parse(localStorage.getItem('rememberMe'));
+    return JSON.parse(TokenStore.localStorage.getItem('rememberMe'));
+  }
+
+  static get localStorage() {
+    if (localStorage == undefined) {
+      localStorage = new LocalStorage(path.join(Platform.localAppData(), 'settings'));
+    }
+    return localStorage;
   }
 }
 

@@ -32,11 +32,10 @@ class InstallerDataService {
     this.username = TokenStore.getUserName();
     this.rememberMe = TokenStore.getStatus();
     this.password = '';
-    if (this.username) {
-      let password = TokenStore.getItem('login', this.username);
-      password.then((pass) => {
-        if(pass && pass !=='') {
-          this.password = pass;
+    if (this.username && this.rememberMe) {
+      TokenStore.getPassword().then((password) => {
+        if(password) {
+          this.password = password;
         }
       });
     }

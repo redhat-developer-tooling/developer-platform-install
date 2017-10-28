@@ -9,13 +9,13 @@
         <img class="login-form-input-container form-group" style="margin-right:90px;margin-bottom:27px;" width="220px" src="images/RHDP_logo_RGB_default.svg"/>
         <div class="login-form-input-container form-group has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid}">
           <label for="username" class="login-form-label">Username</label>
-          <input type="text" id="username" name="username" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.username" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="usernameStatus" focus-if/>
+          <input type="text" id="username" name="username" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.installerDataSvc.username" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="usernameStatus" focus-if/>
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid"></span>-->
           <span id="usernameStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.username.$touched) && accountForm.username.$invalid">(error)</span>
         </div>
         <div class="login-form-input-container last-field has-feedback" ng-class="{'has-error has-feedback': (accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid}">
           <label for="password" class="login-form-label">Password</label>
-          <input type="password" id="password" name="password" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.password" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="passwordStatus"/>
+          <input type="password" id="password" name="password" class="login-form-input form-control" ng-change="acctCtrl.resetLoginErrors()" ng-model="acctCtrl.installerDataSvc.password" ng-disabled="acctCtrl.isLoginBtnClicked" required aria-describedby="passwordStatus"/>
           <!--<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid"></span>-->
           <span id="passwordStatus" class="sr-only" ng-show="(accountForm.$submitted || accountForm.password.$touched) && accountForm.password.$invalid">(error)</span>
         </div>
@@ -23,7 +23,7 @@
           <a class="forgot-password" id="usernameLink" href="" ng-click="acctCtrl.forgotPassword()">Forgot password?</a>
         </div>
         <div class="login-form-input-container form-group remember-me-group">
-          <input class="remember-me" id="rememberMe" type="checkbox" ng-model = "acctCtrl.rememberMe" ng-click="acctCtrl.save()"><span class="remember-me-label">Remember Me</span>
+          <input class="remember-me" id="rememberMe" type="checkbox" ng-model = "acctCtrl.installerDataSvc.rememberMe"><span class="remember-me-label">Remember Me</span>
         </div>
       </form>
       <div class="form-group has-error login-form-error-container">
