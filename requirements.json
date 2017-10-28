@@ -9,7 +9,7 @@
     "bundle": "yes",
     "targetFolderName": "developer-studio",
     "installAfter": "jdk",
-    "dmUrl": "https://devstudio.redhat.com/11/stable/builds/devstudio-11.1.0.GA-build-product/latest/all/devstudio-11.1.0.GA-installer-standalone.jar",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.1.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/11/stable/builds/devstudio-11.1.0.GA-build-product/latest/all/devstudio-11.1.0.GA-installer-standalone.jar",
     "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
     "sha256sum": "e53e8075968b4bff6019650aa54f716422db9c3a0193003c4af6cc3a0a6d6def",
@@ -37,7 +37,7 @@
         "sha256sum": "6cc4b7b017cdd68f381184544743c17d2f84e6ff7cfc64575a20319b8b114e65",
         "version": "1.8.0_151",
         "size": 110055424,
-        "installSize": 211752247,
+        "installSize": 213676032,
         "virusTotalReport": "https://www.virustotal.com/#/file/6cc4b7b017cdd68f381184544743c17d2f84e6ff7cfc64575a20319b8b114e65/detection"
       },
       "darwin": {
@@ -85,7 +85,7 @@
     "targetFolderName": "cdk",
     "platform": {
       "win32": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/windows-amd64/minishift.exe",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-windows-amd64.exe?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/windows-amd64/minishift.exe",
         "fileName": "minishift_3_2_0__GA.exe",
         "sha256sum": "8362420159c2bfd22b428e545230764c22f184024ab0903eaf5caffe35293465",
@@ -96,7 +96,7 @@
         "installAfter": "cygwin"
       },
       "darwin": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/darwin-amd64/minishift",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-darwin-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/darwin-amd64/minishift",
         "fileName": "minishift_3_2_0__GA",
         "sha256sum": "f9b30f341bee4924657d95729f2c2c19b98e659550d8c73edd369c3629a5fc0d",
@@ -107,7 +107,7 @@
         "installAfter": "virtualbox"
       },
       "linux": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/linux-amd64/minishift",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-linux-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/linux-amd64/minishift",
         "fileName": "minishift_3_2_0__GA",
         "sha256sum": "943180a8ede88624fd2d33d1d7e3017eef960e5adadef2e1d60448fd064abe52",
