@@ -22,6 +22,15 @@ describe('InstallerDataService', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    sandbox.stub(Logger, 'initialize');
+    sandbox.stub(Logger, 'info');
+    sandbox.stub(Logger, 'error');
+    sandbox.stub(Logger, 'log');
+    sandbox.stub(Logger, 'getIpcRenderer').returns({
+      send: function() {}
+    });
+    sandbox.stub(fs, 'mkdirSync');
+
     svc = new InstallerDataService();
     svc.ipcRenderer = {
       send: function() {}
@@ -33,10 +42,7 @@ describe('InstallerDataService', function() {
     jdk = new InstallableItem('jdk', 'https://developers.redhat.com/download-manager/jdf/file/jdk.msi', 'jdk.msi', 'jdk', svc);
     vbox = new VirtualBoxInstall(svc, 'virtualbox',
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
-    sandbox.stub(Logger, 'initialize');
-    sandbox.stub(Logger, 'info');
-    sandbox.stub(Logger, 'error');
-    sandbox.stub(fs, 'mkdirSync');
+
     fxExtraStub = sandbox.stub(fsExtra, 'copy');
   });
 
@@ -160,7 +166,9 @@ describe('InstallerDataService', function() {
         Logger.info.reset();
         svc.setup();
         svc.setupTargetFolder();
-        expect(Logger.info).calledTwice;
+        return Promise.resolve().then(()=>{
+          expect(Logger.info).calledTwice;
+        });
       });
 
       it('should add uninstaller entry to control panel and log info message about success', function() {

@@ -12,6 +12,7 @@ import JbosseapInstall from 'browser/model/jbosseap';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
 import Platform from 'browser/services/platform';
+import TockenStore from 'browser/services/credentialManager';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';
@@ -90,10 +91,13 @@ describe('jbosseap installer', function() {
   });
 
   beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(TockenStore, 'getPassword').resolves('');
+    sandbox.stub(TockenStore, 'getUserName').resolves('');
+    sandbox.stub(TockenStore, 'getStatus').resolves(false);
     installerDataSvc = stubDataService();
     installer = new JbosseapInstall(installerDataSvc, 'jbosseap', downloadUrl, 'jbosseap.jar', 'sha');
     installer.ipcRenderer = { on: sinon.stub().yields(undefined, JdkInstall.KEY) };
-    sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
   });
 

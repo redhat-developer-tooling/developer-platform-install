@@ -16,6 +16,7 @@ import InstallableItem from 'browser/model/installable-item';
 import child_process from 'child_process';
 import mockfs from 'mock-fs';
 import loadMetadata from 'browser/services/metadata';
+import TockenStore from 'browser/services/credentialManager';
 chai.use(sinonChai);
 let sinon  = require('sinon');
 
@@ -130,6 +131,9 @@ describe('CDK installer', function() {
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
+    sandbox.stub(TockenStore, 'getPassword').resolves('');
+    sandbox.stub(TockenStore, 'getUserName').resolves('');
+    sandbox.stub(TockenStore, 'getStatus').resolves(false);
   });
 
   afterEach(function () {

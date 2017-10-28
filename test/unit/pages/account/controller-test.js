@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import ElectronMock from '../../../mock/electron';
 import AccountController from 'browser/pages/account/controller';
+import EventEmitter from 'events';
 chai.use(sinonChai);
 
 describe('Account controller', function() {
@@ -16,7 +17,7 @@ describe('Account controller', function() {
 
   beforeEach(function() {
     timeout = function(cb) { cb(); };
-    scope = { '$apply': function() { }, '$watch': function() { } };
+    scope = { '$apply': function() { }, '$watch': function() { }, '$on': function () {return new EventEmitter();} };
     base64 = { encode: function() {}};
     http = sandbox.stub().resolves('success');
     controller = new AccountController({}, timeout, scope, http, base64, {password: '', username: ''}, electron);
@@ -31,14 +32,6 @@ describe('Account controller', function() {
 
     it('should not be failed', function() {
       expect(controller).to.have.property('authFailed', false);
-    });
-
-    it('username should be empty', function() {
-      expect(controller).to.have.property('username').to.be.empty;
-    });
-
-    it('password should be empty', function() {
-      expect(controller).to.have.property('password').to.be.empty;
     });
 
     it('terms and conditions should be considered signed', function() {
@@ -85,8 +78,8 @@ describe('Account controller', function() {
       let installerDataSvc = { setCredentials: function() {} };
       let router = {go: function() {}};
       controller = new AccountController(router, timeout, scope, http, base64, installerDataSvc, electron);
-      controller.username = 'username';
-      controller.password = 'password';
+      installerDataSvc.username = 'username';
+      installerDataSvc.password = 'password';
       controller.login();
 
       expect(http).to.have.been.calledWith(req);
@@ -214,22 +207,6 @@ describe('Account controller', function() {
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith('install');
-      expect(controller.tandcNotSigned).to.be.false;
-      expect(controller.authFailed).to.be.false;
-    });
-
-    it('should save credentials for later use when everything is OK', function() {
-      let router = { go: function() {} };
-      let installerDataSvc = { setCredentials: function() {} };
-      let spy = sinon.spy(installerDataSvc, 'setCredentials');
-
-      controller = new AccountController(router, timeout, scope, null, null, installerDataSvc, electron);
-      controller.username = 'Frank';
-      controller.password = 'p@ssw0rd';
-      controller.handleHttpSuccess({ status: 200, data: true });
-
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith('Frank', 'p@ssw0rd');
       expect(controller.tandcNotSigned).to.be.false;
       expect(controller.authFailed).to.be.false;
     });
