@@ -6,6 +6,7 @@ import path from 'path';
 import pify from 'pify';
 import keytar from 'keytar';
 import mkdirp from 'mkdirp';
+import rimraf from 'rimraf';
 import Logger from './logger';
 import fsExtra from 'fs-extra';
 import electron from 'electron';
@@ -31,6 +32,15 @@ class InstallerDataService {
 
     this.username = TokenStore.getUserName();
     this.rememberMe = TokenStore.getStatus();
+    if (!this.rememberMe) {
+      let dataFilePath = path.join(Platform.localAppData(), 'settings.json');
+      if(fs.existsSync(dataFilePath)) {
+        TokenStore.deleteItem('login', this.username);
+        this.username = '';
+        this.password = '';
+        rimraf.sync(dataFilePath);
+      }
+    }
     this.password = '';
     if (this.username) {
       let password = TokenStore.getItem('login', this.username);
@@ -60,6 +70,7 @@ class InstallerDataService {
       }
     }
   }
+
 
   setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
