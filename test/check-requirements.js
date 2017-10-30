@@ -9,11 +9,13 @@ let fileNames = new Object();
 let count = 0;
 
 function checkRequirements() {
-  for (var attribute in reqs) {
+  for (let attribute in reqs) {
     // sha256 is not set for macOS Java SE
     if(reqs[attribute].sha256sum !== '') {
       data[attribute] = reqs[attribute].url;
       count++;
+    } else {
+      console.log(`skip ${attribute} no sha256sum configured` );
     }
   }
 
