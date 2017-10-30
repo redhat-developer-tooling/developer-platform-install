@@ -1,7 +1,8 @@
 #
-for ($i=0; $i -le $args.Count; $i++) {
+for ($i=0; $i -le $args.Count - 1; $i++) {
  $folder += $args[$i] + " "
 }
+$timeStamp = $args[-1]
 
 $vboxInstalled = Test-Path  $folder'\..\virtualbox'
 $openjdkInstalled = Test-Path  $folder'\..\jdk8'
