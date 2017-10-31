@@ -26,8 +26,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         category: 'public.app-category.developer-tools',
         icon: 'resources/devsuite.icns',
         target: ['zip'],
-        publish: null,
-        ignore
+        publish: null
       },
       files: [
         '**/*',
