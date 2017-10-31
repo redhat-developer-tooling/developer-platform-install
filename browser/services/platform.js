@@ -209,7 +209,7 @@ class Platform {
         return Promise.resolve();
       },
       default: ()=> {
-        return pify(child_process.exec)(`chmod +x ${file}`);
+        return pify(child_process.exec)(`chmod +x '${file}'`);
       }
     });
   }
@@ -255,7 +255,7 @@ class Platform {
     let commands = [];
     executables.forEach(function(executable) {
       let name = path.parse(executable).name;
-      commands.push(`rm -f /usr/local/bin/${name}; ln -s ${executable} /usr/local/bin/${name};`);
+      commands.push(`rm -f /usr/local/bin/${name}; ln -s '${executable}' /usr/local/bin/${name};`);
     });
     let osaScript = [
       'osascript',
