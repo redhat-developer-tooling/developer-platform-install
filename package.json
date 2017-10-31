@@ -48,7 +48,7 @@
     "ng-focus-if": "1.0.7",
     "openpgp": "2.5.11",
     "path": "^0.12.7",
-    "patternfly": "3.29.5",
+    "patternfly": "3.29.11",
     "pify": "3.0.0",
     "replace-in-file": "3.0.0-beta.2",
     "request": "2.83.0",
