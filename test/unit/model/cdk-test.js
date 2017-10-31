@@ -367,8 +367,8 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
-          expect(child_process.exec).calledWith('chmod +x ' + path.join('ocBinRoot', 'minishift'));
-          expect(child_process.exec).calledWith('chmod +x ' + path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc'));
+          expect(child_process.exec).calledWith('chmod +x \'' + path.join('ocBinRoot', 'minishift') + '\'');
+          expect(child_process.exec).calledWith('chmod +x \'' + path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc') + '\'');
         });
       });
 
