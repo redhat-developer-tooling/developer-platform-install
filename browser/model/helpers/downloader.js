@@ -10,7 +10,6 @@ const remote = require('electron').remote;
 
 class Downloader {
   constructor(progress, success, failure, totalDownloads = 1) {
-    this.downloadSize = 0;
     this.totalDownloads = totalDownloads;
     this.currentSize = 0;
     this.progress = progress;
@@ -18,7 +17,6 @@ class Downloader {
     this.failure = failure;
     this.downloads = new Map();
     this.userAgentString = '';
-    this.received = 0;
     this.downloaded = 0;
     this.lastTime = 0;
     if(remote) {
@@ -32,13 +30,14 @@ class Downloader {
   }
 
   errorHandler(stream, err) {
-
     stream.close();
     this.failure(err);
-    if (!this.downloads.get(stream.path)) {
-      this.downloads.set(stream.path, {failure:true});
+    if(!this.downloads.get(stream.path)) {
+      this.downloads.set(stream.path, {failure: true, currentSize: 0});
     }
-    this.downloads.get(stream.path)['failure'] = true;
+    this.currentSize -= this.downloads.get(stream.path).currentSize;
+    this.progress.setCurrent(this.currentSize);
+    this.downloads.get(stream.path).failure = true;
   }
 
   responseHandler(installer) {
@@ -46,13 +45,17 @@ class Downloader {
     this.progress.setProductName(installer ? installer.productName : '');
   }
 
-  dataHandler(data) {
+  dataHandler(file, data) {
     this.currentSize += data.length;
     let now = Date.now();
     if (now - this.lastTime > 500) {
       this.progress.setCurrent(this.currentSize);
       this.lastTime = now;
     }
+    if(!this.downloads.get(file)) {
+      this.downloads.set(file, {currentSize: 0});
+    }
+    this.downloads.get(file).currentSize += data.length;
   }
 
   endHandler(stream) {
@@ -76,6 +79,8 @@ class Downloader {
         } else {
           if(this.downloads.get(file)) {
             this.downloads.get(file)['failure'] = true;
+            this.currentSize -= this.downloads.get(file).currentSize;
+            this.progress.setCurrent(this.currentSize);
           }
           this.failure('SHA256 checksum verification failed');
         }
@@ -96,14 +101,14 @@ class Downloader {
 
   download(options, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {installer, options, sha, 'failure': false});
+    this.downloads.set(stream.path, {installer, options, sha, 'failure': false, currentSize : 0});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
         request.get(this.setAdditionalOptions(options))
           .on('error', this.errorHandler.bind(this, stream))
           .on('error', resolve)
           .on('response', this.responseHandler.bind(this, installer))
-          .on('data', this.dataHandler.bind(this))
+          .on('data', this.dataHandler.bind(this, file))
           .on('end', this.endHandler.bind(this, stream))
           .pipe(stream)
           .on('close', this.closeHandler.bind(this, stream.path, sha, options))
@@ -115,7 +120,7 @@ class Downloader {
 
   downloadAuth(options, username, password, file, sha, installer) {
     let stream = this.writeStream;
-    this.downloads.set(stream.path, {installer, options, username, password, sha, 'failure': false});
+    this.downloads.set(stream.path, {installer, options, username, password, sha, 'failure': false, currentSize : 0});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
         request.get(this.setAdditionalOptions(options))
@@ -123,7 +128,7 @@ class Downloader {
           .on('error', this.errorHandler.bind(this, stream))
           .on('error', resolve)
           .on('response', this.responseHandler.bind(this, installer))
-          .on('data', this.dataHandler.bind(this))
+          .on('data', this.dataHandler.bind(this, file))
           .on('end', this.endHandler.bind(this, stream))
           .pipe(stream)
           .on('close', this.closeHandler.bind(this, stream.path, sha, options))
@@ -134,9 +139,6 @@ class Downloader {
   }
 
   restartDownload() {
-    this.downloadSize = 0;
-    this.received = 0;
-    this.currentSize = 0;
     this.progress.setStatus('Downloading');
     for (var [key, value] of this.downloads.entries()) {
       if (value['failure'] && value.failure) {

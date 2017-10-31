@@ -55,7 +55,7 @@ describe('Downloader', function() {
     let data = { length: 512 };
 
     downloader.received = 1;
-    downloader.dataHandler(data);
+    downloader.dataHandler('filename', data);
 
     expect(fakeProgress.setCurrent).to.have.been.calledOnce;
     expect(fakeProgress.setCurrent).to.have.been.calledWith(data.length);
@@ -68,7 +68,7 @@ describe('Downloader', function() {
 
     downloader.received = 1;
     downloader.lastTime = Date.now() + 9999999999;
-    downloader.dataHandler(data);
+    downloader.dataHandler('filename', data);
 
     expect(fakeProgress.setCurrent).not.called;
   });
@@ -304,8 +304,6 @@ describe('Downloader', function() {
     it('should change downloader status from \'Download Failed\' to \'Downloading\'', function() {
       downloader.restartDownload();
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(downloader.downloadSize).to.be.equal(0);
-      expect(downloader.received).to.be.equal(0);
       expect(downloader.currentSize).to.be.equal(0);
       expect(fakeProgress.setStatus).to.have.been.calledOnce;
       expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
