@@ -28,7 +28,13 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         target: ['zip'],
         publish: null
       },
-      files: '**/*',
+      files: [
+        '**/*',
+        '!node_modules/patternfly/node_modules',
+        '!node_modules/patternfly/src',
+        '!node_modules/patternfly/backstop_data',
+        '!node_modules/patternfly/backstop'
+      ],
       extraFiles,
       directories: {
         app : 'transpiled'
