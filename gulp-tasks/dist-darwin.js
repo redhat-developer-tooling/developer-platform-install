@@ -26,9 +26,16 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         category: 'public.app-category.developer-tools',
         icon: 'resources/devsuite.icns',
         target: ['zip'],
-        publish: null
+        publish: null,
+        ignore
       },
-      files: '**/*',
+      files: [
+        '**/*',
+        '!node_modules/patternfly/node_modules',
+        '!node_modules/patternfly/src',
+        '!node_modules/patternfly/backstop_data',
+        '!node_modules/patternfly/backstop'
+      ],
       extraFiles,
       directories: {
         app : 'transpiled'
