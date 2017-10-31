@@ -339,6 +339,9 @@ footer {
     border-right: 4px solid rgba(3, 3, 3, 0.25);
     border-radius: 100%; */
     border-top: 4px solid #00a8e1;
+    border-width: 5px;
+    height: 29px;
+    width: 29px;
     /* margin: 0 auto;
     position: relative; */
   }
