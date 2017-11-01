@@ -28,13 +28,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
         target: ['zip'],
         publish: null
       },
-      files: [
-        '**/*',
-        '!node_modules/patternfly/node_modules',
-        '!node_modules/patternfly/src',
-        '!node_modules/patternfly/backstop_data',
-        '!node_modules/patternfly/backstop'
-      ],
+      files: '**/*',
       extraFiles,
       directories: {
         app : 'transpiled'
@@ -91,7 +85,7 @@ function darwinDist(gulp, reqs) {
   });
 
   gulp.task('cleanup', function() {
-    return del(['dist/mac'],
+    return del(['dist/mac', `dist/${productName}-${productVersion}-mac.zip`],
       { force: false });
   });
 
