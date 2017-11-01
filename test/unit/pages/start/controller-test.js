@@ -129,7 +129,7 @@ describe('StartController', function() {
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit').returns();
         return ctrl.launchDevstudio().then(()=>{
-          expect(Util.executeCommand).calledWith(`open ${path.join('developer-studio', 'Devstudio.app')}`);
+          expect(Util.executeCommand).calledWith(`open '${path.join('developer-studio', 'Devstudio.app')}'`);
           expect(Util.executeCommand.args[0][2]['env']['rhel.subscription.password']).to.be.equal('12345678');
           expect(ctrl.exit).calledOnce;
         });
@@ -141,7 +141,7 @@ describe('StartController', function() {
         return ctrl.launchDevstudio().then(()=>{
           expect.fail();
         }).catch(()=> {
-          expect(Util.executeCommand).calledWith(`open ${path.join('developer-studio', 'Devstudio.app')}`);
+          expect(Util.executeCommand).calledWith(`open '${path.join('developer-studio', 'Devstudio.app')}'`);
           expect(ctrl.exit).calledOnce;
           expect(Logger.error).calledWithMatch('reason');
         });
