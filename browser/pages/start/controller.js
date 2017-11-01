@@ -40,7 +40,7 @@ class StartController {
       env : Object.assign({}, Platform.ENV)
     };
     options.env['rhel.subscription.password'] = this.installerDataSvc.password;
-    return Util.executeCommand(`open ${devStudioAppPath}`, 1, options).then(()=>{
+    return Util.executeCommand(`open '${devStudioAppPath}'`, 1, options).then(()=>{
       Logger.info('devstudio started sucessfully');
       this.exit();
     }).catch((error)=>{
