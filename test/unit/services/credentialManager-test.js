@@ -9,6 +9,7 @@ import fs from 'fs-extra';
 import TokenStore from 'browser/services/credentialManager';
 import { default as sinonChai } from 'sinon-chai';
 import Platform from 'browser/services/platform';
+import {LocalStorage} from 'node-localstorage';
 chai.use(sinonChai);
 
 
@@ -18,8 +19,10 @@ describe('Platform', function() {
 
   before(function(){
     mockfs({
-      'appdatapath': {
-        'settings.json': '{"username":"abc@redhat.com"}'
+      appdatapath: {
+        settings: {
+          username : '{"username":"abc@redhat.com"}'
+        }
       },
       createCwd: false,
       createTmp: false
@@ -59,7 +62,7 @@ describe('Platform', function() {
 
   describe('getUserName', function() {
     it('should able to get the user login', function() {
-      sandbox.stub(Platform, 'localAppData').returns('appdatapath');
+      sandbox.stub(LocalStorage.prototype, 'getItem').returns('abc@redhat.com');
       let getUserName = TokenStore.getUserName();
       expect(getUserName).to.be.equal('abc@redhat.com')
     });

@@ -29,14 +29,15 @@ class InstallerDataService {
     this.router = $state;
     this.packageConf = packageConf;
 
-    this.username = TokenStore.getUserName();
     this.rememberMe = TokenStore.getStatus();
+    this.username = '';
     this.password = '';
-    if (this.username) {
-      let password = TokenStore.getItem('login', this.username);
-      password.then((pass) => {
-        if(pass && pass !=='') {
-          this.password = pass;
+
+    if (this.rememberMe) {
+      this.username = TokenStore.getUserName();
+      TokenStore.getPassword().then((password) => {
+        if(password) {
+          this.password = password;
         }
       });
     }
