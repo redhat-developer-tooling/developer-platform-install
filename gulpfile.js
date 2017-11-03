@@ -91,7 +91,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements', 'electron-r
   cmd += ' --version-string.FileDescription="' + pjson.description + ' v' + pjson.version + '"';
   cmd += ' --app-copyright="Copyright 2016 Red Hat, Inc."';
   cmd += ' --app-version="' + pjson.version + '"' + ' --build-version="' + pjson.version + '"';
-  cmd += ' --prune --ignore="test|' + config.prefetchFolder + '|node_modules/patternfly/(node_modules|src|backstop_data|backstop)|.github"';
+  cmd += ' --prune --ignore="test|' + config.prefetchFolder + '|node_modules/patternfly/(node_modules|src|backstop_data|backstop)|.github|readme.md|README.md|CHANGELOG.md|changelog.md|CHANGES|CHANDES.md|changes.md|.travis.yml|.npmignore.|.eslintrc"';
   cmd += ' --icon="' + config.configIcon + '"';
   exec(cmd, common.createExecCallback(cb, true));
 });
