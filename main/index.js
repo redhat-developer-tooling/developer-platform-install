@@ -53,6 +53,7 @@ app.on('ready', function() {
   });
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    useContentSize: true,
     width: 1010,
     height: 650,
     'autoHideMenuBar': true,
