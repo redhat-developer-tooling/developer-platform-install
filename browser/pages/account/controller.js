@@ -9,6 +9,8 @@ import Logger from '../../services/logger';
 import Platform from '../../services/platform';
 import TokenStore from '../../services/credentialManager';
 
+const hostname = process.env.DM_STAGE_HOST ? process.env.DM_STAGE_HOST : 'developers.redhat.com';
+
 class AccountController {
 
   constructor($state, $timeout, $scope, request, $base64, installerDataSvc, electron) {
@@ -38,7 +40,7 @@ class AccountController {
     this.resetLoginErrors();
     let req = {
       method: 'GET',
-      url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip',
+      url: `https://${hostname}/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip`,
       auth: {
         user: this.username,
         pass: this.password,
