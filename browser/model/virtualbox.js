@@ -118,9 +118,13 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   installAfterRequirements(progress, success, failure) {
     let installer = new Installer(this.keyName, progress, success, failure);
-    return installer.exec(
-      [`"${this.downloadedFile}"`, '--extract', '-path', `"${this.installerDataSvc.virtualBoxDir()}"`, '--silent'].join(' ')
-    ).then(() => {
+    return this.importCertificate(installer
+    ).catch((error) => {
+      Logger.info(this.keyName + ' - Skipping certificate import due to error');
+      Logger.error(this.keyName + ' - ' + error);
+    }).then(() => {
+      return installer.exec([`"${this.downloadedFile}"`, '--extract', '-path', `"${this.installerDataSvc.virtualBoxDir()}"`, '--silent'].join(' '))
+    }).then(() => {
       return this.configure(installer);
     }).then(() => {
       Platform.addToUserPath([this.option['install'].location]);
@@ -134,6 +138,23 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     return new Promise((resolve, reject) => {
       return this.installMsi(installer, resolve, reject);
     });
+  }
+
+  createImportCommand() {
+    let commands = [
+      '$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2',
+      `$cert.Import((((Get-AuthenticodeSignature \"${this.downloadedFile}\").SignerCertificate).Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert)))`,
+      '$store = Get-Item \"Cert:\\LocalMachine\\TrustedPublisher\"',
+      '$store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]\'ReadWrite\')',
+      '$store.Add($cert)',
+      '$store.Close()',
+      '[Environment]::Exit(0);'
+    ];
+    return `powershell -ExecutionPolicy Bypass -command ${commands.join(';')}`;
+  }
+
+  importCertificate(installer) {
+    return installer.exec(this.createImportCommand());
   }
 
   installMsi(installer, resolve, reject) {
