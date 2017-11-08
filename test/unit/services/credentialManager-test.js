@@ -20,7 +20,8 @@ describe('Platform', function() {
     mockfs({
       'appdatapath': {
         'settings.json': '{"username":"abc@redhat.com"}'
-      },
+      }
+    }, {
       createCwd: false,
       createTmp: false
     });
