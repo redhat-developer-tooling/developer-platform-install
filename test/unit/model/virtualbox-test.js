@@ -162,6 +162,17 @@ describe('Virtualbox installer', function() {
         installer.ipcRenderer = {on: function() {}};
       });
 
+      it('should import the certificate from the executable', function() {
+        sandbox.stub(child_process, 'execFile').yields('done');
+
+        let spy = sandbox.spy(Installer.prototype, 'exec');
+        return installer.installAfterRequirements(fakeProgress, success, failure)
+        .then(() => {
+          expect(spy).to.have.been.called;
+          expect(spy).calledWith(installer.createImportCommand());
+        });
+      });
+
       it('should execute the silent extract', function() {
         sandbox.stub(child_process, 'execFile').yields('done');
 
@@ -174,13 +185,11 @@ describe('Virtualbox installer', function() {
         ];
 
         let spy = sandbox.spy(Installer.prototype, 'exec');
-        let item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
-        item2.setInstallComplete();
-        item2.thenInstall(installer);
-        installer.install(fakeProgress, success, failure);
-
-        expect(spy).to.have.been.called;
-        expect(spy).calledWith(data.join(' '));
+        return installer.installAfterRequirements(fakeProgress, success, failure)
+        .then(() => {
+          expect(spy).to.have.been.called;
+          expect(spy).calledWith(data.join(' '));
+        });
       });
 
       describe('configure', function() {
