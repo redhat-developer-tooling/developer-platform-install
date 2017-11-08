@@ -65,13 +65,15 @@ describe('Hash', function() {
       sandbox.restore();
       let digest = crypto.createHash('sha256').update('string1string2').digest('hex');
       stream = new Readable();
-      sandbox.stub(stream, 'on').yields().returns(stream);
       sandbox.stub(stream, 'read').onFirstCall().returns('string1').onSecondCall().returns('string2').onThirdCall().returns(null);
       sandbox.stub(fs, 'createReadStream').returns(stream);
       hash.SHA256('file', (result) => {
         expect(result).to.be.equal(digest);
         done();
       });
+      stream.emit('readable');
+      stream.emit('readable');
+      stream.emit('close');
     });
   });
 });

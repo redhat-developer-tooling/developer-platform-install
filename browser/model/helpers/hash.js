@@ -6,8 +6,8 @@ class Hash {
     var hash = crypto.createHash('sha256');
     var readStream = fs.createReadStream(filename);
     readStream.on('readable', function () {
-      var chunk;
-      while (null !== (chunk = readStream.read())) {
+      var chunk = readStream.read();
+      if(chunk) {
         hash.update(chunk);
       }
     }).on('close', function () {
