@@ -49,7 +49,10 @@ app.on('quit', function(event, exitCode) {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   globalShortcut.register('CmdOrCtrl+W',()=>{
-    BrowserWindow.getFocusedWindow().close();
+    let focusedWindow = BrowserWindow.getFocusedWindow();
+    if(focusedWindow) {
+      focusedWindow.close();
+    }
   });
   // Create the browser window.
   mainWindow = new BrowserWindow({
