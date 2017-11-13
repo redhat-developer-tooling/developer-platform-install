@@ -8,8 +8,8 @@
         <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
         <span id="instructions">{{selectCtrl.installInstructions}}</span>
       </strong>
-      <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()">Clear all</span>
-      <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()">Select all</span>
+      <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
+      <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
     </div>
     <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
       <div ng-repeat="item in checkboxModel">

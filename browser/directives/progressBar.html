@@ -10,7 +10,7 @@
       ng-class="{'progress-bar-danger': progress.status.indexOf('Failed') > -1}"
       role="progressbar" aria-valuenow="{{progress.current}}" aria-valuemin="{{progress.min}}" aria-valuemax="{{progress.max}}"
       style="width: {{progress.current}}%; animation: progress-bar-stripes 2s infinite steps(15);">
-      <span>{{progress.label}}</span>
+      <span ng-hide="progress.status.indexOf('Failed') > -1">{{progress.label}}</span>
     </div>
   </div>
   <div class="progress-description">
