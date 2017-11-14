@@ -33,20 +33,6 @@ function checkRequirements() {
   fileNames['kompose'] = 'kompose';
   fileNames['fuseplatformkaraf'] = 'karaf';
 
-  //to check if the files are rougly the size they should be
-  minSizes['cdk'] = 50 * 1024;
-  minSizes['minishift-rhel'] = 300 * 1024 * 1024;
-  minSizes['oc.zip'] = 10 * 1024 * 1024;
-  minSizes['cygwin'] = 500 * 1024;
-  minSizes['devstudio'] = 400 * 1024 * 1024;
-  minSizes['jbosseap'] = 174 * 1024 * 1024;
-  minSizes['jdk'] = 50 * 1024 *1024;
-  minSizes['virtualbox'] = 85 * 1024 * 1024;
-  minSizes['7zip'] = 200 * 1024;
-  minSizes['7zip-extra'] = 400 * 1024;
-  minSizes['kompose'] = 400 * 1024;
-  minSizes['fuseplatformkaraf']= 749 *1024;
-
   console.log('-------------------------------');
   console.log('Checking download URLs');
   for (var key in data) {
@@ -69,16 +55,17 @@ function checkUrl(key) {
         req.abort();
         throw new Error(key + ' url returned code ' + response.statusCode);
       }
-      console.log(key + ' - url: ' + data[key]);
+      console.log(key + ' - url: ' + reqs[key].url);
       console.log(key + ' - size: ' + size + 'B');
-      console.log();
 
-      if (size < minSizes[key]) {
+      if (reqs[key].size!=size) {
         req.abort();
-        throw new Error(key + ' is unexpectedly small with just ' + size + ' bytes in size');
+        throw new Error(`${key} size ${size} does not match with size ${reqs[key].size} declared in requirements.json`);
       } else {
+        console.log(key + ' - size: ' + reqs[key].size + 'B in requirements.json');
         req.abort();
       }
+      console.log();
     })
     .on('end', function() {
       if (--count === 0) {
