@@ -15,7 +15,6 @@ describe('Logger', function() {
     ipcRenderer = {
       send: function() {}
     };
-    expect(Logger.getIpcRenderer()).to.equal(Electron.ipcRenderer);
     getIpcRendererStub = sinon.stub(Logger, 'getIpcRenderer').returns(ipcRenderer);
   });
 

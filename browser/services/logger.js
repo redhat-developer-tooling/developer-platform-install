@@ -23,7 +23,7 @@ class Logger {
   }
 
   static getIpcRenderer() {
-    return ipcRenderer;
+    return ipcRenderer? ipcRenderer : { send: function(){} };
   }
 }
 
