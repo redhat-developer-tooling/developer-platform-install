@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 
 class Hash {
   SHA256(filename, done) {
-    return new Promise(function (res,rej) {
+    return new Promise(function (res, rej) {
       var hash = crypto.createHash('sha256');
       var readStream = fs.createReadStream(filename);
       readStream.on('readable', function () {
@@ -20,7 +20,7 @@ class Hash {
         rej(err);
       });
     });
-  };
+  }
 }
 
 export default Hash;
