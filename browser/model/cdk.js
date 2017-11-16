@@ -51,7 +51,7 @@ class CDKInstall extends InstallableItem {
       }
     }).then(()=> {
       return installer.exec(
-        `minishift stop`, {env: this.createEnvironment()}
+        'minishift stop', {env: this.createEnvironment()}
       ).catch(()=>Promise.resolve());
     }).then(()=> {
       return installer.exec(`minishift setup-cdk --force --default-vm-driver=${driverName}`, {env:this.createEnvironment()});
