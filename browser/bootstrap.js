@@ -64,7 +64,7 @@ function openAboutWindow() {
   const issues = new TouchBarButton({
     label: 'Report Issues',
     click: () => {
-      require('electron').shell.openExternal(`https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue`);
+      require('electron').shell.openExternal('https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue');
     }
   });
 
@@ -126,7 +126,7 @@ const exitTouch = new TouchBarButton({
 
 const versionLabel  = new TouchBarLabel({
   label: `Version: ${version}`
-})
+});
 
 remote.getCurrentWindow().setTouchBar(new TouchBar([exitTouch, new TouchBarSpacer({size: 'large'}), helpTouch, aboutTouch, new TouchBarSpacer({size: 'small'}), versionLabel]));
 
