@@ -1,6 +1,6 @@
 'use strict';
 
-let comm = require('./common.js'),
+let comm = require('./common'),
   progress = require('request-progress'),
   path = require('path'),
   request = require('request'),

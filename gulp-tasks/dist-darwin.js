@@ -1,13 +1,13 @@
 'use strict';
 
-const download = require('./download.js');
+const download = require('./download');
 const loadMetadata = require('../browser/services/metadata');
 const config = require('./config.js');
 const rename = require('gulp-rename');
 const runSequence = require('run-sequence');
-const pjson = require('../package.json');
+const pjson = require('../package');
 const fs = require('fs-extra');
-const common = require('./common.js');
+const common = require('./common');
 const del = require('del');
 
 let productName = pjson.productName;
