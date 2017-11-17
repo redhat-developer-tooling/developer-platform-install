@@ -320,12 +320,11 @@ describe('JDK installer', function() {
     });
 
     it('should write the data into temp/jdk.msi', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'jdk.msi'));
+      expect(downloadStub).to.have.been.calledOnce;
+      expect(downloadStub).to.have.been.calledWith(downloadUrl, 'user', 'passwd', path.join(installerDataSvc.localAppData(), 'cache', 'jdk.msi'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {

@@ -133,14 +133,10 @@ describe('fuseplatform installer', function() {
     });
 
     it('should write the data into temp/fuseplatform.jar', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
-
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(streamSpy).to.have.been.calledTwice;
-      expect(spy).to.have.been.calledTwice;
-      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', files.platform.fileName));
+      expect(downloadAuthStub).to.have.been.calledTwice;
+      expect(downloadAuthStub).to.have.been.calledWith(files.platform.dmUrl, 'user', 'passwd', path.join(installerDataSvc.localAppData(), 'cache', files.platform.fileName));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {

@@ -79,7 +79,6 @@ describe('Downloader', function() {
     let streamSpy = sandbox.spy(stream, 'close');
 
     downloader = new Downloader(fakeProgress, function() {}, errorSpy);
-    downloader.setWriteStream(stream);
     downloader.errorHandler(stream, 'some error');
 
     expect(streamSpy).to.be.calledOnce;
@@ -90,7 +89,6 @@ describe('Downloader', function() {
   it('endHandler should end the stream', function() {
     let stream = { end: function() {} };
     let streamSpy = sandbox.spy(stream, 'end');
-    downloader.setWriteStream(stream);
     downloader.endHandler(stream);
 
     expect(streamSpy).to.be.calledOnce;
@@ -167,8 +165,7 @@ describe('Downloader', function() {
         });
         return response;
       });
-      downloader.setWriteStream(new PassThrough());
-      downloader.download(options3).then(()=> {
+      downloader.download(options3, 'jdk.zip').then(()=> {
         expect(requestGetSpy).to.be.calledOnce;
         expect(requestGetSpy).to.be.calledWith(options3);
       });
@@ -183,8 +180,7 @@ describe('Downloader', function() {
         });
         return response;
       });
-      downloader.setWriteStream(new PassThrough());
-      downloader.download(options).then(()=> {
+      downloader.download(options, 'jdk.zip').then(()=> {
         expect(requestGetSpy).to.be.calledOnce;
         expect(requestGetSpy.args[0][0].hasOwnProperty('url')).to.be.true;
         expect(requestGetSpy.args[0][0].url).to.be.equal(options);
@@ -200,8 +196,7 @@ describe('Downloader', function() {
         });
         return response;
       });
-      downloader.setWriteStream(new PassThrough());
-      let d = downloader.download(options);
+      let d = downloader.download(options, 'jdk.zip');
       d.then(()=> {
         expect(requestGetSpy).to.be.calledOnce;
         expect(requestGetSpy.args[0][0].hasOwnProperty('headers')).to.be.true;
@@ -221,11 +216,11 @@ describe('Downloader', function() {
       });
 
       let stream = new PassThrough();
-      downloader.setWriteStream(stream);
+      sandbox.stub(fs, 'createWriteStream').returns(stream);
       let endHandler = sandbox.stub(downloader, 'endHandler');
-      let d = downloader.download(options);
+      let d = downloader.download(options, 'jdk.zip');
 
-      d.then(()=> {
+      return d.then(()=> {
         expect(endHandler).to.be.calledOnce;
         expect(endHandler).to.be.calledWith(stream);
       });
@@ -243,18 +238,16 @@ describe('Downloader', function() {
         return response;
       });
 
-      let stream = new Writable();
-      downloader.setWriteStream(stream);
       let errorHandler = sandbox.stub(downloader, 'errorHandler');
       let successHandler = sandbox.stub(downloader, 'successHandler');
-      let p = downloader.download(options);
-
-      //response.emit('error', error);
+      let p = downloader.download(options, 'jdk.zip');
 
       return p.then(()=>{
         expect(errorHandler).to.be.calledOnce;
-        expect(errorHandler).to.be.calledWith(stream, error);
         expect(successHandler).to.have.not.been.called;
+      }).catch((err)=>{
+        expect.fail();
+        return Promise.rejects();
       });
     });
 
@@ -264,7 +257,6 @@ describe('Downloader', function() {
 
       let stream = new Writable();
       stream.close = function() {};
-      downloader.setWriteStream(stream);
       sandbox.spy(downloader, 'success');
 
       stream['path'] = 'file1';
@@ -284,14 +276,13 @@ describe('Downloader', function() {
       stream1.path = 'file1';
       stream1.close = function() {};
       downloader = new Downloader(fakeProgress, function() {}, function() {}, 2);
-      downloader.setWriteStream(stream1);
       let successHandler = sandbox.stub(downloader, 'success');
-      downloader.download(options);
+      downloader.download(options, 'file1');
       downloader.closeHandler('file1');
       let stream2 = new Writable();
       stream2.path = 'file1';
       stream2.close = function() {};
-      downloader.download(options2);
+      downloader.download(options2, 'file2');
       downloader.closeHandler('file2');
 
       expect(successHandler).to.be.calledOnce;
@@ -330,7 +321,6 @@ describe('Downloader', function() {
       stream.close = function() {};
       stream.path = 'key';
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      downloader.setWriteStream(stream);
       let successHandler = sandbox.stub(downloader, 'successHandler');
       let p = downloader.downloadAuth(options, 'username', 'password', 'key', 'sha');
 
@@ -362,7 +352,6 @@ describe('Downloader', function() {
       stream.close = function() {};
       stream.path = 'key';
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      downloader.setWriteStream(stream);
       let successHandler = sandbox.stub(downloader, 'successHandler');
       let p = downloader.download(options, 'username', 'password', 'key', 'sha');
 
@@ -381,8 +370,7 @@ describe('Downloader', function() {
       let stream = new Writable();
       stream.close = function() {};
       stream.path = 'key';
-      downloader.setWriteStream(stream);
-      downloader.download(options);
+      downloader.download(options, 'file2');
       response.emit('end');
       response.emit('close');
       stream.close = function() {};

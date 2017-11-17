@@ -180,8 +180,7 @@ class InstallableItem {
 
   startDownload(downloadedFile, url, sha, user, pass, progress) {
     progress.setStatus('Downloading');
-    let ws = fs.createWriteStream(downloadedFile);
-    this.downloader.setWriteStream(ws);
+    console.log('bbbbbbb');
     if(user === undefined && pass === undefined ) {
       this.downloader.download(url, downloadedFile, sha, this);
     } else {

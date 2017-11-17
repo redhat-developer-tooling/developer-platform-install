@@ -26,10 +26,9 @@ describe('Virtualbox installer', function() {
   let installerDataSvc, installer;
   let infoStub, errorStub, sandbox, sha256Stub;
 
-  let downloadUrl = 'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe';
   let version = '5.1.24';
   let revision = '117012';
-  let finalUrl = 'http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1.24-117012-Win.exe';
+  let downloadUrl = `http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe`;
   let item2;
 
   installerDataSvc = sinon.stub(new InstallerDataService());
@@ -109,19 +108,18 @@ describe('Virtualbox installer', function() {
     });
 
     it('should write the data into temp/virtualbox.exe', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
+      expect(downloadStub).to.have.been.calledOnce;
+      expect(downloadStub).to.have.been.calledWith(downloadUrl, path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe'));
     });
 
     it('should call downloader#download with the specified parameters once', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(downloadStub).to.have.been.calledOnce;
-      expect(downloadStub).to.have.been.calledWith(finalUrl);
+      expect(downloadStub).to.have.been.calledWith(downloadUrl);
     });
 
     it('should skip download when the file is found in the download folder', function() {

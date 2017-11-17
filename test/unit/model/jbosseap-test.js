@@ -144,14 +144,11 @@ describe('jbosseap installer', function() {
     });
 
     it('should write the data into temp/jbosseap.jar', function() {
-      let spy = sandbox.spy(fs, 'createWriteStream');
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
 
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      expect(streamSpy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(path.join(installerDataSvc.localAppData(), 'cache', 'jbosseap.jar'));
+      expect(downloadAuthStub).to.have.been.calledOnce;
+      expect(downloadAuthStub).to.have.been.calledWith(downloadUrl, 'user', 'passwd', path.join(installerDataSvc.localAppData(), 'cache', 'jbosseap.jar'));
     });
 
     it('should call a correct downloader request with the specified parameters once', function() {

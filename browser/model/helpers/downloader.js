@@ -25,10 +25,6 @@ class Downloader {
     this.root = Promise.resolve();
   }
 
-  setWriteStream(stream) {
-    this.writeStream = stream;
-  }
-
   errorHandler(stream, err) {
     stream.close();
     this.failure(err);
@@ -100,7 +96,7 @@ class Downloader {
   }
 
   download(options, file, sha, installer) {
-    let stream = this.writeStream;
+    let stream = fs.createWriteStream(file);
     this.downloads.set(stream.path, {installer, options, sha, 'failure': false, currentSize : 0});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
@@ -119,7 +115,7 @@ class Downloader {
   }
 
   downloadAuth(options, username, password, file, sha, installer) {
-    let stream = this.writeStream;
+    let stream = fs.createWriteStream(file);
     this.downloads.set(stream.path, {installer, options, username, password, sha, 'failure': false, currentSize : 0});
     this.root = this.root.then(() => {
       return new Promise((resolve)=>{
@@ -142,7 +138,6 @@ class Downloader {
     this.progress.setStatus('Downloading');
     for (var [key, value] of this.downloads.entries()) {
       if (value['failure'] && value.failure) {
-        this.writeStream = fs.createWriteStream(key);
         if(value.hasOwnProperty('username')) {
           this.downloadAuth(value.options, value.username, value.password, key, value.sha, value.installer);
         } else {
