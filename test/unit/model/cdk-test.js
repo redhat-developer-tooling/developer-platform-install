@@ -161,15 +161,11 @@ describe('CDK installer', function() {
     });
 
     it('should write the data into temp folder', function() {
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
-      let fsSpy = sandbox.spy(fs, 'createWriteStream');
 
       installer.downloadInstaller(fakeProgress, success, failure);
 
-      //expect 3 streams to be set and created
-      expect(streamSpy.callCount).to.equal(1);
-      expect(fsSpy.callCount).to.equal(1);
-      expect(fsSpy).calledWith(installer.downloadedFile);
+      expect(authStub.callCount).to.equal(1);
+      expect(authStub).calledWith('https://doenload.cdk/url', 'user' , 'password' , installer.downloadedFile);
     });
 
     it('should call a correct downloader request for cdk file', function() {

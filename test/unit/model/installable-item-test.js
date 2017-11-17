@@ -207,27 +207,22 @@ describe('InstallableItem', function() {
     });
 
     it('should start download w/o auth if no username and password provided', function() {
-      let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
-        downloadStub = sinon.mock(installItem.downloader).expects('download').once().withArgs('url', 'downloadto.zip', 'sha');
+      let downloadStub = sinon.mock(installItem.downloader).expects('download').once().withArgs('url', 'downloadto.zip', 'sha');
 
       installItem.startDownload('downloadto.zip', 'url', 'sha', undefined, undefined, fakeProgress);
 
-      setWriteStreamStub.verify();
       downloadStub.verify();
     });
 
     it('should start download w/ auth if username and password provided', function() {
-      let setWriteStreamStub = sinon.mock(installItem.downloader).expects('setWriteStream').once(),
-        downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
+      let downloadStub = sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
 
       installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
 
-      setWriteStreamStub.verify();
       downloadStub.verify();
     });
 
     it('should set the progress state to "Downloading"', function() {
-      sinon.mock(installItem.downloader).expects('setWriteStream').once(),
       sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
       installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
 

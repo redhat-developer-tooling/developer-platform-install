@@ -101,12 +101,9 @@ describe('kompose installer', function() {
     });
 
     it('should write the data into temp folder', function() {
-      let streamSpy = sandbox.spy(Downloader.prototype, 'setWriteStream');
-      let fsSpy = sandbox.spy(fs, 'createWriteStream');
       installer.downloadInstaller(fakeProgress, success, failure);
-      expect(streamSpy.callCount).to.equal(1);
-      expect(fsSpy.callCount).to.equal(1);
-      expect(fsSpy).calledWith(installer.downloadedFile);
+      expect(authStub.callCount).to.equal(1);
+      expect(authStub).calledWith(installer.downloadUrl, installer.downloadedFile);
     });
 
     it('should skip download when the files are located in downloads folder', function() {
