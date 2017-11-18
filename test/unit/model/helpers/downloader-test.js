@@ -206,16 +206,18 @@ describe('Downloader', function() {
 
     it('should call endHandler when end event is emitted', function() {
       let response = new Readable();
+      let stream = new PassThrough();
       response._read = function() {};
       sandbox.stub(request, 'get').callsFake(function() {
         // deffer error emmition
         Promise.resolve().then(function() {
           response.emit('end');
+          stream.emit('close');
         });
         return response;
       });
 
-      let stream = new PassThrough();
+
       sandbox.stub(fs, 'createWriteStream').returns(stream);
       let endHandler = sandbox.stub(downloader, 'endHandler');
       let d = downloader.download(options, 'jdk.zip');
