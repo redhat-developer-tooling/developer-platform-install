@@ -48,9 +48,20 @@ app.on('quit', function(event, exitCode) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-  globalShortcut.register('CmdOrCtrl+W',()=>{
-    BrowserWindow.getFocusedWindow().close();
+
+  app.on('browser-window-focus', () => {
+    globalShortcut.register('CmdOrCtrl+W',()=>{
+      let focusedWindow = BrowserWindow.getFocusedWindow();
+      if(focusedWindow) {
+        focusedWindow.close();
+      }
+    });
   });
+
+  app.on('browser-window-blur', () => {
+   globalShortcut.unregisterAll();
+  });
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     useContentSize: true,
