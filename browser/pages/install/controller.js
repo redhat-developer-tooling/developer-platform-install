@@ -80,10 +80,8 @@ class InstallController {
     );
   }
 
-  platformDetect() {
-    if(Platform.OS == 'darwin') {
-      return true;
-    }
+  isDarwinPlatform() {
+    return Platform.OS == 'darwin';
   }
 
   downloadAgain() {
