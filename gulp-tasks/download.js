@@ -14,8 +14,7 @@ function downloadFile(fromUrl, toFile, onFinish) {
     throttle: 5000,
     delay: 0,
     lengthHeader: 'content-length'
-  })
-  .on('progress', (state) => {
+  }).on('progress', (state) => {
     if (previous == -1) {
       console.log('[INFO] \'' + toFile + '\' download started from \'' + fromUrl + '\'');
       console.log('0%');
@@ -26,18 +25,15 @@ function downloadFile(fromUrl, toFile, onFinish) {
       console.log(current + '%');
     }
     previous = current;
-  })
-  .on('error', (error)=>{
+  }).on('error', (error)=>{
     onFinish(error);
-  })
-  .on('end', ()=>{
+  }).on('end', ()=>{
     if (previous == -1) {
       console.log('[INFO] \'' + toFile + '\' download started from \'' + fromUrl + '\'');
       console.log('0%');
     }
     console.log('100%');
-  })
-  .pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
+  }).pipe(fs.createWriteStream(toFile)).on('finish', onFinish);
 }
 
 
