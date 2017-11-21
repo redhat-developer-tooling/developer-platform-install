@@ -1,8 +1,9 @@
 'use strict';
 
 let path = require('path'),
-  crypto = require('crypto'),
   fs = require('fs-extra');
+
+import Hash from '../browser/model/helpers/hash';
 
 // Create default callback for exec
 function createExecCallback(cb, quiet) {
@@ -17,18 +18,7 @@ function createExecCallback(cb, quiet) {
 
 // for a given filename, return the sha256sum
 function getSHA256(filename, cb) {
-  var hashstring = 'NONE';
-  var hash = crypto.createHash('sha256');
-  var readStream = fs.createReadStream(filename);
-  readStream.on('readable', function () {
-    var chunk;
-    while (null !== (chunk = readStream.read())) {
-      hash.update(chunk);
-    }
-  }).on('end', function () {
-    hashstring = hash.digest('hex');
-    cb(hashstring);
-  });
+  new Hash().SHA256(filename, cb);
 }
 
 // writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
