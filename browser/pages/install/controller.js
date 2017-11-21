@@ -7,7 +7,7 @@ import Downloader from '../../model/helpers/downloader';
 import Platform from '../../services/platform';
 
 class InstallController {
-  constructor($scope, $timeout, installerDataSvc, electron) {
+  constructor($scope, $timeout, installerDataSvc, electron, $window) {
     this.$scope = $scope;
     this.$timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
@@ -42,7 +42,7 @@ class InstallController {
         this.failedDownloads.add(this.downloader);
       },
       this.totalDownloads,
-      this.electron.remote.getCurrentWindow().webContents.session.getUserAgent()
+      $window.navigator.userAgent
     );
     this.itemProgress.setTotalAmount(this.totalAmount);
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
@@ -231,7 +231,7 @@ class ProgressState {
   }
 }
 
-InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc', 'electron'];
+InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc', 'electron', '$window'];
 
 export default InstallController;
 export { ProgressState };

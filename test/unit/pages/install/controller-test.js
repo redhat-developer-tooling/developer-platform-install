@@ -10,7 +10,7 @@ import VirtualBoxInstall from 'browser/model/virtualbox';
 import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
 import ElectronMock from '../../../mock/electron';
-
+import { JSDOM } from 'jsdom';
 import fs from 'fs';
 chai.use(sinonChai);
 
@@ -20,6 +20,7 @@ describe('Install controller', function() {
   let vbox;
   let logStub, fsStub, infoStub, errorStub;
   let timeoutStub = sinon.stub();
+  let window = new JSDOM('<html>').window;
 
   before(function() {
     logStub = sinon.stub(Logger, 'initialize');
@@ -53,7 +54,7 @@ describe('Install controller', function() {
   describe('constrution', function() {
     it('should process all installables', function() {
       let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      new InstallController({}, {}, installerDataSvc, new ElectronMock());
+      new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(stub).calledOnce;
       expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
@@ -63,7 +64,7 @@ describe('Install controller', function() {
       let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
       sandbox.stub(InstallController.prototype, 'processInstallable').returns();
       sandbox.stub(vbox, 'isSkipped').returns(true);
-      new InstallController({}, {}, installerDataSvc, new ElectronMock());
+      new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
       expect(stub).calledOnce;
     });
   });
@@ -87,14 +88,14 @@ describe('Install controller', function() {
     });
 
     it('should trigger download on not downloaded installables', function() {
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
 
       expect(dlStub).calledOnce;
       expect(dlStub).calledWith('virtualbox', vbox);
     });
 
     it('should not trigger download on already downloaded items', function() {
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
 
     });
   });
@@ -109,7 +110,7 @@ describe('Install controller', function() {
 
     it('data service should register the new downloads', function() {
       let spy = sandbox.spy(installerDataSvc, 'startDownload');
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
 
       expect(spy).calledOnce;
       expect(spy).calledWith('virtualbox');
@@ -121,7 +122,7 @@ describe('Install controller', function() {
     it('should call the installables downloadInstaller method', function() {
       sandbox.stub(installerDataSvc, 'startDownload').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
       expect(vboxStub).calledOnce;
     });
   });
