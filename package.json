@@ -41,7 +41,7 @@
     "globby": "6.1.0",
     "humanize": "0.0.9",
     "humanize-duration": "3.12.0",
-    "keytar": "^4.0.4",
+    "keytar": "4.0.5",
     "localStorage": "^1.0.3",
     "mkdirp": "0.5.1",
     "ng-focus-if": "1.0.7",
