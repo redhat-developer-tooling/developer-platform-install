@@ -42,6 +42,7 @@ class InstallableItem {
     this.downloadUrl = downloadUrl;
 
     this.bundleFolder = remote && remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
+    this.userAgentString = remote && remote.getCurrentWindow().webContents.session.getUserAgent();
     this.bundledFile = path.join(this.bundleFolder, fileName);
 
     this.isCollapsed = true;
@@ -141,7 +142,7 @@ class InstallableItem {
   }
 
   downloadInstaller(progress, success, failure, downloader) {
-    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads);
+    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads, this.userAgentString);
     if(fs.existsSync(this.bundledFile)) {
       this.downloadedFile = this.bundledFile;
       this.downloader.closeHandler();
