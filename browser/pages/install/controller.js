@@ -41,7 +41,8 @@ class InstallController {
         this.itemProgress.setStatus('Download Failed');
         this.failedDownloads.add(this.downloader);
       },
-      this.totalDownloads
+      this.totalDownloads,
+      this.electron.remote.getCurrentWindow().webContents.session.getUserAgent()
     );
     this.itemProgress.setTotalAmount(this.totalAmount);
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {

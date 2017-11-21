@@ -28,7 +28,7 @@ class FusePlatformInstall extends InstallableItem {
   }
 
   downloadInstaller(progress, success, failure, downloader) {
-    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads);
+    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads, this.userAgentString);
     let username = this.installerDataSvc.getUsername(),
       password = this.installerDataSvc.getPassword();
 

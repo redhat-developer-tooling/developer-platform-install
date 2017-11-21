@@ -6,10 +6,9 @@ let fs = require('fs-extra');
 import Hash from './hash';
 import Logger from '../../services/logger';
 import Util from './util';
-const remote = require('electron').remote;
 
 class Downloader {
-  constructor(progress, success, failure, totalDownloads = 1) {
+  constructor(progress, success, failure, totalDownloads = 1, userAgentString) {
     this.totalDownloads = totalDownloads;
     this.currentSize = 0;
     this.progress = progress;
@@ -19,9 +18,7 @@ class Downloader {
     this.userAgentString = '';
     this.downloaded = 0;
     this.lastTime = 0;
-    if(remote) {
-      this.userAgentString = remote.getCurrentWindow().webContents.session.getUserAgent();
-    }
+    this.userAgentString = userAgentString;
     this.root = Promise.resolve();
   }
 
