@@ -50,7 +50,7 @@ app.on('quit', function(event, exitCode) {
 app.on('ready', function() {
 
   app.on('browser-window-focus', () => {
-    globalShortcut.register('CmdOrCtrl+W',()=>{
+    globalShortcut.register('CmdOrCtrl+W', ()=>{
       let focusedWindow = BrowserWindow.getFocusedWindow();
       if(focusedWindow) {
         focusedWindow.close();
@@ -59,7 +59,7 @@ app.on('ready', function() {
   });
 
   app.on('browser-window-blur', () => {
-   globalShortcut.unregisterAll();
+    globalShortcut.unregisterAll();
   });
 
   // Create the browser window.

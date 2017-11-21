@@ -194,7 +194,6 @@ class InstallableItem {
       progress.$timeout();
       this.installAfterRequirements(progress, success, failure);
     } else {
-      let name = this.getInstallAfter().productName;
       this.ipcRenderer.on('installComplete', (event, arg) => {
         if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
           progress.productName = this.productName;

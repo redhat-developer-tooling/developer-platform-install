@@ -148,7 +148,7 @@ describe('SelectionController', function() {
       return selectionController.initPage().then(function() {
         expect(selectionController.sc.checkboxModel.jdk.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && (el[0] == 'checkboxModel.jbosseap.selectedOption'
             || el[0] == 'checkboxModel.devstudio.selectedOption'
             || el[0] == 'checkboxModel.fusetools.selectedOption')) {
@@ -159,7 +159,7 @@ describe('SelectionController', function() {
         selectionController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
         selectionController.sc.checkboxModel.fusetools.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && (el[0] == 'checkboxModel.jbosseap.selectedOption'
             || el[0] == 'checkboxModel.devstudio.selectedOption'
             || el[0] == 'checkboxModel.fusetools.selectedOption')) {
@@ -177,7 +177,7 @@ describe('SelectionController', function() {
         expect(selectionController.sc.checkboxModel.jbosseap.selectedOption).equals('detected');
         selectionController.sc.checkboxModel.jbosseap.selectedOption = 'install';
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
               || el[0] == 'checkboxModel.devstudio.selectedOption')) {
             el[1]('install', 'install'); // the same does angular avter initialization
@@ -186,7 +186,7 @@ describe('SelectionController', function() {
         selectionController.sc.checkboxModel.devstudio.selectedOption = 'detected';
         selectionController.sc.checkboxModel.jbosseap.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && ( el[0] == 'checkboxModel.jbosseap.selectedOption'
               || el[0] == 'checkboxModel.devstudio.selectedOption')) {
             el[1]('detected', 'install');
@@ -196,7 +196,7 @@ describe('SelectionController', function() {
 
         selectionController.sc.checkboxModel.devstudio.selectedOption = 'install';
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && el[0] == 'checkboxModel.devstudio.selectedOption') {
             el[1]('install', 'detected');
           }
@@ -210,14 +210,14 @@ describe('SelectionController', function() {
         expect(selectionController.sc.checkboxModel.cygwin.selectedOption).equals('install');
         expect(selectionController.sc.checkboxModel.virtualbox.selectedOption).equals('install');
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
             el[1]('install', 'detected');
           }
         });
         selectionController.sc.checkboxModel.cdk.selectedOption = 'detected';
         $watch.args.forEach(function(el) {
-          if(el[1].name == 'watchComponent'
+          if(el[1].name == 'bound watchComponent'
             && el[0] == 'checkboxModel.cdk.selectedOption') {
             el[1]('detected', 'install');
           }
@@ -341,5 +341,5 @@ describe('SelectionController', function() {
       selectionController.next();
       expect(selectionController.router.go).calledWith('confirm');
     });
-  })
+  });
 });

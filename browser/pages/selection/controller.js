@@ -66,6 +66,7 @@ class SelectionController {
     }).then(
       ()=> this.setIsDisabled()
     ).catch((error)=> {
+      console.error(error);
       this.setIsDisabled();
     });
   }
@@ -91,27 +92,30 @@ class SelectionController {
       checkboxModel[node].references=0;
     }
     for (let node of nodes) {
-      function watchComponent(newv, oldv) {
-        let installer = checkboxModel[node];
-        if(installer.isSelected()) {
-          for(let dep of graph.dependenciesOf(node)) {
-            let depInstaller = checkboxModel[dep];
-            if(depInstaller.isInstallable && depInstaller.references === 0 && depInstaller.isNotDetected()) {
-              depInstaller.selectedOption = 'install';
-            }
-            depInstaller.references++;
-          }
-        } else if(!installer.isSelected() && oldv === 'install') {
-          for(let dep of graph.dependenciesOf(node)) {
-            let depInstaller = checkboxModel[dep];
-            depInstaller.references--;
-            if(depInstaller.references === 0) {
-              depInstaller.selectedOption = 'detected';
-            }
-          }
+      this.sc.$watch(`checkboxModel.${node}.selectedOption`, this.watchComponent.bind(this, node));
+    }
+  }
+
+  watchComponent(node, newv, oldv) {
+    let graph = this.graph;
+    let checkboxModel = this.sc.checkboxModel;
+    let installer = checkboxModel[node];
+    if(installer.isSelected()) {
+      for(let dep of graph.dependenciesOf(node)) {
+        let depInstaller = checkboxModel[dep];
+        if(depInstaller.isInstallable && depInstaller.references === 0 && depInstaller.isNotDetected()) {
+          depInstaller.selectedOption = 'install';
+        }
+        depInstaller.references++;
+      }
+    } else if(!installer.isSelected() && oldv === 'install') {
+      for(let dep of graph.dependenciesOf(node)) {
+        let depInstaller = checkboxModel[dep];
+        depInstaller.references--;
+        if(depInstaller.references === 0) {
+          depInstaller.selectedOption = 'detected';
         }
       }
-      this.sc.$watch(`checkboxModel.${node}.selectedOption`, watchComponent);
     }
   }
 

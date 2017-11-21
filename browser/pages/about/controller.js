@@ -25,7 +25,7 @@ class AboutController {
   }
 
   report() {
-    this.electron.shell.openExternal(`https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue`);
+    this.electron.shell.openExternal('https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue');
   }
 
 }
