@@ -1,7 +1,6 @@
 'use strict';
 
 import Logger from '../../services/logger';
-import Platform from '../../services/platform';
 
 class ConfirmController {
 
