@@ -8,7 +8,7 @@ import Logger from '../../services/logger';
 import Util from './util';
 
 class Downloader {
-  constructor(progress, success, failure, totalDownloads = 1, userAgentString) {
+  constructor(progress, success, failure, totalDownloads = 1, userAgentString = 'unknown') {
     this.totalDownloads = totalDownloads;
     this.currentSize = 0;
     this.progress = progress;
