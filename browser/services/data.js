@@ -21,7 +21,9 @@ class InstallerDataService {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.defaultFolder = 'c:\\Program Files\\DevelopmentSuite';
+      Platform.getProgramFilePath().then((result)=>{
+        this.defaultFolder = path.join(result, 'Red Hat', 'Development Suite');
+      });
     } else {
       this.defaultFolder = '/Applications/DevelopmentSuite';
     }

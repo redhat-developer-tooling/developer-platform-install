@@ -10,12 +10,17 @@ class LocationController {
     this.router = $state;
     this.sc = $scope;
     this.timeout = $timeout;
+    this.sc.abcdef = installerDataSvc.defaultFolder;
     this.installerDataSvc = installerDataSvc;
-    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
     this.electron = electron;
+    // $scope.$watch('$viewContentLoaded', this.folder.bind(this));
+    $scope.$watch('abcdef', ()=>{
+      this.folder = installerDataSvc.installDir();
+      //|| installerDataSvc.defaultFolder;
+     });
   }
 
   confirm() {

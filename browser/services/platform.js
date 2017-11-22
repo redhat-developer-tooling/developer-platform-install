@@ -50,6 +50,16 @@ class Platform {
     });
   }
 
+  static getProgramFilePath() {
+    return Platform.identify({
+      win32: function() {
+        return pify(child_process.exec)('echo %PROGRAMFILES%').then((stdout)=>{
+          return stdout.trim();
+        });
+      }
+    });
+  }
+
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
