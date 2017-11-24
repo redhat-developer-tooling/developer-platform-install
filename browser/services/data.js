@@ -17,16 +17,9 @@ import loadMetadata from '../services/metadata';
 
 
 class InstallerDataService {
+
   constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
     this.tmpDir = os.tmpdir();
-
-    if (Platform.getOS() === 'win32') {
-      Platform.getProgramFilePath().then((result)=>{
-        this.defaultFolder = path.join(result, 'Red Hat', 'Development Suite');
-      });
-    } else {
-      this.defaultFolder = '/Applications/DevelopmentSuite';
-    }
     this.installRoot = this.defaultFolder;
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
@@ -71,6 +64,21 @@ class InstallerDataService {
         }
       }
     }
+  }
+
+  getFolder() {
+    let promise = new Promise((resolve, reject) => {
+      if (Platform.getOS() === 'win32') {
+        Platform.getProgramFilePath().then((result)=>{
+          this.defaultFolder = path.join(result, 'Red Hat', 'Development Suite');
+          resolve(this.defaultFolder);
+        });
+      } else {
+        this.defaultFolder = '/Applications/DevelopmentSuite';
+        resolve(this.defaultFolder);
+      }
+    });
+    return promise;
   }
 
 

@@ -82,7 +82,6 @@ class InstallableItem {
   }
 
   getProductVersion() {
-    debugger;
     if(this.isDetected()) {
       return this.option[this.selectedOption].version;
     }
