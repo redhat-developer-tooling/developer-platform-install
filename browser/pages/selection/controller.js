@@ -66,7 +66,6 @@ class SelectionController {
     }).then(
       ()=> this.setIsDisabled()
     ).catch((error)=> {
-      console.error(error);
       this.setIsDisabled();
     });
   }

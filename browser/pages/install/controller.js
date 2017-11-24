@@ -3,13 +3,13 @@
 import Logger from '../../services/logger';
 import duration from 'humanize-duration';
 import humanize from 'humanize';
-import Downloader from '../../model/helpers/downloader';
 import Platform from '../../services/platform';
 
 class InstallController {
   constructor($scope, $timeout, installerDataSvc, electron, $window) {
     this.$scope = $scope;
     this.$timeout = $timeout;
+    this.$window = $window
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.electron.ipcRenderer.setMaxListeners(0);
@@ -19,66 +19,67 @@ class InstallController {
 
     this.data = {};
     this.totalDownloads = 0;
-    this.installerDataSvc.allInstallables().forEach((value)=>{
-      if(!value.isSkipped()) {
-        if(value.isDownloadRequired()) {
-          this.totalDownloads += value.totalDownloads;
-        }
-        if(!value.downloaded) {
-          this.totalAmount += value.size;
-        }
-      }
-    });
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
     this.data.progress = this.itemProgress;
-    this.downloader = new Downloader(this.itemProgress,
-      ()=> {
-        this.installerDataSvc.downloading = false;
-        this.processInstall();
-      },
-      (error) => {
-        Logger.error('Download filed with: ' + error);
-        this.itemProgress.setStatus('Download Failed');
-        this.failedDownloads.add(this.downloader);
-      },
-      this.totalDownloads,
-      $window.navigator.userAgent
-    );
-    this.itemProgress.setTotalAmount(this.totalAmount);
-    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      if(value.isSkipped()) {
-        this.installerDataSvc.setupDone(this.itemProgress, key);
-      } else {
-        this.processInstallable(key, value);
-      }
-    }
     this.$scope.data = this.data;
 
-    this.electron.ipcRenderer.on('installComplete', (event, key)=>{
+    this.verifyFiles();
+
+    this.electron.ipcRenderer.on('checkComplete', (event, key) => {
+      if(key == 'all') {
+        this.downloadFiles();
+      }
+    });
+
+    this.electron.ipcRenderer.on('downloadingComplete', (event, key) => {
+      if(key == 'all') {
+        this.processInstall();
+      }
+    });
+
+    this.electron.ipcRenderer.on('installComplete', (event, key) => {
       if(key == 'all') {
         this.itemProgress.current = 100;
         this.$timeout();
-        this.$timeout(()=>{
+        this.$timeout(() => {
           this.installerDataSvc.router.go('start');
         }, 700);
       }
     });
   }
 
-  processInstallable(key, value) {
-    if(value.isDownloadRequired()) {
-      this.triggerDownload(key, value);
+  verifyFiles() {
+    let toCheck = [];
+    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
+      let downloaded = false;
+      for (let file in value.files) {
+        downloaded = downloaded || value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
+      }
+      if (!value.isSkipped() && downloaded) {
+        toCheck.push(key);
+      }
     }
+    this.installerDataSvc.verifyExistingFiles(this.itemProgress, ...toCheck);
   }
 
-  triggerDownload(installableKey, installableValue) {
-    this.installerDataSvc.startDownload(installableKey);
-    installableValue.downloadInstaller(
-      this.itemProgress,
-      undefined,
-      undefined,
-      this.downloader
-    );
+  downloadFiles() {
+    let toDownload = [];
+    this.installerDataSvc.allInstallables().forEach((value, key) => {
+      if(!value.isSkipped()) {
+        if(value.isDownloadRequired()) {
+          toDownload.push(key);
+        }
+        for (let file in value.files) {
+          if (!value.files[file].downloaded) {
+            this.totalAmount += value.files[file].size;
+            this.totalDownloads++;
+          }
+        }
+      }
+    });
+
+    this.itemProgress.setTotalAmount(this.totalAmount);
+    this.installerDataSvc.download(this.itemProgress, this.totalDownloads, this.failedDownloads, this.$window.navigator.userAgent, ...toDownload);
   }
 
   isDarwinPlatform() {
@@ -86,9 +87,8 @@ class InstallController {
   }
 
   downloadAgain() {
-    Logger.info('Restarting download');
     this.closeDownloadAgainDialog();
-    this.downloader.restartDownload();
+    this.installerDataSvc.restartDownload();
   }
 
   closeDownloadAgainDialog() {
@@ -96,9 +96,8 @@ class InstallController {
   }
 
   processInstall() {
-
     let totalItems = 0;
-    this.installerDataSvc.allInstallables().forEach((value)=>{
+    this.installerDataSvc.allInstallables().forEach((value) => {
       if(!value.isSkipped()) {
         totalItems++;
       }
@@ -178,6 +177,13 @@ class ProgressState {
     this.durationFormat.units = ['y', 'd', 'h', 'm'];
   }
 
+  resetTime() {
+    this.lastSpeed = 0;
+    this.lastAmount = this.currentAmount;
+    this.lastTime = Date.now();
+    this.averageSpeed = 0;
+  }
+
   setTotalAmount(size) {
     this.totalAmount = size;
   }
@@ -195,9 +201,9 @@ class ProgressState {
       if (this.status === 'Downloading') {
         this.current = Math.round(this.currentAmount / this.totalAmount * 100);
         this.label = this.sizeInKB(this.currentAmount) + ' / ' + this.sizeInKB(this.totalAmount) + ' (' + this.current + '%), ' + this.durationFormat(remaining) + ' left';
-      } else if(this.status === 'Installing') {
+      } else if (this.status === 'Installing' || this.status.indexOf('Verifying') > -1) {
         this.current = Math.round((this.currentAmount-1) / this.totalAmount * 100);
-        this.label = this.currentAmount + ' out of ' + this.totalAmount ;
+        this.label = this.currentAmount + ' out of ' + this.totalAmount;
       }
       this.$timeout();
     }

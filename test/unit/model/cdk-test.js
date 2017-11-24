@@ -154,12 +154,6 @@ describe('CDK installer', function() {
       authStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      installer.downloadInstaller(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp folder', function() {
 
       installer.downloadInstaller(fakeProgress, success, failure);

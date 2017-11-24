@@ -95,60 +95,60 @@ describe('Downloader', function() {
   });
 
   it('closeHandler should verify downloaded files checksum', function() {
-    let stub = sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    let stub = sandbox.stub(Hash.prototype, 'SHA256').resolves('hash');
 
     downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
-    downloader.closeHandler('file', 'hash', 'url');
-
-    expect(stub).to.have.been.calledOnce;
-    expect(stub).to.have.been.calledWith('file');
+    return downloader.closeHandler('file', 'hash').then(() => {
+      expect(stub).to.have.been.calledOnce;
+      expect(stub).to.have.been.calledWith('file');
+    });
   });
 
   it('closeHandler should set progress status to "Verifying Download" during SHA check if download is done', function () {
-    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    sandbox.stub(Hash.prototype, 'SHA256').resolves('hash');
     fakeProgress.current = 100;
 
     downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
-    downloader.closeHandler('file', 'hash', 'url');
-
-    expect(fakeProgress.setStatus).to.have.been.calledOnce;
-    expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying Download');
+    return downloader.closeHandler('file', 'hash').then(() => {
+      expect(fakeProgress.setStatus).to.have.been.calledOnce;
+      expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying Download');
+    });
   });
 
   it('closeHandler should not set progress status to "Verifying Download" during SHA check if download is not done', function () {
-    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
-    fakeProgress.current = 88;
-
+    sandbox.stub(Hash.prototype, 'SHA256').resolves('hash');
     downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
-    downloader.closeHandler('file', 'hash', 'url');
+    downloader.downloads.set('file2', {options: 'options', sha: 'hash', 'failure': false});
 
-    expect(fakeProgress.setStatus).to.have.not.been.called;
+    return downloader.closeHandler('file', 'hash').then(() => {
+      expect(fakeProgress.setStatus).to.have.not.been.called;
+    });
   });
 
   it('closeHandler should call success when verification succeeds', function() {
     downloader = new Downloader(fakeProgress, succ, fail);
-    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    sandbox.stub(Hash.prototype, 'SHA256').resolves('hash');
     let successSpy = sandbox.spy(downloader, 'success');
     let failureSpy = sandbox.spy(downloader, 'failure');
 
     downloader.downloads.set('file', {options: 'options', sha: 'hash', 'failure': false});
-    downloader.closeHandler('file', 'hash');
-
-    expect(successSpy).to.have.been.calledOnce;
-    expect(failureSpy).to.have.not.been.called;
+    downloader.closeHandler('file', 'hash').then(() => {
+      expect(successSpy).to.have.been.calledOnce;
+      expect(failureSpy).to.have.not.been.called;
+    });
   });
 
   it('closeHandler should call failure when verification fails', function() {
     downloader = new Downloader(fakeProgress, succ, fail);
     downloader.downloads.set('file', {options: 'options', sha: 'sha', 'failure': false});
-    sandbox.stub(Hash.prototype, 'SHA256').yields('hash');
+    sandbox.stub(Hash.prototype, 'SHA256').resolves('hash');
     let successSpy = sandbox.spy(downloader, 'success');
     let failureSpy = sandbox.spy(downloader, 'failure');
 
-    downloader.closeHandler('file', 'hash1');
-
-    expect(failureSpy).to.have.been.calledOnce;
-    expect(successSpy).to.have.not.been.called;
+    downloader.closeHandler('file', 'hash1').then(() => {
+      expect(failureSpy).to.have.been.calledOnce;
+      expect(successSpy).to.have.not.been.called;
+    });
   });
 
   describe('download', function() {

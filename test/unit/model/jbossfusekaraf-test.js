@@ -93,6 +93,7 @@ describe('jbossplaformkaraf nstaller', function() {
         );
       });
     });
+    
     it('should remove first level folder when unpack files from zip archive', function() {
       let mockDevSuiteInstaller = createInstallerMock(false);
       let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
@@ -103,6 +104,7 @@ describe('jbossplaformkaraf nstaller', function() {
         );
       });
     });
+
     it('should configure runtime detection after devstudio installation finished', function() {
       let mockDevSuiteInstaller = createInstallerMock(false);
       let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
@@ -117,6 +119,7 @@ describe('jbossplaformkaraf nstaller', function() {
         expect(devstudioInstaller.configureRuntimeDetection).calledOnce;
       });
     });
+
     it('should return rejected promice if exception cought during unpacking', function() {
       let mockDevSuiteInstaller = createInstallerMock(false);
       mkdirp.sync.restore();
@@ -129,6 +132,7 @@ describe('jbossplaformkaraf nstaller', function() {
         expect(error.name).equals('Error');
       });
     });
+
     it('should return rejected promise if unzip-stream emitted error', function() {
       let mockDevSuiteInstaller = createInstallerMock(false);
       let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);

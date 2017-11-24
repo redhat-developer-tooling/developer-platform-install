@@ -46,7 +46,10 @@ describe('InstallerDataService', function() {
 
   let fakeProgress = {
     installTrigger: function() {},
-    setStatus: function() {}
+    setStatus: function() {},
+    setTotalAmount: function() {},
+    setProductName: function() {},
+    setCurrent: function() {}
   };
 
   describe('initial state', function() {
@@ -223,72 +226,101 @@ describe('InstallerDataService', function() {
 
   });
 
-  describe('downloading', function() {
+  describe('verifyExistingFiles', function() {
+    let checkStub;
+
     beforeEach(function() {
       svc.addItemToInstall('jdk', jdk);
       svc.addItemToInstall('vbox', vbox);
 
-      sandbox.stub(jdk, 'downloadInstaller').returns();
-      sandbox.stub(vbox, 'downloadInstaller').returns();
+      checkStub = sandbox.stub(InstallableItem.prototype, 'checkFiles').resolves();
     });
 
-    it('startDownload should queue the installable for download', function() {
-      svc.startDownload('jdk');
-      expect(svc.isDownloading()).to.be.true;
-      expect(svc.toDownload.size).to.equal(1);
-      expect(svc.toDownload.has('jdk')).to.be.true;
+    it('should call checkFiles for each component passed', function() {
+      return svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox').then(() => {
+        expect(checkStub).calledTwice;
+        expect(checkStub).calledOn(jdk);
+        expect(checkStub).calledOn(vbox);
+      });
     });
 
-    it('downloadDone should signal that the download has finished', function() {
-      svc.startDownload('jdk');
-      svc.startDownload('vbox');
-      sandbox.stub(jdk, 'install');
+    it('should set status to "Verifying previously downloaded components"', function() {
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox');
 
-      svc.downloadDone(fakeProgress, 'jdk');
-
-      expect(jdk.isDownloaded()).to.be.true;
-      expect(svc.toDownload.size).to.equal(1);
+      expect(spy).calledWith('Verifying previously downloaded components');
     });
 
-    it('downloadDone should trigger install on the installable', function() {
-      svc.startDownload('jdk');
-      svc.startDownload('vbox');
+    it('should set total amount to number of components passed', function() {
+      let spy = sandbox.spy(fakeProgress, 'setTotalAmount');
+      svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox');
 
-      let spy = sandbox.spy(svc, 'startInstall');
-      let stub = sandbox.stub(jdk, 'install').returns();
-
-      svc.downloadDone(fakeProgress, 'jdk');
-
-      expect(spy).calledWith('jdk');
-      expect(stub).calledOnce;
+      expect(spy).calledWith(2);
     });
 
-    it('downloadDone should call installDone when installation is finished', function() {
-      svc.addItemsToInstall(jdk);
-      sandbox.stub(jdk, 'install').yields();
-      sandbox.stub(svc, 'installDone');
-      svc.downloadDone(undefined, jdk.keyName);
-      expect(svc.installDone).to.be.calledOnce;
+    it('should set product info to currently processed component', function() {
+      let spy = sandbox.spy(fakeProgress, 'setProductName');
+      return svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox').then(() => {
+        expect(spy).calledTwice;
+        expect(spy).calledWith(jdk.productName);
+        expect(spy).calledWith(vbox.productName);
+      });
     });
 
-    it('downloadDone should log error when installation is failed', function() {
-      svc.addItemsToInstall(jdk);
-      sandbox.stub(jdk, 'install').callsArgWith(2, 'error');
-      Logger.error.reset();
-      svc.downloadDone(undefined, jdk.keyName);
-      expect(Logger.error).to.be.calledOnce;
+    it('should increment current amount for each completed component', function() {
+      let spy = sandbox.spy(fakeProgress, 'setCurrent');
+      return svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox').then(() => {
+        expect(spy).calledThrice;
+      });
     });
 
-    it('downloadDone should send an event when all downloads have finished', function() {
-      svc.startDownload('jdk');
-      svc.startDownload('vbox');
-
-      sandbox.stub(jdk, 'install').returns();
-      sandbox.stub(vbox, 'install').returns();
+    it('should skip checks when no components were passed', function() {
       let spy = sandbox.spy(svc.ipcRenderer, 'send');
+      return svc.verifyExistingFiles(fakeProgress).then(() => {
+        expect(checkStub).not.called;
+        expect(spy).calledOnce;
+        expect(spy).calledWith('checkComplete', 'all');
+      });
+    });
 
-      svc.downloadDone(fakeProgress, 'jdk');
-      svc.downloadDone(fakeProgress, 'vbox');
+    it('should fire "checkComplete" event when complete', function() {
+      let spy = sandbox.spy(svc.ipcRenderer, 'send');
+      return svc.verifyExistingFiles(fakeProgress, 'jdk', 'vbox').then(() => {
+        expect(spy).calledOnce;
+        expect(spy).calledWith('checkComplete', 'all');
+      });
+    });
+  });
+
+  describe('download', function() {
+    let dlStub;
+
+    beforeEach(function() {
+      svc.addItemToInstall('jdk', jdk);
+      svc.addItemToInstall('vbox', vbox);
+
+      dlStub = sandbox.stub(InstallableItem.prototype, 'downloadInstaller').returns();
+    });
+
+    it('should set status to "Downloading"', function() {
+      let spy = sandbox.spy(fakeProgress, 'setStatus');
+      svc.download(fakeProgress, 2, new Set(), '', 'vbox', 'jdk');
+
+      expect(spy).calledOnce;
+      expect(spy).calledWith('Downloading');
+    });
+
+    it('should call downloadInstaller for each component', function() {
+      svc.download(fakeProgress, 2, new Set(), '', 'vbox', 'jdk');
+
+      expect(dlStub).calledTwice;
+      expect(dlStub).calledOn(jdk);
+      expect(dlStub).calledOn(vbox);
+    });
+
+    it('should fire a "downloadingComplete" event when all downloads finish', function() {
+      let spy = sandbox.spy(svc.ipcRenderer, 'send');
+      svc.download(fakeProgress, 2, new Set(), '');
 
       expect(spy).calledOnce;
       expect(spy).calledWith('downloadingComplete', 'all');
