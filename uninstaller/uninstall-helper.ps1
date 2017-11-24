@@ -60,7 +60,7 @@ if ($subfolders.Length -gt 0) {
   foreach ($item in $subfolders) {
     robocopy "$folder\..\temp" "$item" /purge | Out-Null
   }
-  Get-ChildItem "$folder\.." -Recurse | Remove-Item -Force
+  Get-ChildItem "$folder\.." -Recurse | Remove-Item -Force -recurse
 }
 
 Remove-Item "$folder\.."
