@@ -15,10 +15,7 @@ class LocationController {
     this.installables = {};
     $scope.checkboxModel = {};
     this.electron = electron;
-    installerDataSvc.getFolder().then((result) => {
-      this.folder = result;
-      $scope.$apply();
-    });
+    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
   }
 
   confirm() {
