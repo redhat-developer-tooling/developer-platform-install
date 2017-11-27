@@ -91,12 +91,8 @@ footer {
     padding-bottom: 35px;
   }
 
-  .remember-me {
-    float: left;
-  }
-
   .remember-me-group {
-    width: 220px;
+    width: 240px;
   }
 
   .remember-me-label {
@@ -162,6 +158,7 @@ footer {
     width: 15.84%;
     position: relative;
     padding-top: 15px;
+    padding-left: 10px;
   }
 
   .breadcrumbs li:before {
@@ -257,14 +254,8 @@ footer {
     top: -7px;
   }
 
-  #login-section {
-    float: left;
-    width: 50%;
-    margin-top: 12%;
-  }
-
   #accountForm {
-    padding-right: 15%;
+    padding-right: 5%;
   }
 
   #accountForm div {
@@ -278,8 +269,7 @@ footer {
 
   .login-form-error-container {
     float: left;
-    width: 296px;
-    margin-left: 116px;
+    margin-left: 118px;
   }
 
   .login-form-label {
@@ -288,7 +278,7 @@ footer {
   }
 
   .login-form-input {
-    display: inline;
+    display: inline-block;
     width: 220px;
   }
 
@@ -368,24 +358,20 @@ footer {
 
   .forgot-password-group {
     width: 300px;
+    padding: 0 18px;
   }
 
   .last-field {
     margin-bottom: 5px;
   }
 
-  #welcome-text {
+  .welcome-text {
     padding-right: 7%;
     margin-top: 12%;
-  }
-
-  #welcome-text > p {
-    line-height: 16px;
-    margin-bottom: 16px;
+    font-size: 15px
   }
 
   .product-container {
-    padding-left: 10px;
     width: 100%;
   }
 
@@ -474,6 +460,13 @@ footer {
   .bottom-spacer {
     padding-top: 70px;
     padding-bottom: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .account-wrapper {
+    padding-left : 50px;
+    margin-top: 12%
   }
 
   .footer-version {
@@ -526,16 +519,12 @@ footer {
     padding-right: 11%;
   }
 
-  .location-form-elements {
-    margin-bottom: 10px;
-  }
-
   #location-form-note {
-    color: grey;
+    color: #c00;
   }
 
   #location-form-browse {
-    margin-top: 25px;
+    margin-top: 30px;
   }
 
   .location-browse-label {
@@ -543,8 +532,9 @@ footer {
   }
 
   .location-browse-input {
-    width: 60%;
-    margin-right: 0px;
+    width: 63%;
+    margin-right: 2px;
+    padding: 2px 5px 0 5px;
   }
 
   .location-browse-btn {
@@ -554,6 +544,11 @@ footer {
   .installation-note {
     margin-top: 20px;
     font-size: 14px;
+  }
+
+  .location-form-instructions {
+    padding-right: 4%;
+    font-size: 13px;
   }
 
   .centered {
@@ -589,11 +584,6 @@ footer {
 
   .panel2pxborder {
     border-width: 2px
-  }
-
-  .panel-default {
-    margin-bottom: 5px;
-    margin-top: 20px;
   }
 
   .panel-body {
@@ -701,12 +691,12 @@ footer {
 
   .verticalLine {
     border-right: 2px solid #dddddd;
-    margin-right: 6%;
+    margin-right: 3%;
   }
 
   .checkbox-container {
     float: left;
-    padding: 15px 25px 15px 10px;
+    padding: 15px 15px 0 10px;
   }
 
   .message-container {
@@ -782,13 +772,16 @@ footer {
     color: #9c9c9c;
   }
 
-  .selection-info {
-    padding: 50px 7px 0 0;
+  .selection-container {
+    padding-top: 30px;
     position: fixed;
     width: 93%;
-    padding-bottom: 24px;
+    padding-bottom: 11px;
     background: #fff;
-    line-height: 1px;
+  }
+
+  .selection-info {
+    padding: 22px;
   }
 
   .info-color {
@@ -796,7 +789,7 @@ footer {
   }
 
   .form-padding {
-    padding-top: 80px;
+    padding-top: 105px;
   }
 
   .summary-info {
@@ -809,13 +802,13 @@ footer {
     line-height: 1;
     padding: 8px;
     color: #8e8e8e;
-    margin: 5px 5px 0;
+    margin-right: 10px;
     border-left: 3px solid #0088ce;
   }
 
   .confirm-heading {
     position: fixed;
-    width: 794px;
+    width: 83%;
     background: #fff;
     border-bottom: 4px solid #cde7f8;
     margin: 0 -15px 0;
@@ -833,7 +826,8 @@ footer {
   }
 
   .confirm-summary-list {
-    padding: 110px 0 20px;
+    padding: 60px 0;
+    margin-top: 60px;
   }
 
   .confirm-summary-note {
@@ -864,7 +858,7 @@ footer {
     background: #fff;
     border-top: 2px solid transparent;
     padding: 0 10px;
-    margin: 10px 50px 0 50px;
+    margin: 30px 50px 0 50px;
   }
 
   .confirm-card-margin {
@@ -937,4 +931,19 @@ footer {
     margin-right: 10px;
     float: right;
   }
+
+  .panel-group-items .panel:not(.zero-border):hover {
+    border-left: 3px solid #c00;
+  }
+
+  /* .row.main {
+    margin-right: 0px;
+    margin-left: 0px;
+  } */
+
+  .column-divider {
+    border-left: 2px solid #dddddd;
+    height: 260px;
+  }
+
 }
