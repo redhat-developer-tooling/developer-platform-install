@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
   "scripts": {
-    "start": "./node_modules/.bin/gulp run",
+    "start": "./node_modules/.bin/gulp",
     "generate": "./node_modules/.bin/gulp generate",
     "package-bundle": "./node_modules/.bin/gulp package-bundle",
     "package-simple": "./node_modules/.bin/gulp package-simple",
