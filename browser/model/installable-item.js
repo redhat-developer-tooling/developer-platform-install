@@ -76,9 +76,9 @@ class InstallableItem {
         if (fs.existsSync(path.join(this.downloadFolder, this.files[file].fileName))) {
           try {
             let stat = fs.statSync(path.join(this.downloadFolder, this.files[file].fileName));
-            this.downloaded = this.downloaded && (stat && (stat.size == this.files[file].size));
+            this.files[file].downloaded = stat && stat.size == this.files[file].size;
+            this.downloaded = this.downloaded && this.files[file].downloaded;
             this.useDownload = !this.downloaded;
-            this.files[file].downloaded = true;
           } catch (error) {
             this.downloaded = false;
             this.useDownload = true;
