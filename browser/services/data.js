@@ -22,7 +22,7 @@ class InstallerDataService {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.defaultFolder = path.join(Platform.getProgramFilePath(), 'Development Suite');
+      this.defaultFolder = path.join(Platform.getProgramFilesPath(), 'Development Suite');
     } else {
       this.defaultFolder = '/Applications/DevelopmentSuite';
     }

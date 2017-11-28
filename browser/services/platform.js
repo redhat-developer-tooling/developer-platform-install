@@ -50,7 +50,7 @@ class Platform {
     });
   }
 
-  static getProgramFilePath() {
+  static getProgramFilesPath() {
     return Platform.identify({
       win32: function() {
         return Platform.ENV.PROGRAMFILES;

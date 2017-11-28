@@ -327,7 +327,8 @@ describe('CDK installer', function() {
       });
 
       it('should use MINISHIFT_HOME env variable when search for oc.exe executable', function() {
-        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        Platform.getEnv.restore();
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home', PROGRAMFILES: 'C:\\Program Files'});
         return new Promise((resolve, reject)=> {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
