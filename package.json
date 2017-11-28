@@ -80,6 +80,7 @@
     "gulp-run": "1.7.1",
     "gulp-sourcemaps": "^2.4.1",
     "gulp-spawn-mocha": "4.0.1",
+    "gulp-symlink": "2.1.4",
     "gulp-unzip": "0.2.0",
     "gulp-zip": "4.0.0",
     "istanbul": "1.1.0-alpha.1",
