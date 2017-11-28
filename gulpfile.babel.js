@@ -15,7 +15,6 @@ var fs = require('fs-extra'),
   merge = require('merge-stream'),
   sourcemaps = require('gulp-sourcemaps'),
   symlink = require('gulp-symlink'),
-  vfs = require('vinyl-fs'),
   common = require('./gulp-tasks/common'),
   config = require('./gulp-tasks/config'),
   yargs = require('yargs');
