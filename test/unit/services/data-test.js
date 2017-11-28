@@ -52,10 +52,10 @@ describe('InstallerDataService', function() {
   describe('initial state', function() {
 
     describe('on windows', function() {
-      it('should set installation folder to c:\\Program Files\\DevelopmentSuite', function() {
+      it('should set installation folder to C:\\Program Files\\Red Hat\\Development Suite', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal('c:\\Program Files\\DevelopmentSuite');
+        expect(svc.installRoot).to.equal('C:\\Program Files\\Red Hat\\Development Suite');
       });
     });
 

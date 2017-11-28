@@ -50,6 +50,14 @@ class Platform {
     });
   }
 
+  static getProgramFilePath() {
+    return Platform.identify({
+      win32: function() {
+        return process.env.ProgramFiles;
+      }
+    });
+  }
+
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
