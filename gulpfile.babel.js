@@ -62,11 +62,15 @@ gulp.task('clean-all', ['clean'], function() {
 });
 
 // clean dist/ folder in prep for fresh build
-gulp.task('clean', function() {
-  var files = ['dist', 'transpiled'];
-
-  return del(files, { force: true });
+gulp.task('clean', ['clean-transpiled'], function() {
+  return del('dist', { force: true });
 });
+
+// clean transpiled/ folder in prep for fresh build
+gulp.task('clean-transpiled', function() {
+  return del(['transpiled'], { force: true });
+});
+
 
 gulp.task('clean-old-cache', function() {
   var files = [config.prefetchFolder + '/*'];
@@ -97,7 +101,11 @@ gulp.task('generate', ['create-modules-link', 'update-requirements', 'electron-r
 });
 
 // default task
-gulp.task('default', ['run']);
+gulp.task('default', ['run-clean']);
+
+gulp.task('run-clean', function(cb) {
+  return runSequence( 'clean-transpiled', 'run', cb);
+});
 
 gulp.task('run', ['update-requirements', 'create-modules-link', 'electron-rebuild'], function(cb) {
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled', common.createExecCallback(cb));
