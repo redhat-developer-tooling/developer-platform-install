@@ -53,7 +53,9 @@ class Platform {
   static getProgramFilePath() {
     return Platform.identify({
       win32: function() {
-        return process.env.ProgramFiles;
+        return Platform.ENV.PROGRAMFILES;
+      }, default: function() {
+        return 'C:\\Program Files';
       }
     });
   }

@@ -4,7 +4,7 @@ let context = { pageName: 'Target Folder' };
 let path = require('path');
 let breadcrumbBase = require('./breadcrumbs-base');
 
-const defaultFolder = process.platform === 'win32' ? path.join('C:', 'Program Files', 'Red Hat', 'Development Suite') : '/Applications/DevelopmentSuite';
+const defaultFolder = process.platform === 'win32' ? path.join('C:', 'Program Files', 'Development Suite') : '/Applications/DevelopmentSuite';
 
 describe('Location page', function() {
   let locationField, backButton, nextButton, cancelButton, browseButton;

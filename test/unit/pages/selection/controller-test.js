@@ -141,6 +141,7 @@ describe('SelectionController', function() {
   describe('dependency resolution', function() {
     beforeEach(function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
+      sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
     });
     beforeEach(inject(context));
     it('should deselect openjdk if jbosseap and devstudio are not selected', function() {

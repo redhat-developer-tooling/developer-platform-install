@@ -213,6 +213,7 @@ describe('CDK installer', function() {
       let svc;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer, svc} = stubInstaller() );
         sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve(path.join('Users', 'dev1')));
         sandbox.stub(Installer.prototype, 'copyFile').resolves();
@@ -414,15 +415,16 @@ describe('CDK installer', function() {
     describe('on windows', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        ( {cdk: installer} = stubInstaller() );
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
-        sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
+        sandbox.stub(Platform, 'getEnv').returns({'Path':'path', PROGRAMFILES: 'C:\\Program Files'});
+        ( {cdk: installer} = stubInstaller() );
         let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
-        sandbox.stub(Platform, 'getEnv').returns({'Path':''});
+        sandbox.stub(Platform, 'getEnv').returns({'Path':'', PROGRAMFILES: 'C:\\Program Files'});
+        ( {cdk: installer} = stubInstaller() );
         let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });

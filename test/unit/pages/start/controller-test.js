@@ -84,6 +84,7 @@ describe('StartController', function() {
     describe('on windows', function() {
       it('calls specific launch method', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         let stubLaunchWin32 = sandbox.stub(StartController.prototype, 'launchDevstudio_win32');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
@@ -92,6 +93,7 @@ describe('StartController', function() {
       });
       it('should spawn new process and exit', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         sandbox.stub(fs, 'writeFileSync');
         let messageEmmitterFactory = function(message) {
           return {

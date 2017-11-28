@@ -15,6 +15,7 @@ describe('Hyper-V Installer', function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     osStub = sandbox.stub(Platform, 'getOS').returns('win32');
+    sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
     hvInstall = new HypervInstall(new InstallerDataService(), 'url');
   });
 
