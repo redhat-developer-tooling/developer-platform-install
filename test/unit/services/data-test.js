@@ -52,15 +52,16 @@ describe('InstallerDataService', function() {
   describe('initial state', function() {
 
     describe('on windows', function() {
-      it('should set installation folder to c:\\Program Files\\DevelopmentSuite', function() {
+      it('should set installation folder to C:\\Program Files\\Development Suite', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal('c:\\Program Files\\DevelopmentSuite');
+        expect(svc.installRoot).to.equal(path.join(Platform.getProgramFilesPath(), 'Development Suite'));
       });
     });
 
     describe('on macos', function () {
-      it('should set installation folder $HOME\\DevelopmentSuite', function() {
+      it('should set installation folder /Applications/DevelopmentSuite', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         sandbox.stub(Platform, 'getEnv').returns({HOME:'/home/username'});
         let svc = new InstallerDataService();
@@ -113,7 +114,7 @@ describe('InstallerDataService', function() {
 
     it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
-      sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost'});
+      sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost', PROGRAMFILES: 'C:\\Program Files'});
       svc = new InstallerDataService();
       expect(svc.requirements.jdk.dmUrl.startsWith('https://localhost')).equals(true);
     });

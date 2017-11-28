@@ -50,6 +50,16 @@ class Platform {
     });
   }
 
+  static getProgramFilesPath() {
+    return Platform.identify({
+      win32: function() {
+        return Platform.ENV.PROGRAMFILES;
+      }, default: function() {
+        return 'C:\\Program Files';
+      }
+    });
+  }
+
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {

@@ -32,6 +32,7 @@ describe('InstallableItem', function() {
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
     sandbox.stub(Platform, 'getOS').returns('win32');
+    sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
   });
 
   afterEach(function() {

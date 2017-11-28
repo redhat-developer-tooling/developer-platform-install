@@ -17,14 +17,16 @@ import loadMetadata from '../services/metadata';
 
 
 class InstallerDataService {
+
   constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.defaultFolder = 'c:\\Program Files\\DevelopmentSuite';
+      this.defaultFolder = path.join(Platform.getProgramFilesPath(), 'Development Suite');
     } else {
       this.defaultFolder = '/Applications/DevelopmentSuite';
     }
+
     this.installRoot = this.defaultFolder;
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
@@ -70,7 +72,6 @@ class InstallerDataService {
       }
     }
   }
-
 
   setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
