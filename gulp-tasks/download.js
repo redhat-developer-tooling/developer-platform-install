@@ -84,7 +84,7 @@ function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, sha256sum, 
 function prefetch(reqs, bundle, targetFolder) {
   let promises = new Array();
   for (let key in reqs) {
-    if (reqs[key].useDownload && reqs[key].bundle === bundle && (reqs[key].fileName || reqs[key].file)) {
+    if ((reqs[key].useDownload == undefined || reqs[key].useDownload) && reqs[key].bundle === bundle && (reqs[key].fileName || reqs[key].file)) {
       let files = {};
       if(reqs[key].fileName) {
         files[key] = {
