@@ -35,7 +35,7 @@ To build installer follow steps below for specific platform (please note that
 'browser/images' and 'resources' folders contains graphical files for product
 logos and icons which are the copyrighted work of Red Hat).
 
-#### Windows
+#### Windowss
 
 1. Download and install nvm for Windows from <https://github.com/coreybutler/nvm-windows/>.
 Pick the MSI installer.
