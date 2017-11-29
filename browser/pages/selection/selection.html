@@ -26,12 +26,12 @@
 
 <footer id="footer-navigation" class="no-background-color">
   <div class="footer-border"></div>
-  <button type="button" id="selection-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="selectionForm"
+  <button type="button" id="selection-cancel-btn" class="cancel-btn footer-btns btn btn-default btn-lg pull-left" form="selectionForm"
           ng-click="selectCtrl.exit()">Cancel</button>
-  <button type="button" id="selection-back-btn" class="footer-btns btn-plain btn-med-size btn btn-lg back-btn" form="selectionForm"
+  <button type="button" id="selection-back-btn" class=" back-btn footer-btns btn btn-default btn-lg" form="selectionForm"
           ng-disabled="selectCtrl.isDisabled"
           ng-click="selectCtrl.back()">Back</button>
-  <button type="submit" id="selection-install-btn" class="go-btn footer-btns btn btn-primary btn-lg btn-med-size" form="selectionForm"
+  <button type="submit" id="selection-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="selectionForm"
           ng-disabled="!selectCtrl.isConfigurationValid() || selectCtrl.isDisabled" autofocus
           ng-click="selectCtrl.next()">Next</button>
 </footer>

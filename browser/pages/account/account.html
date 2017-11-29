@@ -67,11 +67,11 @@
 
 <footer class="no-background-color">
   <div class="footer-border"></div>
-  <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="accountForm"
+  <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn btn-default btn-lg pull-left" form="accountForm"
           ng-click="acctCtrl.exit()">Cancel</button>
-  <button type="button" id="location-back-btn" class="back-btn-spacer-account btn footer-btns btn-plain btn-med-size btn btn-lg" form="accountForm"
+  <button type="button" id="location-back-btn" class="back-btn-spacer-account footer-btns btn btn-default btn-lg" form="accountForm"
           ng-click="acctCtrl.back()">Back</button>
-  <button id="loginButton" type="submit" class="go-btn footer-btns btn btn-lg btn-primary" form="accountForm"
+  <button id="loginButton" type="submit" class="go-btn footer-btns download-btn btn btn-primary btn-lg" form="accountForm"
           ng-disabled="accountForm.$invalid || acctCtrl.isLoginBtnClicked" ng-class="{'active':acctCtrl.isLoginBtnClicked}">
     Download & Install
   </button>

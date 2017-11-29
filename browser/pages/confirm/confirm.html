@@ -31,10 +31,10 @@
 
 <footer id="footer-navigation" class="no-background-color">
   <div class="footer-border"></div>
-  <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left"
+  <button type="button" id="confirm-cancel-btn" class="cancel-btn footer-btns btn btn-default btn-lg pull-left"
     form="confirmForm" ng-click="confCtrl.exit()">Cancel</button>
-  <button type="button" id="confirm-back-btn" class="footer-btns btn-plain btn-med-size btn btn-lg" form="confirmForm" ng-class="{'back-btn-spacer': !confCtrl.isAccountRequired(), 'back-btn': confCtrl.isAccountRequired()}"
+  <button type="button" id="confirm-back-btn" class="footer-btns btn btn-default btn-lg" form="confirmForm" ng-class="{'back-btn-spacer': !confCtrl.isAccountRequired(), 'back-btn': confCtrl.isAccountRequired()}"
     ng-disabled="confCtrl.isDisabled" ng-click="confCtrl.back()">Back</button>
   <button type="submit" id="confirm-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="confirmForm" ng-click="confCtrl.next()"
-    autofocus ng-class="{'btn-med-size': confCtrl.isAccountRequired()}">{{confCtrl.getNextButtonName()}}</button>
+    autofocus ng-class="{'download-btn': !confCtrl.isAccountRequired()}">{{confCtrl.getNextButtonName()}}</button>
 </footer>

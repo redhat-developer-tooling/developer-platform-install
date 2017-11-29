@@ -10,10 +10,6 @@ header {
   text-align: center;
 }
 
-.double-spaced {
-  line-height: 2em; /* 32px / 16px */
-}
-
 .greyed-out-background {
   position: fixed;
   top: 0;
@@ -51,46 +47,6 @@ footer {
     pointer-events: none;
   }
 
-  .arrow {
-    display:inline-block;
-    width:12px;
-    height:12px;
-    line-height:7px;
-    border-top:2px solid #aaa;
-    border-right:2px solid #aaa;
-    -ms-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -webkit-transform:rotate(45deg);
-    transform:rotate(45deg);
-  }
-
-  .arrow-down {
-    -ms-transform:rotate(135deg);
-    -moz-transform:rotate(135deg);
-    -webkit-transform:rotate(135deg);
-    transform:rotate(135deg);
-  }
-  .arrow-left {
-    -ms-transform:rotate(225deg);
-    -moz-transform:rotate(225deg);
-    -webkit-transform:rotate(225deg);
-    transform:rotate(225deg);
-  }
-  .arrow-up{
-    -ms-transform:rotate(-45deg);
-    -moz-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
-  }
-  .arrow:hover {
-    border-color:#444;
-  }
-
-  .login-header {
-    padding-top: 35px;
-    padding-bottom: 35px;
-  }
-
   .remember-me-group {
     width: 240px;
   }
@@ -124,13 +80,6 @@ footer {
   .login-title-post-text {
     font-size: 18px;
     padding-left: 9px;
-  }
-
-  .branding-name {
-    color: #c00;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: x-large;
   }
 
   .breadcrumbs {
@@ -292,18 +241,8 @@ footer {
     margin-top: 10px;
   }
 
-  .btn-plain {
-    color: #00a8e1;
-    background-color: #FFFFFF;
-    border-color: #00a8e1;
-  }
-
   .btn-spacer {
     margin-right: 10px;
-  }
-
-  .btn-med-size {
-    width: 90px;
   }
 
   #account-form-btn-text {
@@ -441,22 +380,6 @@ footer {
     float: right;
   }
 
-  .dimmed {
-    position: relative;
-  }
-
-  .dimmed:after {
-    content: " ";
-    z-index: 10;
-    display: block;
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-
   .bottom-spacer {
     padding-top: 70px;
     padding-bottom: 80px;
@@ -487,6 +410,7 @@ footer {
   .footer-btns {
     position: absolute;
     bottom: 16px;
+    width: 90px;
   }
 
   .cancel-btn {
@@ -509,6 +433,10 @@ footer {
   .go-btn {
     right: 40px;
     margin-right: calc(-1 * (100vw - 100%));
+  }
+
+  .download-btn {
+    width: 150px
   }
 
   #locationForm {
@@ -561,9 +489,6 @@ footer {
 
   .detection-msg {
     position: fixed;
-    /* top: 50%;
-    left: 50%;
-    margin-top: 70px; */
     margin-left: -200px;
     color: #000000;
   }
@@ -604,14 +529,6 @@ footer {
     vertical-align:middle;
   }
 
-  .confirm-radio-container.dotted-panel {
-    border-style:dashed;
-    background-color: #FFFFFF;
-    border-width: 2px;
-    border-color: #dddddd;
-    border-top: 0;
-  }
-
   .installed-note {
     float: right;
     padding-top: 10px;
@@ -640,16 +557,6 @@ footer {
     padding: 0 10px;
   }
 
-  .confirm-radio-btn {
-    display: inline;
-  }
-
-  .confirm-radio-btn-label {
-    width: 80%;
-    vertical-align: text-top;
-    margin-top: -5px;
-  }
-
   .confirm-browse-label {
     margin-right: 10px;
   }
@@ -664,8 +571,6 @@ footer {
   }
 
   .close-modal{
-    /* display: none; */
-    /* overflow: hidden; */
     position: fixed;
     top: 0;
     right: 0;
@@ -674,13 +579,6 @@ footer {
     z-index: 1050;
     -webkit-overflow-scrolling: touch;
     outline: 0;
-  }
-
-  .close-modal-footer {
-    border-top: none;
-    padding: 14px 15px 15px;
-    text-align: center;
-    border-top: 1px solid #e5e5e5;
   }
 
   .check-element {
@@ -935,11 +833,6 @@ footer {
   .panel-group-items .panel:not(.zero-border):hover {
     border-left: 3px solid #c00;
   }
-
-  /* .row.main {
-    margin-right: 0px;
-    margin-left: 0px;
-  } */
 
   .column-divider {
     border-left: 2px solid #dddddd;
