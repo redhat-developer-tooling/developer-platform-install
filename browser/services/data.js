@@ -239,15 +239,15 @@ class InstallerDataService {
   }
 
   verifyExistingFiles(progress, ...keys) {
+    let promise = Promise.resolve();
     if (keys.length < 1) {
       this.ipcRenderer.send('checkComplete', 'all');
-      return Promise.resolve();
+      return promise;
     }
     progress.setStatus('Verifying previously downloaded components');
     progress.setTotalAmount(keys.length);
     progress.setCurrent(1);
 
-    let promise = Promise.resolve();
     for (let i = 0; i < keys.length; i++) {
       promise = promise.then(() => {
         progress.productVersion = this.getInstallable(keys[i]).productVersion;
@@ -255,12 +255,10 @@ class InstallerDataService {
         return this.getInstallable(keys[i]).checkFiles();
       }).then(() => {
         progress.setCurrent(progress.currentAmount + 1);
-        return Promise.resolve();
       });
     }
    return promise.then(() => {
       this.ipcRenderer.send('checkComplete', 'all');
-      return Promise.resolve();
     });
   }
 

@@ -20,7 +20,7 @@ function loadSignedText(keyText, armoredText) {
       return {options, verified};
     });
   }).catch((error)=>{
-    return Promise.resolve({
+    return {
       options: {
         message: {
           text: armoredText
@@ -32,7 +32,7 @@ function loadSignedText(keyText, armoredText) {
         }]
       },
       error
-    });
+    };
   }).then(function({options, verified, error}) {
     return {
       text: options.message.text,

@@ -22,12 +22,11 @@ class HypervInstall extends InstallableItem {
         this.hypervstatus = detected;
         this.hidden = this.hypervstatus === undefined;
         this.selectedOption = 'detected';
-        return Promise.resolve(detected);
+        return detected;
       }).then((detected)=> {
         if (detected) {
           return Platform.getHypervisorVersion();
         }
-        return Promise.resolve();
       }).then((version)=>{
         if(version) {
           this.option.detected.version = version;

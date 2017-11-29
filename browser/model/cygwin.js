@@ -45,7 +45,6 @@ class CygwinInstall extends InstallableItem {
         if(this.option.detected) {
           delete this.option.detected;
         }
-        return Promise.resolve();
       });
     } else {
       return Promise.resolve();
