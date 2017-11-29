@@ -1,20 +1,17 @@
-<header>
-  <breadcrumb></breadcrumb>
-</header>
-
-<main>
+<breadcrumb></breadcrumb>
+<div class="row">
   <div class="col-sm-12 bottom-spacer">
     <form name="locationForm" id="locationForm" class="form-horizontal" ng-submit="locCtrl.confirm()">
       <div id="location-form-container">
-        <p id="location-form-instructions" class="location-form-elements">
+        <p class="location-form-instructions">
           This installer will automatically detect the existing Red Hat products and tools that meet the requirements and
           <b>help you install the rest of the components</b>. Before it gets started, please browse to locate the installation
           folder or use the default location.
         </p>
-        <p id="location-form-note" class="location-form-elements">
+        <p id="location-form-note">
           Note: You can NOT choose the folder again once components start to get installed.
         </p>
-        <div id="location-form-browse" class="has-feedback location-form-elements" ng-class="{'has-error has-feedback': locationForm.folder.$invalid}">
+        <div id="location-form-browse" class="has-feedback" ng-class="{'has-error has-feedback': locationForm.folder.$invalid}">
           <div class="location-browse-container">
             <label for="location-browse-input-folder" class="location-browse-label">
               Select the installation folder
@@ -47,14 +44,14 @@
       </div>
     </form>
   </div>
-</main>
+</div>
 
 <footer class="no-background-color">
   <div class="footer-border"></div>
-  <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn-plain btn-med-size btn btn-lg pull-left" form="locationForm"
+  <button type="button" id="location-cancel-btn" class="cancel-btn footer-btns btn btn-default btn-lg pull-left" form="locationForm"
           ng-click="locCtrl.exit()">Cancel</button>
-  <button type="button" id="location-back-btn" class="back-btn footer-btns btn-plain btn-med-size btn btn-lg" form="locationForm"
+  <button type="button" id="location-back-btn" class="back-btn footer-btns btn btn-default btn-lg" form="locationForm"
           ng-click="locCtrl.back()">Back</button>
-  <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-med-size btn-lg" form="locationForm"
+  <button type="submit" id="location-install-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="locationForm"
           ng-disabled="locationForm.folder.$invalid" autofocus>Next</button>
 </footer>

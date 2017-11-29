@@ -10,10 +10,6 @@ header {
   text-align: center;
 }
 
-.double-spaced {
-  line-height: 2em; /* 32px / 16px */
-}
-
 .greyed-out-background {
   position: fixed;
   top: 0;
@@ -51,52 +47,8 @@ footer {
     pointer-events: none;
   }
 
-  .arrow {
-    display:inline-block;
-    width:12px;
-    height:12px;
-    line-height:7px;
-    border-top:2px solid #aaa;
-    border-right:2px solid #aaa;
-    -ms-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -webkit-transform:rotate(45deg);
-    transform:rotate(45deg);
-  }
-
-  .arrow-down {
-    -ms-transform:rotate(135deg);
-    -moz-transform:rotate(135deg);
-    -webkit-transform:rotate(135deg);
-    transform:rotate(135deg);
-  }
-  .arrow-left {
-    -ms-transform:rotate(225deg);
-    -moz-transform:rotate(225deg);
-    -webkit-transform:rotate(225deg);
-    transform:rotate(225deg);
-  }
-  .arrow-up{
-    -ms-transform:rotate(-45deg);
-    -moz-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
-  }
-  .arrow:hover {
-    border-color:#444;
-  }
-
-  .login-header {
-    padding-top: 35px;
-    padding-bottom: 35px;
-  }
-
-  .remember-me {
-    float: left;
-  }
-
   .remember-me-group {
-    width: 220px;
+    width: 240px;
   }
 
   .remember-me-label {
@@ -130,13 +82,6 @@ footer {
     padding-left: 9px;
   }
 
-  .branding-name {
-    color: #c00;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: x-large;
-  }
-
   .breadcrumbs {
     list-style: none;
     padding-top: 35px;
@@ -162,6 +107,7 @@ footer {
     width: 15.84%;
     position: relative;
     padding-top: 15px;
+    padding-left: 10px;
   }
 
   .breadcrumbs li:before {
@@ -257,14 +203,8 @@ footer {
     top: -7px;
   }
 
-  #login-section {
-    float: left;
-    width: 50%;
-    margin-top: 12%;
-  }
-
   #accountForm {
-    padding-right: 15%;
+    padding-right: 5%;
   }
 
   #accountForm div {
@@ -278,8 +218,7 @@ footer {
 
   .login-form-error-container {
     float: left;
-    width: 296px;
-    margin-left: 116px;
+    margin-left: 118px;
   }
 
   .login-form-label {
@@ -288,7 +227,7 @@ footer {
   }
 
   .login-form-input {
-    display: inline;
+    display: inline-block;
     width: 220px;
   }
 
@@ -302,18 +241,8 @@ footer {
     margin-top: 10px;
   }
 
-  .btn-plain {
-    color: #00a8e1;
-    background-color: #FFFFFF;
-    border-color: #00a8e1;
-  }
-
   .btn-spacer {
     margin-right: 10px;
-  }
-
-  .btn-med-size {
-    width: 90px;
   }
 
   #account-form-btn-text {
@@ -368,24 +297,20 @@ footer {
 
   .forgot-password-group {
     width: 300px;
+    padding: 0 18px;
   }
 
   .last-field {
     margin-bottom: 5px;
   }
 
-  #welcome-text {
+  .welcome-text {
     padding-right: 7%;
     margin-top: 12%;
-  }
-
-  #welcome-text > p {
-    line-height: 16px;
-    margin-bottom: 16px;
+    font-size: 15px
   }
 
   .product-container {
-    padding-left: 10px;
     width: 100%;
   }
 
@@ -455,25 +380,16 @@ footer {
     float: right;
   }
 
-  .dimmed {
-    position: relative;
-  }
-
-  .dimmed:after {
-    content: " ";
-    z-index: 10;
-    display: block;
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-
   .bottom-spacer {
     padding-top: 70px;
     padding-bottom: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .account-wrapper {
+    padding-left : 50px;
+    margin-top: 12%
   }
 
   .footer-version {
@@ -494,6 +410,7 @@ footer {
   .footer-btns {
     position: absolute;
     bottom: 16px;
+    width: 90px;
   }
 
   .cancel-btn {
@@ -518,6 +435,10 @@ footer {
     margin-right: calc(-1 * (100vw - 100%));
   }
 
+  .download-btn {
+    width: 150px
+  }
+
   #locationForm {
     padding: 100px 54px 0;
   }
@@ -526,16 +447,12 @@ footer {
     padding-right: 11%;
   }
 
-  .location-form-elements {
-    margin-bottom: 10px;
-  }
-
   #location-form-note {
-    color: grey;
+    color: #c00;
   }
 
   #location-form-browse {
-    margin-top: 25px;
+    margin-top: 30px;
   }
 
   .location-browse-label {
@@ -543,8 +460,9 @@ footer {
   }
 
   .location-browse-input {
-    width: 60%;
-    margin-right: 0px;
+    width: 63%;
+    margin-right: 2px;
+    padding: 2px 5px 0 5px;
   }
 
   .location-browse-btn {
@@ -554,6 +472,11 @@ footer {
   .installation-note {
     margin-top: 20px;
     font-size: 14px;
+  }
+
+  .location-form-instructions {
+    padding-right: 4%;
+    font-size: 13px;
   }
 
   .centered {
@@ -566,9 +489,6 @@ footer {
 
   .detection-msg {
     position: fixed;
-    /* top: 50%;
-    left: 50%;
-    margin-top: 70px; */
     margin-left: -200px;
     color: #000000;
   }
@@ -591,11 +511,6 @@ footer {
     border-width: 2px
   }
 
-  .panel-default {
-    margin-bottom: 5px;
-    margin-top: 20px;
-  }
-
   .panel-body {
     background-color: #fafafa;
   }
@@ -612,14 +527,6 @@ footer {
 
   .vallign-middle {
     vertical-align:middle;
-  }
-
-  .confirm-radio-container.dotted-panel {
-    border-style:dashed;
-    background-color: #FFFFFF;
-    border-width: 2px;
-    border-color: #dddddd;
-    border-top: 0;
   }
 
   .installed-note {
@@ -650,16 +557,6 @@ footer {
     padding: 0 10px;
   }
 
-  .confirm-radio-btn {
-    display: inline;
-  }
-
-  .confirm-radio-btn-label {
-    width: 80%;
-    vertical-align: text-top;
-    margin-top: -5px;
-  }
-
   .confirm-browse-label {
     margin-right: 10px;
   }
@@ -674,8 +571,6 @@ footer {
   }
 
   .close-modal{
-    /* display: none; */
-    /* overflow: hidden; */
     position: fixed;
     top: 0;
     right: 0;
@@ -686,13 +581,6 @@ footer {
     outline: 0;
   }
 
-  .close-modal-footer {
-    border-top: none;
-    padding: 14px 15px 15px;
-    text-align: center;
-    border-top: 1px solid #e5e5e5;
-  }
-
   .check-element {
     padding: 10px;
     border: 1px solid black;
@@ -701,12 +589,12 @@ footer {
 
   .verticalLine {
     border-right: 2px solid #dddddd;
-    margin-right: 6%;
+    margin-right: 3%;
   }
 
   .checkbox-container {
     float: left;
-    padding: 15px 25px 15px 10px;
+    padding: 13px 15px 0 10px;
   }
 
   .message-container {
@@ -782,13 +670,16 @@ footer {
     color: #9c9c9c;
   }
 
-  .selection-info {
-    padding: 50px 7px 0 0;
+  .selection-container {
+    padding-top: 30px;
     position: fixed;
     width: 93%;
-    padding-bottom: 24px;
+    padding-bottom: 11px;
     background: #fff;
-    line-height: 1px;
+  }
+
+  .selection-info {
+    padding: 22px;
   }
 
   .info-color {
@@ -796,7 +687,7 @@ footer {
   }
 
   .form-padding {
-    padding-top: 80px;
+    padding-top: 105px;
   }
 
   .summary-info {
@@ -809,13 +700,13 @@ footer {
     line-height: 1;
     padding: 8px;
     color: #8e8e8e;
-    margin: 5px 5px 0;
+    margin-right: 10px;
     border-left: 3px solid #0088ce;
   }
 
   .confirm-heading {
     position: fixed;
-    width: 794px;
+    width: 83%;
     background: #fff;
     border-bottom: 4px solid #cde7f8;
     margin: 0 -15px 0;
@@ -833,7 +724,8 @@ footer {
   }
 
   .confirm-summary-list {
-    padding: 110px 0 20px;
+    padding: 60px 0;
+    margin-top: 60px;
   }
 
   .confirm-summary-note {
@@ -864,7 +756,7 @@ footer {
     background: #fff;
     border-top: 2px solid transparent;
     padding: 0 10px;
-    margin: 10px 50px 0 50px;
+    margin: 8px 50px 0 50px;
   }
 
   .confirm-card-margin {
@@ -937,4 +829,14 @@ footer {
     margin-right: 10px;
     float: right;
   }
+
+  .panel-group-items .panel:not(.zero-border):hover {
+    border-left: 2px solid #c00;
+  }
+
+  .column-divider {
+    border-left: 2px solid #dddddd;
+    height: 260px;
+  }
+
 }

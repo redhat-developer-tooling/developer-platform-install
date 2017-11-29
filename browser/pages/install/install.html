@@ -1,27 +1,22 @@
-<header>
-  <breadcrumb></breadcrumb>
-</header>
-
-<main>
-  <div class="col-sm-12 bottom-spacer">
-    <div class="install-header">
-      <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
-      <p style="color: grey;">Currently gathering content</p>
-    </div>
-    <div class="alert install-info" ng-show="instCtrl.isDarwinPlatform()">
-      <span class="pficon pficon-info"></span>
-      <strong>MacOS may ask for your administrative password several times during installation.</strong>
-    </div>
-    <div class="panel-default">
-      <div class="panel-body">
-        <div ng-repeat="progress in data">
-          <progress-bar progress="progress"></progress-bar>
-          <div class="btn btn-danger btn-action" ng-click="instCtrl.showLog()" ng-show="progress.status.indexOf('Failed') > -1" data-toggle="tooltip" data-placement="bottom" title="Displays the log details." style="margin-top: -10px;">Details</div>
-        </div>
+<breadcrumb></breadcrumb>
+<div class="col-sm-12 bottom-spacer">
+  <div class="install-header">
+    <div style="font-weight: 700;font-size: large;">Downloading and Installing</div>
+    <p style="color: grey;">Currently gathering content</p>
+  </div>
+  <div class="alert install-info" ng-show="instCtrl.isDarwinPlatform()">
+    <span class="pficon pficon-info"></span>
+    <strong>MacOS may ask for your administrative password several times during installation.</strong>
+  </div>
+  <div class="panel-default">
+    <div class="panel-body">
+      <div ng-repeat="progress in data">
+        <progress-bar progress="progress"></progress-bar>
+        <div class="btn btn-danger btn-action" ng-click="instCtrl.showLog()" ng-show="progress.status.indexOf('Failed') > -1" data-toggle="tooltip" data-placement="bottom" title="Displays the log details." style="margin-top: -10px;">Details</div>
       </div>
     </div>
   </div>
-</main>
+</div>
 
 <div class="greyed-out-background" ng-show="instCtrl.failedDownloads.size > 0"></div>
 <div class="close-modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" ng-show="instCtrl.failedDownloads.size > 0">
@@ -51,6 +46,6 @@
 
 <footer class="no-background-color">
   <div class="footer-border"></div>
-  <button type="button" id="location-cancel-btn" class="go-btn footer-btns btn btn-primary btn-lg btn-med-size" form="installForm"
+  <button type="button" id="location-cancel-btn" class="go-btn footer-btns btn btn-primary btn-lg" form="installForm"
           ng-click="instCtrl.exit()">Cancel</button>
 </footer>
