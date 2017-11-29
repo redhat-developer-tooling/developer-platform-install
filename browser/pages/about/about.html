@@ -1,13 +1,14 @@
-<main>
-  <form>
-    <h2 class="about-heading">Red Hat<sup><small class="icon">®</small></sup> Development Suite</h2>
-    <span class="version-panel"><strong>Software Version &emsp;</strong>{{version}}</span>
-    <section class="welcome-panel">
-      <p>For additional information, see:</p>
-      <a class="link" href="" ng-click="aboutCtrl.documentation()">Documentation</a><br/>
-      <a class="link-release" href="" ng-click="aboutCtrl.release()">Release notes</a><br/>
-      <a class="link-report" href="" ng-click="aboutCtrl.report()">Report issues</a><br/>
-    </section>
-    <span class="tradmark-panel">Copyright © 2017 Red Hat, Inc.</span>
-  </form>
-</main>
+<div class="about-container">
+  <h2 class="about-heading">Red Hat<sup><small class="icon">®</small></sup> Development Suite</h2>
+  <span class="version-panel"><strong>Software Version &emsp;</strong>{{version}}</span>
+  <section class="about-additional-info">
+    <p>For additional information, see:</p>
+    <a class="link" href="" ng-click="aboutCtrl.documentation()">Documentation</a><br/>
+    <a class="link-release" href="" ng-click="aboutCtrl.release()">Release notes</a><br/>
+    <a class="link-report" href="" ng-click="aboutCtrl.report()">Report issues</a><br/>
+  </section>
+  <span class="tradmark-panel">Copyright © 2017 Red Hat, Inc.</span>
+  <div class="about-note-mac" ng-show="aboutCtrl.isDarwinPlatform()">
+    <p>Note: Press <kbd>⌘</kbd>+<kbd>W</kbd> to close the window.</p>
+  </div>
+</div>

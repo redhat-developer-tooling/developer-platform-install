@@ -6,7 +6,7 @@ const name = "About Page";
 let nextButton;
 
 function setup() {
-  browser.driver.wait(protractor.until.elementLocated(By.id('aboutNextButton')), 20000)
+  browser.driver.wait(protractor.until.elementLocated(By.id('welcomeNextButton')), 20000)
   .then((elm) => {
     nextButton = elm;
   });

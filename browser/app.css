@@ -130,20 +130,20 @@ footer {
     background: #0088ce;
   }
 
-  .about-section {
+  .welcome-section {
     width:100%;
     padding: 2% 5% 0% 5%;
     position: relative;
   }
 
-  .about-subsection {
+  .welcome-subsection {
     width: 33%;
     float: left;
     padding: 12px;
     position: relative;
   }
 
-  .about-name {
+  .welcome-static-name {
     color: #c00;
     text-align: center;
     text-transform: uppercase;
@@ -152,26 +152,44 @@ footer {
     padding: 5% 0% 5% 0%;
   }
 
-  .about-img {
+  .welcome-static-img {
     display: block;
     margin: 0 auto;
   }
 
-  .about-background {
+  .welcome-background {
     background-image: url(images/welcome-background.png);
     background-size: 100%;
   }
 
-  .aboutpage-background {
+  .about-background {
     background-image: url(images/RCUE_About_BG.png);
     background-size: 100%;
   }
 
+  .about-container {
+    padding-left: 60px;
+    color: #FFFFFF;
+  }
+
   .about-heading {
     position: relative;
-    color: #FFFFFF;
-    padding-left: 60px;
     top: 50px;
+  }
+
+  .version-panel {
+    position: relative;
+    top: 66px;
+  }
+
+  .tradmark-panel {
+    position: relative;
+    top: 110px;
+  }
+
+  .about-additional-info {
+    position: relative;
+    top: 88px;
   }
 
   .icon {
@@ -330,27 +348,6 @@ footer {
     position: relative;
     left: 15px;
    }
-
-  .version-panel {
-    position: relative;
-    color: #FFFFFF;
-    padding-left: 60px;
-    top: 66px;
-  }
-
-  .tradmark-panel {
-    position: relative;
-    color: #FFFFFF;
-    padding-left: 60px;
-    top: 110px;
-  }
-
-  .welcome-panel {
-    position: relative;
-    color: #FFFFFF;
-    top: 88px;
-    padding-left: 60px;
-  }
 
   .product-info {
     padding-left: 5px;
@@ -837,6 +834,14 @@ footer {
   .column-divider {
     border-left: 2px solid #dddddd;
     height: 260px;
+  }
+
+  .about-note-mac {
+    position: relative;
+    top: 145px;
+    color: white;
+    display: block;
+    font-size: 9px;
   }
 
 }
