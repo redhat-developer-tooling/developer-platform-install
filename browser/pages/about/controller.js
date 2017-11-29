@@ -1,6 +1,7 @@
 'use strict';
 
 const semver = require('semver');
+import Platform from '../../services/platform';
 
 class AboutController {
 
@@ -26,6 +27,10 @@ class AboutController {
 
   report() {
     this.electron.shell.openExternal('https://github.com/redhat-developer-tooling/developer-platform-install/blob/master/CONTRIBUTING.md#reporting-an-issue');
+  }
+
+  isDarwinPlatform() {
+    return Platform.OS == 'darwin';
   }
 
 }

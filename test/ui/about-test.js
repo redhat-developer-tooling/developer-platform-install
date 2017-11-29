@@ -9,7 +9,7 @@ describe('About Page', function() {
   beforeAll(function() {
     browser.setLocation('about')
       .then(function() {
-        nextButton = element(By.id('aboutNextButton'));
+        nextButton = element(By.id('welcomeNextButton'));
       });
   });
 
