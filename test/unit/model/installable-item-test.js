@@ -11,6 +11,7 @@ import InstallerDataService from 'browser/services/data';
 import Hash from 'browser/model/helpers/hash';
 import {ProgressState} from 'browser/pages/install/controller';
 import Platform from 'browser/services/platform';
+import path from 'path';
 
 chai.use(sinonChai);
 
@@ -131,30 +132,106 @@ describe('InstallableItem', function() {
   });
 
   describe('checkFiles method', function() {
-    it('should check each downloaded file', function() {
+    let item;
 
+    beforeEach(function() {
+      item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      item.files.foo = {
+        dmUrl: 'downloadUrl',
+        fileName: 'foo.bar',
+        sha256sum: 'sum',
+        size: 123
+      };
+    });
+
+    it('should check each downloaded file', function() {
+      sandbox.stub(fs, 'existsSync').returns(true);
+      let stub = sandbox.stub(Hash.prototype, 'SHA256').resolves('sum');
+
+      return item.checkFiles().then(() => {
+        expect(stub).calledTwice;
+        expect(stub).calledWith(path.join(item.downloadFolder, item.files.jdk.fileName));
+        expect(stub).calledWith(path.join(item.downloadFolder, item.files.foo.fileName));
+      });
     });
 
     it('should confirm file is downloaded when checksums match', function() {
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(Hash.prototype, 'SHA256').resolves('sum');
+      item.files.jdk.sha256sum = 'sum';
 
+      return item.checkFiles().then(() => {
+        expect(item.files.jdk.downloaded).to.be.true;
+        expect(item.files.foo.downloaded).to.be.true;
+      });
     });
 
     it('should set the component to download when a checksum does not match', function() {
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(Hash.prototype, 'SHA256').resolves('sum');
 
+      return item.checkFiles().then(() => {
+        expect(item.files.jdk.downloaded).to.be.false;
+        expect(item.files.foo.downloaded).to.be.true;
+        expect(item.useDownload).to.be.true;
+      });
     });
 
     it('should skip files that do not exist', function() {
+      let fsStub = sandbox.stub(fs, 'existsSync');
+      fsStub.onFirstCall().returns(false);
+      fsStub.onSecondCall().returns(true);
+      let stub = sandbox.stub(Hash.prototype, 'SHA256').resolves('sum');
 
+      return item.checkFiles().then(() => {
+        expect(stub).calledOnce;
+        expect(stub).calledWithExactly(path.join(item.downloadFolder, item.files.foo.fileName));
+      });
     });
   });
 
   describe('downloadInstaller method', function() {
-    it('should start download for each file not downloaded', function() {
+    let item, dlStub;
 
+    beforeEach(function() {
+      item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', new InstallerDataService());
+      item.files.foo = {
+        dmUrl: 'downloadUrl',
+        fileName: 'foo.bar',
+        sha256sum: 'sum',
+        size: 123
+      };
+      dlStub = sandbox.stub(item, 'startDownload').returns();
+    });
+
+    it('should start download for each file not downloaded', function() {
+      sandbox.stub(fs, 'existsSync').returns(false);
+      item.downloadInstaller(fakeProgress);
+
+      expect(dlStub).calledTwice;
+      expect(dlStub).calledWith(path.join(item.downloadFolder, item.files.jdk.fileName), item.files.jdk.dmUrl, item.files.jdk.sha256sum);
+      expect(dlStub).calledWith(path.join(item.downloadFolder, item.files.foo.fileName), item.files.foo.dmUrl, item.files.foo.sha256sum);
     });
 
     it('should skip downloaded and bundled files', function() {
+      item.files.bar = {
+        dmUrl: 'downloadUrl',
+        fileName: 'foo.bar',
+        sha256sum: 'sum',
+        size: 123,
+        downloaded: true
+      };
+      let closeStub = sandbox.stub(Downloader.prototype, 'closeHandler').returns();
+      let fsStub = sandbox.stub(fs, 'existsSync');
+      fsStub.onFirstCall().returns(false);
+      fsStub.onSecondCall().returns(true);
 
+      item.downloadInstaller(fakeProgress);
+
+      expect(dlStub).calledOnce;
+      expect(dlStub).calledWith(path.join(item.downloadFolder, item.files.jdk.fileName), item.files.jdk.dmUrl, item.files.jdk.sha256sum);
+      expect(closeStub).calledOnce;
+      expect(item.files.foo.downloadedFile).to.equal(path.join(item.bundleFolder, item.files.foo.fileName));
     });
   });
 
