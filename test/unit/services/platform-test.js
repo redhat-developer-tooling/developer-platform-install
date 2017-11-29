@@ -328,7 +328,7 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
       });
       it('should return Unknown as version', function() {
-        return Platform.getHypervisorVersion  ().then((result) => {
+        return Platform.getHypervisorVersion().then((result) => {
           expect(result).to.be.equal('Unknown');
         });
       });
@@ -339,7 +339,7 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
       });
       it('should return Unknown as version', function() {
-        return Platform.getHypervisorVersion  ().then((result) => {
+        return Platform.getHypervisorVersion().then((result) => {
           expect(result).to.be.equal('Unknown');
         });
       });
@@ -353,7 +353,7 @@ describe('Platform', function() {
 
       it('should return promise resolved to true if powershell script returns `Enabled` in stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '10.0.123.1345');
-        return Platform.getHypervisorVersion  ().then((result) => {
+        return Platform.getHypervisorVersion().then((result) => {
           expect(result).to.be.equal('10.0.123.1345');
         });
       });

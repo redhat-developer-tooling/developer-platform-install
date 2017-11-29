@@ -79,10 +79,9 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       if(output === '%VBOX_MSI_INSTALL_PATH%') {
         return Util.executeCommand('where VirtualBox', 1);
       }
-      return Promise.resolve(output);
+      return output;
     }).then((output) => {
-      tempDetectedLocation = output;
-      return Promise.resolve(output);
+      return tempDetectedLocation = output;
     }).then((output) => {
       return Util.folderContains(output, ['VirtualBox.exe', 'VBoxManage.exe']);
     }).then((output) => {
@@ -98,12 +97,10 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         delete this.option.detected;
       }
       this.addOption('install', this.version, path.join(this.installerDataSvc.installRoot, 'virtualbox'), true);
-      return Promise.resolve();
     }).then(()=>{
       return Platform.isVirtualizationEnabled();
     }).then((result)=>{
       this.virtualizationEnabled=result;
-      return Promise.resolve();
     });
   }
 
@@ -226,7 +223,6 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
         delete this.option.detected;
       }
       this.addOption('install', this.version, '/usr/local/bin', true);
-      return Promise.resolve();
     }).then(() => {
       return Platform.isVirtualizationEnabled();
     }).then((result) => {

@@ -62,7 +62,6 @@ class SelectionController {
     return this.detectInstalledComponents().then(()=> {
       this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
       this.installWatchers();
-      return Promise.resolve();
     }).then(
       ()=> this.setIsDisabled()
     ).catch((error)=> {

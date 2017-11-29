@@ -91,7 +91,6 @@ class Downloader {
             this.failure('SHA256 checksum verification failed');
           }
           this.checkAmount--;
-          return Promise.resolve();
         });
       });
     } else {

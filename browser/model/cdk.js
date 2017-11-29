@@ -52,7 +52,7 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return installer.exec(
         'minishift stop', {env: this.createEnvironment()}
-      ).catch(()=>Promise.resolve());
+      ).catch(()=>{});
     }).then(()=> {
       return installer.exec(`minishift setup-cdk --force --default-vm-driver=${driverName}`, {env:this.createEnvironment()});
     }).then(()=> {
@@ -62,7 +62,6 @@ class CDKInstall extends InstallableItem {
       return globby(ocExePattern, {root: path.join(home, 'cache', 'oc')});
     }).then((files)=> {
       ocExe = files[0].replace(/\//g, path.sep);
-      return Promise.resolve();
     }).then(()=> {
       return Platform.makeFileExecutable(ocExe);
     }).then(()=> {

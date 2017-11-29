@@ -43,7 +43,7 @@ class JdkInstall extends InstallableItem {
       } else if(Platform.OS == 'darwin') {
         return this.findDarwinJava();
       } else {
-        return Promise.resolve('');
+        return '';
       }
     }).then((output)=>{
       this.openJdkMsi = output.length>0;
@@ -81,7 +81,6 @@ class JdkInstall extends InstallableItem {
       if(this.option.detected) {
         delete this.option.detected;
       }
-      return Promise.resolve();
     });
   }
 
@@ -123,7 +122,7 @@ class JdkInstall extends InstallableItem {
         if (!output || output.startsWith('Unable to find any JVMs')) {
           return Promise.reject('No java detected');
         } else {
-          return Promise.resolve(output);
+          return output;
         }
       });
   }

@@ -64,34 +64,27 @@ class Platform {
     return Platform.identify({
       win32: function() {
         return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled;[Environment]::Exit(0);"').then((stdout)=>{
-          let result = Promise.resolve();
+          let result;
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
             if(stdout == 'True') {
-              result = Promise.resolve(true);
+              result = true;
             } else if(stdout == 'False') {
-              result = Promise.resolve(false);
+              result = false;
             }
           }
           return result;
         }).catch(()=>{
-          return Promise.resolve();
+          // Ignore errors
         });
       },
       darwin: function() {
         return pify(child_process.exec)('sysctl -a | grep -o VMX').then((stdout)=>{
-          let result = Promise.resolve();
           if(stdout) {
-            stdout = stdout.replace(/\s/g, '');
-            if(stdout == 'VMX') {
-              result = Promise.resolve(true);
-            } else {
-              result = Promise.resolve(false);
-            }
+            return stdout.replace(/\s/g, '') == 'VMX';
           }
-          return result;
         }).catch(()=>{
-          return Promise.resolve();
+          // ignore errors
         });
       },
       default: function() {
@@ -104,16 +97,16 @@ class Platform {
     return Platform.identify({
       win32: function() {
         return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(get-item c:\\windows\\system32\\vmms.exe).VersionInfo.ProductVersion"').then((stdout) => {
-          let result = Promise.resolve('Unknown');
+          let result = 'Unknown';
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
             if(stdout) {
-              result = Promise.resolve(stdout);
+              result = stdout;
             }
           }
           return result;
         }).catch(()=>{
-          return Promise.resolve('Unknown');
+          return 'Unknown';
         });
       },
       default: function() {
@@ -126,18 +119,17 @@ class Platform {
     return Platform.identify({
       win32: function() {
         return pify(child_process.exec)('PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-Hypervisor | foreach{$_.state}; [Environment]::Exit(0);"').then((stdout) => {
-          let result = Promise.resolve();
+          let result;
           if(stdout) {
             stdout = stdout.replace(/\s/g, '');
             if(stdout == 'Enabled') {
-              result = Promise.resolve(true);
+              result = true;
             } else if(stdout == 'Disabled') {
-              result = Promise.resolve(false);
+              result = false;
             }
           }
           return result;
         }).catch(()=>{
-          return Promise.resolve();
         });
       },
       default: function() {
@@ -162,9 +154,8 @@ class Platform {
       win32: ()=> {
         let disk = path.parse(location).root.charAt(0);
         return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter deviceid='''${disk}:''').FreeSpace;[Environment]::Exit(0);}"`).then((stdout) => {
-          return Promise.resolve(Number.parseInt(stdout));
+          return Number.parseInt(stdout);
         }).catch(()=>{
-          return Promise.resolve();
         });
       },
       darwin: ()=> {
@@ -172,9 +163,9 @@ class Platform {
         return pify(child_process.exec)(`df -k ${path}`).then((stdout) => {
           let lines = stdout.split('\n');
           let split = lines[1].replace( / +/g, ' ' ).split(' ');
-          return Promise.resolve(Number.parseInt(split[split.length - 1] === '/' ? split[3] : split[4]));
+          return Number.parseInt(split[split.length - 1] === '/' ? split[3] : split[4]);
         }).catch(()=>{
-          return Promise.resolve('No such file or dir');
+          return 'No such file or dir';
         });
       },
       default: ()=> Promise.resolve()
@@ -231,7 +222,7 @@ class Platform {
   static getUserPath_win32() {
     return pify(child_process.exec)(
       'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\');[Environment]::Exit(0);"'
-    ).then(result=> Promise.resolve(result.replace(/\r?\n/g, '')));
+    ).then(result=> result.replace(/\r?\n/g, ''));
   }
 
   static setUserPath_win32(newPath) {

@@ -205,7 +205,6 @@ class InstallableItem {
             this.downloaded = false;
             this.files[file].downloaded = false;
           }
-          return Promise.resolve();
         });
       }
     }
