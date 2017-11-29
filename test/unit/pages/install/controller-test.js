@@ -7,6 +7,7 @@ import InstallController from 'browser/pages/install/controller';
 import { ProgressState } from 'browser/pages/install/controller';
 import InstallerDataService from 'browser/services/data';
 import VirtualBoxInstall from 'browser/model/virtualbox';
+import JdkInstall from 'browser/model/jdk-install';
 import InstallableItem from 'browser/model/installable-item';
 import Logger from 'browser/services/logger';
 import ElectronMock from '../../../mock/electron';
@@ -52,78 +53,132 @@ describe('Install controller', function() {
   });
 
   describe('constrution', function() {
-    it('should process all installables', function() {
-      let stub = sandbox.stub(InstallController.prototype, 'processInstallable').returns();
+    it('should verify existing files', function() {
+      let stub = sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
       new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(stub).calledOnce;
-      expect(stub).calledWith(VirtualBoxInstall.KEY, vbox);
     });
 
-    it('should mark skipped installables as done', function() {
-      let stub = sandbox.stub(installerDataSvc, 'setupDone').returns();
-      sandbox.stub(InstallController.prototype, 'processInstallable').returns();
-      sandbox.stub(vbox, 'isSkipped').returns(true);
-      new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      expect(stub).calledOnce;
-    });
-  });
+    it('should register an event handler for 3 different events', function() {
+      sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+      let tron = {
+         ipcRenderer: {
+           setMaxListeners: function() {},
+           on: function(event, callback) {}
+         }
+      };
 
-  describe('processInstallable', function() {
-    let dlStub, inStub;
+      let spy = sandbox.spy(tron.ipcRenderer, 'on');
+      new InstallController({}, {}, installerDataSvc, tron, window);
 
-    before(function() {
-      dlStub = sinon.stub(InstallController.prototype, 'triggerDownload');
-      inStub = sinon.stub(InstallController.prototype, 'triggerInstall');
-    });
-
-    after(function() {
-      dlStub.restore();
-      inStub.restore();
-    });
-
-    afterEach(function() {
-      dlStub.reset();
-      inStub.reset();
-    });
-
-    it('should trigger download on not downloaded installables', function() {
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
-
-      expect(dlStub).calledOnce;
-      expect(dlStub).calledWith('virtualbox', vbox);
-    });
-
-    it('should not trigger download on already downloaded items', function() {
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
-
+      expect(spy).calledThrice;
+      expect(spy).calledWith('checkComplete');
+      expect(spy).calledWith('downloadingComplete');
+      expect(spy).calledWith('installComplete');
     });
   });
 
-  describe('triggerDownload', function() {
-    let vboxStub, doneStub;
+  describe('verifyFiles', function() {
+    let verifyStub;
 
     beforeEach(function() {
-      vboxStub = sandbox.stub(vbox, 'downloadInstaller');
-      doneStub = sandbox.stub(installerDataSvc, 'downloadDone').returns();
+      verifyStub = sandbox.stub(installerDataSvc, 'verifyExistingFiles').returns();
     });
 
-    it('data service should register the new downloads', function() {
-      let spy = sandbox.spy(installerDataSvc, 'startDownload');
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
+    it('should select component for file verification if some of its files are downloaded', function() {
+      vbox.files.virtualbox.downloaded = true;
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
-      expect(spy).calledOnce;
-      expect(spy).calledWith('virtualbox');
-
-      expect(installerDataSvc.downloading).to.be.true;
-      expect(installerDataSvc.toDownload.size).to.equal(1);
+      expect(verifyStub).calledOnce;
+      expect(verifyStub).calledWith(ctrl.itemProgress, 'virtualbox');
     });
 
-    it('should call the installables downloadInstaller method', function() {
-      sandbox.stub(installerDataSvc, 'startDownload').returns();
+    it('should skip a component if none of its files are downloaded', function() {
+      vbox.files.virtualbox.downloaded = false;
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock(), window);
-      expect(vboxStub).calledOnce;
+      expect(verifyStub).calledOnce;
+      expect(verifyStub).calledWithExactly(ctrl.itemProgress);
+    });
+
+    it('should skip a component if it is bundled', function() {
+      vbox.files.virtualbox.downloaded = true;
+      vbox.downloadedFile = vbox.bundledFile;
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+
+      expect(verifyStub).calledOnce;
+      expect(verifyStub).calledWithExactly(ctrl.itemProgress);
+    });
+
+    it('should work for multiple components', function() {
+      vbox.files.virtualbox.downloaded = true;
+      let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
+      installerDataSvc.addItemToInstall('jdk', jdk);
+      jdk.files.jdk.downloaded = true;
+
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+
+      expect(verifyStub).calledOnce;
+      expect(verifyStub).calledWith(ctrl.itemProgress, 'virtualbox', 'jdk');
+    });
+  });
+
+  describe('downloadFiles', function() {
+    let dlStub, progressStub;
+
+    beforeEach(function() {
+      sandbox.stub(installerDataSvc, 'verifyExistingFiles').returns();
+      dlStub = sandbox.stub(installerDataSvc, 'download').returns();
+      progressStub = sandbox.stub(ProgressState.prototype, 'setTotalAmount').returns();
+    });
+
+    it('should process components that require download', function() {
+      let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
+      installerDataSvc.addItemToInstall('jdk', jdk);
+      vbox.useDownload = true;
+      jdk.useDownload = false;
+
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      ctrl.downloadFiles();
+
+      expect(dlStub).calledOnce;
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, ctrl.totalDownloads, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox');
+    });
+
+    it('should set the total amount to the sum of file sizes', function() {
+      vbox.useDownload = true;
+      vbox.files.foo = {
+        dmUrl: 'downloadUrl',
+        fileName: 'foo.bar',
+        sha256sum: 'sum',
+        size: 123
+      }
+
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      ctrl.downloadFiles();
+
+      expect(progressStub).calledOnce;
+      expect(progressStub).calledWith(vbox.files.virtualbox.size + vbox.files.foo.size);
+    });
+
+    it('should set total download count to number of pending files', function() {
+      let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
+      installerDataSvc.addItemToInstall('jdk', jdk);
+      jdk.useDownload = true;
+      vbox.useDownload = true;
+      vbox.files.foo = {
+        dmUrl: 'downloadUrl',
+        fileName: 'foo.bar',
+        sha256sum: 'sum',
+        size: 123
+      }
+
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      ctrl.downloadFiles();
+
+      expect(dlStub).calledOnce;
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');
     });
   });
 
@@ -310,6 +365,23 @@ describe('Install controller', function() {
         let result = progress.calculateTime();
         expect(progress.averageSpeed).to.equal(0.15 * 400 + 0.85 * 800);
         expect(result).to.equal((9000000 - 400000) / (0.15 * 400 + 0.85 * 800));
+      });
+    });
+
+    describe('resetTime', function() {
+      it('resets speed and time calculation', function() {
+        let progress = new ProgressState();
+        progress.lastTime = 100000;
+        progress.lastSpeed = 1000;
+        progress.averageSpeed = 100;
+        progress.totalAmount = 9000000;
+        progress.currentAmount = 400000;
+
+        progress.resetTime();
+
+        expect(progress.lastSpeed).to.equal(0);
+        expect(progress.lastAmount).to.equal(progress.currentAmount);
+        expect(progress.averageSpeed).to.equal(0);
       });
     });
   });

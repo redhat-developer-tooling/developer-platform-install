@@ -16,9 +16,13 @@ class FusePlatformInstall extends InstallableItem {
     super(FusePlatformInstall.KEY, file.platform.dmUrl, file.platform.fileName, targetFolderName, installerDataSvc, true);
     this.sha256 = file.platform.sha256sum;
     this.addOption('install', this.version, '', true);
+    this.files = file;
     this.jbeap = file.eap;
     this.jbeap.bundledFile = path.join(this.bundleFolder, this.jbeap.fileName);
     this.jbeap.downloadedFile = path.join(this.downloadFolder, this.jbeap.fileName);
+    this.platform = file.platform;
+    this.platform.bundledFile = path.join(this.bundleFolder, this.platform.fileName);
+    this.platform.downloadedFile = path.join(this.downloadFolder, this.platform.fileName);
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbosseap640-autoinstall.xml');
     this.totalDownloads = 2;
   }
@@ -26,41 +30,7 @@ class FusePlatformInstall extends InstallableItem {
   static get KEY() {
     return 'fuseplatform';
   }
-
-  downloadInstaller(progress, success, failure, downloader) {
-    this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads, this.userAgentString);
-    let username = this.installerDataSvc.getUsername(),
-      password = this.installerDataSvc.getPassword();
-
-    if(fs.existsSync(this.bundledFile)) {
-      this.downloadedFile = this.bundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.downloadedFile,
-        this.downloadUrl,
-        this.sha256,
-        username,
-        password,
-        progress
-      );
-    }
-
-    if(fs.existsSync(this.jbeap.bundledFile)) {
-      this.jbeap.downloadedFile = this.jbeap.bundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.jbeap.downloadedFile,
-        this.jbeap.dmUrl,
-        this.jbeap.sha256sum,
-        username,
-        password,
-        progress
-      );
-    }
-  }
-
+  
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let fusePlatformDir = this.installerDataSvc.fuseplatformDir();
@@ -103,7 +73,7 @@ class FusePlatformInstall extends InstallableItem {
   get installArgs() {
     return [
       '-jar',
-      this.downloadedFile
+      this.platform.downloadedFile
     ];
   }
 

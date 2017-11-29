@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
-  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload) {
+  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus,) {
     super(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = sha256sum;
@@ -18,7 +18,11 @@ class DevstudioInstall extends InstallableItem {
     this.addOption('install', this.version, '', true);
     this.additionalLocations = additionalLocations;
     this.additionalIus = additionalIus;
-    this.useDownload = useDownload;
+
+    if (keyName === 'fusetools') {
+      this.files = {};
+      this.useDownload = false;
+    }
   }
 
   static get KEY() {
@@ -87,8 +91,8 @@ class DevstudioInstall extends InstallableItem {
   }
 }
 
-function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload}) {
-  return new DevstudioInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus, useDownload);
+function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus}) {
+  return new DevstudioInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus);
 }
 
 DevstudioInstall.convertor = {fromJson};
