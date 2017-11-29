@@ -66,8 +66,18 @@ class InstallerDataService {
     if(stageHost) {
       for (let variable in this.requirements) {
         let dmUrl = this.requirements[variable].dmUrl;
-        if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
+        if (dmUrl && dmUrl.includes('download-manager/jdf')) {
           this.requirements[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
+        } if(this.requirements[variable].file) {
+          let files = Object.keys(this.requirements[variable].file).map(file=>{
+            return this.requirements[variable].file[file];
+          });
+          console.log(files);
+          files.forEach(function(file) {
+            if (file.dmUrl && file.dmUrl.includes('download-manager/jdf/')) {
+              file.dmUrl = file.dmUrl.replace('developers.redhat.com', stageHost);
+            }
+          });
         }
       }
     }
