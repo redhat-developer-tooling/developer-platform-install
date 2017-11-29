@@ -95,11 +95,6 @@ describe('kompose installer', function() {
       authStub = sandbox.stub(Downloader.prototype, 'download').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      installer.downloadInstaller(fakeProgress, success, failure);
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp folder', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
       expect(authStub.callCount).to.equal(1);

@@ -112,13 +112,6 @@ describe('devstudio installer', function() {
       downloadAuthStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      installer.downloadInstaller(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp/devstudio.jar', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
@@ -170,6 +163,15 @@ describe('devstudio installer', function() {
       installer.installAfterRequirements(fakeProgress, success, failure);
 
       expect(spy).to.have.been.calledOnce;
+    });
+
+    it('should use bundled installer if exists', function() {
+      sandbox.stub(fsextra, 'existsSync').returns(true);
+      let spy = sandbox.spy(DevstudioAutoInstallGenerator.prototype, 'fileContent');
+
+      installer.installAfterRequirements(fakeProgress, success, failure);
+
+      expect(installer.downloadedFile==installer.bundledFile).equals(true);
     });
 
     it('should write the install configuration into temp/devstudio-autoinstall.xml', function() {
@@ -260,7 +262,6 @@ describe('devstudio installer', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(fsextra, 'existsSync').returns(true);
-
       });
 
       it('should use windows specific location for runtime_locations.properties file', function() {
@@ -277,13 +278,21 @@ describe('devstudio installer', function() {
           expect(errorStub).called;
         });
       });
+
+      it('should not add runtime if runtime_locations.properties file doesn\'t exist', function() {
+        fsextra.existsSync.restore();
+        sandbox.stub(fsextra, 'existsSync').returns(false);
+        sandbox.stub(fsextra, 'appendFile');
+        return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
+          expect(fsextra.appendFile).have.not.been.called;
+        });
+      })
     });
 
     describe('on macos', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         sandbox.stub(fsextra, 'existsSync').returns(true);
-
       });
 
       it('should use windows specific location for runtime_locations.properties file', function() {

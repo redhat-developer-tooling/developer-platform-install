@@ -311,14 +311,6 @@ describe('JDK installer', function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      sandbox.stub(fs, 'existsSync').returns(false);
-      installer.downloadInstaller(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp/jdk.msi', function() {
 
       installer.downloadInstaller(fakeProgress, success, failure);

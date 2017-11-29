@@ -56,27 +56,43 @@ class Downloader {
   }
 
   closeHandler(file, sha) {
+    this.closePromise = Promise.resolve();
     if(this.downloads.get(file) && this.downloads.get(file)['failure']) {
       return;
     }
     if(sha) {
+      let remainingCount = 0;
+      this.downloads.forEach((value) => {
+        if (!value.done) { remainingCount++; }
+      });
+      let total = this.progress.totalAmount;
+      this.checkAmount = this.checkAmount ? this.checkAmount++ : 1;
+
       Logger.log(`Configured file='${file}' sha256='${sha}'`);
       var h = new Hash();
-      if(this.progress.current === 100) {
+      if(this.checkAmount === remainingCount) {
         this.progress.setStatus('Verifying Download');
+        this.progress.setTotalAmount(remainingCount);
+        this.progress.setCurrent(this.checkAmount);
       }
-      h.SHA256(file, (dlSha) => {
-        if(sha === dlSha) {
-          Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
-          this.successHandler(file);
-        } else {
-          if(this.downloads.get(file)) {
-            this.downloads.get(file)['failure'] = true;
-            this.currentSize -= this.downloads.get(file).currentSize;
-            this.progress.setCurrent(this.currentSize);
+      return this.closePromise = this.closePromise.then(() => {
+        return h.SHA256(file).then((dlSha) => {
+          if(sha === dlSha) {
+            Logger.log(`Downloaded file='${file}' sha256='${dlSha}'`);
+            this.successHandler(file);
+          } else {
+            if(this.downloads.get(file)) {
+              this.downloads.get(file)['failure'] = true;
+              this.currentSize -= this.downloads.get(file).currentSize;
+              this.progress.setTotalAmount(total)
+              this.progress.setCurrent(this.currentSize);
+              this.progress.resetTime();
+            }
+            this.failure('SHA256 checksum verification failed');
           }
-          this.failure('SHA256 checksum verification failed');
-        }
+          this.checkAmount--;
+          return Promise.resolve();
+        });
       });
     } else {
       this.successHandler(file);
@@ -86,8 +102,9 @@ class Downloader {
   successHandler(file) {
     if(this.downloads.get(file)) {
       this.downloads.get(file)['failure'] = false;
+      this.downloads.get(file)['done'] = true;
     }
-    if(this.totalDownloads == ++this.downloaded ) {
+    if(this.totalDownloads == ++this.downloaded || this.totalDownloads == 0) {
       this.success();
     }
   }

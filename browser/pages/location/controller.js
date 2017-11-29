@@ -11,11 +11,11 @@ class LocationController {
     this.sc = $scope;
     this.timeout = $timeout;
     this.installerDataSvc = installerDataSvc;
-    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
     this.folderExists = false;
     this.installables = {};
     $scope.checkboxModel = {};
     this.electron = electron;
+    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
   }
 
   confirm() {

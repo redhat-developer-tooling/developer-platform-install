@@ -84,25 +84,43 @@ function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, sha256sum, 
 function prefetch(reqs, bundle, targetFolder) {
   let promises = new Array();
   for (let key in reqs) {
-    if (reqs[key].bundle === bundle) {
-      let currentFile = path.join(targetFolder, reqs[key].fileName);
-      promises.push(() => {
-        return new Promise((resolve, reject) => {
-          // if file is already downloaded, check its sha against the stored one
-          downloadAndReadSHA256(targetFolder, reqs[key].fileName + '.sha256', reqs[key].sha256sum, reject, (currentSHA256) => {
-            //console.log('[DEBUG] SHA256SUM for ' + key + ' = ' + currentSHA256);
-            comm.isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
-              if(dl) {
-                console.log('[INFO] \'' + currentFile + '\' SHA256 is correct, no download required');
-                resolve(true);
-              } else {
-                if(fs.existsSync(currentFile)) {
-                  console.log('[INFO] \'' + currentFile + '\' SHA256 is not correct, download required');
+    if ((reqs[key].useDownload == undefined || reqs[key].useDownload) && reqs[key].bundle === bundle && (reqs[key].fileName || reqs[key].file)) {
+      let files = {};
+      if(reqs[key].fileName) {
+        files[key] = {
+          url: reqs[key].url,
+          fileName: path.basename(reqs[key].fileName),
+          sha256sum: reqs[key].sha256sum,
+          size: reqs[key].size
+        };
+      } else {
+        files = reqs[key].file;
+      }
+      // convert from object to array of fields
+      files = Object.keys(files).map(function(file) {
+        return files[file];
+      });
+      files.forEach((file) =>{
+        let currentFile = path.join(targetFolder, file.fileName);
+        promises.push(() => {
+          return new Promise((resolve, reject) => {
+            console.log(file);
+            // if file is already downloaded, check its sha against the stored one
+            downloadAndReadSHA256(targetFolder, file.fileName + '.sha256', file.sha256sum, reject, (currentSHA256) => {
+              //console.log('[DEBUG] SHA256SUM for ' + key + ' = ' + currentSHA256);
+              comm.isExistingSHA256Current(currentFile, currentSHA256, (dl) => {
+                if(dl) {
+                  console.log('[INFO] \'' + currentFile + '\' SHA256 is correct, no download required');
+                  resolve(true);
                 } else {
-                  console.log('[INFO] \'' + currentFile + '\' is not downloaded yet');
+                  if(fs.existsSync(currentFile)) {
+                    console.log('[INFO] \'' + currentFile + '\' SHA256 is not correct, download required');
+                  } else {
+                    console.log('[INFO] \'' + currentFile + '\' is not downloaded yet');
+                  }
+                  downloadFileAndCreateSha256(targetFolder, file.fileName, file.url, currentSHA256, resolve, reject);
                 }
-                downloadFileAndCreateSha256(targetFolder, reqs[key].fileName, reqs[key].url, currentSHA256, resolve, reject);
-              }
+              });
             });
           });
         });

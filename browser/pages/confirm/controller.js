@@ -16,7 +16,11 @@ class ConfirmController {
       let totalDownloadSize = 0;
       for (let value of this.installerDataSvc.allInstallables().values()) {
         if(value.size && value.selectedOption == 'install' && !value.downloaded) {
-          totalDownloadSize += value.size;
+          for (let file in value.files) {
+            if (!value.files[file].downloaded) {
+              totalDownloadSize += value.files[file].size;
+            }
+          }
         }
       }
       return totalDownloadSize;

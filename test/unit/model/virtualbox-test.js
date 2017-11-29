@@ -100,13 +100,6 @@ describe('Virtualbox installer', function() {
       downloadStub = sandbox.stub(Downloader.prototype, 'download').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      installer.downloadInstaller(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp/virtualbox.exe', function() {
 
       installer.downloadInstaller(fakeProgress, success, failure);

@@ -32,6 +32,7 @@ describe('InstallableItem', function() {
     sandbox = sinon.sandbox.create();
     fakeProgress = sandbox.stub(new ProgressState());
     sandbox.stub(Platform, 'getOS').returns('win32');
+    sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
   });
 
   afterEach(function() {
@@ -101,7 +102,6 @@ describe('InstallableItem', function() {
   });
 
   describe('getInstallAfter method', function() {
-
     it('should ignore skipped installers and return first selected for installation', function() {
       let svc = new InstallerDataService();
       let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
@@ -114,7 +114,6 @@ describe('InstallableItem', function() {
       item1.thenInstall(item2).thenInstall(item3).thenInstall(item4);
       expect(item4.getInstallAfter()).to.be.equal(item1);
     });
-
   });
 
   describe('getProductVersion', function() {
@@ -124,76 +123,39 @@ describe('InstallableItem', function() {
       item.selectedOption = 'detected';
       expect(item.getProductVersion()).to.be.equal('1.2');
     });
+
     it('returns version for included product if not detected', function() {
       let item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', new InstallerDataService());
       expect(item.getProductVersion()).to.be.equal(item.version);
     });
   });
 
-  describe('checkAndDownload method', function() {
-    let svc, downloader, installItem;
+  describe('checkFiles method', function() {
+    it('should check each downloaded file', function() {
 
-    beforeEach(function() {
-      svc = new InstallerDataService();
-      downloader = new Downloader(null, function() {});
-      installItem = new InstallableItem('jdk', 'downloadUrl', 'fileName', 'targetLocation', svc, false);
-      installItem.downloader = downloader;
     });
 
-    it('should start to download file if there is no dowloaded file', function() {
-      sandbox.stub(fs, 'existsSync').returns(false);
-      let startDlMock = sandbox.stub(installItem, 'startDownload').returns();
+    it('should confirm file is downloaded when checksums match', function() {
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
-
-      expect(startDlMock).to.have.been.calledOnce;
     });
 
-    it('should start download file if there is dowloaded file with wrong checksum', function() {
-      sandbox.stub(fs, 'existsSync').returns(true);
-      let startDlMock = sandbox.stub(installItem, 'startDownload').returns();
-      sandbox.stub(Hash.prototype, 'SHA256').yields('wrongsha');
+    it('should set the component to download when a checksum does not match', function() {
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
-
-      expect(startDlMock).to.have.been.calledOnce;
     });
 
-    it('should not start download file if there is dowloaded file with correct checksum', function() {
-      let successHandStub = sandbox.stub(downloader, 'successHandler').returns();
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(installItem, 'startDownload').returns();
-      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
+    it('should skip files that do not exist', function() {
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
+    });
+  });
 
-      expect(successHandStub).to.have.been.calledOnce;
+  describe('downloadInstaller method', function() {
+    it('should start download for each file not downloaded', function() {
+
     });
 
-    it('should set progress status to "Verifying Existing Download" if a downloaded file exists', function() {
-      sandbox.stub(downloader, 'successHandler').returns();
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(installItem, 'startDownload').returns();
-      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
+    it('should skip downloaded and bundled files', function() {
 
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Verifying previously downloaded components');
     });
-
-    it('should not change progress status if current status is \'Downloading\'', function() {
-      sandbox.stub(downloader, 'successHandler').returns();
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(installItem, 'startDownload').returns();
-      sandbox.stub(Hash.prototype, 'SHA256').yields('sha');
-      fakeProgress = sandbox.stub(new ProgressState());
-      fakeProgress.status = 'Downloading';
-      installItem.checkAndDownload('temp/inatall.zip', 'url', 'sha', undefined, undefined, fakeProgress);
-
-      expect(fakeProgress.setStatus).have.not.been.called;
-    });
-
   });
 
   describe('startDownload method', function() {
@@ -221,15 +183,6 @@ describe('InstallableItem', function() {
 
       downloadStub.verify();
     });
-
-    it('should set the progress state to "Downloading"', function() {
-      sinon.mock(installItem.downloader).expects('downloadAuth').once().withArgs('url', 'user', 'password', 'downloadto.zip', 'sha');
-      installItem.startDownload('downloadto.zip', 'url', 'sha', 'user', 'password', fakeProgress);
-
-      expect(fakeProgress.setStatus).to.have.been.calledOnce;
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
   });
 
   describe('when instantiated', function() {
@@ -259,31 +212,37 @@ describe('InstallableItem', function() {
       let svc = new InstallerDataService();
       item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
     });
+
     describe('should return true', function() {
       it('when item is not detected and selected for installation', function() {
         item.setSelectedOption = 'install';
         expect(item.isConfigured()).to.be.true;
       });
+
       it('when item is detected, valid and selected for installation', function() {
         item.setSelectedOption = 'install';
         item.addOption('detected', '1.0.0', 'path/to/location', true);
         expect(item.isConfigured()).to.be.true;
       });
+
       it('when item is detected, invalid and selected for installation', function() {
         item.setSelectedOption = 'install';
         item.addOption('detected', '1.0.0', 'path/to/location', false);
         expect(item.isConfigured()).to.be.true;
       });
+
       it('when item is detected, valid and is not selected for installation', function() {
         item.setSelectedOption = 'detected';
         item.addOption('detected', '1.0.0', 'path/to/location', true);
         expect(item.isConfigured()).to.be.true;
       });
+
       it('when item is not detected and is not selected for installation', function() {
         item.setSelectedOption = 'detected';
         expect(item.isConfigured()).to.be.true;
       });
     });
+
     describe('should return false', function() {
       it('when item is detected, invalid and is not selected for installation', function() {
         item.selectedOption = 'detected';
@@ -356,6 +315,7 @@ describe('InstallableItem', function() {
       let svc = new InstallerDataService();
       item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
     });
+
     describe('should return true', function() {
       it('if item detectded and invalid', function() {
         item.selectedOption = 'detected';
@@ -363,11 +323,13 @@ describe('InstallableItem', function() {
         expect(item.isInvalidVersionDetected()).to.be.true;
       });
     });
+
     describe('should return false', function() {
       it('if not detectded', function() {
         item.selectedOption = 'detected';
         expect(item.isInvalidVersionDetected()).to.be.false;
       });
+
       it('if item detectded and valid', function() {
         item.selectedOption = 'detected';
         item.addOption('detected', '1.0.0', 'path/to/location', true);
@@ -381,12 +343,14 @@ describe('InstallableItem', function() {
       let svc = new InstallerDataService();
       item = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
     });
+
     it('should return location for detected option if detected', function() {
       item.selectedOption = 'detected';
       item.addOption('detected', '1.0.0', 'path/to/detected/location', true);
       item.addOption('install', '1.0.0', 'path/to/instal/location', true);
       expect(item.getLocation()).to.be.equal('path/to/detected/location');
     });
+
     it('should return location for install option if not detected', function() {
       item.selectedOption = 'detected';
       item.addOption('install', '1.0.0', 'path/to/instal/location', true);
@@ -419,6 +383,7 @@ describe('InstallableItem', function() {
       item.references = 1;
       expect(item.isDisabled()).to.be.equal(true);
     });
+
     it('returns false if there are no references', function() {
       item.references = 0;
       expect(item.isDisabled()).to.be.equal(false);
@@ -431,14 +396,17 @@ describe('InstallableItem', function() {
       item.size = 100;
       expect(item.getDownloadStatus()).equals('Selected to download');
     });
+
     it('returns \'No download required\' if item download size is undefined', function() {
       delete item.size;
       expect(item.getDownloadStatus()).equals('No download required');
     });
+
     it('returns \'No download required\' if item download size equals 0', function() {
       item.size = 0;
       expect(item.getDownloadStatus()).equals('No download required');
     });
+
     it('returns \'Previously Downloaded\' if item is downloaded and size is more than 0', function() {
       item.downloaded = true;
       item.size = 100;

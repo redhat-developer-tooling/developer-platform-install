@@ -51,27 +51,17 @@ if ($devstudioInstalled) {
   echo 'DONE'
 }
 
+$targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
+
 echo 'Removing installation folder'
 
-$subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
-
-if ($subfolders.Length -gt 0) {
-  New-Item "$folder\..\temp" -type Directory -Force | Out-Null
-  foreach ($item in $subfolders) {
-    robocopy "$folder\..\temp" "$item" /purge | Out-Null
-  }
-  Get-ChildItem "$folder\.." -Recurse | Remove-Item -Force
-}
-
-Remove-Item "$folder\.."
+Remove-Item -path "$targetFolder" -Force -Recurse
 
 echo 'DONE'
 
 echo 'Removing path entries'
 [string[]] $pathFolders = [Environment]::GetEnvironmentVariable("Path", "User") -Split ';'
 [Collections.ArrayList] $folderList = New-Object Collections.Arraylist
-
-$targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
 
 $pathFolders | foreach {
   If (-Not ($_ -like "$targetFolder*")) {

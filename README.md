@@ -26,7 +26,7 @@ Architecture
 ------------
 
 This installer is desktop application for Windows and macOS built with
-[Electron](http://electron.atom.io/docs/tutorial/about/).
+[Electron](https://electronjs.org/docs/all).
 
 Building Installer
 ------------------
@@ -93,13 +93,13 @@ for On-line and Bundle Installers.
 in bash terminal
 
         touch ~/.bash_profile
-        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
 
    then restart bash to pick up changes in your environment
 
 4. Install nodejs using nvm command
 
-        nvm install v6.11.2
+        nvm install v8.9.1
 
 5. Clone installer repository
 
@@ -364,8 +364,8 @@ without Administartive privileges.
 
 #### macOS
 
-On macOS installer starts macOS installer with osascript that requests administartive account
-credential to continue, so you can run from any bash instance and installer will show request
+On macOS, installer starts with osascript that requests administartive account
+credential to continue. So you can run from any bash instance and installer will show request
 for account with rights to administer current machine.
 
 Updating dependencies to latest

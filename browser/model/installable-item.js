@@ -56,16 +56,41 @@ class InstallableItem {
     }
     this.downloadedFile = path.join(this.downloadFolder, fileName);
 
-    if(fs.existsSync(this.bundledFile)) {
-      this.downloaded = true;
+    if (requirement.file) {
+      this.files = requirement.file;
     } else {
-      if(fs.existsSync(this.downloadedFile)) {
-        try {
-          let stat = fs.statSync(this.downloadedFile);
-          this.downloaded = stat && (stat.size == requirement.size);
-        } catch (error) {
-          Logger.info(`${this.keyName} - fstat function failure ${error}`);
+      this.files = {};
+      this.files[this.keyName] = {
+        dmUrl: downloadUrl,
+        fileName: path.basename(fileName),
+        sha256sum: requirement.sha256sum,
+        size: this.size
+      };
+    }
+
+    this.downloaded = true;
+    this.useDownload = false;
+
+    for (let file in this.files) {
+      if (!fs.existsSync(path.join(this.bundleFolder, this.files[file].fileName))) {
+        if (fs.existsSync(path.join(this.downloadFolder, this.files[file].fileName))) {
+          try {
+            let stat = fs.statSync(path.join(this.downloadFolder, this.files[file].fileName));
+            this.files[file].downloaded = stat && stat.size == this.files[file].size;
+            this.downloaded = this.downloaded && this.files[file].downloaded;
+            this.useDownload = !this.downloaded;
+          } catch (error) {
+            this.downloaded = false;
+            this.useDownload = true;
+            Logger.info(`${this.keyName} - fstat function failure ${error}`);
+          }
+        } else {
+          this.downloaded = false;
+          this.useDownload = true;
         }
+      } else {
+        this.files[file].downloaded = true;
+        this.downloadedFile = path.join(this.bundleFolder, this.files[file].fileName);
       }
     }
 
@@ -143,44 +168,51 @@ class InstallableItem {
 
   downloadInstaller(progress, success, failure, downloader) {
     this.downloader = downloader ? downloader : new Downloader(progress, success, failure, this.totalDownloads, this.userAgentString);
-    if(fs.existsSync(this.bundledFile)) {
-      this.downloadedFile = this.bundledFile;
-      this.downloader.closeHandler();
-    } else {
-      this.checkAndDownload(
-        this.downloadedFile,
-        this.downloadUrl,
-        this.sha256,
-        this.authRequired ? this.installerDataSvc.getUsername() : undefined,
-        this.authRequired ? this.installerDataSvc.getPassword() : undefined,
-        progress
-      );
+    for (let file in this.files) {
+      if (this.files[file].downloaded) {
+        continue;
+      }
+
+      if (fs.existsSync(path.join(this.bundleFolder, this.files[file].fileName))) {
+        this.files[file].downloadedFile = path.join(this.bundleFolder, this.files[file].fileName);
+        this.downloader.closeHandler();
+      } else {
+        this.startDownload(
+          path.join(this.downloadFolder, this.files[file].fileName),
+          this.files[file].dmUrl,
+          this.files[file].sha256sum,
+          this.authRequired ? this.installerDataSvc.getUsername() : undefined,
+          this.authRequired ? this.installerDataSvc.getPassword() : undefined,
+          progress
+        );
+      }
     }
   }
 
-  checkAndDownload(downloadedFile, url, sha, user, pass, progress) {
-    if(fs.existsSync(downloadedFile)) {
-      let h = new Hash();
-
-      if (progress.current === 0 && progress.status !== 'Downloading') {
-        progress.setStatus('Verifying previously downloaded components');
+  checkFiles() {
+    let promise = Promise.resolve();
+    for (let file in this.files) {
+      if (fs.existsSync(path.join(this.downloadFolder, this.files[file].fileName))) {
+        let h = new Hash();
+        promise = promise.then(() => {
+          return h.SHA256(path.join(this.downloadFolder, this.files[file].fileName));
+        }).then((dlSha) => {
+          if(this.files[file].sha256sum === dlSha) {
+            Logger.info(`Using previously downloaded file='${this.files[file].fileName}' sha256='${dlSha}'`);
+            this.files[file].downloaded = true;
+          } else {
+            this.useDownload = true;
+            this.downloaded = false;
+            this.files[file].downloaded = false;
+          }
+          return Promise.resolve();
+        });
       }
-
-      h.SHA256(downloadedFile, (dlSha) => {
-        if(sha === dlSha) {
-          Logger.info(`Using previously downloaded file='${downloadedFile}' sha256='${dlSha}'`);
-          this.downloader.successHandler(downloadedFile);
-        } else {
-          this.startDownload(downloadedFile, url, sha, user, pass, progress);
-        }
-      });
-    } else {
-      this.startDownload(downloadedFile, url, sha, user, pass, progress);
     }
+    return promise;
   }
 
   startDownload(downloadedFile, url, sha, user, pass, progress) {
-    progress.setStatus('Downloading');
     if(user === undefined && pass === undefined ) {
       this.downloader.download(url, downloadedFile, sha, this);
     } else {

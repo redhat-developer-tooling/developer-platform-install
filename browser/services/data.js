@@ -14,17 +14,20 @@ import child_process from'child_process';
 import Platform from '../services/platform';
 import TokenStore from './credentialManager';
 import loadMetadata from '../services/metadata';
+import Downloader from '../model/helpers/downloader';
 
 
 class InstallerDataService {
+
   constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
     this.tmpDir = os.tmpdir();
 
     if (Platform.getOS() === 'win32') {
-      this.defaultFolder = 'c:\\Program Files\\DevelopmentSuite';
+      this.defaultFolder = path.join(Platform.getProgramFilesPath(), 'Development Suite');
     } else {
       this.defaultFolder = '/Applications/DevelopmentSuite';
     }
+
     this.installRoot = this.defaultFolder;
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
@@ -64,13 +67,22 @@ class InstallerDataService {
     if(stageHost) {
       for (let variable in this.requirements) {
         let dmUrl = this.requirements[variable].dmUrl;
-        if (dmUrl && dmUrl.includes('download-manager/jdf/file')) {
+        if (dmUrl && dmUrl.includes('download-manager/jdf')) {
           this.requirements[variable].dmUrl = dmUrl.replace('developers.redhat.com', stageHost);
+        } if(this.requirements[variable].file) {
+          let files = Object.keys(this.requirements[variable].file).map(file=>{
+            return this.requirements[variable].file[file];
+          });
+          console.log(files);
+          files.forEach(function(file) {
+            if (file.dmUrl && file.dmUrl.includes('download-manager/jdf/')) {
+              file.dmUrl = file.dmUrl.replace('developers.redhat.com', stageHost);
+            }
+          });
         }
       }
     }
   }
-
 
   setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
@@ -121,7 +133,6 @@ class InstallerDataService {
 
   addItemToInstall(key, item) {
     this.installableItems.set(key, item);
-    this.toInstall.add(key);
   }
 
   addItemsToInstall(...items) {
@@ -227,37 +238,71 @@ class InstallerDataService {
     return this.installing;
   }
 
-  startDownload(key) {
-    Logger.info('Download started for: ' + key);
+  verifyExistingFiles(progress, ...keys) {
+    if (keys.length < 1) {
+      this.ipcRenderer.send('checkComplete', 'all');
+      return Promise.resolve();
+    }
+    progress.setStatus('Verifying previously downloaded components');
+    progress.setTotalAmount(keys.length);
+    progress.setCurrent(1);
+
+    let promise = Promise.resolve();
+    for (let i = 0; i < keys.length; i++) {
+      promise = promise.then(() => {
+        progress.productVersion = this.getInstallable(keys[i]).productVersion;
+        progress.setProductName(this.getInstallable(keys[i]).productName);
+        return this.getInstallable(keys[i]).checkFiles();
+      }).then(() => {
+        progress.setCurrent(progress.currentAmount + 1);
+        return Promise.resolve();
+      });
+    }
+   return promise.then(() => {
+      this.ipcRenderer.send('checkComplete', 'all');
+      return Promise.resolve();
+    });
+  }
+
+  download(progress, totalDownloads, failedDownloads, userAgent, ...keys) {
+    let success = () => {
+      this.downloading = false;
+      this.ipcRenderer.send('downloadingComplete', 'all');
+    };
+
+    if (keys.length < 1) {
+      return success();
+    }
+
+    this.downloader = new Downloader(progress, success,
+      (error) => {
+        Logger.error('Download failed with: ' + error);
+        progress.setStatus('Download Failed');
+        failedDownloads.add(this.downloader);
+      },
+      totalDownloads,
+      userAgent
+    );
+    progress.setStatus('Downloading');
 
     if (!this.isDownloading()) {
       this.downloading = true;
     }
-    this.toDownload.add(key);
+
+    for (let key of keys) {
+      Logger.info('Download started for: ' + key);
+      this.getInstallable(key).downloadInstaller(
+        progress,
+        undefined,
+        undefined,
+        this.downloader
+      );
+    }
   }
 
-  downloadDone(progress, key) {
-    Logger.info('Download finished for: ' + key);
-
-    let item = this.getInstallable(key);
-    item.setDownloadComplete();
-
-    this.toDownload.delete(key);
-    if (this.isDownloading() && this.toDownload.size == 0) {
-      this.downloading = false;
-      this.ipcRenderer.send('downloadingComplete', 'all');
-    }
-
-    this.startInstall(key);
-
-    return item.install(progress,
-      () => {
-        this.installDone(progress, key);
-      },
-      (error) => {
-        Logger.error(key + ' failed to install: ' + error);
-      }
-    );
+  restartDownload() {
+    Logger.info('Restarting download');
+    this.downloader.restartDownload();
   }
 
   startInstall(key) {
@@ -297,7 +342,6 @@ class InstallerDataService {
       Logger.info('All installs complete');
       this.installing = false;
       this.ipcRenderer.send('installComplete', 'all');
-      // this.router.go('start');
     }
   }
 

@@ -154,12 +154,6 @@ describe('CDK installer', function() {
       authStub = sandbox.stub(Downloader.prototype, 'downloadAuth').returns();
     });
 
-    it('should set progress to "Downloading"', function() {
-      installer.downloadInstaller(fakeProgress, success, failure);
-
-      expect(fakeProgress.setStatus).to.have.been.calledWith('Downloading');
-    });
-
     it('should write the data into temp folder', function() {
 
       installer.downloadInstaller(fakeProgress, success, failure);
@@ -213,6 +207,7 @@ describe('CDK installer', function() {
       let svc;
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer, svc} = stubInstaller() );
         sandbox.stub(Platform, 'getUserHomePath').returns(Promise.resolve(path.join('Users', 'dev1')));
         sandbox.stub(Installer.prototype, 'copyFile').resolves();
@@ -326,7 +321,8 @@ describe('CDK installer', function() {
       });
 
       it('should use MINISHIFT_HOME env variable when search for oc.exe executable', function() {
-        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home'});
+        Platform.getEnv.restore();
+        sandbox.stub(Platform, 'getEnv').returns({MINISHIFT_HOME: './minishift-home', PROGRAMFILES: 'C:\\Program Files'});
         return new Promise((resolve, reject)=> {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
@@ -414,15 +410,16 @@ describe('CDK installer', function() {
     describe('on windows', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        ( {cdk: installer} = stubInstaller() );
       });
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
-        sandbox.stub(Platform, 'getEnv').returns({'Path':'path'});
+        sandbox.stub(Platform, 'getEnv').returns({'Path':'path', PROGRAMFILES: 'C:\\Program Files'});
+        ( {cdk: installer} = stubInstaller() );
         let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
-        sandbox.stub(Platform, 'getEnv').returns({'Path':''});
+        sandbox.stub(Platform, 'getEnv').returns({'Path':'', PROGRAMFILES: 'C:\\Program Files'});
+        ( {cdk: installer} = stubInstaller() );
         let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
