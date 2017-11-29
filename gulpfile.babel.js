@@ -14,7 +14,7 @@ var fs = require('fs-extra'),
   mkdirp = require('mkdirp'),
   merge = require('merge-stream'),
   sourcemaps = require('gulp-sourcemaps'),
-  vfs = require('vinyl-fs'),
+  symlink = require('gulp-symlink'),
   common = require('./gulp-tasks/common'),
   config = require('./gulp-tasks/config'),
   yargs = require('yargs');
@@ -45,8 +45,8 @@ gulp.task('transpile:app', function() {
 
 //create symlink to node_modules in transpiled folder
 gulp.task('create-modules-link', function () {
-  return vfs.src('node_modules', {followSymlinks: true})
-  .pipe(vfs.symlink('transpiled'));
+  return gulp.src('node_modules')
+  .pipe(symlink('transpiled/node_modules', {force:true}));
 });
 
 gulp.task('electron-rebuild', function(cb) {
