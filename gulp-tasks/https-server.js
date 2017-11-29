@@ -29,22 +29,34 @@ function handleRequest(req, res) {
 
   } else if(req.method === 'GET') {
     let url = req.url;
-    console.log(`Url='${url}'`);
     if (url.endsWith('/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip')) {
       res.end('true');
     } else if(url.endsWith('/favicon.ico')) {
       // not required
     } else {
-      console.log('Request to download manager ');
+      console.log('Request to download manager');
       for (let prop in requirements) {
         let requirement = requirements[prop];
-        console.log(requirement.dmUrl);
         if(requirement.dmUrl && requirement.dmUrl.endsWith(url)
           || requirement.url && requirement.url.endsWith(url) ) {
           console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + requirement.fileName);
           res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + requirement.fileName });
           res.end();
           return;
+        } else if(requirement.file) {
+          let files = Object.keys(requirement.file).map(file=>{
+            return requirement.file[file];
+          });
+          console.log(files);
+          for (let file of files) {
+            if(file.dmUrl && file.dmUrl.endsWith(url)
+              || file.url && file.url.endsWith(url) ) {
+                console.log('Issuing redirect ' + 'https://' + req.headers['host'] + '/' + file.fileName);
+                res.writeHead(302, { 'Location': 'https://' + req.headers['host'] + '/requirements-cache/' + file.fileName });
+                res.end();
+                return;
+              }
+          }
         }
       }
       url = url.substring(1);
