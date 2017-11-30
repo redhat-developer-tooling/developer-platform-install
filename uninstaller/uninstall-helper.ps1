@@ -55,7 +55,7 @@ $targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
 
 echo 'Removing installation folder'
 
-Remove-Item -path "$targetFolder" -Force -Recurse
+Remove-Item -path "\\?\$targetFolder" -Force -Recurse
 
 echo 'DONE'
 
