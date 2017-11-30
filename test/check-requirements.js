@@ -3,7 +3,6 @@ let loadMetadata = require('../browser/services/metadata');
 let reqs = loadMetadata(require('../requirements.json'), process.platform);
 let request = require('request');
 
-let minSizes = new Object();
 let data = new Object();
 let fileNames = new Object();
 let count = 0;

@@ -426,7 +426,7 @@ describe('Platform', function() {
       });
 
       it('should able to return free disk space for home', function() {
-        let home = `Filesystem    1024-blocks Used Available Capacity iused ifree %iused  Mounted on\nmap auto_home           0    0         0   100%       0     0  100%   /home`;
+        let home = 'Filesystem    1024-blocks Used Available Capacity iused ifree %iused  Mounted on\nmap auto_home           0    0         0   100%       0     0  100%   /home';
         sandbox.stub(child_process, 'exec').yields(undefined, home);
         let location = '/home/DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
@@ -435,7 +435,7 @@ describe('Platform', function() {
       });
 
       it('should able to return free disk space', function() {
-        let applications = `Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /`;
+        let applications = 'Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /';
         sandbox.stub(child_process, 'exec').yields(undefined, applications);
         let location = '/Applications/DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
@@ -444,7 +444,7 @@ describe('Platform', function() {
       });
 
       it('should able to return free disk space', function() {
-        let applications = `Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /`;
+        let applications = 'Filesystem 1024-blocks     Used Available Capacity  iused    ifree %iused  Mounted on\n/dev/disk1   243966468 48677780 195032688    20% 12233443 48758172   20%   /';
         sandbox.stub(child_process, 'exec').yields(undefined, applications);
         let location = 'Downloads/DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
@@ -453,7 +453,7 @@ describe('Platform', function() {
       });
 
       it('should able to return error if path is not present', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, `df: /Applications/developer: No such file or dir`);
+        sandbox.stub(child_process, 'exec').yields(undefined, 'df: /Applications/developer: No such file or dir');
         let location = '/Applications/developer';
         return Platform.getFreeDiskSpace(location).then((result) => {
           expect(result).to.be.equal('No such file or dir');
@@ -490,7 +490,7 @@ describe('Platform', function() {
       });
 
       it('should return NaN if drive not found', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, "");
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
         let location = 'd:\\DevelopmentSuite';
         return Platform.getFreeDiskSpace(location).then((result) => {
           expect(result).to.be.NaN;

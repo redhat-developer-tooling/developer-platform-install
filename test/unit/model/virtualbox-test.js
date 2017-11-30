@@ -158,10 +158,10 @@ describe('Virtualbox installer', function() {
 
         let spy = sandbox.spy(Installer.prototype, 'exec');
         return installer.installAfterRequirements(fakeProgress, success, failure)
-        .then(() => {
-          expect(spy).to.have.been.called;
-          expect(spy).calledWith(installer.createImportCommand());
-        });
+          .then(() => {
+            expect(spy).to.have.been.called;
+            expect(spy).calledWith(installer.createImportCommand());
+          });
       });
 
       it('should execute the silent extract', function() {
@@ -177,10 +177,10 @@ describe('Virtualbox installer', function() {
 
         let spy = sandbox.spy(Installer.prototype, 'exec');
         return installer.installAfterRequirements(fakeProgress, success, failure)
-        .then(() => {
-          expect(spy).to.have.been.called;
-          expect(spy).calledWith(data.join(' '));
-        });
+          .then(() => {
+            expect(spy).to.have.been.called;
+            expect(spy).calledWith(data.join(' '));
+          });
       });
 
       describe('configure', function() {

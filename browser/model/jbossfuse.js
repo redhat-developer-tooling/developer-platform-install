@@ -6,7 +6,6 @@ import esc from 'xml-escape';
 import rimraf from 'rimraf';
 import mkdirp from 'mkdirp';
 
-import Downloader from './helpers/downloader';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
@@ -24,13 +23,12 @@ class FusePlatformInstall extends InstallableItem {
     this.platform.bundledFile = path.join(this.bundleFolder, this.platform.fileName);
     this.platform.downloadedFile = path.join(this.downloadFolder, this.platform.fileName);
     this.installConfigFile = path.join(this.installerDataSvc.tempDir(), 'jbosseap640-autoinstall.xml');
-    this.totalDownloads = 2;
   }
 
   static get KEY() {
     return 'fuseplatform';
   }
-  
+
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let fusePlatformDir = this.installerDataSvc.fuseplatformDir();

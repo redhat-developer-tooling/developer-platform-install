@@ -2,10 +2,8 @@
 
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
-import path from 'path';
 import keytar from 'keytar';
 import mockfs from 'mock-fs';
-import fs from 'fs-extra';
 import TokenStore from 'browser/services/credentialManager';
 import { default as sinonChai } from 'sinon-chai';
 import Platform from 'browser/services/platform';
@@ -16,7 +14,7 @@ describe('Platform', function() {
 
   let sandbox;
 
-  before(function(){
+  before(function() {
     mockfs({
       'appdatapath': {
         'settings.json': '{"username":"abc@redhat.com"}'
@@ -62,7 +60,7 @@ describe('Platform', function() {
     it('should able to get the user login', function() {
       sandbox.stub(Platform, 'localAppData').returns('appdatapath');
       let getUserName = TokenStore.getUserName();
-      expect(getUserName).to.be.equal('abc@redhat.com')
+      expect(getUserName).to.be.equal('abc@redhat.com');
     });
   });
 });

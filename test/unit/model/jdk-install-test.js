@@ -414,7 +414,7 @@ describe('JDK installer', function() {
     it('should not change installerDataSvc.jdkRoot if the same location found in install log', function(done) {
       sandbox.stub(require('child_process'), 'execFile').yields();
       sandbox.stub(Installer.prototype, 'execFile').returns(Promise.resolve(true));
-      sandbox.stub(Util, 'findText').returns(Promise.resolve('Dir \(target\): Key: INSTALLDIR	, Object: target/install'));
+      sandbox.stub(Util, 'findText').returns(Promise.resolve('Dir \\(target\\): Key: INSTALLDIR	, Object: target/install'));
       installer = new JdkInstall(installerDataSvc, 'jdk8', downloadUrl, 'jdk8.msi', 'sha');
       sandbox.stub(installer, 'getLocation').returns('target/install');
       installerDataSvc.jdkRoot = 'install/jdk8';

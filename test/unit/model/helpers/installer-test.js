@@ -66,20 +66,20 @@ describe('Installer', function() {
       let stub = sandbox.stub(child_process, 'exec').yields();
 
       return installer.exec(command, args)
-      .then(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith(command, args);
-      });
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(command, args);
+        });
     });
 
     it('should resolve as true if no error occurs', function() {
       sandbox.stub(child_process, 'exec').yields(undefined, 'stdout', 'stderr');
       infoStub.reset();
       return installer.exec(command, args)
-      .then(function(result) {
-        expect(result).to.equal(true);
-        expect(infoStub).to.be.calledWith('test - stdout');
-      });
+        .then(function(result) {
+          expect(result).to.equal(true);
+          expect(infoStub).to.be.calledWith('test - stdout');
+        });
     });
 
     it('should reject when an error occurs', function() {
@@ -87,12 +87,12 @@ describe('Installer', function() {
       sandbox.stub(child_process, 'exec').yields(err);
 
       return installer.exec(command, args)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
     });
   });
 
@@ -104,20 +104,20 @@ describe('Installer', function() {
       let stub = sandbox.stub(child_process, 'execFile').yields();
 
       return installer.execFile(file, args)
-      .then(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith(file, args);
-      });
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(file, args);
+        });
     });
 
     it('should resolve as true if no error occurs', function() {
       sandbox.stub(child_process, 'execFile').yields(undefined, 'stdout', 'stderr');
       infoStub.reset();
       return installer.execFile(file, args)
-      .then(function(result) {
-        expect(result).to.equal(true);
-        expect(infoStub).to.be.calledWith('test - stdout');
-      });
+        .then(function(result) {
+          expect(result).to.equal(true);
+          expect(infoStub).to.be.calledWith('test - stdout');
+        });
     });
 
     it('should reject when an error occurs', function() {
@@ -125,12 +125,12 @@ describe('Installer', function() {
       sandbox.stub(child_process, 'execFile').yields(err);
 
       return installer.execFile(file, args)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
     });
   });
 
@@ -144,10 +144,10 @@ describe('Installer', function() {
         let spy = sandbox.stub(fs, 'createReadStream');
 
         return installer.unzip(file, dir)
-        .catch(function() {
-          expect(spy).to.have.been.calledOnce;
-          expect(spy).to.have.been.calledWith(file);
-        });
+          .catch(function() {
+            expect(spy).to.have.been.calledOnce;
+            expect(spy).to.have.been.calledWith(file);
+          });
       });
 
       it('should call unzip#Extract into a correct folder', function() {
@@ -157,10 +157,10 @@ describe('Installer', function() {
         let readStreamMock = { pipe: function() { return eventEmitter; }};
         sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
         return installer.unzip(file, dir)
-        .catch(function() {
-          expect(stub).to.have.been.calledOnce;
-          expect(stub).to.have.been.calledWith({ path: dir });
-        });
+          .catch(function() {
+            expect(stub).to.have.been.calledOnce;
+            expect(stub).to.have.been.calledWith({ path: dir });
+          });
       });
 
       it('should resolve as true if no error occurs', function() {
@@ -180,7 +180,7 @@ describe('Installer', function() {
       it('should reject when an error occurs', function() {
         let eventEmitter = new EventEmitter();
         sandbox.stub(eventEmitter, 'on').onFirstCall().returns(eventEmitter)
-            .onSecondCall().yields('error');
+          .onSecondCall().yields('error');
         let readStreamMock = { pipe: function() { return eventEmitter; }};
         sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
 
@@ -239,19 +239,19 @@ describe('Installer', function() {
       let stub = sandbox.stub(fs, 'move').yields();
 
       return installer.moveFile(source, target)
-      .then(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith(source, target);
-      });
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(source, target);
+        });
     });
 
     it('should resolve as true when no error occurs', function() {
       sandbox.stub(fs, 'move').yields();
 
       return installer.moveFile(source, target)
-      .then(function(result) {
-        expect(result).to.equal(true);
-      });
+        .then(function(result) {
+          expect(result).to.equal(true);
+        });
     });
 
     it('should reject when an error occurs', function() {
@@ -259,12 +259,12 @@ describe('Installer', function() {
       sandbox.stub(fs, 'move').yields(err);
 
       return installer.moveFile(source, target)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
     });
   });
 
@@ -276,19 +276,19 @@ describe('Installer', function() {
       let stub = sandbox.stub(fs, 'copy').yields();
 
       return installer.copyFile(source, target)
-      .then(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith(source, target);
-      });
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(source, target);
+        });
     });
 
     it('should resolve as true when no error occurs', function() {
       sandbox.stub(fs, 'copy').yields();
 
       return installer.copyFile(source, target)
-      .then(function(result) {
-        expect(result).to.equal(true);
-      });
+        .then(function(result) {
+          expect(result).to.equal(true);
+        });
     });
 
     it('should reject when an error occurs', function() {
@@ -296,12 +296,12 @@ describe('Installer', function() {
       sandbox.stub(fs, 'copy').yields(err);
 
       return installer.copyFile(source, target)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
     });
   });
 
@@ -313,19 +313,19 @@ describe('Installer', function() {
       let stub = sandbox.stub(fs, 'writeFile').yields();
 
       return installer.writeFile(file, data)
-      .then(function() {
-        expect(stub).to.have.been.calledOnce;
-        expect(stub).to.have.been.calledWith(file, data);
-      });
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(file, data);
+        });
     });
 
     it('should resolve as true when no error occurs', function() {
       sandbox.stub(fs, 'writeFile').yields();
 
       return installer.writeFile(file, data)
-      .then(function(result) {
-        expect(result).to.equal(true);
-      });
+        .then(function(result) {
+          expect(result).to.equal(true);
+        });
     });
 
     it('should reject when an error occurs', function() {
@@ -333,12 +333,12 @@ describe('Installer', function() {
       sandbox.stub(fs, 'writeFile').yields(err);
 
       return installer.writeFile(file, data)
-      .then(function() {
-        expect.fail('it did not reject');
-      })
-      .catch(function(error) {
-        expect(error).to.equal(err);
-      });
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
     });
   });
 

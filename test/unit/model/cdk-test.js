@@ -159,7 +159,7 @@ describe('CDK installer', function() {
       installer.downloadInstaller(fakeProgress, success, failure);
 
       expect(authStub.callCount).to.equal(1);
-      expect(authStub).calledWith('https://doenload.cdk/url', 'user' , 'password' , installer.downloadedFile);
+      expect(authStub).calledWith('https://doenload.cdk/url', 'user', 'password', installer.downloadedFile);
     });
 
     it('should call a correct downloader request for cdk file', function() {

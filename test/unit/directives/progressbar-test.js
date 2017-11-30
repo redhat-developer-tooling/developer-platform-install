@@ -26,12 +26,12 @@ describe('ProgressBarDirective', function() {
     sandbox.restore();
   });
   it('shows directive', function() {
-      // Compile a piece of HTML containing the directive
+    // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
     $compile(angular.element(
-        '<progress-bar></progress-bar>'))(scope);
+      '<progress-bar></progress-bar>'))(scope);
     scope.$digest();
-      // Check that the compiled element contains the templated content
+    // Check that the compiled element contains the templated content
     // expect(compiledDirective.html()).to.contain('notSelected-message');
     // expect(compiledDirective.html()).to.not.contain('notAbsolute-message');
   });

@@ -25,18 +25,18 @@ describe('PathValidatorDirective', function() {
   });
   it('shows only notSelected error for empty folder field', function() {
     sandbox.stub(Platform, 'getOS').returns('win32');
-      // Compile a piece of HTML containing the directive
+    // Compile a piece of HTML containing the directive
     scope = $rootScope.$new();
     scope.folder = '';
     var compiledDirective = $compile(angular.element(
-        `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
-          <ng-messages for="locationForm.folder.$error">
-            <ng-message when="notSelected">notSelected-message</ng-message>
-            <ng-message when="notAbsolute">notAbsolute-message</ng-message>
-          </ng-messages>
-        </form>`))(scope);
+      `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
+         <ng-messages for="locationForm.folder.$error">
+           <ng-message when="notSelected">notSelected-message</ng-message>
+           <ng-message when="notAbsolute">notAbsolute-message</ng-message>
+         </ng-messages>
+       </form>`))(scope);
     scope.$digest();
-      // Check that the compiled element contains the templated content
+    // Check that the compiled element contains the templated content
     expect(compiledDirective.html()).to.contain('notSelected-message');
     expect(compiledDirective.html()).to.not.contain('notAbsolute-message');
   });
@@ -44,34 +44,34 @@ describe('PathValidatorDirective', function() {
   describe('on macos', function() {
     it('does not use windows path format validator', function() {
       sandbox.stub(Platform, 'getOS').returns('darwin');
-        // Compile a piece of HTML containing the directive
+      // Compile a piece of HTML containing the directive
       scope = $rootScope.$new();
       scope.folder = '/home/user';
       var compiledDirective = $compile(angular.element(
-          `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
+        `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
             <ng-messages for="locationForm.folder.$error">
               <ng-message when="invalidFormat">invalidFormat-message</ng-message>
             </ng-messages>
           </form>`))(scope);
       scope.$digest();
-        // Check that the compiled element contains the templated content
+      // Check that the compiled element contains the templated content
       expect(compiledDirective.html()).to.not.contain('invalidFormat-message');
     });
   });
   describe('on windows', function() {
     it('run windows path format validator', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
-        // Compile a piece of HTML containing the directive
+      // Compile a piece of HTML containing the directive
       scope = $rootScope.$new();
       scope.folder = '/home/user';
       var compiledDirective = $compile(angular.element(
-          `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
+        `<form name="locationForm"><input ng-model="folder" name="folder" path-validator/>
             <ng-messages for="locationForm.folder.$error">
               <ng-message when="invalidFormat">invalidFormat-message</ng-message>
             </ng-messages>
           </form>`))(scope);
       scope.$digest();
-        // Check that the compiled element contains the templated content
+      // Check that the compiled element contains the templated content
       expect(compiledDirective.html()).to.contain('invalidFormat-message');
     });
   });

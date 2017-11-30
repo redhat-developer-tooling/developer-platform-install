@@ -19,9 +19,9 @@ class DevstudioInstall extends InstallableItem {
     this.additionalLocations = additionalLocations;
     this.additionalIus = additionalIus;
 
-    if (keyName === 'fusetools') {
+    if (!this.useDownload) {
       this.files = {};
-      this.useDownload = false;
+      this.downloaded = true;
     }
   }
 

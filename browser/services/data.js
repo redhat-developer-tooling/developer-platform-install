@@ -4,7 +4,6 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import pify from 'pify';
-import keytar from 'keytar';
 import mkdirp from 'mkdirp';
 import rimraf from 'rimraf';
 import Logger from './logger';
@@ -73,7 +72,6 @@ class InstallerDataService {
           let files = Object.keys(this.requirements[variable].file).map(file=>{
             return this.requirements[variable].file[file];
           });
-          console.log(files);
           files.forEach(function(file) {
             if (file.dmUrl && file.dmUrl.includes('download-manager/jdf/')) {
               file.dmUrl = file.dmUrl.replace('developers.redhat.com', stageHost);
@@ -257,7 +255,7 @@ class InstallerDataService {
         progress.setCurrent(progress.currentAmount + 1);
       });
     }
-   return promise.then(() => {
+    return promise.then(() => {
       this.ipcRenderer.send('checkComplete', 'all');
     });
   }

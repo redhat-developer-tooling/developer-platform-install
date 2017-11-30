@@ -24,7 +24,7 @@ class InstallableItem {
     this.existingInstall = false;
     this.existingInstallLocation = '';
     this.existingVersion = '';
-    this.useDownload = true;
+    this.useDownload = requirement.useDownload == undefined ? true : requirement.useDownload;
     this.downloaded = false;
     this.installed = false;
     this.size = requirement.size;
@@ -69,7 +69,6 @@ class InstallableItem {
     }
 
     this.downloaded = true;
-    this.useDownload = false;
 
     for (let file in this.files) {
       if (!fs.existsSync(path.join(this.bundleFolder, this.files[file].fileName))) {
@@ -78,15 +77,12 @@ class InstallableItem {
             let stat = fs.statSync(path.join(this.downloadFolder, this.files[file].fileName));
             this.files[file].downloaded = stat && stat.size == this.files[file].size;
             this.downloaded = this.downloaded && this.files[file].downloaded;
-            this.useDownload = !this.downloaded;
           } catch (error) {
             this.downloaded = false;
-            this.useDownload = true;
             Logger.info(`${this.keyName} - fstat function failure ${error}`);
           }
         } else {
           this.downloaded = false;
-          this.useDownload = true;
         }
       } else {
         this.files[file].downloaded = true;
@@ -100,7 +96,7 @@ class InstallableItem {
     this.references = 0;
 
     this.messages = requirement.messages;
-    this.totalDownloads = 1;
+    this.totalDownloads = Object.keys(this.files).length;
   }
 
   getProductName() {
@@ -135,7 +131,7 @@ class InstallableItem {
   }
 
   isDownloadRequired() {
-    return this.useDownload;
+    return !this.downloaded;
   }
 
   setDownloadComplete() {
@@ -201,7 +197,6 @@ class InstallableItem {
             Logger.info(`Using previously downloaded file='${this.files[file].fileName}' sha256='${dlSha}'`);
             this.files[file].downloaded = true;
           } else {
-            this.useDownload = true;
             this.downloaded = false;
             this.files[file].downloaded = false;
           }
@@ -211,7 +206,7 @@ class InstallableItem {
     return promise;
   }
 
-  startDownload(downloadedFile, url, sha, user, pass, progress) {
+  startDownload(downloadedFile, url, sha, user, pass) {
     if(user === undefined && pass === undefined ) {
       this.downloader.download(url, downloadedFile, sha, this);
     } else {
