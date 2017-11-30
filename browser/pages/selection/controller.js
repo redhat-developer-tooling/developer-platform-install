@@ -64,7 +64,7 @@ class SelectionController {
       this.installWatchers();
     }).then(
       ()=> this.setIsDisabled()
-    ).catch((error)=> {
+    ).catch(()=> {
       this.setIsDisabled();
     });
   }

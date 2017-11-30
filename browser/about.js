@@ -24,5 +24,5 @@ let aboutModule =
           url: '/about',
           controller: 'AboutController as aboutCtrl',
           templateUrl: 'pages/about/about.html'
-        })
+        });
     }]);
