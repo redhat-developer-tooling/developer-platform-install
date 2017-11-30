@@ -55,6 +55,8 @@ $targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
 
 echo 'Removing installation folder'
 
+New-Item "$folder\..\temp" -type Directory -Force | Out-Null
+robocopy "$folder\..\temp" "$targetFolder" /purge | Out-Null
 Remove-Item -path "$targetFolder" -Force -Recurse
 
 echo 'DONE'
