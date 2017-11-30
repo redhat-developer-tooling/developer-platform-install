@@ -10,7 +10,7 @@ import Logger from '../services/logger';
 import Platform from '../services/platform';
 
 class DevstudioInstall extends InstallableItem {
-  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus,) {
+  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, additionalLocations, additionalIus) {
     super(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
 
     this.sha256 = sha256sum;
