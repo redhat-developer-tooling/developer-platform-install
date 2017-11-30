@@ -57,7 +57,7 @@ LO3H861OaD3fHWTg2azY6woFr0mu0Fq68a/rpsEUGuXagtdoZaE+VP1SrsIpuPZM
 -----END PGP SIGNATURE-----
 `;
 
-let invalidText = `altered message`;
+let invalidText = 'altered message';
 
 let invalidClearsignMessage = `-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1

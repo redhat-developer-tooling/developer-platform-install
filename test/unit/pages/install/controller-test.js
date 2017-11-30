@@ -63,10 +63,10 @@ describe('Install controller', function() {
     it('should register an event handler for 3 different events', function() {
       sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
       let tron = {
-         ipcRenderer: {
-           setMaxListeners: function() {},
-           on: function(event, callback) {}
-         }
+        ipcRenderer: {
+          setMaxListeners: function() {},
+          on: function() {}
+        }
       };
 
       let spy = sandbox.spy(tron.ipcRenderer, 'on');
@@ -136,8 +136,8 @@ describe('Install controller', function() {
     it('should process components that require download', function() {
       let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
       installerDataSvc.addItemToInstall('jdk', jdk);
-      vbox.useDownload = true;
-      jdk.useDownload = false;
+      vbox.downloaded = false;
+      jdk.downloaded = true;
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
       ctrl.downloadFiles();
@@ -153,7 +153,7 @@ describe('Install controller', function() {
         fileName: 'foo.bar',
         sha256sum: 'sum',
         size: 123
-      }
+      };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
       ctrl.downloadFiles();
@@ -172,7 +172,7 @@ describe('Install controller', function() {
         fileName: 'foo.bar',
         sha256sum: 'sum',
         size: 123
-      }
+      };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
       ctrl.downloadFiles();

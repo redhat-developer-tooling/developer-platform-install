@@ -10,7 +10,6 @@ import { Readable, PassThrough, Writable } from 'stream';
 import Hash from 'browser/model/helpers/hash';
 import fs from 'fs-extra';
 import {ProgressState} from 'browser/pages/install/controller';
-const EventEmitter = require('events');
 chai.use(sinonChai);
 
 describe('Downloader', function() {
@@ -249,7 +248,7 @@ describe('Downloader', function() {
         expect(successHandler).to.have.not.been.called;
       }).catch((err)=>{
         expect.fail();
-        return Promise.rejects();
+        return Promise.rejects(err);
       });
     });
 
@@ -323,7 +322,7 @@ describe('Downloader', function() {
       stream.close = function() {};
       stream.path = 'key';
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      let successHandler = sandbox.stub(downloader, 'successHandler');
+      sandbox.stub(downloader, 'successHandler');
       let p = downloader.downloadAuth(options, 'username', 'password', 'key', 'sha');
 
       return p.then(()=>{
@@ -354,7 +353,7 @@ describe('Downloader', function() {
       stream.close = function() {};
       stream.path = 'key';
       sandbox.stub(fs, 'createWriteStream').returns(stream);
-      let successHandler = sandbox.stub(downloader, 'successHandler');
+      sandbox.stub(downloader, 'successHandler');
       let p = downloader.download(options, 'username', 'password', 'key', 'sha');
 
       return p.then(()=>{

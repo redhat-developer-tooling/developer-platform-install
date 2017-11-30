@@ -9,7 +9,7 @@ class InstallController {
   constructor($scope, $timeout, installerDataSvc, electron, $window) {
     this.$scope = $scope;
     this.$timeout = $timeout;
-    this.$window = $window
+    this.$window = $window;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.electron.ipcRenderer.setMaxListeners(0);
@@ -51,9 +51,9 @@ class InstallController {
   verifyFiles() {
     let toCheck = [];
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let downloaded = false;
+      let downloaded = true;
       for (let file in value.files) {
-        downloaded = downloaded || value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
+        downloaded = downloaded && value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
       }
       if (!value.isSkipped() && downloaded) {
         toCheck.push(key);
@@ -65,10 +65,8 @@ class InstallController {
   downloadFiles() {
     let toDownload = [];
     this.installerDataSvc.allInstallables().forEach((value, key) => {
-      if(!value.isSkipped()) {
-        if(value.isDownloadRequired()) {
-          toDownload.push(key);
-        }
+      if(!value.isSkipped() && value.isDownloadRequired()) {
+        toDownload.push(key);
         for (let file in value.files) {
           if (!value.files[file].downloaded) {
             this.totalAmount += value.files[file].size;

@@ -11,7 +11,6 @@ import Util from 'browser/model/helpers/util';
 import JbosseapInstall from 'browser/model/jbosseap';
 import JdkInstall from 'browser/model/jdk-install';
 import Logger from 'browser/services/logger';
-import Platform from 'browser/services/platform';
 import Downloader from 'browser/model/helpers/downloader';
 import Installer from 'browser/model/helpers/installer';
 import Hash from 'browser/model/helpers/hash';

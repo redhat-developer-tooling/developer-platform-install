@@ -14,7 +14,7 @@ describe('About controller', function() {
   let electron = new ElectronMock();
 
   beforeEach(function() {
-    scope = { '$apply': function() { }, version : "2.1.0-GA" };
+    scope = { '$apply': function() { }, version : '2.1.0-GA' };
     controller = new AboutController({}, scope, electron);
   });
 

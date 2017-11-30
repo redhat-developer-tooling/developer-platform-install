@@ -167,7 +167,7 @@ describe('devstudio installer', function() {
 
     it('should use bundled installer if exists', function() {
       sandbox.stub(fsextra, 'existsSync').returns(true);
-      let spy = sandbox.spy(DevstudioAutoInstallGenerator.prototype, 'fileContent');
+      sandbox.spy(DevstudioAutoInstallGenerator.prototype, 'fileContent');
 
       installer.installAfterRequirements(fakeProgress, success, failure);
 
@@ -286,7 +286,7 @@ describe('devstudio installer', function() {
         return installer.configureRuntimeDetection('runtime1', 'location').then(()=>{
           expect(fsextra.appendFile).have.not.been.called;
         });
-      })
+      });
     });
 
     describe('on macos', function() {
