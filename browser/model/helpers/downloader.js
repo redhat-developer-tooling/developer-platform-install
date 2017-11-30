@@ -84,7 +84,7 @@ class Downloader {
             if(this.downloads.get(file)) {
               this.downloads.get(file)['failure'] = true;
               this.currentSize -= this.downloads.get(file).currentSize;
-              this.progress.setTotalAmount(total)
+              this.progress.setTotalAmount(total);
               this.progress.setCurrent(this.currentSize);
               this.progress.resetTime();
             }

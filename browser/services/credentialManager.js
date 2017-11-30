@@ -29,7 +29,7 @@ class TokenStore {
     return username;
   }
 
-  static getStatus(){
+  static getStatus() {
     return JSON.parse(localStorage.getItem('rememberMe'));
   }
 }

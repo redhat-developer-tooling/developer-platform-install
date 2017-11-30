@@ -24,10 +24,6 @@ function pathValidator() {
         return value.length<=90;
       }
 
-      function hasNoSpaces(value) {
-        return !value.includes(' ');
-      }
-
       function validateDisk(value) {
         let stats = path.parse(value);
         return !stats.root.length == 0 && fs.existsSync(stats.root);
