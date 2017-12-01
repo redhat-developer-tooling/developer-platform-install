@@ -55,9 +55,9 @@ class Platform {
       win32: function() {
         return Platform.ENV.PROGRAMFILES;
       }, darwin: function() {
-
+        return '/Applications';
       }, default: function() {
-        return 'C:\\Program Files';
+        return Platform.getUserHomePath();
       }
     });
   }

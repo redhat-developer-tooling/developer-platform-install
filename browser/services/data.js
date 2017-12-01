@@ -21,13 +21,7 @@ class InstallerDataService {
   constructor($state, requirements = require('../../requirements.json'), packageConf = require('../../package.json')) {
     this.tmpDir = os.tmpdir();
 
-    if (Platform.getOS() === 'win32') {
-      this.defaultFolder = path.join(Platform.getProgramFilesPath(), 'Development Suite');
-    } else {
-      this.defaultFolder = '/Applications/DevelopmentSuite';
-    }
-
-    this.installRoot = this.defaultFolder;
+    this.installRoot = path.join(Platform.getProgramFilesPath(), 'DevelopmentSuite');
     this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
     this.packageConf = packageConf;
