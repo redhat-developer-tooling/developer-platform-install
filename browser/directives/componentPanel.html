@@ -1,38 +1,38 @@
 <div ng-hide="item === undefined || item.hidden === true">
-  <div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':item.isDetected()}">
-    <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
-         ng-class="{'dotted-panel':item.isDetected()}">
-         <div class="checkbox-container verticalLine">
-           <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
-         </div>
-      <div class="product-container">
-        <div class="warnings-in-panel">
-          <span id="{{item.keyName}}-installed-note" class="installed-note" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
-            <i class="fa fa-check"></i> Using detected version {{item.option.detected.version}}
-          </span>
-          <div ng-show="item.hasOption('detected')">
-            <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
-              <div class="help-block">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <span id="{{item.keyName}}-newer-message">Newer than required!</span>
+  <div id="{{item.keyName}}-panel" class="panel-border panel-default panel2pxborder" ng-class="{'zero-border':item.isDetected()}">
+    <label for="{{item.keyName}}-checkbox" id="{{item.keyName}}-panel-heading" class="label-panel panel-heading panel-normal" ng-class="{'dotted-panel':item.isDetected()}">
+        <div class="checkbox-container verticalLine">
+          <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+        </div>
+        <div class="product-container">
+          <div class="warnings-in-panel">
+            <span id="{{item.keyName}}-installed-note" class="installed-note" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+              <i class="fa fa-check"></i> Using detected version {{item.option.detected.version}}
+            </span>
+            <div ng-show="item.hasOption('detected')">
+              <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span id="{{item.keyName}}-newer-message">Newer than required!</span>
+                </div>
               </div>
-            </div>
-            <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
-              <div class="help-block">
-              <span class="pficon pficon-warning-triangle-o"></span>
-                <span id="{{item.keyName}}-older-message">Older than required!</span>
+              <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
+                <div class="help-block">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span id="{{item.keyName}}-older-message">Older than required!</span>
+                </div>
               </div>
             </div>
           </div>
+          <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span>
+          <span id="{{item.keyName}}-version" class="product-info">{{item.version}}</span>
+          <span ng-show="parseNumber(item.size) > 0">
+            <span class="product-info">|</span>
+            <span id="{{item.keyName}}-size" class="product-info">{{item.size | humanize}}</span>
+          </span>
+          <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
         </div>
-        <span id="{{item.keyName}}-name" class="product-name">{{item.productName}}</span>
-        <span id="{{item.keyName}}-version" class="product-info">{{item.version}}</span>
-        <span ng-show="parseNumber(item.size) > 0">
-          <span class="product-info">|</span><span id="{{item.keyName}}-size" class="product-info">{{item.size | humanize}}</span>
-        </span>
-        <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
-      </div>
-    </div>
+    </label>
   </div>
 
   <div class="help-block" ng-show="item.messages.info !== undefined && !item.isDetected()">
