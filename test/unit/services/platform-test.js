@@ -635,9 +635,7 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getEnv').returns({USERPROFILE: 'c:\\Users\\dev1'});
       });
       it('returns USERPROFILE environment variable value', function() {
-        return Platform.getUserHomePath().then((result) => {
-          expect(result).to.be.equal('c:\\Users\\dev1');
-        });
+        expect(Platform.getUserHomePath()).to.be.equal('c:\\Users\\dev1');
       });
     });
     describe('on macos', function() {
@@ -646,9 +644,7 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getEnv').returns({HOME: 'c:\\Users\\dev1'});
       });
       it('returns HOME environment variable value', function() {
-        return Platform.getUserHomePath().then((result) => {
-          expect(result).to.be.equal('c:\\Users\\dev1');
-        });
+        expect(Platform.getUserHomePath()).to.be.equal('c:\\Users\\dev1');
       });
     });
     describe('on linux', function() {
@@ -657,9 +653,7 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getEnv').returns({HOME: 'c:\\Users\\dev1'});
       });
       it('returns HOME environment variable value', function() {
-        return Platform.getUserHomePath().then((result) => {
-          expect(result).to.be.equal('c:\\Users\\dev1');
-        });
+        expect(Platform.getUserHomePath()).to.be.equal('c:\\Users\\dev1');
       });
     });
   });
