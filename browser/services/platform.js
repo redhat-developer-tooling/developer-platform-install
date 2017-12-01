@@ -54,6 +54,8 @@ class Platform {
     return Platform.identify({
       win32: function() {
         return Platform.ENV.PROGRAMFILES;
+      }, darwin: function() {
+
       }, default: function() {
         return 'C:\\Program Files';
       }
@@ -141,10 +143,10 @@ class Platform {
   static getUserHomePath() {
     return Platform.identify({
       win32: ()=> {
-        return Promise.resolve(Platform.ENV.USERPROFILE);
+        return Platform.ENV.USERPROFILE;
       },
       default: ()=> {
-        return Promise.resolve(Platform.ENV.HOME);
+        return Platform.ENV.HOME;
       }
     });
   }
