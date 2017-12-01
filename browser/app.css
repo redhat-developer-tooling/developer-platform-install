@@ -10,11 +10,12 @@ header {
   text-align: center;
 }
 
-.label-panel {
-  display: inline-block;
-  max-width: 100%;
-  margin-bottom: 5px;
-  width: 1439px;
+.panel-height {
+  height: 74px;
+}
+
+.label-font {
+  font-weight: 500;
 }
 
 .greyed-out-background {
@@ -509,15 +510,6 @@ footer {
   .zero-border {
     border-style: dashed;
     border-width: 2px
-  }
-
-  .panel-border {
-    margin-bottom: 20px;
-    background-color: rgba(93, 77, 77, 0.20);
-    border: 1px solid transparent;
-    border-radius: 1px;
-    height: 74px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   }
 
   .panel2pxborder {
