@@ -15,7 +15,7 @@ class LocationController {
     this.installables = {};
     $scope.checkboxModel = {};
     this.electron = electron;
-    this.folder = installerDataSvc.installDir() || installerDataSvc.defaultFolder;
+    this.folder = installerDataSvc.installDir();
   }
 
   confirm() {
@@ -24,12 +24,6 @@ class LocationController {
       value.setOptionLocation('install', path.join(this.folder, value.targetFolderName));
     }
     this.router.go('selection');
-  }
-
-  resetFolder() {
-    if (!this.folder) {
-      this.folder = this.installerDataSvc.defaultFolder;
-    }
   }
 
   selectFolder() {

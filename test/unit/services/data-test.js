@@ -59,7 +59,7 @@ describe('InstallerDataService', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(Platform, 'getEnv').returns({PROGRAMFILES: 'C:\\Program Files'});
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal(path.join(Platform.getProgramFilesPath(), 'Development Suite'));
+        expect(svc.installRoot).to.equal(path.join(Platform.getProgramFilesPath(), 'DevelopmentSuite'));
       });
     });
 
@@ -68,7 +68,7 @@ describe('InstallerDataService', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
         sandbox.stub(Platform, 'getEnv').returns({HOME:'/home/username'});
         let svc = new InstallerDataService();
-        expect(svc.installRoot).to.equal('/Applications/DevelopmentSuite');
+        expect(svc.installRoot).to.equal(path.join(Platform.getProgramFilesPath(), 'DevelopmentSuite'));
       });
     });
 
