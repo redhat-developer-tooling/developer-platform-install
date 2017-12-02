@@ -1,4 +1,4 @@
-<div ng-hide="item === undefined || item.hidden === true">
+<div id="{{item.keyName}}" ng-hide="item === undefined || item.hidden === true" onclick="document.getElementById(this.id +'-checkbox').click()">
   <div id="{{item.keyName}}-panel" class="panel panel-default panel2pxborder" ng-class="{'zero-border':item.isDetected()}">
     <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
          ng-class="{'dotted-panel':item.isDetected()}">
