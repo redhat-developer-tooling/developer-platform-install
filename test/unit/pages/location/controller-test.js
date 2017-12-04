@@ -89,9 +89,7 @@ describe('LocationController', function() {
 
   describe('selectFolder', function() {
     beforeEach(function() {
-
       sandbox.stub(locationcontroller, 'checkFolder');
-
     });
 
     it('saves selected folder into folder property', function() {
@@ -136,5 +134,17 @@ describe('LocationController', function() {
       expect(locationcontroller.router.go).calledWith('selection');
     });
   });
-
+  describe('resetFolder', function() {
+    beforeEach(function() {
+      locationcontroller.folder = '';
+      sandbox.stub(locationcontroller, 'checkFolder');
+      locationcontroller.resetFolder();
+    });
+    it('restores default target install location when empty', function() {
+      expect(locationcontroller.folder).to.be.equal(locationcontroller.installerDataSvc.installDir())
+    })
+    it('runs regular folder check', function() {
+        expect(locationcontroller.checkFolder).has.been.calledOnce;
+    });
+  })
 });
