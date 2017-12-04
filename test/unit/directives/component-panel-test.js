@@ -27,22 +27,37 @@ describe('ComponentPanelDirective', function() {
   afterEach(function() {
     sandbox.restore();
   });
-  it('shows directive', function() {
-    let installerDataSvc = sinon.stub(new InstallerDataService());
-    installerDataSvc.getRequirementByName.restore();
-    installerDataSvc.tempDir.returns('temporaryFolder');
-    installerDataSvc.installDir.returns('installFolder');
-    installerDataSvc.getUsername.returns('user');
-    installerDataSvc.getPassword.returns('password');
-    installerDataSvc.komposeDir.returns(path.join(installerDataSvc.installDir(), 'kompose'));
-    installerDataSvc.localAppData.restore();
 
-    // Compile a piece of HTML containing the directive
-    scope = $rootScope.$new();
-    scope.item = new InstallableItem('kompose', 'url', 'kompose.exe', 'kompose', installerDataSvc, false);
+  function buildScope() {
+    let ds = sinon.stub(new InstallerDataService());
+    ds.getRequirementByName.restore();
+    ds.tempDir.returns('temporaryFolder');
+    ds.installDir.returns('installFolder');
+    ds.getUsername.returns('user');
+    ds.getPassword.returns('password');
+    ds.komposeDir.returns(path.join(ds.installDir(), 'kompose'));
+    ds.localAppData.restore();
+    let scope = $rootScope.$new();
+    scope.item = new InstallableItem('kompose', 'url', 'kompose.exe', 'kompose', ds, false);
+    return scope;
+  }
+
+  it('generates html with comoponent name and download size 1.00 M', function() {
+    let scope = buildScope();
+    scope.item.size = 1024*1024;
     let compiledDirective = $compile(angular.element(
       '<component-panel item="item"></component-panel>'))(scope);
     scope.$digest();
     expect(compiledDirective.html()).to.contain('Kompose');
+    expect(compiledDirective.html()).to.contain('1.00 MB');
+  });
+
+  it('generates html with comoponent name and download size 0 M', function() {
+    let scope = buildScope();
+    scope.item.size = undefined;
+    let compiledDirective = $compile(angular.element(
+      '<component-panel item="item"></component-panel>'))(scope);
+    scope.$digest();
+    expect(compiledDirective.html()).to.contain('0 MB');
   });
 });
