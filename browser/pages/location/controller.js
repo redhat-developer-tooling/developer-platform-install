@@ -26,6 +26,11 @@ class LocationController {
     this.router.go('selection');
   }
 
+  resetFolder() {
+    this.folder = this.folder || this.installerDataSvc.installRoot;
+    this.checkFolder();
+  }
+
   selectFolder() {
     let selection = this.electron.remote.dialog.showOpenDialog(
       this.electron.remote.getCurrentWindow(), {
