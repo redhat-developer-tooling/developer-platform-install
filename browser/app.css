@@ -10,6 +10,14 @@ header {
   text-align: center;
 }
 
+.panel-height {
+  height: 74px;
+}
+
+.label-font {
+  font-weight: 500;
+}
+
 .greyed-out-background {
   position: fixed;
   top: 0;
