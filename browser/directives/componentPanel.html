@@ -3,7 +3,7 @@
     <div id="{{item.keyName}}-panel-heading" class="panel-heading panel-normal"
          ng-class="{'dotted-panel':item.isDetected()}">
          <div class="checkbox-container verticalLine">
-           <input id="{{item.keyName}}-checkbox" type="checkbox" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
+           <input id="{{item.keyName}}-checkbox" type="checkbox" style="pointer-events: none;" ng-disabled="item.isDisabled()" ng-model="item.selectedOption" aria-label="Toggle ngHide" class="vallign-middle" ng-true-value="'install'" ng-false-value="'detected'">
          </div>
       <div class="product-container">
         <div class="warnings-in-panel">
