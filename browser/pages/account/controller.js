@@ -90,7 +90,7 @@ class AccountController {
   }
 
   forgotPassword() {
-    this.electron.shell.openExternal('https://developers.redhat.com/auth/realms/rhd/account');
+    this.electron.shell.openExternal('https://developers.redhat.com/auth/realms/rhd/login-actions/reset-credentials');
   }
 
   createAccount() {
