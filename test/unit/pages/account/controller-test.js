@@ -147,7 +147,7 @@ describe('Account controller', function() {
       sandbox.stub(electron.shell);
       controller.forgotPassword();
       expect(electron.shell.openExternal).calledOnce;
-      expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/account');
+      expect(electron.shell.openExternal).to.have.been.calledWith('https://developers.redhat.com/auth/realms/rhd/login-actions/reset-credentials');
     });
   });
 
