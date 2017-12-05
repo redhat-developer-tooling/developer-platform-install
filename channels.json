@@ -1,0 +1,10 @@
+{
+  "java-dev": {
+    "label": "Java Development",
+    "description": "Java Development toolset description"
+  },
+  "fuse-developemt" :{
+    "label": "Fuse Development",
+    "description": "Fuse Development toolset"
+  }
+}
