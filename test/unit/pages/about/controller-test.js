@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import ElectronMock from '../../../mock/electron';
 import AboutController from 'browser/pages/about/controller';
+import Platform from 'browser/services/platform';
 chai.use(sinonChai);
 
 describe('About controller', function() {
@@ -43,6 +44,16 @@ describe('About controller', function() {
       sandbox.stub(electron.shell);
       controller.report();
       expect(electron.shell.openExternal).calledOnce;
+    });
+  });
+
+  describe('isDarwinPlatform', function() {
+    it('returns true only on macOS', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
+      expect(controller.isDarwinPlatform()).equals(true);
+      Platform.getOS.restore();
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      expect(controller.isDarwinPlatform()).equals(false);
     });
   });
 });
