@@ -80,9 +80,6 @@ describe('ConfirmController', function() {
     beforeEach(inject(context));
     it('should calculate total install size for selected components', function() {
       let cdk = confirmController.installerDataSvc.getInstallable('cdk');
-      for(let installer of installerDataSvc.allInstallables().values()) {
-        expect(installer.selectedOption).equals('install');
-      }
       expect(confirmController.sc.updateTotalInstallSize()).equals(cdk.installSize);
     });
   });
@@ -91,10 +88,46 @@ describe('ConfirmController', function() {
     beforeEach(inject(context));
     it('should calculate total download size for selected components', function() {
       let cdk = confirmController.installerDataSvc.getInstallable('cdk');
-      for (let installer of installerDataSvc.allInstallables().values()) {
-        expect(installer.selectedOption).equals('install');
-      }
       expect(confirmController.sc.updateTotalDownloadSize()).equals(cdk.size);
+    });
+  });
+
+  describe('isAccountRequired', function() {
+    beforeEach(inject(context));
+    it('returns true if any selected component requires auth', function() {
+      let cdk = confirmController.installerDataSvc.getInstallable('cdk');
+      cdk.authRequired = true;
+      expect(confirmController.isAccountRequired()).equals(true);
+    });
+    it('returns false if no components required auth selected', function() {
+      confirmController.installerDataSvc.getInstallable('cdk');
+      expect(confirmController.isAccountRequired()).equals(false);
+    });
+  });
+
+  describe('next', function() {
+    beforeEach(inject(context));
+    it('navigates to Account page if auth required', function() {
+      sandbox.stub(confirmController, 'isAccountRequired').returns(true);
+      confirmController.next();
+      expect(confirmController.router.go).has.been.calledWith('account');
+    });
+    it('navigates to Install page if auth is not required', function() {
+      sandbox.stub(confirmController, 'isAccountRequired').returns(false);
+      confirmController.next();
+      expect(confirmController.router.go).has.been.calledWith('install');
+    });
+  });
+
+  describe('getNextButtonName', function() {
+    beforeEach(inject(context));
+    it('retnurns "Download & Install" if auth required', function() {
+      sandbox.stub(confirmController, 'isAccountRequired').returns(true);
+      expect(confirmController.getNextButtonName()).equals('Next');
+    });
+    it('navigates to Install page if auth is not required', function() {
+      sandbox.stub(confirmController, 'isAccountRequired').returns(false);
+      expect(confirmController.getNextButtonName()).equals('Download & Install');
     });
   });
 });
