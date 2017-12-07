@@ -844,4 +844,10 @@ footer {
     font-size: 9px;
   }
 
+  .wizard-pf-sidebar {
+    top: 125px;
+    height: 78vh;
+    border-top: 1px solid blue;
+  }
+
 }

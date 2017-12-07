@@ -17,7 +17,13 @@
     "useDownload": true,
     "requires": ["jdk"],
     "size": 678757632,
-    "installSize": 840675328
+    "installSize": 840675328,
+    "channel_id": 1,
+    "channel" : {
+      "channel_id": 1,
+      "channel_name": "cdk",
+      "channel_description": "For container development"
+    }
   },
   "jdk": {
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
@@ -83,6 +89,12 @@
     "detectable": false,
     "bundle": "yes",
     "targetFolderName": "cdk",
+    "channel_id": 1,
+    "channel" : {
+      "channel_id": 1,
+      "channel_name": "cdk",
+      "channel_description": "For container development"
+    },
     "platform": {
       "win32": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-windows-amd64.exe?workflow=direct",
@@ -129,6 +141,12 @@
     "targetFolderName": "kompose",
     "version": "1.3.0 Technology Preview",
     "installAfter": "cdk",
+    "channel_id": 1,
+    "channel" : {
+      "channel_id": 1,
+      "channel_name": "cdk",
+      "channel_description": "For container development"
+    },
     "messages": {
       "info": {
         "message": "For additional information and documentation visit http://kompose.io",
@@ -197,6 +215,12 @@
     "size": 228052992,
     "installSize": 1045204992,
     "sha256sum": "",
+    "channel_id": 2,
+    "channel" : {
+      "channel_id": 2,
+      "channel_name": "fuse",
+      "channel_description": "For fuse development"
+    },
     "file": {
       "platform": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/content/origin/files/sha256/84/847cd3a03bc3ae41b1b997b2bae34dadaa8a8fee4b45dd70de8b53bb32f953dd/fuse-eap-installer-6.3.0.redhat-187.jar?workflow=direct",
