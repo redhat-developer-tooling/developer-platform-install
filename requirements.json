@@ -18,10 +18,9 @@
     "requires": ["jdk"],
     "size": 678757632,
     "installSize": 840675328,
-    "channel_id": 1,
     "channel" : {
       "channel_id": 1,
-      "channel_name": "cdk",
+      "channel_name": "container-development",
       "channel_description": "For container development"
     }
   },
@@ -89,10 +88,9 @@
     "detectable": false,
     "bundle": "yes",
     "targetFolderName": "cdk",
-    "channel_id": 1,
     "channel" : {
       "channel_id": 1,
-      "channel_name": "cdk",
+      "channel_name": "container-development",
       "channel_description": "For container development"
     },
     "platform": {
@@ -141,10 +139,9 @@
     "targetFolderName": "kompose",
     "version": "1.3.0 Technology Preview",
     "installAfter": "cdk",
-    "channel_id": 1,
     "channel" : {
       "channel_id": 1,
-      "channel_name": "cdk",
+      "channel_name": "container-development",
       "channel_description": "For container development"
     },
     "messages": {
@@ -215,10 +212,9 @@
     "size": 228052992,
     "installSize": 1045204992,
     "sha256sum": "",
-    "channel_id": 2,
     "channel" : {
       "channel_id": 2,
-      "channel_name": "fuse",
+      "channel_name": "fuse-development",
       "channel_description": "For fuse development"
     },
     "file": {

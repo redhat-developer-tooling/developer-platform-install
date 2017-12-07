@@ -17,19 +17,19 @@
     </div>
   </form> -->
 
-    <div id="tabs" style="margin: 30px auto;">
+    <div id="channels" style="margin: 30px auto;">
       <div class="row">
-          <div class="col-sm-3">
+          <div class="col-sm-4">
               <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
-                  <li ng-class="{'active': selectCtrl.view_tab == $index+1}" ng-repeat="tab in selectCtrl.tabs"> 
+                  <li ng-class="{'active': selectCtrl.channel_tab == $index+1}" ng-repeat="tab in selectCtrl.channelList"> 
                       <a class="btn-lg" ng-click="selectCtrl.changeTab($index+1)" href="">{{tab.name}}</a>
                   </li>
               </ul>
           </div>
-          <div class="col-sm-9" style="padding-left: 0px;">
+          <div class="col-sm-8" style="padding-left: 0px;">
               <div class="tab-content">
                 <form name="selectionForm" id="selectionForm" class="form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
-                  <div ng-repeat="(key,item) in filterChannel(checkboxModel, selectCtrl.view_tab)" class="panel-group-items">
+                  <div ng-repeat="(key,item) in filterChannel(checkboxModel, selectCtrl.channel_tab)" class="panel-group-items">
                     <component-panel item="item"></component-panel>
                   </div>
                 </form>
