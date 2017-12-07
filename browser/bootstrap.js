@@ -3,9 +3,7 @@
 import mainModule from './main';
 import { remote } from 'electron';
 
-angular.element(document).ready(function() {
-  angular.bootstrap(document, [mainModule.name], { strictDi: true });
-});
+angular.bootstrap(document, [mainModule.name], { strictDi: true });
 
 // Determine version
 const semver = require('semver');
