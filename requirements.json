@@ -22,7 +22,42 @@
       "containerDev": { },
       "javaDev": { },
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
+    }
+  },
+  "devstuido_bpm": {
+    "name": "JBoss Buisness Process and Rules Tools",
+    "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/devstudio-p2",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "jbosseap",
+    "ius": [
+      "org.jboss.tools.bpel.feature.feature.group",
+      "org.eclipse.bpmn2.feature.feature.group",
+      "org.eclipse.bpmn2.modeler.feature.group",
+      "org.eclipse.bpmn2.modeler.runtime.jboss.feature.group",
+      "org.drools.eclipse.feature.feature.group",
+      "org.jbpm.eclipse.feature.feature.group",
+      "org.kie.eclipse.feature.feature.group",
+      "org.kie.eclipse.navigator.feature.feature.group",
+      "org.jboss.tools.runtime.drools.detector.feature.feature.group"
+    ],
+    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/discovery/",
+    "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
+    "sha256sum": "",
+    "version": "7.3.0.GA",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudio"],
+    "size": 678757632,
+    "installSize": 840675328,
+    "channel" : {
+      "devstudio": { }
     }
   },
   "jdk": {
@@ -83,7 +118,8 @@
       "containerDev": { },
       "javaDev": { },
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
     }
   },
   "cdk": {
@@ -204,7 +240,8 @@
     "size": 0,
     "channel" : {
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
     }
   },
   "fuseplatform": {
