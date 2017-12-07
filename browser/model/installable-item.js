@@ -30,6 +30,9 @@ class InstallableItem {
     this.size = requirement.size;
     this.installSize = requirement.installSize;
     this.version = requirement.version;
+    if(requirement.channel){
+      this.channels = requirement.channel.channel_id; 
+    }
 
     this.detected = false;
     this.detectedVersion = 'unknown';

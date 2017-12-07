@@ -17,12 +17,36 @@ class SelectionController {
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
+    this.step = 1;
 
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
+    this.view_tab = 1;
+    this.tabs = [{
+        name: 'Container'
+    }, {
+        name: 'Fuse'
+    }]
+    
+    this.changeTab = function (index) {
+        this.view_tab = index;
+        this.selectedTab = this.tabs[index];
+    }
+
+    this.changeTab(1);
+
+    $scope.filterChannel = function(items, id) {
+      var result = {};
+      angular.forEach(items, function(value, key) {
+        if (value.hasOwnProperty('channels') && value.channels === id) {
+          result[key] = value;
+        }
+      });
+      return result;
+  }    
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -92,6 +116,7 @@ class SelectionController {
     for (let node of nodes) {
       this.sc.$watch(`checkboxModel.${node}.selectedOption`, this.watchComponent.bind(this, node));
     }
+    console.log(checkboxModel);
   }
 
   watchComponent(node, newv, oldv) {

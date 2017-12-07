@@ -1,7 +1,7 @@
 <breadcrumb></breadcrumb>
 <div class="bottom-spacer">
   <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="selection-container has-spinner">
-    <div class="selection-info">
+    <!-- <div class="selection-info">
       <span class="pficon pficon-info" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
       <strong>
         <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
@@ -9,13 +9,35 @@
       </strong>
       <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
       <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
-    </div>
-  </div>
-  <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
+    </div> -->
+  <!--</div> -->
+  <!-- <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
     <div ng-repeat="item in checkboxModel" class="panel-group-items">
       <component-panel item="item"></component-panel>
     </div>
-  </form>
+  </form> -->
+
+    <div id="tabs" style="margin: 30px auto;">
+      <div class="row">
+          <div class="col-sm-3">
+              <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
+                  <li ng-class="{'active': selectCtrl.view_tab == $index+1}" ng-repeat="tab in selectCtrl.tabs"> 
+                      <a class="btn-lg" ng-click="selectCtrl.changeTab($index+1)" href="">{{tab.name}}</a>
+                  </li>
+              </ul>
+          </div>
+          <div class="col-sm-9" style="padding-left: 0px;">
+              <div class="tab-content">
+                <form name="selectionForm" id="selectionForm" class="form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
+                  <div ng-repeat="(key,item) in filterChannel(checkboxModel, selectCtrl.view_tab)" class="panel-group-items">
+                    <component-panel item="item"></component-panel>
+                  </div>
+                </form>
+            </div>
+          </div>
+      </div>
+    </div>
+
   <div id="detection-info" class="centered has-spinner" ng-show="selectCtrl.isDisabled" ng-class="{'active':selectCtrl.isDisabled}">
     <div class="spinner spinner-lg spinner-bgcolour"></div>
     <div class="detection-msg">
