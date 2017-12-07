@@ -62,6 +62,11 @@ let mainModule =
           data: {
             displayName: 'Selection'
           }
+        }).state('selection.channel', {
+          url: '/channel/:channel',
+          params: {
+            channel: 'all'
+          }
         })
         .state('confirm', {
           url: '/confirm',
