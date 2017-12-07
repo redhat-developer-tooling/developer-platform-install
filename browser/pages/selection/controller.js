@@ -24,16 +24,16 @@ class SelectionController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
-    this.view_tab = 1;
-    this.tabs = [{
-        name: 'Container'
+    this.channel_tab = 1;
+    this.channelList = [{
+        name: 'Container Development'
     }, {
-        name: 'Fuse'
+        name: 'Fuse Development'
     }]
     
     this.changeTab = function (index) {
-        this.view_tab = index;
-        this.selectedTab = this.tabs[index];
+        this.channel_tab = index;
+        this.selectedTab = this.channelList[index];
     }
 
     this.changeTab(1);
@@ -46,7 +46,7 @@ class SelectionController {
         }
       });
       return result;
-  }    
+    }    
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
