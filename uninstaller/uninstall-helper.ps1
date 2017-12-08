@@ -58,7 +58,7 @@ echo 'Removing installation folder'
 $major = $PSVersionTable.PSVersion.Major
 $minor = $PSVersionTable.PSVersion.Minor
 
-if ("$major.$minor" -gt 5.0) {
+if ("$major.$minor" -gt "5.0") {
   Remove-Item -path "\\?\$targetFolder" -Force -Recurse
 } else {
   New-Item "$folder\..\temp" -type Directory -Force | Out-Null
