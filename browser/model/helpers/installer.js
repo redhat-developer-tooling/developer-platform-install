@@ -142,9 +142,7 @@ class Installer {
   }
 
   succeed(done) {
-    if (done) {
-      this.success();
-    }
+    done && this.success();
   }
 
   fail(error) {

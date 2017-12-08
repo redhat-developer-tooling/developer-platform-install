@@ -181,7 +181,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         resolve(res);
       });
     }).catch((err) => {
-      return reject(err);
+       reject(err);
     }).then(()=>{
       del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
