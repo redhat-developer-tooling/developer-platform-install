@@ -12,7 +12,6 @@ import pify from 'pify';
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(CDKInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
-
     this.sha256 = sha256sum;
     this.addOption('install', this.version, '', true);
   }

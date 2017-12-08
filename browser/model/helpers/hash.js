@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs-extra');
 
 class Hash {
-  SHA256(filename, done) {
+  SHA256(filename, done = function() {}) {
     return new Promise(function (res, rej) {
       var hash = crypto.createHash('sha256');
       var readStream = fs.createReadStream(filename);
@@ -13,10 +13,10 @@ class Hash {
         }
       }).on('close', function () {
         var hashstring = hash.digest('hex');
-        if (done) done(hashstring);
+        done(hashstring);
         res(hashstring);
       }).on('error', function(err) {
-        if (done) done(undefined, err);
+        done(undefined, err);
         rej(err);
       });
     });
