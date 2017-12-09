@@ -2,7 +2,7 @@
 $timeStamp = $args[1]
 $versionString = $args[2]
 
-$powershell = which powershell
+$powershell = where.exe powershell
 $uninstallItem = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 $devsuiteItem =  "$uninstallItem\DevelopmentSuite$timeStamp"
 $uninstallIcon = "$targetLocation\uninstaller\uninstall.ico"
