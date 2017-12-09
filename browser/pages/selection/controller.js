@@ -24,29 +24,11 @@ class SelectionController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
-    this.channel_tab = 1;
-    this.channelList = [{
-        name: 'Container Development'
-    }, {
-        name: 'Fuse Development'
-    }]
-    
-    this.changeTab = function (index) {
-        this.channel_tab = index;
-        this.selectedTab = this.channelList[index];
-    }
+    this.channelList = require('../../../channels');
 
-    this.changeTab(1);
+    this.channel_tab = 'containerDev';
 
-    $scope.filterChannel = function(items, id) {
-      var result = {};
-      angular.forEach(items, function(value, key) {
-        if (value.hasOwnProperty('channels') && value.channels === id) {
-          result[key] = value;
-        }
-      });
-      return result;
-    }    
+    $scope.componentsInChannel = this.componentsInChannel.bind(this);
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -64,6 +46,12 @@ class SelectionController {
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+  }
+
+  componentsInChannel(value) {
+    return Object.values(this.sc.checkboxModel).filter(value=>{
+      return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
+    });
   }
 
   clearAll() {
@@ -143,6 +131,7 @@ class SelectionController {
   }
 
   detectInstalledComponents() {
+    return Promise.resolve();
     if(!this.isDisabled) {
       this.isDisabled = true;
       this.timeout(()=>{});

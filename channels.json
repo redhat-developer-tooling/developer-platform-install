@@ -1,10 +1,21 @@
-{
-  "java-dev": {
-    "label": "Java Development",
-    "description": "Java Development toolset description"
-  },
-  "fuse-developemt" :{
-    "label": "Fuse Development",
-    "description": "Fuse Development toolset"
-  }
-}
+[{
+  "id": "containerDev",
+  "name": "Container Development",
+  "description": "Container Development toolset"
+}, {
+  "id": "javaDev",
+  "name": "Java Development",
+  "description": "Java Development toolset"
+}, {
+  "id": "fuseDev",
+  "name": "Fuse Development",
+  "description": "Fuse Development toolset "
+}, {
+  "id": "rhProds",
+  "name": "Red Hat Products",
+  "description": "Red Hat Products only collection"
+}, {
+  "id": "all",
+  "name": "All",
+  "description": "All available components"
+}]
