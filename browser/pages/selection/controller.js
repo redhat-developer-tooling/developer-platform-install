@@ -131,7 +131,6 @@ class SelectionController {
   }
 
   detectInstalledComponents() {
-    return Promise.resolve();
     if(!this.isDisabled) {
       this.isDisabled = true;
       this.timeout(()=>{});
