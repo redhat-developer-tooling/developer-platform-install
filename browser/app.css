@@ -3,7 +3,7 @@ html {
   height: 100%;
 }
 header {
-  margin-right: calc(-1 * (100vw - 100% - 40px));
+  margin-right: 40px;
 }
 
 .centered {
@@ -27,7 +27,7 @@ footer {
   background-color: #FFFFFF;
   z-index: 3;
   position: fixed;
-  margin-left: -40px;
+  margin-left: -20px;
 }
 
 /* .navbar-nav > li > a:hover > span:first-child,
@@ -78,7 +78,6 @@ footer {
     position: absolute;
     top: 10px;
     right: 30px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .branding-login {
@@ -434,7 +433,6 @@ footer {
 
   .back-btn {
     right: 140px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .back-btn-spacer-account {
@@ -447,7 +445,6 @@ footer {
 
   .go-btn {
     right: 40px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .download-btn {
