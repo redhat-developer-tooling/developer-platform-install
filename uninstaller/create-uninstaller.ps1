@@ -2,11 +2,12 @@
 $timeStamp = $args[1]
 $versionString = $args[2]
 
+$powershell = where.exe powershell
 $uninstallItem = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 $devsuiteItem =  "$uninstallItem\DevelopmentSuite$timeStamp"
 $uninstallIcon = "$targetLocation\uninstaller\uninstall.ico"
 # sign all shell scripts and replace ByPass to AllSigned
-$uninstallString = "powershell -ExecutionPolicy ByPass -File `"$targetLocation\uninstaller\uninstall.ps1`" $timeStamp"
+$uninstallString = "$powershell -ExecutionPolicy ByPass -File `"$targetLocation\uninstaller\uninstall.ps1`" $timeStamp"
 $installDate = Get-Date -Format yyyyMMdd
 
 Get-ChildItem $uninstallItem | where-object { ($_.PSChildName -like "DevelopmentSuite*" -and (Get-ItemProperty -Path $_.PSPath -Name InstallLocation).InstallLocation -like "$targetLocation") } | ForEach-Object {Remove-Item -Path $_.PSPath }

@@ -55,7 +55,16 @@ $targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
 
 echo 'Removing installation folder'
 
-Remove-Item -path "\\?\$targetFolder" -Force -Recurse
+$major = $PSVersionTable.PSVersion.Major
+$minor = $PSVersionTable.PSVersion.Minor
+
+if ("$major.$minor" -gt "5.0") {
+  Remove-Item -path "\\?\$targetFolder" -Force -Recurse
+} else {
+  New-Item "$folder\..\temp" -type Directory -Force | Out-Null
+  robocopy "$folder\..\temp" "$targetFolder" /purge | Out-Null
+  Remove-Item -path "$targetFolder" -Force -Recurse
+}
 
 echo 'DONE'
 
