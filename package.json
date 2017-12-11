@@ -39,6 +39,7 @@
     "fs-extra": "4.0.3",
     "glob": "7.1.2",
     "globby": "7.1.1",
+    "hasha": "^3.0.0",
     "humanize": "0.0.9",
     "humanize-duration": "3.12.0",
     "keytar": "^4.0.5",
