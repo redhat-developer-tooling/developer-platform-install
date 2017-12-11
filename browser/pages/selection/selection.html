@@ -1,7 +1,7 @@
 <breadcrumb></breadcrumb>
 <div class="bottom-spacer">
   <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="selection-container has-spinner">
-    <!-- <div class="selection-info">
+    <div class="selection-info">
       <span class="pficon pficon-info" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
       <strong>
         <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
@@ -9,30 +9,23 @@
       </strong>
       <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
       <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
-    </div> -->
-  <!--</div> -->
-  <!-- <form name="selectionForm" id="selectionForm" class="form-horizontal form-padding" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
-    <div ng-repeat="item in checkboxModel" class="panel-group-items">
-      <component-panel item="item"></component-panel>
     </div>
-  </form> -->
-
-    <div id="channels" style="margin: 30px auto;">
+    <div id="channels" class="channels-container">
       <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-4 channels-nav">
               <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
                   <li ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
                       <a class="btn-lg" ng-click="selectCtrl.channel_tab = tab.id" href="">{{tab.name}}</a>
                   </li>
               </ul>
           </div>
-          <div class="col-sm-8" style="padding-left: 0px;">
-              <div class="tab-content" style="overflow:auto; height:440px">
-                <form name="selectionForm" id="selectionForm" class="form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
-                  <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
-                    <component-panel item="item"></component-panel>
-                  </div>
-                </form>
+          <div class="col-sm-8 channels-no-padding">
+            <div class="channels-content">
+              <form name="selectionForm" id="selectionForm" class="selection-form-padding form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
+                <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
+                  <component-panel item="item"></component-panel>
+                </div>
+              </form>
             </div>
           </div>
       </div>

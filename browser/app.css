@@ -344,7 +344,7 @@ footer {
     color: #c00;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: large;
+    font-size: 15px;
   }
 
   .product-version {
@@ -511,7 +511,9 @@ footer {
   }
 
   .panel2pxborder {
-    border-width: 2px
+    border-width: 2px;
+    margin-top: 20px;
+    margin-bottom: 0px;
   }
 
   .panel-body {
@@ -597,7 +599,7 @@ footer {
 
   .checkbox-container {
     float: left;
-    padding: 13px 15px 0 10px;
+    padding: 8px 10px 0 0;
   }
 
   .message-container {
@@ -682,7 +684,7 @@ footer {
   }
 
   .selection-info {
-    padding: 22px;
+    padding: 4px;
   }
 
   .info-color {
@@ -850,10 +852,30 @@ footer {
     font-size: 9px;
   }
 
-  .wizard-pf-sidebar {
-    top: 125px;
-    height: 78vh;
-    border-top: 1px solid blue;
+  .detected-container {
+    background: #dddddd;
+    padding: 1px 20px;
   }
 
+  .channels-container {
+    margin: 20px auto;
+  }
+  
+  .channels-nav {
+    margin-top: 20px
+  }
+  
+  .channels-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .channels-content {
+    overflow:auto;
+    height:415px;
+  }
+
+  .selection-form-padding {
+    padding-right: 20px;
+  }
 }

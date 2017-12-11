@@ -47,7 +47,7 @@ class SelectionController {
   }
 
   componentsInChannel(value) {
-    return Object.values(this.sc.checkboxModel).filter(value=>{
+    return Object.values(this.sc.checkboxModel).filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
   }
