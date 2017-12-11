@@ -27,31 +27,22 @@ footer {
   background-color: #FFFFFF;
   z-index: 3;
   position: fixed;
-  margin-left: -40px;
+  margin-left: -20px;
 }
 
-/* .navbar-nav > li > a:hover > span:first-child,
-.navbar-nav > li > a:focus > span:first-child,
-.navbar-nav > .active > a  > span:first-child {
-  box-shadow: inset 0px -3px 0px #f2ab00;
-} */
-
-.nav-pills > li.active {
-  border-left: 2px solid red;
-}
 .nav-pills {
   font-weight: 700;
 }
+
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   color: #c00;
   background-color: #f5f5f5;
+  border-left: 2px solid red;
 }
-
 
 .no-background-color {
   background-color: transparent;
 }
-
 
 @media only all {
 

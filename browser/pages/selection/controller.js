@@ -24,11 +24,19 @@ class SelectionController {
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
+    this.selTab = 1;
+    this.selectTab = function(index){
+      this.selTab = index;
+    }
     this.channel_tab = 1;
     this.channelList = [{
         name: 'Container Development'
     }, {
         name: 'Fuse Development'
+    }, {
+       name: 'Application Development'
+    }, {
+       name: 'Runtimes'
     }]
     
     this.changeTab = function (index) {

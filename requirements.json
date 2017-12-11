@@ -31,6 +31,11 @@
     "targetFolderName": "jdk8",
     "detectable": true,
     "installAfter": "kompose",
+    "channel" : {
+      "channel_id": 3,
+      "channel_name": "application-development",
+      "channel_description": "For application development"
+    },
     "platform": {
       "win32": {
         "name": "OpenJDK",
@@ -196,7 +201,12 @@
     "defaultOption": "detected",
     "requires": ["devstudio"],
     "installSize": 76685312,
-    "size": 0
+    "size": 0,
+    "channel" : {
+      "channel_id": 2,
+      "channel_name": "fuse-development",
+      "channel_description": "For fuse development"
+    }
   },
   "fuseplatform": {
     "name": "Red Hat JBoss Fuse on JBoss EAP",
@@ -256,7 +266,12 @@
      "sha256sum": "4ef481bb22f4a9c688d03f46374917e0f2548229f94ebd817c33817baf203b0c",
      "useDownload": true,
      "defaultOption": "detected",
-     "requires": ["jdk"]
+     "requires": ["jdk"],
+     "channel" : {
+      "channel_id": 2,
+      "channel_name": "fuse-development",
+      "channel_description": "For fuse development"
+    }
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
@@ -276,7 +291,12 @@
     "size": 184545112,
     "installSize" : 192233472,
     "defaultOption": "detected",
-    "requires": ["jdk"]
+    "requires": ["jdk"],
+    "channel" : {
+      "channel_id": 2,
+      "channel_name": "fuse-development",
+      "channel_description": "For fuse development"
+    }
   },
   "hyperv": {
     "name": "Microsoft Hyper-V",
