@@ -3,7 +3,7 @@ html {
   height: 100%;
 }
 header {
-  margin-right: calc(-1 * (100vw - 100% - 40px));
+  margin-right: 40px;
 }
 
 .centered {
@@ -27,13 +27,22 @@ footer {
   background-color: #FFFFFF;
   z-index: 3;
   position: fixed;
-  margin-left: -19px;
+  margin-left: -20px;
+}
+
+.nav-pills {
+  font-weight: 700;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  color: #c00;
+  background-color: #f5f5f5;
+  border-left: 2px solid red;
 }
 
 .no-background-color {
   background-color: transparent;
 }
-
 
 @media only all {
 
@@ -60,7 +69,6 @@ footer {
     position: absolute;
     top: 10px;
     right: 30px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .branding-login {
@@ -336,7 +344,7 @@ footer {
     color: #c00;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: large;
+    font-size: 15px;
   }
 
   .product-version {
@@ -416,7 +424,6 @@ footer {
 
   .back-btn {
     right: 140px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .back-btn-spacer-account {
@@ -429,7 +436,6 @@ footer {
 
   .go-btn {
     right: 40px;
-    margin-right: calc(-1 * (100vw - 100%));
   }
 
   .download-btn {
@@ -505,7 +511,9 @@ footer {
   }
 
   .panel2pxborder {
-    border-width: 2px
+    border-width: 2px;
+    margin-top: 20px;
+    margin-bottom: 0px;
   }
 
   .panel-body {
@@ -591,7 +599,7 @@ footer {
 
   .checkbox-container {
     float: left;
-    padding: 13px 15px 0 10px;
+    padding: 8px 10px 0 0;
   }
 
   .message-container {
@@ -676,7 +684,7 @@ footer {
   }
 
   .selection-info {
-    padding: 22px;
+    padding: 4px;
   }
 
   .info-color {
@@ -844,4 +852,30 @@ footer {
     font-size: 9px;
   }
 
+  .detected-container {
+    background: #dddddd;
+    padding: 1px 20px;
+  }
+
+  .channels-container {
+    margin: 20px auto;
+  }
+  
+  .channels-nav {
+    margin-top: 20px
+  }
+  
+  .channels-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .channels-content {
+    overflow:auto;
+    height:415px;
+  }
+
+  .selection-form-padding {
+    padding-right: 20px;
+  }
 }

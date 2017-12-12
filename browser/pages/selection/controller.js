@@ -17,12 +17,16 @@ class SelectionController {
     this.installedSearchNote = '';
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
+    this.step = 1;
 
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
     $scope.detectionStyle = false;
     $scope.virtualization = true;
+    this.channelList = require('../../../channels');
+    this.channel_tab = 'containerDev';
+    $scope.componentsInChannel = this.componentsInChannel.bind(this);
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -40,6 +44,12 @@ class SelectionController {
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+  }
+
+  componentsInChannel(value) {
+    return Object.values(this.sc.checkboxModel).filter(value=> {
+      return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
+    });
   }
 
   clearAll() {
@@ -92,6 +102,7 @@ class SelectionController {
     for (let node of nodes) {
       this.sc.$watch(`checkboxModel.${node}.selectedOption`, this.watchComponent.bind(this, node));
     }
+    console.log(checkboxModel);
   }
 
   watchComponent(node, newv, oldv) {

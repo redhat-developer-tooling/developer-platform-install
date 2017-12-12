@@ -17,7 +17,13 @@
     "useDownload": true,
     "requires": ["jdk"],
     "size": 678757632,
-    "installSize": 840675328
+    "installSize": 840675328,
+    "channel" : {
+      "containerDev": { },
+      "javaDev": { },
+      "fuseDev": { },
+      "rhProds": { }
+    }
   },
   "jdk": {
     "description": "A free and open source implementation of the Java Platform, Standard Edition (Java SE)",
@@ -72,6 +78,12 @@
         "installSize": 107450368,
         "virusTotalReport": "https://www.virustotal.com/#/file/235ff8218d8fe864aa976368522db45f1e6e7302b7a43a42ecdceeedb6783af8/detection"
       }
+    },
+    "channel" : {
+      "containerDev": { },
+      "javaDev": { },
+      "fuseDev": { },
+      "rhProds": { }
     }
   },
   "cdk": {
@@ -83,6 +95,11 @@
     "detectable": false,
     "bundle": "yes",
     "targetFolderName": "cdk",
+    "channel" : {
+      "containerDev": { },
+      "javaDev": { },
+      "rhProds": { }
+    },
     "platform": {
       "win32": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-windows-amd64.exe?workflow=direct",
@@ -129,6 +146,9 @@
     "targetFolderName": "kompose",
     "version": "1.3.0 Technology Preview",
     "installAfter": "cdk",
+    "channel" : {
+      "containerDev": { }
+    },
     "messages": {
       "info": {
         "message": "For additional information and documentation visit http://kompose.io",
@@ -181,7 +201,11 @@
     "defaultOption": "detected",
     "requires": ["devstudio"],
     "installSize": 76685312,
-    "size": 0
+    "size": 0,
+    "channel" : {
+      "fuseDev": { },
+      "rhProds": { }
+    }
   },
   "fuseplatform": {
     "name": "Red Hat JBoss Fuse on JBoss EAP",
@@ -192,7 +216,6 @@
     "bundle": "no",
     "targetFolderName": "jboss-fuse-eap",
     "installAfter": "fusetools",
-    "requires": "jdk",
     "version": "6.3.0.GA",
     "size": 228052992,
     "installSize": 1045204992,
@@ -215,7 +238,11 @@
     },
     "useDownload": true,
     "defaultOption": "detected",
-    "requires": ["jdk"]
+    "requires": ["jdk"],
+    "channel" : {
+      "fuseDev": { },
+      "rhProds": { }
+    }
   },
   "fuseplatformkaraf": {
     "name": "Red Hat JBoss Fuse on Apache Karaf",
@@ -226,7 +253,6 @@
      "bundle": "no",
      "targetFolderName": "jboss-fuse-karaf",
      "installAfter": "fuseplatform",
-     "requires": "jdk",
      "version": "6.3.0.GA",
      "size": 785784505,
      "installSize": 1129381888,
@@ -236,7 +262,11 @@
      "sha256sum": "4ef481bb22f4a9c688d03f46374917e0f2548229f94ebd817c33817baf203b0c",
      "useDownload": true,
      "defaultOption": "detected",
-     "requires": ["jdk"]
+     "requires": ["jdk"],
+     "channel" : {
+       "fuseDev": { },
+       "rhProds": { }
+     }
   },
   "jbosseap": {
     "name": "Red Hat JBoss Enterprise Application Platform",
@@ -256,7 +286,11 @@
     "size": 184545112,
     "installSize" : 192233472,
     "defaultOption": "detected",
-    "requires": ["jdk"]
+    "requires": ["jdk"],
+    "channel" : {
+      "javaDev": { },
+      "rhProds": { }
+    }
   },
   "hyperv": {
     "name": "Microsoft Hyper-V",
@@ -281,6 +315,9 @@
     },
     "platform": {
       "win32": {}
+    },
+    "channel" : {
+      "containerDev": { }
     }
   },
   "virtualbox": {
@@ -292,6 +329,9 @@
     "detectable": true,
     "bundle": "no",
     "targetFolderName": "virtualbox",
+    "channel" : {
+      "containerDev": { }
+    },
     "messages": {
       "dependency": {
         "message": "Please uninstall detected Oracle VirtualBox and restart Installer to continue."
@@ -365,6 +405,9 @@
     "virusTotalReport": "https://virustotal.com/en/file/56f41491671bef8de546e2c9221e6a7ec51a2168a9ba28a0d10c25d15be60ab2/analysis/",
     "platform": {
       "win32": {}
+    },
+    "channel" : {
+      "cntainerDev": { }
     }
   },
   "7zip": {

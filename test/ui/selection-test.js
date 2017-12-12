@@ -74,6 +74,7 @@ describe('Selection page', function selectionPage() {
           cancelButton = element(By.id('selection-cancel-btn'));
           backButton = element(By.id('selection-back-btn'));
           installSizeFooter = element(By.className('size-footer'));
+          element(By.id("all-tab")).click();
         });
     });
 
