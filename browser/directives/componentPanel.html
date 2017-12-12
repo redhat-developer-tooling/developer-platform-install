@@ -14,8 +14,8 @@
         <div id="{{item.keyName}}-description">{{item.productDesc}}</div>
       </div>
     </div>
-    <div class="detected-container">
-      <span id="{{item.keyName}}-installed-note" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+    <div class="detected-container" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+      <span id="{{item.keyName}}-installed-note">
         <i class="pficon-ok"></i> Using detected version {{item.option.detected.version}}
       </span>
       <div ng-show="item.hasOption('detected')" style="padding-left: 10px;" class="inline">
