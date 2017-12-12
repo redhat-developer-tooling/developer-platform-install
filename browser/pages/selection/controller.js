@@ -102,7 +102,6 @@ class SelectionController {
     for (let node of nodes) {
       this.sc.$watch(`checkboxModel.${node}.selectedOption`, this.watchComponent.bind(this, node));
     }
-    console.log(checkboxModel);
   }
 
   watchComponent(node, newv, oldv) {
