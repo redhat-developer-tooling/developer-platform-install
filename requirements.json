@@ -407,7 +407,7 @@
       "win32": {}
     },
     "channel" : {
-      "cntainerDev": { }
+      "containerDev": { }
     }
   },
   "7zip": {
