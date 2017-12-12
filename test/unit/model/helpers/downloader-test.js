@@ -10,6 +10,7 @@ import { Readable, PassThrough, Writable } from 'stream';
 import Hash from 'browser/model/helpers/hash';
 import fs from 'fs-extra';
 import {ProgressState} from 'browser/pages/install/controller';
+import mockfs from 'mock-fs';
 chai.use(sinonChai);
 
 describe('Downloader', function() {
@@ -24,9 +25,11 @@ describe('Downloader', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     logStub = sinon.stub(Logger, 'log');
+    mockfs();
   });
 
   after(function() {
+    mockfs.restore();
     infoStub.restore();
     errorStub.restore();
     logStub.restore();
