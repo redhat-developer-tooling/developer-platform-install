@@ -234,4 +234,11 @@ describe('Account controller', function() {
       expect(controller.authFailed).to.be.false;
     });
   });
+  describe('exit', function() {
+    it('exit closes active window', function() {
+      sandbox.stub(electron.remote.currentWindow);
+      controller.exit();
+      expect(electron.remote.currentWindow.close).calledOnce;
+    });
+  });
 });

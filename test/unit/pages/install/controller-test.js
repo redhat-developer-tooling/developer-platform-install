@@ -384,6 +384,17 @@ describe('Install controller', function() {
         expect(progress.averageSpeed).to.equal(0);
       });
     });
+
+    describe('exit', function() {
+      it('exit closes active window', function() {
+        let electron = new ElectronMock();
+        sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+        sandbox.stub(electron.remote.currentWindow);
+        let installController = new InstallController({}, {}, installerDataSvc, electron, window);
+        installController.exit();
+        expect(electron.remote.currentWindow.close).calledOnce;
+      });
+    });
   });
 
   it.skip('downloadAgain closes dialog with error and start download for failed installers', function() {
