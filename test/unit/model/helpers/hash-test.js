@@ -12,25 +12,22 @@ describe('Hash', function() {
   let hash = new Hash();
 
   describe('SHA256', function() {
-
-    let fakeHash = {
-      algorithm: function() {}
-    };
     let sandbox, fromFile;
 
     beforeEach(function() {
       sandbox = sinon.sandbox.create();
-      fromFile = sandbox.stub(hasha, 'fromFile').returns(fakeHash);
+      fromFile = sandbox.stub(hasha, 'fromFile').resolves('fakeHash');
     });
 
     afterEach(function() {
       sandbox.restore();
     });
 
-    it('should read the specified file', function() {
-      hash.SHA256('file');
-      expect(fromFile).to.have.been.called;
-      expect(fromFile).to.have.been.calledWith('file');
+    it('should return promise resolved to sha256 hash', function() {
+      return hash.SHA256('file').then((sha256)=> {
+        expect(sha256).to.be.equal('fakeHash');
+        expect(fromFile).to.have.been.calledWith('file', {algorithm: 'sha256'});
+      });
     });
   });
 });
