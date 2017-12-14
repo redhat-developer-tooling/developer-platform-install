@@ -388,7 +388,7 @@ describe('Install controller', function() {
     describe('exit', function() {
       it('exit closes active window', function() {
         let electron = new ElectronMock();
-        sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+        sandbox.stub(installerDataSvc, 'verifyFiles').returns();
         sandbox.stub(electron.remote.currentWindow);
         let installController = new InstallController({}, {}, installerDataSvc, electron, window);
         installController.exit();
