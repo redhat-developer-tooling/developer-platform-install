@@ -54,14 +54,14 @@ describe('Install controller', function() {
 
   describe('constrution', function() {
     it('should verify existing files', function() {
-      let stub = sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+      let stub = sandbox.stub(installerDataSvc, 'verifyFiles').returns();
       new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(stub).calledOnce;
     });
 
     it('should register an event handler for 3 different events', function() {
-      sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+      sandbox.stub(installerDataSvc, 'verifyFiles').returns();
       let tron = {
         ipcRenderer: {
           setMaxListeners: function() {},
@@ -135,15 +135,15 @@ describe('Install controller', function() {
 
     it('should process components that require download', function() {
       let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
-      installerDataSvc.addItemToInstall('jdk', jdk);
+        installerDataSvc.addItemToInstall('jdk', jdk);
       vbox.downloaded = false;
       jdk.downloaded = true;
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      installerDataSvc.downloadFiles(ctrl.itemProgress, window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
-      expect(dlStub).calledWithExactly(ctrl.itemProgress, ctrl.totalDownloads, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox');
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, 1, window.navigator.userAgent, 'virtualbox');
     });
 
     it('should set the total amount to the sum of file sizes', function() {
@@ -156,7 +156,7 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(progressStub).calledOnce;
       expect(progressStub).calledWith(vbox.files.virtualbox.size + vbox.files.foo.size);
@@ -175,10 +175,10 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
-      expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');
     });
   });
 
@@ -388,7 +388,7 @@ describe('Install controller', function() {
     describe('exit', function() {
       it('exit closes active window', function() {
         let electron = new ElectronMock();
-        sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+        sandbox.stub(installerDataSvc, 'verifyFiles').returns();
         sandbox.stub(electron.remote.currentWindow);
         let installController = new InstallController({}, {}, installerDataSvc, electron, window);
         installController.exit();

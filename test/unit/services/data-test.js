@@ -304,14 +304,14 @@ describe('InstallerDataService', function() {
 
     it('should set status to "Downloading"', function() {
       let spy = sandbox.spy(fakeProgress, 'setStatus');
-      svc.download(fakeProgress, 2, new Set(), '', 'vbox', 'jdk');
+      svc.download(fakeProgress, 2, '', 'vbox', 'jdk');
 
       expect(spy).calledOnce;
       expect(spy).calledWith('Downloading');
     });
 
     it('should call downloadInstaller for each component', function() {
-      svc.download(fakeProgress, 2, new Set(), '', 'vbox', 'jdk');
+      svc.download(fakeProgress, 2, '', 'vbox', 'jdk');
 
       expect(dlStub).calledTwice;
       expect(dlStub).calledOn(jdk);
@@ -320,7 +320,7 @@ describe('InstallerDataService', function() {
 
     it('should fire a "downloadingComplete" event when all downloads finish', function() {
       let spy = sandbox.spy(svc.ipcRenderer, 'send');
-      svc.download(fakeProgress, 2, new Set(), '');
+      svc.download(fakeProgress, 2, '');
 
       expect(spy).calledOnce;
       expect(spy).calledWith('downloadingComplete', 'all');

@@ -53,6 +53,7 @@ class InstallerDataService {
     this.toSetup = new Set();
     this.downloading = false;
     this.installing = false;
+    this.failedDownloads = new Set();
     this.requirements = loadMetadata(requirements, Platform.getOS());
     // filter download-manager urls and replace host name with stage
     // host name provided in environment variable
@@ -254,7 +255,7 @@ class InstallerDataService {
     });
   }
 
-  download(progress, totalDownloads, failedDownloads, userAgent, ...keys) {
+  download(progress, totalDownloads, userAgent, ...keys) {
     let success = () => {
       this.downloading = false;
       this.ipcRenderer.send('downloadingComplete', 'all');
@@ -268,7 +269,7 @@ class InstallerDataService {
       (error) => {
         Logger.error('Download failed with: ' + error);
         progress.setStatus('Download Failed');
-        failedDownloads.add(this.downloader);
+        this.failedDownloads.add(this.downloader);
       },
       totalDownloads,
       userAgent
@@ -333,6 +334,72 @@ class InstallerDataService {
       this.installing = false;
       this.ipcRenderer.send('installComplete', 'all');
     }
+  }
+
+  verifyFiles(progress) {
+    let toCheck = [];
+    for (let [key, value] of this.allInstallables().entries()) {
+      let downloaded = true;
+      for (let file in value.files) {
+        downloaded = downloaded && value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
+      }
+      if (!value.isSkipped() && downloaded) {
+        toCheck.push(key);
+      }
+    }
+    this.verifyExistingFiles(progress, ...toCheck);
+  }
+
+  downloadFiles(progress, userAgent) {
+    let toDownload = [];
+    let totalAmount = 0;
+    let totalDownloads = 0
+    this.allInstallables().forEach((value, key) => {
+      if(!value.isSkipped() && value.isDownloadRequired()) {
+        toDownload.push(key);
+        for (let file in value.files) {
+          if (!value.files[file].downloaded) {
+            totalAmount += value.files[file].size;
+            totalDownloads++;
+          }
+        }
+      }
+    });
+
+    progress.setTotalAmount(totalAmount);
+    this.download(progress, totalDownloads, userAgent, ...toDownload);
+  }
+
+  processInstall(progress) {
+    let totalItems = 0;
+    this.allInstallables().forEach((value) => {
+      if(!value.isSkipped()) {
+        totalItems++;
+      }
+    });
+
+    progress.setStatus('Installing');
+    progress.setTotalAmount(totalItems);
+    progress.setCurrent(1);
+
+    for (let [key, value] of this.allInstallables().entries()) {
+      if(!value.isSkipped()) {
+        this.triggerInstall(key, value, progress);
+      }
+    }
+  }
+
+  triggerInstall(installableKey, installableValue, progress) {
+    this.startInstall(installableKey);
+    installableValue.install(progress,
+      () => {
+        progress.setCurrent(progress.currentAmount+1);
+        this.installDone(progress, installableKey);
+      },
+      (error) => {
+        Logger.error(installableKey + ' failed to install: ' + error);
+      }
+    );
   }
 
   static factory($state) {

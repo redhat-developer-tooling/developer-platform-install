@@ -13,27 +13,24 @@ class InstallController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.electron.ipcRenderer.setMaxListeners(0);
-    this.failedDownloads = new Set();
-    this.totalAmount = 0;
     this.installerDataSvc.setupTargetFolder();
 
     this.data = {};
-    this.totalDownloads = 0;
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
     this.data.progress = this.itemProgress;
     this.$scope.data = this.data;
 
-    this.verifyFiles();
+    this.installerDataSvc.verifyFiles(this.itemProgress);
 
     this.electron.ipcRenderer.on('checkComplete', (event, key) => {
       if(key == 'all') {
-        this.downloadFiles();
+        this.installerDataSvc.downloadFiles(this.itemProgress, this.$window.navigator.userAgent);
       }
     });
 
     this.electron.ipcRenderer.on('downloadingComplete', (event, key) => {
       if(key == 'all') {
-        this.processInstall();
+        this.installerDataSvc.processInstall(this.itemProgress);
       }
     });
 
@@ -48,38 +45,6 @@ class InstallController {
     });
   }
 
-  verifyFiles() {
-    let toCheck = [];
-    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      let downloaded = true;
-      for (let file in value.files) {
-        downloaded = downloaded && value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
-      }
-      if (!value.isSkipped() && downloaded) {
-        toCheck.push(key);
-      }
-    }
-    this.installerDataSvc.verifyExistingFiles(this.itemProgress, ...toCheck);
-  }
-
-  downloadFiles() {
-    let toDownload = [];
-    this.installerDataSvc.allInstallables().forEach((value, key) => {
-      if(!value.isSkipped() && value.isDownloadRequired()) {
-        toDownload.push(key);
-        for (let file in value.files) {
-          if (!value.files[file].downloaded) {
-            this.totalAmount += value.files[file].size;
-            this.totalDownloads++;
-          }
-        }
-      }
-    });
-
-    this.itemProgress.setTotalAmount(this.totalAmount);
-    this.installerDataSvc.download(this.itemProgress, this.totalDownloads, this.failedDownloads, this.$window.navigator.userAgent, ...toDownload);
-  }
-
   isDarwinPlatform() {
     return Platform.OS == 'darwin';
   }
@@ -90,39 +55,7 @@ class InstallController {
   }
 
   closeDownloadAgainDialog() {
-    this.failedDownloads.clear();
-  }
-
-  processInstall() {
-    let totalItems = 0;
-    this.installerDataSvc.allInstallables().forEach((value) => {
-      if(!value.isSkipped()) {
-        totalItems++;
-      }
-    });
-
-    this.itemProgress.setStatus('Installing');
-    this.itemProgress.setTotalAmount(totalItems);
-    this.itemProgress.setCurrent(1);
-
-    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      if(!value.isSkipped()) {
-        this.triggerInstall(key, value, this.itemProgress);
-      }
-    }
-  }
-
-  triggerInstall(installableKey, installableValue, progress) {
-    this.installerDataSvc.startInstall(installableKey);
-    installableValue.install(progress,
-      () => {
-        this.itemProgress.setCurrent(this.itemProgress.currentAmount+1);
-        this.installerDataSvc.installDone(progress, installableKey);
-      },
-      (error) => {
-        Logger.error(installableKey + ' failed to install: ' + error);
-      }
-    );
+    this.installerDataSvc.failedDownloads.clear();
   }
 
   showLog() {
