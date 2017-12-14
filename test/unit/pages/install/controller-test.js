@@ -54,14 +54,14 @@ describe('Install controller', function() {
 
   describe('constrution', function() {
     it('should verify existing files', function() {
-      let stub = sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+      let stub = sandbox.stub(installerDataSvc, 'verifyFiles').returns();
       new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(stub).calledOnce;
     });
 
     it('should register an event handler for 3 different events', function() {
-      sandbox.stub(InstallController.prototype, 'verifyFiles').returns();
+      sandbox.stub(installerDataSvc, 'verifyFiles').returns();
       let tron = {
         ipcRenderer: {
           setMaxListeners: function() {},
@@ -140,7 +140,7 @@ describe('Install controller', function() {
       jdk.downloaded = true;
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      ctrl.downloadFiles(ctrl.itemProgress);
 
       expect(dlStub).calledOnce;
       expect(dlStub).calledWithExactly(ctrl.itemProgress, ctrl.totalDownloads, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox');
@@ -156,7 +156,7 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      ctrl.downloadFiles(ctrl.itemProgress);
 
       expect(progressStub).calledOnce;
       expect(progressStub).calledWith(vbox.files.virtualbox.size + vbox.files.foo.size);
@@ -175,7 +175,7 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles();
+      ctrl.downloadFiles(ctrl.itemProgress);
 
       expect(dlStub).calledOnce;
       expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');

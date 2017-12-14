@@ -335,6 +335,20 @@ class InstallerDataService {
     }
   }
 
+  verifyFiles(progress) {
+    let toCheck = [];
+    for (let [key, value] of this.allInstallables().entries()) {
+      let downloaded = true;
+      for (let file in value.files) {
+        downloaded = downloaded && value.files[file].downloaded && value.downloadedFile !== value.bundledFile;
+      }
+      if (!value.isSkipped() && downloaded) {
+        toCheck.push(key);
+      }
+    }
+    this.verifyExistingFiles(progress, ...toCheck);
+  }
+
   static factory($state) {
     return new InstallerDataService($state);
   }
