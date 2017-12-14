@@ -13,12 +13,9 @@ class InstallController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.electron.ipcRenderer.setMaxListeners(0);
-    this.failedDownloads = new Set();
-    this.totalAmount = 0;
     this.installerDataSvc.setupTargetFolder();
 
     this.data = {};
-    this.totalDownloads = 0;
     this.itemProgress = new ProgressState('', undefined, undefined, undefined, this.$scope, this.$timeout);
     this.data.progress = this.itemProgress;
     this.$scope.data = this.data;
@@ -27,13 +24,13 @@ class InstallController {
 
     this.electron.ipcRenderer.on('checkComplete', (event, key) => {
       if(key == 'all') {
-        this.downloadFiles(this.itemProgress);
+        this.installerDataSvc.downloadFiles(this.itemProgress, this.$window.navigator.userAgent);
       }
     });
 
     this.electron.ipcRenderer.on('downloadingComplete', (event, key) => {
       if(key == 'all') {
-        this.processInstall(this.itemProgress);
+        this.installerDataSvc.processInstall(this.itemProgress);
       }
     });
 
@@ -48,24 +45,6 @@ class InstallController {
     });
   }
 
-  downloadFiles(progress) {
-    let toDownload = [];
-    this.installerDataSvc.allInstallables().forEach((value, key) => {
-      if(!value.isSkipped() && value.isDownloadRequired()) {
-        toDownload.push(key);
-        for (let file in value.files) {
-          if (!value.files[file].downloaded) {
-            this.totalAmount += value.files[file].size;
-            this.totalDownloads++;
-          }
-        }
-      }
-    });
-
-    progress.setTotalAmount(this.totalAmount);
-    this.installerDataSvc.download(progress, this.totalDownloads, this.failedDownloads, this.$window.navigator.userAgent, ...toDownload);
-  }
-
   isDarwinPlatform() {
     return Platform.OS == 'darwin';
   }
@@ -76,39 +55,7 @@ class InstallController {
   }
 
   closeDownloadAgainDialog() {
-    this.failedDownloads.clear();
-  }
-
-  processInstall(progress) {
-    let totalItems = 0;
-    this.installerDataSvc.allInstallables().forEach((value) => {
-      if(!value.isSkipped()) {
-        totalItems++;
-      }
-    });
-
-    progress.setStatus('Installing');
-    progress.setTotalAmount(totalItems);
-    progress.setCurrent(1);
-
-    for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
-      if(!value.isSkipped()) {
-        this.triggerInstall(key, value, progress);
-      }
-    }
-  }
-
-  triggerInstall(installableKey, installableValue, progress) {
-    this.installerDataSvc.startInstall(installableKey);
-    installableValue.install(progress,
-      () => {
-        progress.setCurrent(progress.currentAmount+1);
-        this.installerDataSvc.installDone(progress, installableKey);
-      },
-      (error) => {
-        Logger.error(installableKey + ' failed to install: ' + error);
-      }
-    );
+    this.installerDataSvc.failedDownloads.clear();
   }
 
   showLog() {

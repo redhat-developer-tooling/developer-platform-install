@@ -135,15 +135,15 @@ describe('Install controller', function() {
 
     it('should process components that require download', function() {
       let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
-      installerDataSvc.addItemToInstall('jdk', jdk);
+        installerDataSvc.addItemToInstall('jdk', jdk);
       vbox.downloaded = false;
       jdk.downloaded = true;
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles(ctrl.itemProgress);
+      installerDataSvc.downloadFiles(ctrl.itemProgress, window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
-      expect(dlStub).calledWithExactly(ctrl.itemProgress, ctrl.totalDownloads, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox');
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, 1, window.navigator.userAgent, 'virtualbox');
     });
 
     it('should set the total amount to the sum of file sizes', function() {
@@ -156,7 +156,7 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles(ctrl.itemProgress);
+      installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(progressStub).calledOnce;
       expect(progressStub).calledWith(vbox.files.virtualbox.size + vbox.files.foo.size);
@@ -175,10 +175,10 @@ describe('Install controller', function() {
       };
 
       let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
-      ctrl.downloadFiles(ctrl.itemProgress);
+      installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
-      expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.failedDownloads, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');
+      expect(dlStub).calledWithExactly(ctrl.itemProgress, 3, ctrl.$window.navigator.userAgent, 'virtualbox', 'jdk');
     });
   });
 
