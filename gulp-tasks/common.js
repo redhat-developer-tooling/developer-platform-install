@@ -17,13 +17,13 @@ function createExecCallback(cb, quiet) {
 }
 
 // for a given filename, return the sha256sum
-function getSHA256(filename, cb) {
-  new Hash().SHA256(filename, cb);
+function getSHA256(filename) {
+  return new Hash().SHA256(filename);
 }
 
 // writes to {filename}.sha256, eg., 6441cde1821c93342e54474559dc6ff96d40baf39825a8cf57b9aad264093335 requirements.json
 function createSHA256File(filename, cb) {
-  getSHA256(filename, function(hashstring) {
+  getSHA256(filename).then((hashstring) => {
     fs.writeFile(filename + '.sha256', hashstring + ' *' + path.parse(filename).base, (err)=>{
       cb(err);
     });
@@ -34,7 +34,7 @@ function createSHA256File(filename, cb) {
 function isExistingSHA256Current(currentFile, sha256sum, processResult) {
   if (fs.existsSync(currentFile)) {
     console.log('[INFO] \'' + currentFile + '\' exists in cache');
-    getSHA256(currentFile, function(hashstring) {
+    getSHA256(currentFile).then((hashstring) => {
       if (sha256sum !== hashstring) {
         console.log('[WARN] SHA256 in requirements.json (' + sha256sum + ') does not match computed SHA (' + hashstring + ') for ' + currentFile);
       }

@@ -67,7 +67,7 @@ function downloadFileAndCreateSha256(targetFolder, fileName, reqURL, sha256sum, 
     if (err) {
       reject(err);
     } else {
-      comm.getSHA256(currentFile, (currentSHA256)=>{
+      comm.getSHA256(currentFile).then((currentSHA256)=>{
         if(currentSHA256 == sha256sum) {
           console.log( '[INFO] \'' + currentFile + '\' is downloaded and sha256 is correct');
           comm.createSHA256File(currentFile, (shaGenError)=>{
