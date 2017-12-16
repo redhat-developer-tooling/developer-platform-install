@@ -124,7 +124,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
     }).then(() => {
       return this.configure(installer);
     }).then(() => {
-      Platform.addToUserPath([this.option['install'].location]);
+      return Platform.addToUserPath([this.option['install'].location]);
+    }).then(() => {
       installer.succeed(true);
     }).catch((error) => {
       installer.fail(error);
