@@ -87,7 +87,6 @@ class ConfirmController {
 
   back() {
     Logger.info('Going back a page');
-    // this.electron.remote.getCurrentWindow().removeAllListeners('focus');
     this.router.go('selection');
   }
 }
