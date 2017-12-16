@@ -34,8 +34,7 @@ class CygwinInstall extends InstallableItem {
         let cygwinVersion = cygwinPackageRegex.exec(out)[1];
         opensshPackageReqex.exec(out)[1];
         rsyncPackageRegex.exec(out)[1];
-        this.addOption('detected', '', '', true);
-        this.option['detected'].version = cygwinVersion;
+        this.addOption('detected', cygwinVersion, '', true);
         this.selectedOption = 'detected';
       }).then(()=>{
         return Util.executeCommand('where cygcheck', 1);
