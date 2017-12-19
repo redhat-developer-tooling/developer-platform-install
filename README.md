@@ -235,7 +235,21 @@ To open html coverage report in your default browser after unit tests finished u
 Running unit tests one by one for each installer module
 
     gulp unit-test-1by1
+    
+If you experience this error when running unit tests
 
+    module.js:598
+     return process.dlopen(module, path._makeLong(filename));
+                 ^
+
+    Error: The specified procedure could not be found.
+    \\?\C:\p\rh\dpi\node_modules\keytar\build\Release\keytar.node
+       at Object.Module._extensions..node (module.js:598:18)
+
+install 'keytar' module using npm
+
+    npm install keytar
+    
 Debugging unit tests
 --------------------
 
