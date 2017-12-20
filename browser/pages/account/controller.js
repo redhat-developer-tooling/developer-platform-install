@@ -9,8 +9,6 @@ import Logger from '../../services/logger';
 import Platform from '../../services/platform';
 import TokenStore from '../../services/credentialManager';
 
-const hostname = process.env.DM_STAGE_HOST ? process.env.DM_STAGE_HOST : 'developers.redhat.com';
-
 class AccountController {
 
   constructor($state, $timeout, $scope, request, $base64, installerDataSvc, electron) {
@@ -27,6 +25,7 @@ class AccountController {
     this.isLoginBtnClicked = false;
     this.rememberMe = this.installerDataSvc.rememberMe;
     this.httpError = undefined;
+    this.hostname = process.env.DM_STAGE_HOST ? process.env.DM_STAGE_HOST : 'developers.redhat.com';
     this.password = '';
     this.username = '';
     $scope.$watch('$viewContentLoaded', ()=>{
@@ -40,14 +39,14 @@ class AccountController {
     this.resetLoginErrors();
     let req = {
       method: 'GET',
-      url: `https://${hostname}/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip`,
+      url: `https://${this.hostname}/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip`,
       auth: {
         user: this.username,
         pass: this.password,
         sendImmediately: true
       },
       headers: {
-        'Accept'    : 'application/json, text/plain, */*',
+        'Accept': 'application/json, text/plain, */*',
         'User-Agent': this.getUserAgent()
       },
       followAllRedirects: true,
@@ -124,7 +123,7 @@ class AccountController {
       this.isLoginBtnClicked = false;
       this.authFailed = true;
     }
-    this.apply();
+    this.timeout();
   }
 
   handleHttpFailure(error) {
@@ -132,13 +131,7 @@ class AccountController {
     this.isLoginBtnClicked = false;
     this.httpError = error;
     console.error(error);
-    this.apply();
-  }
-
-  apply() {
-    this.timeout(()=>{
-      this.scope.$apply();
-    });
+    this.timeout();
   }
 
   exit() {
@@ -152,6 +145,6 @@ class AccountController {
   }
 }
 
-AccountController.$inject = ['$state', '$timeout', '$scope', 'request', '$base64', 'installerDataSvc', 'electron'];
+AccountController.$inject = ['$state', '$timeout', '$scope', 'request', '$base64', 'installerDataSvc', 'electron', '$document'];
 
 export default AccountController;
