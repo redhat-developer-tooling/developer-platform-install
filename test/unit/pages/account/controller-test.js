@@ -15,11 +15,11 @@ describe('Account controller', function() {
   let electron = new ElectronMock();
 
   beforeEach(function() {
-    timeout = function(cb) { cb(); };
-    scope = { '$apply': function() { }, '$watch': function() { } };
+    timeout = sandbox.stub();
+    scope = { '$apply': function() { }, '$watch': function(event, cb) { cb && cb() } };
     base64 = { encode: function() {}};
     http = sandbox.stub().resolves('success');
-    controller = new AccountController({}, timeout, scope, http, base64, {password: '', username: ''}, electron);
+    controller = new AccountController({go:sandbox.stub()}, timeout, scope, http, base64, {password: '', username: ''}, electron);
   });
 
   afterEach(function() {
@@ -234,11 +234,20 @@ describe('Account controller', function() {
       expect(controller.authFailed).to.be.false;
     });
   });
+  describe('save', function() {
+    it('should save entered user name and password if `Remember me` is set');
+  });
   describe('exit', function() {
-    it('exit closes active window', function() {
+    it('should close active window', function() {
       sandbox.stub(electron.remote.currentWindow);
       controller.exit();
       expect(electron.remote.currentWindow.close).calledOnce;
+    });
+  });
+  describe('back', function() {
+    it('should navigate to confirmation page', function() {
+      controller.back();
+      expect(controller.router.go).calledWith('confirm');
     });
   });
 });
