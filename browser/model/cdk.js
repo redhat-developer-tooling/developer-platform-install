@@ -114,11 +114,8 @@ class CDKInstall extends InstallableItem {
   virtualizationIsConfigured() {
     let virtualbox = this.installerDataSvc.getInstallable('virtualbox');
     let hyperv = this.installerDataSvc.getInstallable('hyperv');
-    return (virtualbox
-      && virtualbox.isConfigured())
-      || (hyperv
-      && hyperv.isConfigured()
-      || this.selectedOption !== 'install');
+    return virtualbox && virtualbox.isConfigured()
+      || (hyperv && hyperv.isConfigured() || this.selectedOption !== 'install');
   }
 }
 

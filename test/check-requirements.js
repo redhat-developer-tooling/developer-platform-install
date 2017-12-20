@@ -52,7 +52,7 @@ function checkUrl(key) {
       let size = response.headers['content-length'];
       if (response.statusCode !== 200) {
         req.abort();
-        throw new Error(key + ' url returned code ' + response.statusCode);
+        throw new Error('Request for ' + key + ' url returned code ' + response.statusCode);
       }
       console.log(key + ' - url: ' + reqs[key].url);
       console.log(key + ' - size: ' + size + 'B');
@@ -73,6 +73,7 @@ function checkUrl(key) {
       }
     })
     .on('error', function(err) {
+      console.log(`Download failed for ${key}`);
       req.abort();
       throw err;
     });

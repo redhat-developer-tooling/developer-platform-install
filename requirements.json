@@ -9,11 +9,11 @@
     "bundle": "yes",
     "targetFolderName": "developer-studio",
     "installAfter": "jdk",
-    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.1.0.GA-installer-standalone.jar?workflow=direct",
-    "url": "https://devstudio.redhat.com/11/stable/builds/devstudio-11.1.0.GA-build-product/latest/all/devstudio-11.1.0.GA-installer-standalone.jar",
-    "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
-    "sha256sum": "e53e8075968b4bff6019650aa54f716422db9c3a0193003c4af6cc3a0a6d6def",
-    "version": "11.1.0.GA",
+    "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/devstudio-11.2.0.latest-installer-standalone.jar",
+    "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/devstudio-11.2.0.latest-installer-standalone.jar",
+    "fileName": "devstudio-11.2.0.AM3-installer-standalone.jar",
+    "sha256sum": "",
+    "version": "11.2.0.AM3",
     "useDownload": true,
     "requires": ["jdk"],
     "size": 678757632,
@@ -22,7 +22,42 @@
       "containerDev": { },
       "javaDev": { },
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
+    }
+  },
+  "devstuido_bpm": {
+    "name": "JBoss Buisness Process and Rules Tools",
+    "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/devstudio-p2",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "jbosseap",
+    "ius": [
+      "org.jboss.tools.bpel.feature.feature.group",
+      "org.eclipse.bpmn2.feature.feature.group",
+      "org.eclipse.bpmn2.modeler.feature.group",
+      "org.eclipse.bpmn2.modeler.runtime.jboss.feature.group",
+      "org.drools.eclipse.feature.feature.group",
+      "org.jbpm.eclipse.feature.feature.group",
+      "org.kie.eclipse.feature.feature.group",
+      "org.kie.eclipse.navigator.feature.feature.group",
+      "org.jboss.tools.runtime.drools.detector.feature.feature.group"
+    ],
+    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/discovery/",
+    "fileName": "devstudio-11.1.0.GA-installer-standalone.jar",
+    "sha256sum": "",
+    "version": "7.3.0.GA",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudio"],
+    "size": 678757632,
+    "installSize": 840675328,
+    "channel" : {
+      "devstudio": { }
     }
   },
   "jdk": {
@@ -83,7 +118,8 @@
       "containerDev": { },
       "javaDev": { },
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
     }
   },
   "cdk": {
@@ -102,34 +138,34 @@
     },
     "platform": {
       "win32": {
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-windows-amd64.exe?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/windows-amd64/minishift.exe",
-        "fileName": "minishift_3_2_0__GA.exe",
-        "sha256sum": "8362420159c2bfd22b428e545230764c22f184024ab0903eaf5caffe35293465",
-        "version": "3.2.0-GA",
-        "size": 487340032,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/windows-amd64/minishift.exe",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/windows-amd64/minishift.exe",
+        "fileName": "minishift_3_3_0__alpha_1.exe",
+        "sha256sum": "211e69f7e64b527aa7636cc2ff638bff692ddf0e67d65e08ccbf5848f0945d60",
+        "version": "3.3.0-Alpha.1",
+        "size": 501517312,
         "installSize" : 836390912,
         "requires": ["cygwin","hyperv||virtualbox"],
         "installAfter": "cygwin"
       },
       "darwin": {
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-darwin-amd64?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/darwin-amd64/minishift",
-        "fileName": "minishift_3_2_0__GA",
-        "sha256sum": "f9b30f341bee4924657d95729f2c2c19b98e659550d8c73edd369c3629a5fc0d",
-        "version": "3.2.0-GA",
-        "size": 488498160,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/darwin-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/darwin-amd64/minishift",
+        "fileName": "minishift_3_3_0__alpha_1",
+        "sha256sum": "00361c06a949428067206e9a2e0e940b092e1ec9ffe8d068c66136a453249178",
+        "version": "3.3.0-Alpha.1",
+        "size": 502618912,
         "installSize" : 836390912,
         "requires": ["virtualbox"],
         "installAfter": "virtualbox"
       },
       "linux": {
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.2.0-1-minishift-linux-amd64?workflow=direct",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/24-Oct-2017.cdk-3.2.0/linux-amd64/minishift",
-        "fileName": "minishift_3_2_0__GA",
-        "sha256sum": "943180a8ede88624fd2d33d1d7e3017eef960e5adadef2e1d60448fd064abe52",
-        "version": "3.2.0-GA",
-        "size": 487191808,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/linux-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/01-Dec-2017.cdk-3.3.0-alpha.1/linux-amd64/minishift",
+        "fileName": "minishift_3_3_0__alpha_1",
+        "sha256sum": "8f8cfdecb4fca6e647c628b590567b6254ecb3a839604e8acf415e5eaa759e89",
+        "version": "3.3.0-Alpha.1",
+        "size": 501339264,
         "installSize" : 836390912,
         "requires": ["virtualbox"],
         "installAfter": "virtualbox"
@@ -204,7 +240,8 @@
     "size": 0,
     "channel" : {
       "fuseDev": { },
-      "rhProds": { }
+      "rhProds": { },
+      "devstudio": { }
     }
   },
   "fuseplatform": {
@@ -398,9 +435,9 @@
     "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.9.0.exe",
-    "sha256sum": "56f41491671bef8de546e2c9221e6a7ec51a2168a9ba28a0d10c25d15be60ab2",
+    "sha256sum": "dbadd1f5f57ba68f9e0e224c8e71331f88234cf39b019a04958006a99fd6604b",
     "version": "2.9.0-3",
-    "size": 907795,
+    "size": 937491,
     "installSize": 159215616,
     "virusTotalReport": "https://virustotal.com/en/file/56f41491671bef8de546e2c9221e6a7ec51a2168a9ba28a0d10c25d15be60ab2/analysis/",
     "platform": {
