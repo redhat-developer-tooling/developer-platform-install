@@ -864,11 +864,6 @@ footer {
   .channels-nav {
     margin-top: 20px
   }
-  
-  .channels-no-padding {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
 
   .channels-content {
     overflow:auto;
@@ -878,4 +873,51 @@ footer {
   .selection-form-padding {
     padding-right: 20px;
   }
+
+  .channel-vtab-nav-col {
+    background-color: #6d0000;
+    width: 25%;
+    margin-right: 2.5702331142%;
+    padding-top: 25px;
+  }
+
+  .channel-vtab-nav-tabs {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .channel-vtab-nav-tab {
+    padding: 0 15px 0 2%;
+    position: relative;
+    display: flex;
+    flex-shrink: 1;
+    margin: 10px 0;
+  }
+
+  .channel-vtab-nav-tab.active {
+    margin-right: -10px;
+    background: #2c0000;
+  }
+
+  .channel-vtab-nav-tab.active > a {
+    cursor: default;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .channel-vtab-nav-link {
+    color: #fff;
+    flex-grow: 1;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.1;
+    padding: 10px 0 10px 30px;
+  }
+
+  .channel-vtab-nav-link:hover, .channel-vtab-nav-link:focus {
+    color: #fff;
+    text-decoration: none;
+  }
+
 }

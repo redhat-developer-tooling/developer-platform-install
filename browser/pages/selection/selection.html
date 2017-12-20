@@ -12,15 +12,15 @@
     </div>
     <div id="channels" class="channels-container">
       <div class="row">
-          <div class="col-sm-4 channels-nav">
-              <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
-                  <li id="{{tab.id}}-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
-                      <a class="btn-lg" ng-click="selectCtrl.channel_tab = tab.id" href="">{{tab.name}}</a>
-                  </li>
+        <div class="channel-vtab-nav" style="display: flex;">
+            <nav class="channel-vtab-nav-col">
+              <ul class="channel-vtab-nav-tabs">
+                <li id="{{tab.id}}-tab" class="channel-vtab-nav-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
+                    <a  class="channel-vtab-nav-link" ng-click="selectCtrl.channel_tab = tab.id" href="">{{tab.name}}</a>
+                </li>
               </ul>
-          </div>
-          <div class="col-sm-8 channels-no-padding">
-            <div class="channels-content">
+            </nav>
+            <div class="channels-content" style="width: 75%">
               <form name="selectionForm" id="selectionForm" class="selection-form-padding form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
                 <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
                   <component-panel item="item"></component-panel>
