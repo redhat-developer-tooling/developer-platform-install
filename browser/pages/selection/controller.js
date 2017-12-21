@@ -18,6 +18,7 @@ class SelectionController {
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
     this.step = 1;
+    this.filter = {};
 
     this.installables = {};
     $scope.checkboxModel = {};
@@ -26,7 +27,6 @@ class SelectionController {
     $scope.virtualization = true;
     this.channelList = require('../../../channels');
     this.channel_tab = 'containerDev';
-    $scope.componentsInChannel = this.componentsInChannel.bind(this);
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
       $scope.checkboxModel[key] = value;
@@ -46,8 +46,9 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
   }
 
-  componentsInChannel(value) {
-    return Object.values(this.sc.checkboxModel).filter(value=> {
+  componentsInChannel(key) {
+    this.channel_tab = key;
+    this.filter = Object.values(this.sc.checkboxModel).filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
   }
@@ -55,14 +56,16 @@ class SelectionController {
   clearAll() {
     for (let key in this.sc.checkboxModel) {
       let node = this.sc.checkboxModel[key];
-      node.selectedOption = 'detected';
+      if (node.channel.hasOwnProperty(this.channel_tab)) {
+        node.selectedOption = 'detected';
+      }
     }
   }
 
   selectAll() {
     for (let key in this.sc.checkboxModel) {
       let node = this.sc.checkboxModel[key];
-      if (node.isInstallable && node.isNotDetected()) {
+      if (node.isInstallable && node.isNotDetected() && node.channel.hasOwnProperty(this.channel_tab)) {
         node.selectedOption = 'install';
       }
     }
