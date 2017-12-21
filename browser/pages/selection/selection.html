@@ -15,14 +15,14 @@
           <div class="col-sm-4 channels-nav">
               <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
                   <li id="{{tab.id}}-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
-                      <a class="btn-lg" ng-click="selectCtrl.channel_tab = tab.id" href="">{{tab.name}}</a>
+                      <a class="btn-lg" ng-init="selectCtrl.componentsInChannel('containerDev')" ng-click="selectCtrl.componentsInChannel(tab.id)" href="">{{tab.name}}</a>
                   </li>
               </ul>
           </div>
           <div class="col-sm-8 channels-no-padding">
             <div class="channels-content">
               <form name="selectionForm" id="selectionForm" class="selection-form-padding form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
-                <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
+                <div ng-repeat="item in selectCtrl.filter" class="panel-group-items">
                   <component-panel item="item"></component-panel>
                 </div>
               </form>
