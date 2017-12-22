@@ -397,12 +397,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox location added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':'path'});
-        let pathArray = ['virtualbox', 'ocBinRoot', 'path'];
+        let pathArray = ['ocBinRoot', 'virtualbox', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':''});
-        let pathArray = ['virtualbox', 'ocBinRoot'];
+        let pathArray = ['ocBinRoot', 'virtualbox'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
@@ -414,13 +414,13 @@ describe('CDK installer', function() {
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path', PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer} = stubInstaller() );
-        let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot', 'path'];
+        let pathArray = ['cygwin', 'ocBinRoot', 'virtualbox', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'', PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer} = stubInstaller() );
-        let pathArray = ['virtualbox', 'cygwin', 'ocBinRoot'];
+        let pathArray = ['cygwin', 'ocBinRoot', 'virtualbox'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
