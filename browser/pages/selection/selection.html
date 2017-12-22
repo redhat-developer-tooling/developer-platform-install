@@ -15,7 +15,7 @@
           <div class="col-sm-4 channels-nav">
               <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
                   <li id="{{tab.id}}-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
-                      <a class="btn-lg" ng-init="selectCtrl.componentsInChannel()" ng-click="selectCtrl.componentsInChannel(tab.id)" href="">{{tab.name}}</a>
+                      <a class="btn-lg" ng-init="selectCtrl.componentsInChannel('containerDev')" ng-click="selectCtrl.componentsInChannel(tab.id)" href="">{{tab.name}}</a>
                   </li>
               </ul>
           </div>
