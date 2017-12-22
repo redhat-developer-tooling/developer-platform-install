@@ -46,8 +46,7 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
   }
 
-  componentsInChannel(key) {
-    this.channel_tab = key;
+  componentsInChannel() {
     this.filter = Object.values(this.sc.checkboxModel).filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
