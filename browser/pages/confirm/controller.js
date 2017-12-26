@@ -11,30 +11,32 @@ class ConfirmController {
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     $scope.downloadComp = this.detectDownloadedComponents();
+    $scope.updateTotalDownloadSize = this.updateTotalDownloadSize.bind(this);
+    $scope.updateTotalInstallSize = this.updateTotalInstallSize.bind(this);
+  }
 
-    $scope.updateTotalDownloadSize = () => {
-      let totalDownloadSize = 0;
-      for (let value of this.installerDataSvc.allInstallables().values()) {
-        if(value.size && value.selectedOption == 'install' && !value.downloaded) {
-          for (let file in value.files) {
-            if (!value.files[file].downloaded) {
-              totalDownloadSize += value.files[file].size;
-            }
+  updateTotalDownloadSize() {
+    let totalDownloadSize = 0;
+    for (let value of this.installerDataSvc.allInstallables().values()) {
+      if(value.size && value.selectedOption == 'install' && !value.downloaded) {
+        for (let file in value.files) {
+          if (!value.files[file].downloaded) {
+            totalDownloadSize += value.files[file].size;
           }
         }
       }
-      return totalDownloadSize;
-    };
+    }
+    return totalDownloadSize;
+  }
 
-    $scope.updateTotalInstallSize = () => {
-      let totalInstallSize = 0;
-      for (let value of this.installerDataSvc.allInstallables().values()) {
-        if(value.installSize && value.selectedOption == 'install') {
-          totalInstallSize += value.installSize;
-        }
+  updateTotalInstallSize() {
+    let totalInstallSize = 0;
+    for (let value of this.installerDataSvc.allInstallables().values()) {
+      if(value.installSize && value.selectedOption == 'install') {
+        totalInstallSize += value.installSize;
       }
-      return totalInstallSize;
-    };
+    }
+    return totalInstallSize;
   }
 
   detectDownloadedComponents() {
