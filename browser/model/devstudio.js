@@ -35,6 +35,8 @@ class DevstudioInstall extends InstallableItem {
     if(fs.existsSync(this.bundledFile)) {
       this.downloadedFile = this.bundledFile;
     }
+    this.InstallConfigRecord = path.join(this.installerDataSvc.devstudioDir(), 'InstallConfigRecord.xml');
+    this.RenameInstallConfigRecord = path.join(this.installerDataSvc.devstudioDir(), 'InstallConfigRecord-' + this.keyName + '.xml');
     this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
     let installer = new Installer(this.keyName, progress, success, failure);
     Logger.info(this.keyName + ' - Generate devstudio auto install file content');
@@ -46,6 +48,9 @@ class DevstudioInstall extends InstallableItem {
         return this.headlessInstall(installer, result);
       })
       .then(() => {
+        if(fs.existsSync(this.InstallConfigRecord)) {
+          fs.rename(this.InstallConfigRecord, this.RenameInstallConfigRecord);
+        }
         installer.succeed(true);
       })
       .catch((error) => {
