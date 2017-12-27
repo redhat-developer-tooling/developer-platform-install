@@ -102,13 +102,13 @@ class AccountController {
 
   handleHttpSuccess(result) {
     this.httpError = undefined;
-    if (result.status == 200 && result.data == true) {
+    if (result.status == 200 && result.data) {
       this.installerDataSvc.setCredentials(this.username, this.password);
       this.isLoginBtnClicked = false;
       this.router.go('install');
       this.authFailed = false;
       // Storing the password for next use
-      if (this.rememberMe == true) {
+      if (this.rememberMe) {
         let dataFilePath = Platform.localAppData();
         mkdirp.sync(dataFilePath);
         let data = {'username': this.username};
