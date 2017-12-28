@@ -315,20 +315,6 @@ describe('Install controller', function() {
         progress.setStatus('');
         expect(progress.current).equals(1);
       });
-      it.skip('sets prcentage to 100 and clear lable if status is not "Downloading"', function() {
-        progress.setStatus('Verifying something');
-        expect(progress.$scope.$apply).have.been.calledOnce;
-        expect(progress.label).equals('');
-        expect(progress.current).equals(100);
-      });
-      it.skip('resets downloading stats if status is "Downloading"', function() {
-        progress.setStatus('Downloading');
-        expect(progress.$scope.$apply).have.been.calledOnce;
-        expect(progress.current).equals(0);
-        expect(progress.label).equals(0 + '%');
-        expect(progress.currentAmount).equals(0);
-        expect(progress.totalSize).equals(0);
-      });
     });
     describe('setComplete', function() {
       let progress;
