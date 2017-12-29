@@ -183,6 +183,12 @@ of Vagrant and VirtualBox (will download them):
 5. To build both installers in a single step:
 
         npm run dist
+        
+Running installer behind proxy
+------------------------------
+
+Proxy configuration details are available in this issue [#1171](https://github.com/redhat-developer-tooling/developer-platform-install/issues/1171).
+
 
 Local build with clean up
 -------------------------
