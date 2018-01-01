@@ -22,7 +22,7 @@ header {
 
 footer {
   bottom: 0;
-  height: 66px;
+  height: 60px;
   width: 100%;
   background-color: #FFFFFF;
   z-index: 3;
@@ -387,9 +387,7 @@ footer {
 
   .bottom-spacer {
     padding-top: 70px;
-    padding-bottom: 80px;
     padding-left: 20px;
-    padding-right: 20px;
   }
 
   .account-wrapper {
@@ -512,7 +510,7 @@ footer {
 
   .panel2pxborder {
     border-width: 2px;
-    margin-top: 20px;
+    margin-top: 14px;
     margin-bottom: 0px;
   }
 
@@ -676,11 +674,9 @@ footer {
   }
 
   .selection-container {
-    padding-top: 30px;
+    padding-top: 33px;
     position: fixed;
-    width: 93%;
-    padding-bottom: 11px;
-    background: #fff;
+    width: 96%;
   }
 
   .selection-info {
@@ -831,7 +827,7 @@ footer {
     line-height: 20px;
     padding: 0 10px 2px;
     text-transform: uppercase;
-    margin-right: 10px;
+    margin: -3px 10px 0 0;
     float: right;
   }
 
@@ -858,7 +854,7 @@ footer {
   }
 
   .channels-container {
-    margin: 20px auto;
+    margin: 5px auto;
   }
   
   .channels-nav {
@@ -872,23 +868,27 @@ footer {
 
   .selection-form-padding {
     padding-right: 20px;
+    padding-top: 15px;
+  }
+
+  .channel-vtab-nav {
+    display: flex;
   }
 
   .channel-vtab-nav-col {
-    background-color: #6d0000;
+    background-color: #fafafa;
     width: 25%;
-    margin-right: 2.5702331142%;
-    padding-top: 25px;
+    padding-top: 10px;
   }
 
   .channel-vtab-nav-tabs {
     padding: 0;
     margin: 0;
     list-style: none;
+    padding-top: 20px;
   }
 
   .channel-vtab-nav-tab {
-    padding: 0 15px 0 2%;
     position: relative;
     display: flex;
     flex-shrink: 1;
@@ -896,8 +896,8 @@ footer {
   }
 
   .channel-vtab-nav-tab.active {
-    margin-right: -10px;
-    background: #2c0000;
+    background: #A3DBE8;
+    border-left: 5px solid #004153;
   }
 
   .channel-vtab-nav-tab.active > a {
@@ -907,17 +907,37 @@ footer {
   }
 
   .channel-vtab-nav-link {
-    color: #fff;
+    color: #363636;
     flex-grow: 1;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 13px;
     line-height: 1.1;
     padding: 10px 0 10px 30px;
   }
 
   .channel-vtab-nav-link:hover, .channel-vtab-nav-link:focus {
-    color: #fff;
     text-decoration: none;
+    background-color: #A3DBE8;
+    color: #fff;
+  }
+
+  .selection-panel-heading {
+    background-color: #f5f5f5;
+    border: 1px solid lightgray;
+    padding: 10px 5px 10px 0;
+    border-left: none;
+  }
+
+  .selection-panel-body {
+    overflow: auto;
+    height: 445px;
+    padding: 5px 15px;
+  }
+
+  .component-installed-note {
+    border: 1px solid lightgray;
+    background-color: #f5f5f5;
+    padding: 10px 30px 13px;
   }
 
 }

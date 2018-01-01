@@ -46,24 +46,22 @@ class SelectionController {
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
   }
 
-  componentsInChannel(value) {
+  componentsInChannel() {
     return Object.values(this.sc.checkboxModel).filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
   }
 
-  clearAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
-      node.selectedOption = 'detected';
-    }
-  }
-
-  selectAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
-      if (node.isInstallable && node.isNotDetected()) {
-        node.selectedOption = 'install';
+  toggleSelection(type) {
+    var selectedChannel = this.componentsInChannel();
+    for (let key in selectedChannel) {
+      let node = selectedChannel[key];
+      if(type==='all'){
+        if (node.isInstallable && node.isNotDetected()) {
+          node.selectedOption = 'install';
+        }
+      } else if(type==='none'){
+        node.selectedOption = 'detected';
       }
     }
   }
