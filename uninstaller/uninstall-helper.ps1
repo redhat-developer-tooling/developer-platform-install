@@ -7,7 +7,7 @@ $timeStamp = $args[-1]
 $vboxInstalled = Test-Path  $folder'\..\virtualbox'
 $openjdkInstalled = Test-Path  $folder'\..\jdk8'
 
-$devstudiofolder = $folder + '\..\developer-studio';
+$devstudiofolder = $folder + '\..\devstudio';
 $devstudioInstalled = Test-Path $devstudiofolder;
 
 echo 'Uninstalling Red Hat Development Suite'

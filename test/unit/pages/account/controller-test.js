@@ -5,6 +5,11 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import ElectronMock from '../../../mock/electron';
 import AccountController from 'browser/pages/account/controller';
+import TokenStore from 'browser/services/credentialManager';
+import fs from 'fs-extra';
+import rimraf from 'rimraf';
+import mkdirp from 'mkdirp';
+
 chai.use(sinonChai);
 
 describe('Account controller', function() {
@@ -15,11 +20,11 @@ describe('Account controller', function() {
   let electron = new ElectronMock();
 
   beforeEach(function() {
-    timeout = function(cb) { cb(); };
-    scope = { '$apply': function() { }, '$watch': function() { } };
+    timeout = sandbox.stub();
+    scope = { '$apply': function() { }, '$watch': function(event, cb) { cb && cb() } };
     base64 = { encode: function() {}};
     http = sandbox.stub().resolves('success');
-    controller = new AccountController({}, timeout, scope, http, base64, {password: '', username: ''}, electron);
+    controller = new AccountController({go:sandbox.stub()}, timeout, scope, http, base64, {password: '', username: ''}, electron);
   });
 
   afterEach(function() {
@@ -218,14 +223,18 @@ describe('Account controller', function() {
       expect(controller.authFailed).to.be.false;
     });
 
-    it('should save credentials for later use when everything is OK', function() {
+    it('should save credentials for later use when request.status is OK and response text is `true`', function() {
       let router = { go: function() {} };
       let installerDataSvc = { setCredentials: function() {} };
       let spy = sinon.spy(installerDataSvc, 'setCredentials');
-
+      sandbox.stub(mkdirp, 'sync');
+      sandbox.stub(fs, 'writeFileSync');
+      sandbox.stub(TokenStore, 'setItem');
       controller = new AccountController(router, timeout, scope, null, null, installerDataSvc, electron);
+      controller.rememberMe = true;
       controller.username = 'Frank';
       controller.password = 'p@ssw0rd';
+
       controller.handleHttpSuccess({ status: 200, data: true });
 
       expect(spy).to.have.been.calledOnce;
@@ -233,12 +242,45 @@ describe('Account controller', function() {
       expect(controller.tandcNotSigned).to.be.false;
       expect(controller.authFailed).to.be.false;
     });
+
+  });
+
+  describe('save', function() {
+    beforeEach(function() {
+      let checkbox = {
+        checked: false
+      };
+      global.document = {
+        getElementById: sandbox.stub().returns(checkbox)
+      };
+      global.localStorage = {
+        setItem: sandbox.stub()
+      };
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(TokenStore, 'deleteItem');
+      sandbox.stub(rimraf, 'sync');
+    });
+    it('should save entered user name and password if `Remember me` is set', function() {
+      controller.username = 'user1';
+      controller.password = 'password';
+      controller.save();
+    });
+    afterEach(function() {
+      delete global.document;
+    });
   });
   describe('exit', function() {
-    it('exit closes active window', function() {
+    it('should close active window', function() {
       sandbox.stub(electron.remote.currentWindow);
       controller.exit();
       expect(electron.remote.currentWindow.close).calledOnce;
     });
   });
+  describe('back', function() {
+    it('should navigate to confirmation page', function() {
+      controller.back();
+      expect(controller.router.go).calledWith('confirm');
+    });
+  });
+
 });
