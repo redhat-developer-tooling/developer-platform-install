@@ -40,7 +40,6 @@ class SelectionController {
     });
 
     $scope.isConfigurationValid = this.isConfigurationValid;
-
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
@@ -53,9 +52,7 @@ class SelectionController {
   }
 
   toggleSelection(type) {
-    var selectedChannel = this.componentsInChannel();
-    for (let key in selectedChannel) {
-      let node = selectedChannel[key];
+    this.componentsInChannel(this.channel_tab).forEach((node)=>{
       if(type==='all'){
         if (node.isInstallable && node.isNotDetected()) {
           node.selectedOption = 'install';
@@ -63,8 +60,16 @@ class SelectionController {
       } else if(type==='none'){
         node.selectedOption = 'detected';
       }
-    }
+    });
   }
+
+  componentsLen(tab) {
+    var s = Object.values(this.sc.checkboxModel).filter(value=> {
+        return this.channel_tab === 'all' || value.channel && value.channel[tab.id];
+    });
+    return s.length;
+  }
+
 
   initPage() {
     return this.detectInstalledComponents().then(()=> {
