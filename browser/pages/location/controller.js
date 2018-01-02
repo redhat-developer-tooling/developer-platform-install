@@ -20,7 +20,7 @@ class LocationController {
 
   confirm() {
     this.installerDataSvc.installRoot = this.folder;
-    for (var [, value] of this.installerDataSvc.allInstallables().entries()) {
+    for (let value of this.installerDataSvc.allInstallables().values()) {
       value.setOptionLocation('install', path.join(this.folder, value.targetFolderName));
     }
     this.router.go('selection');
