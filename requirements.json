@@ -23,8 +23,7 @@
       "javaDev": { },
       "fuseDev": { },
       "rhProds": { },
-      "devstudio": { },
-      "all": { }
+      "devstudio": { }
     }
   },
   "devstuido_bpm": {
@@ -58,8 +57,7 @@
     "size": 678757632,
     "installSize": 840675328,
     "channel" : {
-      "devstudio": { },
-      "all": { }
+      "devstudio": { }
     }
   },
   "jdk": {
@@ -121,8 +119,7 @@
       "javaDev": { },
       "fuseDev": { },
       "rhProds": { },
-      "devstudio": { },
-      "all": { }
+      "devstudio": { }
     }
   },
   "cdk": {
@@ -137,8 +134,7 @@
     "channel" : {
       "containerDev": { },
       "javaDev": { },
-      "rhProds": { },
-      "all": { }
+      "rhProds": { }
     },
     "platform": {
       "win32": {
@@ -187,8 +183,7 @@
     "version": "1.3.0 Technology Preview",
     "installAfter": "cdk",
     "channel" : {
-      "containerDev": { },
-      "all": { }
+      "containerDev": { }
     },
     "messages": {
       "info": {
@@ -246,8 +241,7 @@
     "channel" : {
       "fuseDev": { },
       "rhProds": { },
-      "devstudio": { },
-      "all": { }
+      "devstudio": { }
     }
   },
   "fuseplatform": {
@@ -284,8 +278,7 @@
     "requires": ["jdk"],
     "channel" : {
       "fuseDev": { },
-      "rhProds": { },
-      "all": { }
+      "rhProds": { }
     }
   },
   "fuseplatformkaraf": {
@@ -309,8 +302,7 @@
      "requires": ["jdk"],
      "channel" : {
        "fuseDev": { },
-       "rhProds": { },
-       "all": { }
+       "rhProds": { }
      }
   },
   "jbosseap": {
@@ -334,8 +326,7 @@
     "requires": ["jdk"],
     "channel" : {
       "javaDev": { },
-      "rhProds": { },
-      "all": { }
+      "rhProds": { }
     }
   },
   "hyperv": {
@@ -363,8 +354,7 @@
       "win32": {}
     },
     "channel" : {
-      "containerDev": { },
-      "all": { }
+      "containerDev": { }
     }
   },
   "virtualbox": {
@@ -377,8 +367,7 @@
     "bundle": "no",
     "targetFolderName": "virtualbox",
     "channel" : {
-      "containerDev": { },
-      "all": { }
+      "containerDev": { }
     },
     "messages": {
       "dependency": {
@@ -455,8 +444,7 @@
       "win32": {}
     },
     "channel" : {
-      "containerDev": { },
-      "all": { }
+      "containerDev": { }
     }
   },
   "7zip": {
