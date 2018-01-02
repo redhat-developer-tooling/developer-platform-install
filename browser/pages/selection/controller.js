@@ -53,19 +53,17 @@ class SelectionController {
   }
 
   clearAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
+    this.componentsInChannel(this.channel_tab).forEach((node)=>{
       node.selectedOption = 'detected';
-    }
+    });
   }
 
   selectAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
+    this.componentsInChannel(this.channel_tab).forEach((node)=>{
       if (node.isInstallable && node.isNotDetected()) {
         node.selectedOption = 'install';
       }
-    }
+    });
   }
 
   initPage() {
