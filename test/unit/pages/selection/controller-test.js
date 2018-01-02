@@ -312,7 +312,7 @@ describe('SelectionController', function() {
     });
   });
 
-  describe('toggleSelection', function() {
+  describe('toggleSelect', function() {
     beforeEach(inject(context));
     it('should not select detected components', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
