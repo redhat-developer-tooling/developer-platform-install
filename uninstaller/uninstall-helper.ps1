@@ -35,7 +35,7 @@ if ( $openJdkInstalled ) {
 
 if ($devstudioInstalled) {
   echo 'Removing shortcuts'
-  [xml]$installConfig = Get-Content $devstudiofolder'\InstallConfigRecord.xml';
+  [xml]$installConfig = Get-Content $devstudiofolder'\InstallConfigRecord-devstudio.xml';
   $shortcuts = $installConfig.AutomatedInstallation.'com.izforge.izpack.panels.ShortcutPanel'.shortcut.name;
 
   $desktop = [Environment]::GetFolderPath("Desktop");
