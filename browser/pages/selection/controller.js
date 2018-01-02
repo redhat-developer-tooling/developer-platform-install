@@ -18,7 +18,6 @@ class SelectionController {
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
     this.step = 1;
-
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
@@ -40,31 +39,38 @@ class SelectionController {
     });
 
     $scope.isConfigurationValid = this.isConfigurationValid;
-
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+    this.componentDetails = Object.values(this.sc.checkboxModel);
   }
 
-  componentsInChannel(value) {
-    return Object.values(this.sc.checkboxModel).filter(value=> {
+  componentsInChannel() {
+    return this.componentDetails.filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
   }
 
-  clearAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
-      node.selectedOption = 'detected';
-    }
+  toggleSelection(type) {
+    this.componentsInChannel(this.channel_tab).forEach((node)=>{
+      if(type==='all'){
+        if (node.isInstallable && node.isNotDetected()) {
+          node.selectedOption = 'install';
+        }
+      } else if(type==='none'){
+        node.selectedOption = 'detected';
+      }
+    });
   }
 
-  selectAll() {
-    for (let key in this.sc.checkboxModel) {
-      let node = this.sc.checkboxModel[key];
-      if (node.isInstallable && node.isNotDetected()) {
-        node.selectedOption = 'install';
-      }
+  channelBadge(tab) {
+    if(tab.id === 'all'){
+      return this.componentDetails.length;
+    } else {
+      var channels = this.componentDetails.filter(value=> {
+        return value.channel && value.channel[tab.id];
+      });
+      return channels.length;
     }
   }
 

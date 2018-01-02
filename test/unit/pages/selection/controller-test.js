@@ -312,24 +312,24 @@ describe('SelectionController', function() {
     });
   });
 
-  describe('toggleSelectAll', function() {
+  describe('toggleSelect', function() {
     beforeEach(inject(context));
     it('should not select detected components', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
       kompose.addOption('detected', '1.0.0', 'location', true);
       kompose.selectedOption = 'detected';
-      selectionController.selectAll();
+      selectionController.toggleSelection('all');
       expect(kompose.selectedOption).equals('detected');
     });
 
     it('should select all installable components', function() {
       let kompose = selectionController.sc.checkboxModel.kompose;
-      selectionController.selectAll();
+      selectionController.toggleSelection('all');
       expect(kompose.selectedOption).equals('install');
     });
 
     it('should deselect all selected components', function() {
-      selectionController.clearAll();
+      selectionController.toggleSelection('none');
       for (let installer in selectionController.checkboxModel) {
         expect(installer.selectedOption).equals('detected');
       }

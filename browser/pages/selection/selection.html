@@ -1,36 +1,39 @@
 <breadcrumb></breadcrumb>
 <div class="bottom-spacer">
-  <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="selection-container has-spinner">
-    <div class="selection-info">
-      <span class="pficon pficon-info" ng-show="selectCtrl.numberOfExistingInstallations>0"></span>
-      <strong>
-        <span ng-show="selectCtrl.numberOfExistingInstallations>0">&nbsp;{{selectCtrl.installedSearchNote}}&nbsp;</span>
-        <span id="instructions">{{selectCtrl.installInstructions}}</span>
-      </strong>
-      <span class="btn btn-default btn-action" ng-click="selectCtrl.clearAll()" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
-      <span class="btn btn-default btn-action" ng-click="selectCtrl.selectAll()" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
-    </div>
-    <div id="channels" class="channels-container">
-      <div class="row">
-          <div class="col-sm-4 channels-nav">
-              <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
-                  <li id="{{tab.id}}-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
-                      <a class="btn-lg" ng-click="selectCtrl.channel_tab = tab.id" href="">{{tab.name}}</a>
-                  </li>
-              </ul>
-          </div>
-          <div class="col-sm-8 channels-no-padding">
-            <div class="channels-content">
-              <form name="selectionForm" id="selectionForm" class="selection-form-padding form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
-                <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
-                  <component-panel item="item"></component-panel>
-                </div>
-              </form>
+  <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="row selection-container has-spinner">
+    <div class="channel-vtab-nav">
+      <nav class="channel-vtab-nav-col">
+        <strong ng-show="selectCtrl.numberOfExistingInstallations>0" class="component-installed-note">
+          <span class="pficon pficon-info info-color"></span>
+          <span>&nbsp;Installed Component</span>
+          <span class="badge">{{selectCtrl.numberOfExistingInstallations}}</span>
+        </strong>
+        <ul class="channel-vtab-nav-tabs">
+          <li id="{{tab.id}}-tab" class="channel-vtab-nav-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
+            <a  class="channel-vtab-nav-link" ng-click="selectCtrl.channel_tab = tab.id" href="">
+              <span>{{tab.name}}</span>
+              <span class="badge badge-component-count">{{selectCtrl.channelBadge(tab)}}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div style="width: 80%">
+        <div class="selection-panel-heading">
+          <strong style="padding: 20px;">Select the components based on the channel selected</strong>
+          <span class="btn btn-default btn-action" ng-click="selectCtrl.toggleSelection('none')" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
+          <span class="btn btn-default btn-action" ng-click="selectCtrl.toggleSelection('all')" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
+        </div>
+        <div class="selection-panel-body">
+          <form name="selectionForm" id="selectionForm" class="form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
+            <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
+              <component-panel item="item"></component-panel>
             </div>
-          </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
+
   <div id="detection-info" class="centered has-spinner" ng-show="selectCtrl.isDisabled" ng-class="{'active':selectCtrl.isDisabled}">
     <div class="spinner spinner-lg spinner-bgcolour"></div>
     <div class="detection-msg">
