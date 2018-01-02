@@ -18,7 +18,6 @@ class SelectionController {
     this.isDisabled = false;
     this.numberOfExistingInstallations = 0;
     this.step = 1;
-
     this.installables = {};
     $scope.checkboxModel = {};
     $scope.platform = Platform.OS;
@@ -43,10 +42,11 @@ class SelectionController {
     $scope.$watch('$viewContentLoaded', this.initPage.bind(this));
 
     this.electron.remote.getCurrentWindow().addListener('focus', this.activatePage.bind(this));
+    this.componentDetails = Object.values(this.sc.checkboxModel);
   }
 
   componentsInChannel() {
-    return Object.values(this.sc.checkboxModel).filter(value=> {
+    return this.componentDetails.filter(value=> {
       return this.channel_tab === 'all' || value.channel && value.channel[this.channel_tab];
     });
   }
@@ -63,13 +63,16 @@ class SelectionController {
     });
   }
 
-  componentsLen(tab) {
-    var s = Object.values(this.sc.checkboxModel).filter(value=> {
-        return this.channel_tab === 'all' || value.channel && value.channel[tab.id];
-    });
-    return s.length;
+  channelBadge(tab) {
+    if(tab.id === 'all'){
+      return this.componentDetails.length;
+    } else {
+      var channels = this.componentDetails.filter(value=> {
+        return value.channel && value.channel[tab.id];
+      });
+      return channels.length;
+    }
   }
-
 
   initPage() {
     return this.detectInstalledComponents().then(()=> {

@@ -12,7 +12,7 @@
           <li id="{{tab.id}}-tab" class="channel-vtab-nav-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
             <a  class="channel-vtab-nav-link" ng-click="selectCtrl.channel_tab = tab.id" href="">
               <span>{{tab.name}}</span>
-              <span class="badge badge-component-count">{{selectCtrl.componentsLen(tab)}}</span>
+              <span class="badge badge-component-count">{{selectCtrl.channelBadge(tab)}}</span>
             </a>
           </li>
         </ul>
