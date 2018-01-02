@@ -106,10 +106,6 @@ describe('Selection page', function selectionPage() {
       expect(nextButton.isEnabled()).toBe(true);
     });
 
-    it('should state the instructions', function() {
-      expect(element(By.id('instructions')).getText()).toMatch(/Select .*components to install\./);
-    });
-
     it('should display a panel for each component', function() {
       for (let key in requirements) {
         expect(requirements[key].panel.isDisplayed()).toBe(true);
