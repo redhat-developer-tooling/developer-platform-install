@@ -878,14 +878,13 @@ footer {
   .channel-vtab-nav-col {
     background-color: #fafafa;
     width: 25%;
-    padding-top: 10px;
+    margin-top: -10px;
   }
 
   .channel-vtab-nav-tabs {
     padding: 0;
     margin: 0;
     list-style: none;
-    padding-top: 20px;
   }
 
   .channel-vtab-nav-tab {
@@ -922,10 +921,7 @@ footer {
   }
 
   .selection-panel-heading {
-    background-color: #f5f5f5;
-    border: 1px solid lightgray;
     padding: 10px 5px 10px 0;
-    border-left: none;
   }
 
   .selection-panel-body {
@@ -949,6 +945,19 @@ footer {
     background-color: #004153;
     float: right;
     padding: 4px;
+  }
+
+  .badge-installed-status {
+    float: right;
+    margin: 2px;
+    background-color: #fafafa;
+    text-transform: uppercase;
+    font-size: 9px;
+    color: #3f3f3f;
+  }
+
+  .no-top-margin {
+    margin-top: 0;
   }
 
 }

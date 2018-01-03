@@ -3,11 +3,6 @@
   <div ng-class="{'is-disabled':selectCtrl.isDisabled}" class="row selection-container has-spinner">
     <div class="channel-vtab-nav">
       <nav class="channel-vtab-nav-col">
-        <strong ng-show="selectCtrl.numberOfExistingInstallations>0" class="component-installed-note">
-          <span class="pficon pficon-info info-color"></span>
-          <span>&nbsp;Installed Component</span>
-          <span class="badge">{{selectCtrl.numberOfExistingInstallations}}</span>
-        </strong>
         <ul class="channel-vtab-nav-tabs">
           <li id="{{tab.id}}-tab" class="channel-vtab-nav-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
             <a  class="channel-vtab-nav-link" ng-click="selectCtrl.channel_tab = tab.id" href="">
