@@ -48,7 +48,7 @@ if ($devstudioInstalled) {
     if ((Test-Path $desktop'\'$_'.lnk')) {
       Remove-Item $desktop'\'$_'.lnk';
     } elseif (Test-Path $programs'\'$_) {
-      Remove-Item $programs'\'$_ -Recurse;
+      Remove-Item -path \\?\$programs'\'$_ -Force -Recurse
     }
   }
   echo 'DONE'
