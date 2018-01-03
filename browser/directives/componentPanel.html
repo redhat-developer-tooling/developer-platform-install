@@ -15,18 +15,19 @@
       </div>
     </div>
     <div class="detected-container" ng-show="item.hasOption('detected') && item.selectedOption === 'detected'">
+      <span class="badge badge-installed-status">Installed</span>
       <span id="{{item.keyName}}-installed-note">
         <i class="pficon-ok"></i> Using detected version {{item.option.detected.version}}
       </span>
       <div ng-show="item.hasOption('detected')" style="padding-left: 10px;" class="inline">
         <div id="{{item.keyName}}-newer-warning" ng-show="item.option.detected.warning !== '' && item.selectedOption === 'detected'" class="has-warning">
-          <div class="help-block">
+          <div class="help-block no-top-margin">
             <span class="pficon pficon-warning-triangle-o"></span>
             <span id="{{item.keyName}}-newer-message">Newer than required!</span>
           </div>
         </div>
         <div id="{{item.keyName}}-older-warning" ng-show="item.option.detected.error !=='' && item.selectedOption === 'detected'" class="has-warning">
-          <div class="help-block">
+          <div class="help-block no-top-margin">
           <span class="pficon pficon-warning-triangle-o"></span>
             <span id="{{item.keyName}}-older-message">Older than required!</span>
           </div>
