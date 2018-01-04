@@ -27,7 +27,7 @@
     }
   },
   "devstuido_bpm": {
-    "name": "JBoss Buisness Process and Rules Tools",
+    "name": "JBoss Business Process and Rules Tools",
     "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/devstudio-p2",
