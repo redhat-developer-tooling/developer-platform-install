@@ -28,8 +28,6 @@ class JbosseapAutoInstallGenerator {
         '<pack index="2" name="XMLs and XSDs" selected="true"/>',
         '<pack index="3" name="Modules" selected="true"/>',
         '<pack index="4" name="Welcome Content" selected="true"/>',
-        '<pack index="5" name="Quickstarts" selected="false"/>',
-        '<pack index="6" name="Icons" selected="true"/>',
         '</com.izforge.izpack.panels.TreePacksPanel>',
         '<com.izforge.izpack.panels.UserInputPanel id="CreateUserPanel">',
         '<userInput>',
