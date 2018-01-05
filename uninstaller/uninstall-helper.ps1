@@ -10,6 +10,9 @@ $openjdkInstalled = Test-Path  $folder'\..\jdk8'
 $devstudiofolder = $folder + '\..\devstudio';
 $devstudioInstalled = Test-Path $devstudiofolder;
 
+$cygwinfolder = $folder + '\..\cygwin';
+$cygwinInstalled = Test-Path $cygwinfolder;
+
 echo 'Uninstalling Red Hat Development Suite'
 
 if ( $vboxInstalled ) {
@@ -49,6 +52,29 @@ if ($devstudioInstalled) {
     }
   }
   echo 'DONE'
+}
+
+if($cygwinInstalled) {
+  $cygwinfolder = (Resolve-Path $cygwinfolder).Path;
+  $publicDesktop = [Environment]::GetEnvironmentVariable("Public") + "\Desktop";
+  $startMenu = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Cygwin";
+  $shell = New-Object -ComObject WScript.Shell;
+
+  if (-Not (Test-Path $startMenu)) {
+    $startMenu = '';
+  } 
+
+  $shortcuts = Get-ChildItem -Path $publicDesktop,$startMenu "cygwin*.lnk";
+  foreach($shortcut in $shortcuts) {
+    $target = $shell.CreateShortcut($shortcut.FullName).TargetPath;
+    if ($target -like "$cygwinfolder*") {
+      Remove-Item -Force $shortcut.FullName;
+    }
+  }
+
+  if (($startMenu.Length -gt 0) -and ((Get-ChildItem $startMenu | Measure-Object).Count -eq 0)) {
+    Remove-Item -Force -Recurse $startMenu;
+  }
 }
 
 $targetFolder = [System.IO.Path]::GetFullPath((Join-Path ($folder) '..'))
