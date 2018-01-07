@@ -522,6 +522,7 @@ footer {
     display: flex;
     border-bottom: 0;
     border-color: #DDDDDD;
+    background-color: #fafafa;
   }
 
   .panel .dotted-panel {
@@ -921,30 +922,25 @@ footer {
   }
 
   .selection-panel-heading {
-    padding: 10px 5px 10px 0;
+    padding: 11px;
+    background-color: whitesmoke;
+    border-left: 5px solid #004153;
+    margin-left: 10px;
+    margin-right: -10px;
   }
 
   .selection-panel-body {
     overflow: auto;
-    height: 445px;
-    padding: 5px 15px;
+    height: 398px;
+    padding: 0 5px 10px 10px;
+    margin-left: 0;
+    margin-right: -10px;
   }
 
   .component-installed-note {
     border: 1px solid lightgray;
     background-color: #f5f5f5;
     padding: 10px 30px 13px;
-  }
-
-  .badge-component-count {
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    margin: 5px 10px;
-    color: #ffffff;
-    background-color: #004153;
-    float: right;
-    padding: 4px;
   }
 
   .badge-installed-status {
@@ -956,8 +952,26 @@ footer {
     color: #3f3f3f;
   }
 
+  .channel-info  {
+    padding: 10px 0 10px 0;
+    background-color: #f5f5f5;
+    margin: 0 -10px 10px 10px;
+  }
+
   .no-top-margin {
     margin-top: 0;
   }
 
+  .channel-desc {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .channel-info .status {
+    padding-left: 5px;
+    font-weight: 600;
+    padding-right: 10px;
+    border-right: 2px solid #dddddd;
+    font-size: 12px;
+  }
 }

@@ -64,14 +64,25 @@ class SelectionController {
   }
 
   channelBadge(tab) {
-    if(tab.id === 'all'){
+    if(tab === 'all'){
       return this.componentDetails.length;
     } else {
       var channels = this.componentDetails.filter(value=> {
-        return value.channel && value.channel[tab.id];
+        return value.channel && value.channel[tab];
       });
       return channels.length;
     }
+  }
+
+  componentsSelected() {
+    let downloadedComponents = [];
+    this.componentsInChannel(this.channel_tab).forEach((value)=> {
+      if(value.selectedOption == 'install') {
+        downloadedComponents.push(value);
+      }
+      this.downloadComp = downloadedComponents;
+    });
+    return this.downloadComp.length;
   }
 
   initPage() {
