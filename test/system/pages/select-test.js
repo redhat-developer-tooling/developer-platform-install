@@ -14,18 +14,21 @@ function setup(common = require('./common')) {
   backButton = element(By.id('selection-back-btn'));
   browser.wait(protractor.ExpectedConditions.elementToBeClickable(backButton), 90000);
 
-  for (var key in reqs) {
-    reqs[key].installedNote = element(By.id(key + '-installed-note'));
-    reqs[key].panel = element(By.id(key + '-panel-heading'));
-    reqs[key].checkbox = element(By.id(key + '-checkbox'));
-    reqs[key].newerWarning = element(By.id(key + '-newer-warning'));
-    reqs[key].olderWarning = element(By.id(key + '-older-warning'));
-  }
-
-  reqs.jdk.checkbox.isEnabled().then((enabled) => {
-    if (enabled) {
-      reqs.jdk.checkbox.click();
+  element(By.id('all-tab')).click()
+  .then(() => {
+    for (var key in reqs) {
+      reqs[key].installedNote = element(By.id(key + '-installed-note'));
+      reqs[key].panel = element(By.id(key + '-panel-heading'));
+      reqs[key].checkbox = element(By.id(key + '-checkbox'));
+      reqs[key].newerWarning = element(By.id(key + '-newer-warning'));
+      reqs[key].olderWarning = element(By.id(key + '-older-warning'));
     }
+  
+    reqs.jdk.checkbox.isEnabled().then((enabled) => {
+      if (enabled) {
+        reqs.jdk.checkbox.click();
+      }
+    });
   });
 }
 

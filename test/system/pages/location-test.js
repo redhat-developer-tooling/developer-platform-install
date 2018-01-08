@@ -10,7 +10,7 @@ let locationField, nextButton, defaultFolder;
 
 switch (process.platform) {
   case 'win32':
-    defaultFolder = path.join('c:', 'DevelopmentSuite');
+    defaultFolder = path.join('C:', 'Program Files', 'DevelopmentSuite');
     break;
   case 'darwin':
     defaultFolder = '/Applications/DevelopmentSuite';
