@@ -59,7 +59,7 @@
     "modulePath": "model/installable-item",
     "installable": true,
     "detectable": false,
-    "bundle": "yes",
+    "bundle": "no",
     "installAfter": "devstuidorhamt",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.1.0.GA-updatesite-central.zip?workflow=direct",
     "fileName": "devstudio-11.1.0.GA-updatesite-central.zip",
