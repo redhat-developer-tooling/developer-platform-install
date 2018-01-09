@@ -66,6 +66,7 @@
     "sha256sum": "fe6ddaee4e4b63542e4332df19639d7c9f722055f8aec7f9d8917fe71bcf67df",
     "version": "11.2.0.AM3",
     "useDownload": true,
+    "defaultOption": "detected",
     "requires": ["devstudio"],
     "size": 82037965,
     "installSize": 840675328,
