@@ -26,7 +26,7 @@ function setup(common = require('./common')) {
   
     reqs.jdk.checkbox.isEnabled().then((enabled) => {
       if (enabled) {
-        reqs.jdk.checkbox.click();
+        clickElement(reqs.jdk.checkbox);
       }
     });
   });
