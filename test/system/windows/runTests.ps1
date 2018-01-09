@@ -36,7 +36,7 @@ Set-Location -Path $folder
 npm run system-test -- --binary $binary --virtualbox $virtualbox --hyperv $hyperv --cygwin $cygwin --jdk $jdk --targetFolder $targetFolder --bundle $bundle --additionalItems $additionalItems
 
 $logs = $folder + '\..\..\..\logs';
-$targetFolder = if ($targetFolder) { $targetFolder } else { "C:\DevelopmentSuite\" }
+$targetFolder = if ($targetFolder) { $targetFolder } else { "C:\Program Files\DevelopmentSuite\" }
 New-Item -ItemType Directory -Force -Path $logs;
 Get-ChildItem $targetFolder -ErrorAction SilentlyContinue |
   Where-Object {$_.name -like "*.log"} |

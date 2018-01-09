@@ -15,21 +15,11 @@ $javaUrl = 'http://download-node-02.eng.bos.redhat.com/brewroot/packages/openjdk
 $cygwinUrl = 'https://cygwin.com/setup-x86_64.exe';
 $virtualboxUrl = 'http://download.virtualbox.org/virtualbox/';
 
-function getVagrant($version) {
-  if (-Not [string]::IsNullOrEmpty($version)) {
-    echo 'Vagrant Installation'
-    $fileName = 'vagrant_' + $version + '.msi';
-    $url = $vagrantUrl + $version + '/' + $fileName;
-
-    Invoke-Expression -Command "$downloader -url $url -output $fileName";
-    uninstallMsi -name 'vagrant';
-    installMsi -msiFile $fileName;
-    
-    $vagrantPath = "C:\HashiCorp\Vagrant\bin"
-    $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User");
-    [Environment]::SetEnvironmentVariable("PATH", "$vagrantPath;$oldPath", "User");
-    [Environment]::Exit(0);
-  }
+function addToPath($itemPath) {
+  $oldPath = [Environment]::GetEnvironmentVariable("PATH", "Machine");
+  $oldProcessPath = [Environment]::GetEnvironmentVariable("PATH", "Process");
+  [Environment]::SetEnvironmentVariable("PATH", "$itemPath;$oldPath", "Machine");
+  [Environment]::SetEnvironmentVariable("PATH", "$itemPath;$oldProcessPath", "Process");
 }
 
 function getJava($version) {
@@ -42,9 +32,7 @@ function getJava($version) {
     installMsi -msiFile $fileName;
 
     $javaPath = "C:\Program Files\RedHat\java-1.8.0-openjdk-1.8.0.111-1\bin"
-    $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User");
-    [Environment]::SetEnvironmentVariable("PATH", "$javaPath;$oldPath", "User");
-    [Environment]::Exit(0);
+    addToPath($javaPath);
   }
 }
 
@@ -53,7 +41,7 @@ function getCygwin($version) {
     echo 'Cygwin Installation'
     $fileName = 'setup-x86_64.exe';
     $site = 'http://mirrors.xmission.com/cygwin';
-    $root = 'c:\devsuite-test\cygwin';
+    $root = 'c:\cygwin64';
     $packages = Join-Path $root 'packages'
     $arguments = '--no-admin --quiet-mode --only-site -l "' + $packages + '" --site "' + $site + '" --root "' + $root + '" --categories Base --packages openssh,rsync';
     
@@ -65,9 +53,7 @@ function getCygwin($version) {
     }
     
     $cygwinPath = Join-Path $root 'bin'
-    $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User");
-    [Environment]::SetEnvironmentVariable("PATH", "$cygwinPath;$oldPath", "User");
-    [Environment]::Exit(0);
+    addToPath($cygwinPath);
   }
 }
 
@@ -111,7 +97,6 @@ function installMsi($msiFile) {
   echo 'DONE';
 }
 
-getVagrant -version $vagrant;
 getJava -version $java;
 getVirtualbox -version $virtualbox;
 getCygwin -version $cygwin;
