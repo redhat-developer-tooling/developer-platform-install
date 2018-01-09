@@ -52,6 +52,28 @@
       "devstudio": { }
     }
   },
+  "devstudiocentral": {
+    "name": "Red Hat JBoss Developer Studio Central Repository",
+    "description": "An Eclipse p2 repository with additional tools",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/installable-item",
+    "installable": true,
+    "detectable": false,
+    "bundle": "yes",
+    "installAfter": "devstuidorhamt",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.1.0.GA-updatesite-central.zip?workflow=direct",
+    "fileName": "devstudio-11.1.0.GA-updatesite-central.zip",
+    "sha256sum": "fe6ddaee4e4b63542e4332df19639d7c9f722055f8aec7f9d8917fe71bcf67df",
+    "version": "11.2.0.AM3",
+    "useDownload": true,
+    "requires": ["devstudio"],
+    "size": 82037965,
+    "installSize": 840675328,
+    "authRequired": true,
+    "channel" : {
+      "devstudio": { }
+    }
+  },
   "devstuido_bpm": {
     "name": "JBoss Business Process and Rules Tools",
     "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
