@@ -10,7 +10,7 @@ let count = 0;
 function checkRequirements() {
   for (let attribute in reqs) {
     // sha256 is not set for macOS Java SE
-    if(reqs[attribute].sha256sum !== '') {
+    if(reqs[attribute].sha256sum !== '' && reqs[attribute].url) {
       data[attribute] = reqs[attribute].url;
       count++;
     } else {
