@@ -26,6 +26,32 @@
       "devstudio": { }
     }
   },
+  "devstuidorhamt": {
+    "name": "Red Hat Application Migration Toolkit Eclipse Plugin",
+    "description": "An extensible and customizable tool that helps simplify migration of Java applications",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/devstudio-p2-zip",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "jbosseap",
+    "ius": [
+      "org.jboss.tools.windup.feature.feature.group"
+    ],
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/4.0.0/migrationtoolkit-rhamt-eclipse-plugin-repository-4.0.0.zip?workflow=direct",
+    "fileName": "migrationtoolkit-rhamt-eclipse-plugin-repository-4.0.0.zip",
+    "sha256sum": "cb793fd2b9202b5ec6d764b280c626a37248f663089e1c679a0f55e3ce6b33c6",
+    "version": "4.0.0.GA",
+    "useDownload": true,
+    "requires": ["devstudio"],
+    "defaultOption": "detected",
+    "size": 331060218,
+    "installSize": 840675328,
+    "channel" : {
+      "devstudio": { }
+    }
+  },
   "devstuido_bpm": {
     "name": "JBoss Business Process and Rules Tools",
     "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
