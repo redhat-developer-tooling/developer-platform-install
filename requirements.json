@@ -74,6 +74,32 @@
       "devstudio": { }
     }
   },
+  "devstuido_central_angularjs": {
+    "name": "AngularJS for Web Tools",
+    "description": "AngularJS Tooling provides content assist and Ionic framework support",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/devstudio-central-p2-zip",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "devstudiocentral",
+    "ius": [
+      "org.jboss.tools.jst.angularjs.feature.feature.group"
+    ],
+    "dmUrl": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "3.8.100.GA",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudiocentral"],
+    "size": 0,
+    "installSize": 840675328,
+    "channel" : {
+      "devstudio": { }
+    }
+  },
   "devstuido_bpm": {
     "name": "JBoss Business Process and Rules Tools",
     "description": "A business process and rules development support for BPEL, BPMN, Drools, jBPM6 and KIE",
