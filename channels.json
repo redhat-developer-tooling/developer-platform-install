@@ -1,25 +1,32 @@
-[{
-  "id": "containerDev",
-  "name": "Container Development",
-  "description": "Container Development toolset"
-}, {
-  "id": "javaDev",
-  "name": "Java Development",
-  "description": "Java Development toolset"
-}, {
-  "id": "fuseDev",
-  "name": "Fuse Development",
-  "description": "Fuse Development toolset "
-}, {
-  "id": "rhProds",
-  "name": "Red Hat Products",
-  "description": "Red Hat Products only collection"
-}, {
-  "id": "devstudio",
-  "name": "Developer Studio",
-  "description": "Components for Red Hat Developer studio"
-}, {
-  "id": "all",
-  "name": "All",
-  "description": "All available components"
-}]
+{
+  "containerDev": {
+    "id": "containerDev",
+    "name": "Container Development",
+    "description": "An environment to quickly set up your environment for building secure Docker-based applications."
+  },
+  "javaDev": {
+    "id": "javaDev",
+    "name": "Java Development",
+    "description": "Build applications with a Tried, Tested and Trusted open source implementation of the Java platform."
+  },
+  "fuseDev": {
+    "id": "fuseDev",
+    "name": "Fuse Development",
+    "description": "A small-footprint enterprise service bus (ESB) that lets you build, deploy and integrate applications and services."
+  },
+  "rhProds": {
+    "id": "rhProds",
+    "name": "Red Hat Products",
+    "description": "Red Hat Software Collections that delivers the latest stable technologies."
+  },
+  "devstudio": {
+    "id": "devstudio",
+    "name": "Developer Studio",
+    "description": "An Eclipse-based IDE to create apps for web, mobile, transactional enterprise, and SOA-based integration apps/services."
+  },
+  "all": {
+    "id": "all",
+    "name": "All",
+    "description": "Collection of multiple individual components that enables large-scale application migrations and modernizations."
+  }
+}

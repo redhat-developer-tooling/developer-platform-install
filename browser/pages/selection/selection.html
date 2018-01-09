@@ -7,18 +7,25 @@
           <li id="{{tab.id}}-tab" class="channel-vtab-nav-tab" ng-class="{'active': selectCtrl.channel_tab === tab.id}" ng-repeat="tab in selectCtrl.channelList">
             <a  class="channel-vtab-nav-link" ng-click="selectCtrl.channel_tab = tab.id" href="">
               <span>{{tab.name}}</span>
-              <span class="badge badge-component-count">{{selectCtrl.channelBadge(tab)}}</span>
             </a>
           </li>
         </ul>
       </nav>
       <div style="width: 80%">
-        <div class="selection-panel-heading">
-          <strong style="padding: 20px;">Select the components based on the channel selected</strong>
+        <div class="row selection-panel-heading">
+          <span class="channel-desc">{{selectCtrl.channelList[selectCtrl.channel_tab].description}}</span>
+        </div>
+        <div class="row channel-info">
+          <span>
+            <span class="fa fa-cube" style="padding-left:5px;"></span>
+            <span class="status">{{selectCtrl.channelBadge(selectCtrl.channel_tab)}} components</span>
+            <span class="fa fa-check"></span>
+            <span class="status">{{selectCtrl.componentsSelected()}} selected</span>
+          </span>
           <span class="btn btn-default btn-action" ng-click="selectCtrl.toggleSelection('none')" ng-disabled="!selectCtrl.isAtLeastOneSelected()" data-toggle="tooltip" data-placement="bottom" title="Clear all selected components">Clear all</span>
           <span class="btn btn-default btn-action" ng-click="selectCtrl.toggleSelection('all')" data-toggle="tooltip" data-placement="bottom" title="Select all components available">Select all</span>
-        </div>
-        <div class="selection-panel-body">
+        </div> 
+        <div class="row selection-panel-body">
           <form name="selectionForm" id="selectionForm" class="form-horizontal" ng-submit="selectCtrl.install()" ng-class="{'is-disabled':selectCtrl.isDisabled}">
             <div ng-repeat="item in componentsInChannel()" class="panel-group-items">
               <component-panel item="item"></component-panel>
