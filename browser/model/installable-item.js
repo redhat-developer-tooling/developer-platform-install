@@ -30,7 +30,7 @@ class InstallableItem {
     this.size = requirement.size;
     this.installSize = requirement.installSize;
     this.version = requirement.version;
-    this.channel = requirement.channel; 
+    this.channel = requirement.channel;
 
     this.detected = false;
     this.detectedVersion = 'unknown';
@@ -233,6 +233,10 @@ class InstallableItem {
     }
   }
 
+  installAfterRequirements(progress, success) {
+    success && success();
+  }
+
   changeIsCollapsed() {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -327,5 +331,11 @@ class InstallableItem {
     return true;
   }
 }
+
+function fromJson({keyName, installerDataSvc, downloadUrl, fileName, authRequired}) {
+  return new InstallableItem(keyName, downloadUrl, fileName, '', installerDataSvc, authRequired);
+}
+
+InstallableItem.convertor = {fromJson};
 
 export default InstallableItem;
