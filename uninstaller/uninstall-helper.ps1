@@ -4,6 +4,22 @@ for ($i=0; $i -le $args.Count - 1; $i++) {
 }
 $timeStamp = $args[-1]
 
+$subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+
+for ($i=0; $i -le $subfolders.Count - 1; $i++) {
+  $Source = $subfolders[$i]
+  $target = $subfolders[$i]+'\..'
+  $path = "move ""$Source"" ""$target"" >nul 2>nul && echo nolock || echo lock"
+  $status = cmd.exe /c $path
+  if ($status -replace '\s','' -eq 'lock'){
+
+    Write-Host "devsuite install folder is locked by running program or file opened in editor please close all running tools/editors and try again."
+    Write-Host "Press any key to exit"
+    $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Exit
+  }
+}
+
 $vboxInstalled = Test-Path  $folder'\..\virtualbox'
 $openjdkInstalled = Test-Path  $folder'\..\jdk8'
 
@@ -62,7 +78,7 @@ if($cygwinInstalled) {
 
   if (-Not (Test-Path $startMenu)) {
     $startMenu = '';
-  } 
+  }
 
   $shortcuts = Get-ChildItem -Path $publicDesktop,$startMenu "cygwin*.lnk";
   foreach($shortcut in $shortcuts) {
