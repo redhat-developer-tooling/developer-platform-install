@@ -22,7 +22,7 @@ class DevStudioCentralP2Install extends InstallableItem {
     progress.setStatus('Installing');
     return Promise.resolve().then(()=> {
       let devstudio = this.installerDataSvc.getInstallable('devstudio');
-      let devstudiocentral = this.installerDataSvc.getInstallable('devstudio_central');
+      let devstudiocentral = this.installerDataSvc.getInstallable('devstudiocentral');
       let devstudioLocation = Platform.OS == 'darwin' ? 'studio/devstudio.app/Contents/MacOS' : 'studio';
       let devstudioExec = path.join(`${this.installerDataSvc.devstudioDir()}`, devstudioLocation, 'devstudio');
       let cmd = [`"${devstudioExec}"`,

@@ -234,7 +234,8 @@ class InstallableItem {
   }
 
   installAfterRequirements(progress, success) {
-    success && success();
+    progress.setStatus('Installing');
+    success && success(true);
   }
 
   changeIsCollapsed() {
