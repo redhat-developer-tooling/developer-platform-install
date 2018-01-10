@@ -74,7 +74,7 @@
       "devstudio": { }
     }
   },
-  "devstuido_central_angularjs": {
+  "devstuidocentralangularjs": {
     "name": "AngularJS for Web Tools",
     "description": "AngularJS Tooling provides content assist and Ionic framework support",
     "vendor": "Red Hat, Inc.",
@@ -109,7 +109,7 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "jbosseap",
+    "installAfter": "devstuidocentralangularjs",
     "ius": [
       "org.jboss.tools.bpel.feature.feature.group",
       "org.eclipse.bpmn2.feature.feature.group",
