@@ -6,7 +6,7 @@ let path = require('path');
 let context = { pageName: 'Selection' };
 let breadcrumbBase = require('./breadcrumbs-base');
 let loadMetadata = require('../../browser/services/metadata');
-let requirements = loadMetadata(require(path.join(rootPath, 'requirements.json')), process.platform);
+let requirements = loadMetadata(require(path.join(rootPath, 'transpiled', 'requirements.json')), process.platform);
 let conditions = protractor.ExpectedConditions;
 
 for (let key in requirements) {
@@ -74,7 +74,7 @@ describe('Selection page', function selectionPage() {
           cancelButton = element(By.id('selection-cancel-btn'));
           backButton = element(By.id('selection-back-btn'));
           installSizeFooter = element(By.className('size-footer'));
-          element(By.id("all-tab")).click();
+          element(By.id('all-tab')).click();
         });
     });
 
