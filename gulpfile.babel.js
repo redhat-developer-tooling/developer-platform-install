@@ -164,7 +164,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
   let updateDevStudioSize = ()=>{
     return new Promise((resolve) => {
       let req = request.get(reqs.devstudio.url).on('response', function(response) {
-        reqs.devstudio.size = response.headers['content-length'];
+        reqs.devstudio.size = parseInt(response.headers['content-length'], 10);
         req.abort();
         resolve();
       });
