@@ -11,19 +11,17 @@ class ComponentLoader {
     for (let key in this.requirements) {
       this.addComponent(key);
     }
-    this.orderInstallation();
+    //this.orderInstallation();
   }
 
   loadComponent(key) {
     this.addComponent(key);
-    this.orderInstallation();
   }
 
   removeComponent(key) {
     this.installerDataSvc.allInstallables().delete(key);
     this.installerDataSvc.toDownload.delete(key);
     this.installerDataSvc.toInstall.delete(key);
-    this.orderInstallation();
   }
 
   addComponent(key) {
@@ -40,59 +38,11 @@ class ComponentLoader {
     }
   }
 
-  orderInstallation() {
-    let newOrder = {};
-    Object.assign(newOrder, this.buildBaseOrder());
-    let changed;
-    do {
-      changed = false;
-      for (let item of Object.keys(newOrder)) {
-        let children = newOrder[item];
-        let finalChildren = [];
-        for (let i = 0; i < children.length; i++) {
-          if (this.installerDataSvc.getInstallable(children[i])) {
-            finalChildren.push(children[i]);
-          } else {
-            if (newOrder[children[i]]) {
-              finalChildren = finalChildren.concat(newOrder[children[i]]);
-              newOrder[item] = finalChildren;
-              changed = true;
-            }
-          }
-        }
-      }
-    } while (changed);
-
-    for (let [key, value] of this.installerDataSvc.allInstallables()) {
-      for (let i = 0; i < newOrder[key].length; i++) {
-        let nextItem = this.installerDataSvc.getInstallable(newOrder[key][i]);
-        value.thenInstall(nextItem);
-      }
+  orderInstallation(graph) {
+    let installers = graph.overallOrder();
+    for(let i = 0; i < installers.length-1; i++) {
+      this.installerDataSvc.getInstallable(installers[i]).thenInstall(this.installerDataSvc.getInstallable(installers[i+1]));
     }
-  }
-
-  buildBaseOrder() {
-    let baseOrder = {
-      root: []
-    };
-    let requirements = this.installerDataSvc.requirements;
-    for (let key in requirements) {
-      let item = requirements[key];
-      if( item.bundle !== 'tools') {
-        if(baseOrder[key] == undefined) {
-          baseOrder[key] = [];
-        }
-        if(item.installAfter == undefined) {
-          baseOrder.root.push(key);
-        } else {
-          if (baseOrder[item.installAfter] == undefined) {
-            baseOrder[item.installAfter] = [];
-          }
-          baseOrder[item.installAfter].push(key);
-        }
-      }
-    }
-    return baseOrder;
   }
 
   static loadGraph(svc) {
@@ -100,7 +50,7 @@ class ComponentLoader {
     // first add all the nodes into graph
     for (let key in svc.requirements) {
       let item = svc.requirements[key];
-      if( item.bundle !== 'tools') {
+      if( item.bundle !== 'tools' && svc.getInstallable(key)) {
         graph.addNode(key);
       }
     }
@@ -116,7 +66,7 @@ class ComponentLoader {
               let req = svc.getRequirementByName(orDep);
               // temp solution for conditional dependency resolution
               // would work for hyperv || virtualbox but not in general
-              if(installable.isValidVersionDetected() || req.installable === true) {
+              if(installable && (installable.isValidVersionDetected() || req.installable === true)) {
                 graph.addDependency(key, orDep);
                 break;
               }

@@ -87,11 +87,18 @@ class SelectionController {
 
   initPage() {
     return this.detectInstalledComponents().then(()=> {
+      let checkboxModel = this.sc.checkboxModel;
+      if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
+        this.loader.removeComponent('virtualbox');
+      } else {
+        this.loader.removeComponent('hyperv');
+      }
       this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
       this.installWatchers();
     }).then(
       ()=> this.setIsDisabled()
-    ).catch(()=> {
+    ).catch((error)=> {
+      console.error(error);
       this.setIsDisabled();
     });
   }
@@ -160,13 +167,7 @@ class SelectionController {
 
   // Prep the install location path for each product, then go to the next page.
   next() {
-    let checkboxModel = this.sc.checkboxModel;
-    if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
-      this.loader.removeComponent('virtualbox');
-    } else {
-      this.loader.removeComponent('hyperv');
-    }
-
+    this.loader.orderInstallation(this.graph);
     let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fuseplatform', 'fuseplatformkaraf'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);

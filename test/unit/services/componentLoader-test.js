@@ -135,26 +135,13 @@ describe('Component Loader', function() {
       svc = new InstallerDataService({}, reqs);
       loader = new ComponentLoader(svc);
       addAll(loader, reqs);
-      loader.orderInstallation();
+      loader.orderInstallation(ComponentLoader.loadGraph(svc));
 
-      expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
+      expect(svc.getInstallable('jdk').installAfter.keyName).to.equal('cdk');
       expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('cygwin').installAfter.keyName).to.equal('virtualbox');
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('cygwin');
-    });
-
-    it('if the first component in sequence is not present, its children should take its place', function() {
-      svc = new InstallerDataService({}, reducedReqs);
-      loader = new ComponentLoader(svc);
-      addAll(loader, reducedReqs);
-      loader.orderInstallation();
-
-      expect(svc.getInstallable('jdk')).to.equal(undefined);
-      expect(svc.getInstallable('devstudio').installAfter).to.equal(undefined);
-      expect(svc.getInstallable('virtualbox').installAfter).to.equal(undefined);
-      expect(svc.getInstallable('cygwin').installAfter.keyName).to.equal('virtualbox');
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('cygwin');
+      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('cygwin');
+      expect(svc.getInstallable('cygwin').installAfter).to.equal(undefined);
+      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('virtualbox');
     });
   });
 
@@ -163,7 +150,7 @@ describe('Component Loader', function() {
       svc = new InstallerDataService({}, reqs);
       loader = new ComponentLoader(svc);
       addAll(loader, reqs);
-      loader.orderInstallation();
+      loader.orderInstallation(ComponentLoader.loadGraph(svc));
     });
 
     it('should delete the appropriate component', function() {
@@ -176,16 +163,6 @@ describe('Component Loader', function() {
       expect(svc.toDownload.has('cdk')).to.be.false;
       expect(svc.toInstall.has('cdk')).to.be.false;
     });
-
-    it('should rearange the installation sequence', function() {
-      loader.removeComponent('cygwin');
-
-      expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
-      expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('cygwin')).to.equal(undefined);
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('virtualbox');
-    });
   });
 
   describe('loadComponent', function() {
@@ -193,22 +170,11 @@ describe('Component Loader', function() {
       svc = new InstallerDataService({}, reqs);
       loader = new ComponentLoader(svc);
       addAll(loader, reducedReqs);
-      loader.orderInstallation();
     });
 
     it('should add the specified component', function() {
       loader.loadComponent('jdk');
       expect(svc.getInstallable('jdk')).to.not.equal(undefined);
-    });
-
-    it('should rearange the installation sequence', function() {
-      loader.loadComponent('jdk');
-
-      expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
-      expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('cygwin').installAfter.keyName).to.equal('virtualbox');
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('cygwin');
     });
   });
 
@@ -216,11 +182,11 @@ describe('Component Loader', function() {
     beforeEach(function() {
       svc = new InstallerDataService({}, reqs);
       loader = new ComponentLoader(svc);
+      loader.loadComponents();
+      loader.orderInstallation(ComponentLoader.loadGraph(svc));
     });
 
     it('should add all the components from the requirements', function() {
-      loader.loadComponents();
-
       expect(svc.getInstallable('jdk')).to.not.equal(undefined);
       expect(svc.getInstallable('devstudio')).to.not.equal(undefined);
       expect(svc.getInstallable('virtualbox')).to.not.equal(undefined);
@@ -229,13 +195,11 @@ describe('Component Loader', function() {
     });
 
     it('should order the installation sequence', function() {
-      loader.loadComponents();
-
-      expect(svc.getInstallable('jdk').installAfter).to.equal(undefined);
+      expect(svc.getInstallable('jdk').installAfter.keyName).to.equal('cdk');
       expect(svc.getInstallable('devstudio').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('jdk');
-      expect(svc.getInstallable('cygwin').installAfter.keyName).to.equal('virtualbox');
-      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('cygwin');
+      expect(svc.getInstallable('virtualbox').installAfter.keyName).to.equal('cygwin');
+      expect(svc.getInstallable('cygwin').installAfter).to.equal(undefined);
+      expect(svc.getInstallable('cdk').installAfter.keyName).to.equal('virtualbox');
     });
   });
 });
