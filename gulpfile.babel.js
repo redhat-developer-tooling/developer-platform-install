@@ -46,7 +46,7 @@ gulp.task('transpile:app', function() {
 //create symlink to node_modules in transpiled folder
 gulp.task('create-modules-link', function () {
   return gulp.src('node_modules')
-  .pipe(symlink('transpiled/node_modules', {force:true}));
+    .pipe(symlink('transpiled/node_modules', {force:true}));
 });
 
 gulp.task('electron-rebuild', function(cb) {
@@ -161,9 +161,20 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     });
   };
 
+  let updateDevStudioSize = ()=>{
+    return new Promise((resolve) => {
+      let req = request.get(reqs.devstudio.url).on('response', function(response) {
+        reqs.devstudio.size = parseInt(response.headers['content-length'], 10);
+        req.abort();
+        resolve();
+      });
+    });
+  };
+
   return Promise.resolve()
     .then(updateDevStudioVersion)
     .then(updateDevStudioSha)
+    .then(updateDevStudioSize)
     .then(()=>{
       fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
     }).catch((err)=>{
