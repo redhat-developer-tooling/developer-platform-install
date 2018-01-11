@@ -176,7 +176,8 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     .then(updateDevStudioSha)
     .then(updateDevStudioSize)
     .then(()=>{
-      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
+      fs.writeFileSync('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
+      reqs = loadMetadata(require('./transpiled/requirements.json'), process.platform);
     }).catch((err)=>{
       console.log(err);
     });
