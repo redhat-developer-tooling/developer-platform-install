@@ -226,7 +226,7 @@
   },
   "cdk": {
     "name": "Red Hat Container Development Kit",
-    "description": "Developer Tools for Creating, Testing, and Distributing Red Hat Container-Based Applications",
+    "description": "A tool to develop applications on OpenShift Container Platform 3 locally",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/cdk",
     "installable": true,
@@ -237,6 +237,13 @@
       "containerDev": { },
       "javaDev": { },
       "rhProds": { }
+    },
+    "messages": {
+      "info": {
+        "message": "Visit https://developers.redhat.com/products/cdk to learn everything you need to build your first application",
+        "link": "https://developers.redhat.com/products/cdk/overview/",
+        "linkDescription": "https://developers.redhat.com/products/cdk"
+      }
     },
     "platform": {
       "win32": {

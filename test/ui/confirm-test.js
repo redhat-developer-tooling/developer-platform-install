@@ -5,7 +5,7 @@ let context = { pageName: 'Confirmation' };
 let path = require('path');
 let breadcrumbBase = require('./breadcrumbs-base');
 let loadMetadata = require('../../browser/services/metadata');
-let requirements = loadMetadata(require(path.join(rootPath, 'requirements.json')), process.platform);
+let requirements = loadMetadata(require(path.join(rootPath, 'transpiled', 'requirements.json')), process.platform);
 
 for (let key in requirements) {
   if (requirements[key].bundle === 'tools') {
@@ -46,18 +46,26 @@ describe('Confirmation page', function() {
 
   it('should display a total download & install size', function() {
     expect(installsize.isEnabled()).toBe(true);
-    let totalDownloadSize = 0;
-    let totalinstallSize = 0;
-    for (var key in requirements) {
-      if(requirements[key].defaultOption === undefined || requirements[key].defaultOption === 'install') {
-        totalDownloadSize += requirements[key].size;
-        if(requirements[key].installSize) {
-          totalinstallSize += requirements[key].installSize;
-        }
-      }
+    let sizes = [];
+    let installSizes = [];
+    for (let key in requirements) {
+      let selectedElement = element(By.id(`${key}-download-status`));
+      sizes.push(selectedElement.getText().then((text)=>{return text=='Selected to download'? requirements[key].size:0;}).catch(()=>{return 0;}));
+      installSizes.push(selectedElement.getText().then((text)=>{return requirements[key].installSize;}).catch(()=>{return 0;}));
     }
-    expect(element(By.id('install-size-header')).getText()).toEqual(humanize.filesize(totalinstallSize));
-    expect(element(By.id('download-size-header')).getText()).toEqual(humanize.filesize(totalDownloadSize));
+
+    let pms = [
+      Promise.all(sizes).then((results)=>{
+        return results.reduce((acc,current)=>acc+current)
+      }),
+      Promise.all(installSizes).then((results)=>{
+        return results.reduce((acc,current)=>acc+current)
+      }),
+    ];
+    return Promise.all(pms).then((result)=>{
+      expect(element(By.id('install-size-header')).getText()).toEqual(humanize.filesize(result[1]));
+      expect(element(By.id('download-size-header')).getText()).toEqual(humanize.filesize(result[0]));
+    });
   });
 
   describe('components', function() {
