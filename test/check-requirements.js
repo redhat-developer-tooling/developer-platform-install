@@ -31,6 +31,7 @@ function checkRequirements() {
   fileNames['7zip-extra'] = '7-Zip';
   fileNames['kompose'] = 'kompose';
   fileNames['fuseplatformkaraf'] = 'karaf';
+  fileNames['devstuidocentraljbpm'] = 'devstudio-integration-stack';
 
   console.log('-------------------------------');
   console.log('Checking download URLs');
