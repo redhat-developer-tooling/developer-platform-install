@@ -31,7 +31,7 @@ class WelcomeController {
       let numaricDevsuiteVersion = devsuiteVersion.split('-')[0].replace(/\./g,'');
       if (numaricDevsuiteVersion.replace(/\./g,'') > numaricVersion.replace(/\./g,'')){
         this.scope.textversion = 'Updated version:'
-        this.scope.newversion = version;
+        this.scope.newversion = devsuiteVersion;
         this.scope.status = `New`;
       } else {
           this.scope.status = 'Current';
