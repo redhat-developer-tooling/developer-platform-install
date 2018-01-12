@@ -411,6 +411,15 @@ footer {
     position: absolute;
     bottom: 16px;
     left: 16px;
+    font-size: 15px;
+  }
+
+  .footer-version-new {
+    color: #c00;
+  }
+
+  .footer-version-current {
+    color: green;
   }
 
   .footer-border{

@@ -50,16 +50,19 @@
 <footer id="footer-navigation" class="no-background-color">
 
   <div class="form-group pull-right form-buttons">
-    <div>
-      <button type="button" class="btn btn-primary btn-lg version-check" ng-click="welcomeCtrl.exit()">
-        <span>{{status}}</span>
+    <div ng-show="status=='New'">
+      <button type="button" class="btn btn-primary btn-lg version-check" ng-click="welcomeCtrl.downloadLatestVersion()">
+        <span>Donwload latest version</span>
       </button>
     </div>
-      <span class="version">{{textversion}} {{newversion}}</span>
-    <button id="welcomeNextButton" type="button" class="go-btn footer-btns btn btn-primary btn-lg" form="welcomeForm"
+      <button id="welcomeNextButton" type="button" class="go-btn footer-btns btn btn-primary btn-lg" form="welcomeForm"
         ng-click="welcomeCtrl.next()" autofocus>
       <span id="welcome-form-btn-text">Next</span>
     </button>
   </div>
-  <span class="footer-version">Version: {{version}}</span>
+  <span class="footer-version">Version: {{version}}
+    <span ng-show="status=='Checking'">(Checking for Development Suite Installer updates)</span>
+    <span class="footer-version-new" ng-show="status=='New'">(New Development Suite Installer {{newversion}} is available)</span>
+    <span class="footer-version-current" ng-show="status=='Current'">(Development Suite Installer is up to date)</span>
+  </span>
 </footer>
