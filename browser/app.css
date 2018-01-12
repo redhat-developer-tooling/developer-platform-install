@@ -118,6 +118,18 @@ footer {
     padding-left: 10px;
   }
 
+  .version {
+    position: relative;
+    top: -57px;
+    left: -173px;
+  }
+
+  .version-check {
+    position: relative;
+    top: 2px;
+    left: -163px;
+  }
+
   .breadcrumbs li:before {
     content: "";
     display: block;
@@ -857,7 +869,7 @@ footer {
   .channels-container {
     margin: 5px auto;
   }
-  
+
   .channels-nav {
     margin-top: 20px
   }
