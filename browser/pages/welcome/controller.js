@@ -1,6 +1,4 @@
 'use strict';
-import Logger from '../../services/logger';
-
 
 class WelcomeController {
 
