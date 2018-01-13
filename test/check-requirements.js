@@ -14,7 +14,12 @@ function checkRequirements() {
       data[attribute] = reqs[attribute].url;
       count++;
     } else {
-      console.log(`skip ${attribute} no sha256sum configured` );
+      if(reqs[attribute].sha256sum == undefined || reqs[attribute].sha256sum == '') {
+        console.log(`skip ${attribute} no sha256sum configured` );
+      }
+      if(reqs[attribute].url == undefined) {
+        console.log(`skip ${attribute} no url configured` );
+      }
     }
   }
 
