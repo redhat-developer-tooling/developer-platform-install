@@ -15,6 +15,9 @@ for ($i=0; $i -le $subfolders.Count - 1; $i++) {
   if ($status -replace '\s','' -eq 'lock'){
     Write-Host "DevSuite folder '$Source' is locked by running program or file opened in editor. Please close all running tools/editors and try again."
     $lock +=1;
+  } else {
+    $command = "move ""$target"" ""$Source"" >nul 2>nul"
+    cmd.exe /c $command
   }
 }
 
