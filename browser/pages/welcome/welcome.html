@@ -62,7 +62,7 @@
   </div>
   <span class="footer-version">Version: {{version}}
     <span ng-show="status=='Checking'">(Checking for Development Suite Installer updates)</span>
-    <span class="footer-version-new" ng-show="status=='New'">(New Development Suite Installer {{newversion}} is available)</span>
-    <span class="footer-version-current" ng-show="status=='Current'">(Development Suite Installer is up to date)</span>
+    <span class="footer-version-new" ng-show="status=='New'">(New Development Suite Installer {{newVersion}} is available)</span>
+    <span class="footer-version-current" ng-show="status=='Current' || status=='Error'">(Development Suite Installer is up to date)</span>
   </span>
 </footer>

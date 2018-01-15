@@ -1,5 +1,7 @@
 'use strict';
 
+import Version from '../../model/helpers/version';
+
 class WelcomeController {
 
   constructor($state, $scope, electron, request) {
@@ -10,6 +12,10 @@ class WelcomeController {
     this.electron = electron;
     this.scope.version = electron.remote.app.getVersion();
     $scope.$watch('$viewContentLoaded', this.check.bind(this));
+
+    this.URL_DM_DEVSUITE_INFO = 'https://developers.redhat.com/download-manager/rest/available/devsuite/?nv=1';
+    this.URL_DEVSUITE_DOWNLOAD_PAGE = 'https://developers.redhat.com/products/devsuite/download/';
+    this.URL_DEVELOPER_PROGRAM_SITE = 'https://developers.redhat.com';
   }
 
   next() {
@@ -17,38 +23,39 @@ class WelcomeController {
   }
 
   check() {
-    let versionUrl = 'https://developers.redhat.com/download-manager/rest/available/devsuite/?nv=1';
     this.scope.status = 'Checking'
     let req = {
       method: 'GET',
-      url: versionUrl
+      url: this.URL_DM_DEVSUITE_INFO
     };
 
-    this.http(req).then((data)=>{
+    return this.http(req).then((data)=>{
       let version = this.scope.version;
       let devsuiteVersion = data.data[0].featuredArtifact.versionName;
-      let numaricVersion = version.split('-')[0].replace(/\./g,'');
-      let numaricDevsuiteVersion = devsuiteVersion.split('-')[0].replace(/\./g,'');
-      if (numaricDevsuiteVersion.replace(/\./g,'') > numaricVersion.replace(/\./g,'')){
-        this.scope.textversion = 'Updated version:'
-        this.scope.newversion = devsuiteVersion;
+      let numericVersion = version.split('-')[0];
+      if (Version.GT(devsuiteVersion, numericVersion)){
+        this.scope.newVersion = devsuiteVersion;
         this.scope.status = `New`;
       } else {
-          this.scope.status = 'Current';
+        this.scope.status = 'Current';
       }
+    }).catch((error)=>{
+      this.scope.status = 'Error';
+      this.scope.error = error;
+      console.log(error);
     }).then(()=>{
       this.scope.$apply();
     });
   }
 
   downloadLatestVersion() {
-    this.electron.shell.openExternal('https://developers.redhat.com/products/devsuite/download/')
+    this.electron.shell.openExternal(this.URL_DEVSUITE_DOWNLOAD_PAGE);
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.electron.remote.getCurrentWindow().close();
   }
 
   openDevSuiteOverview() {
-    this.electron.shell.openExternal('https://developers.redhat.com');
+    this.electron.shell.openExternal(this.URL_DEVELOPER_PROGRAM_SITE);
   }
 }
 
