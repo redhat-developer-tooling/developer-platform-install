@@ -336,6 +336,7 @@
     "targetFolderName": "developer-studio",
     "installAfter": "devstudio",
     "url": "https://devstudio.redhat.com/11/",
+    "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
     "sha256sum": "",
     "version": "10.2.0.GA",
     "additionalLocation": "",
