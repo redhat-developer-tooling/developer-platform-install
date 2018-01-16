@@ -4,6 +4,7 @@ import path from 'path';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Platform from '../services/platform';
+import CDKInstall from './cdk';
 
 class CheInstall extends InstallableItem {
   constructor(installerDataSvc, url) {
@@ -19,8 +20,10 @@ class CheInstall extends InstallableItem {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
     return Promise.resolve().then(()=>{
-      return installer.exec('minishift config set memory 5GB && minishift addon enable che', this.createEnvironment());
-    }).then(success).catch(failure);
+      return installer.exec('minishift config set memory 5GB && minishift addon enable che', { env: this.createEnvironment() });
+    }).then(success).catch((error) => {
+      installer.fail(error);
+    });
   }
 
   createEnvironment() {
@@ -31,7 +34,7 @@ class CheInstall extends InstallableItem {
   }
 
   get cdkInstaller() {
-    return this.installerDataSvc.getInstallable(this.keyName);
+    return this.installerDataSvc.getInstallable(CDKInstall.KEY);
   }
 }
 
