@@ -306,21 +306,21 @@
         "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v1.7.0/kompose-windows-amd64.exe",
         "fileName": "kompose-1.7.0.TP-windows-amd64.exe",
         "sha256sum": "ea1775ffba33e26e15d25a9540c2b5d65a47b6593adccbe3687fc504f30f8d4c",
-        "size": 47578112,
+        "size": 47712768,
         "installSize": 47578112
       },
       "darwin": {
         "url": "https://github.com/kubernetes-incubator/kompose/releases/download/v1.7.0/kompose-darwin-amd64",
         "fileName": "kompose-1.7.0.TP-darwin-amd64",
         "sha256sum": "7810694432641452fb1327d40b7b04e2a7b71bb88b0c06947003141d619d3738",
-        "size": 47245088,
+        "size": 47305936,
         "installSize": 47245088
       },
       "linux": {
         "url": "https://github.com/kubernetes/kompose/releases/download/v1.7.0/kompose-linux-amd64",
         "fileName": "kompose-1.7.0.TP-linux-amd64",
         "sha256sum": "7810694432641452fb1327d40b7b04e2a7b71bb88b0c06947003141d619d3738",
-        "size": 47823558,
+        "size": 47880590,
         "installSize": 47823558
       }
     }
