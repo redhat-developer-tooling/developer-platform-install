@@ -1,4 +1,9 @@
 {
+  "all": {
+    "id": "all",
+    "name": "All",
+    "description": "Collection of multiple individual components that enables large-scale application migrations and modernizations."
+  },
   "containerDev": {
     "id": "containerDev",
     "name": "Container Development",
@@ -23,10 +28,5 @@
     "id": "devstudio",
     "name": "Developer Studio",
     "description": "An Eclipse-based IDE to create apps for web, mobile, transactional enterprise, and SOA-based integration apps/services."
-  },
-  "all": {
-    "id": "all",
-    "name": "All",
-    "description": "Collection of multiple individual components that enables large-scale application migrations and modernizations."
   }
 }
