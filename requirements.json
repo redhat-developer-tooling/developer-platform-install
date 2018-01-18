@@ -606,6 +606,32 @@
       "devstudio": { }
     }
   },
+  "devstuiocentralsonarlint": {
+    "name": "SonarLint for Eclipse",
+    "description": "A tool that provides on-the-fly feedback on new bugs and code smells",
+    "vendor": "SonarSource",
+    "modulePath": "model/devstudio-central-p2-zip",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "devstuiocentralsubclipse",
+    "ius": [
+      "org.sonarlint.eclipse.feature.feature.group"
+    ],
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "3.3.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudiocentral"],
+    "size": 0,
+    "installSize": 13140571,
+    "channel" : {
+      "devstudio": { }
+    }
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
