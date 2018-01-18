@@ -37,6 +37,7 @@ function checkRequirements() {
   fileNames['kompose'] = 'kompose';
   fileNames['fuseplatformkaraf'] = 'karaf';
   fileNames['devstuidobpm'] = 'devstudio-integration-stack';
+  fileNames['devstudiocentral '] = 'central';
 
   console.log('-------------------------------');
   console.log('Checking download URLs');
