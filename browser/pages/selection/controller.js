@@ -24,7 +24,7 @@ class SelectionController {
     $scope.detectionStyle = false;
     $scope.virtualization = true;
     this.channelList = require('../../../channels');
-    this.channel_tab = 'containerDev';
+    this.channel_tab = 'all';
     $scope.componentsInChannel = this.componentsInChannel.bind(this);
 
     for (let [key, value] of this.installerDataSvc.allInstallables().entries()) {
