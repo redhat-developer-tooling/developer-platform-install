@@ -289,6 +289,7 @@
     "modulePath": "model/kompose",
     "installable": true,
     "detectable": false,
+    "bundle": "no",
     "targetFolderName": "kompose",
     "version": "1.7.0 Technology Preview",
     "installAfter": "cdk",
