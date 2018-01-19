@@ -16,6 +16,7 @@ var fs = require('fs-extra'),
   sourcemaps = require('gulp-sourcemaps'),
   symlink = require('gulp-symlink'),
   common = require('./gulp-tasks/common'),
+  download = require('./gulp-tasks/download'),
   config = require('./gulp-tasks/config'),
   yargs = require('yargs');
 
@@ -26,6 +27,12 @@ process.on('uncaughtException', function(err) {
   if(err) {
     throw err;
   }
+});
+
+gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
+  return download.prefetch(reqs, 'no', config.prefetchFolder).then(()=>{
+    return download.prefetch(reqs, 'yes', config.prefetchFolder);
+  });
 });
 
 // transpile sources and copy resources to a separate folder

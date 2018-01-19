@@ -129,11 +129,6 @@ module.exports = function(gulp, reqs) {
     return download.prefetch(reqs, 'tools', toolsFolder);
   });
 
-  gulp.task('prefetch-all', ['create-prefetch-cache-dir'], function() {
-    return download.prefetch(reqs, 'no', config.prefetchFolder).then(()=>{
-      return download.prefetch(reqs, 'yes', config.prefetchFolder);
-    });
-  });
 
   gulp.task('create-tools-dir', function() {
     if (!fs.existsSync(toolsFolder)) {
