@@ -4,7 +4,7 @@ for ($i=0; $i -le $args.Count - 1; $i++) {
 }
 $timeStamp = $args[-1]
 
-$subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+[array]$subfolders = Get-ChildItem "$folder\.." -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
 
 for ($i=0; $i -le $subfolders.Count - 1; $i++) {
   $Source = $subfolders[$i]
