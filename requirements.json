@@ -309,21 +309,24 @@
         "fileName": "kompose-1.7.0.TP-windows-amd64.exe",
         "sha256sum": "ea1775ffba33e26e15d25a9540c2b5d65a47b6593adccbe3687fc504f30f8d4c",
         "size": 47712768,
-        "installSize": 47578112
+        "installSize": 47578112,
+        "virusTotalReport": "https://virustotal.com/en/file/ea1775ffba33e26e15d25a9540c2b5d65a47b6593adccbe3687fc504f30f8d4c/analysis/"
       },
       "darwin": {
         "url": "https://developers.redhat.com/redirect/to/kompose-macos-1.7.0.download",
         "fileName": "kompose-1.7.0.TP-darwin-amd64",
         "sha256sum": "7810694432641452fb1327d40b7b04e2a7b71bb88b0c06947003141d619d3738",
         "size": 47305936,
-        "installSize": 47245088
+        "installSize": 47245088,
+        "virusTotalReport": "https://virustotal.com/en/file/7810694432641452fb1327d40b7b04e2a7b71bb88b0c06947003141d619d3738/analysis/"
       },
       "linux": {
         "url": "https://github.com/kubernetes/kompose/releases/download/v1.7.0/kompose-linux-amd64",
         "fileName": "kompose-1.7.0.TP-linux-amd64",
-        "sha256sum": "7810694432641452fb1327d40b7b04e2a7b71bb88b0c06947003141d619d3738",
+        "sha256sum": "92130af19a9f7f93983c10069e8cff36387a0b22a14dd6a96fd2137703be275a",
         "size": 47880590,
-        "installSize": 47823558
+        "installSize": 47823558,
+        "virusTotalReport": "https://virustotal.com/en/file/92130af19a9f7f93983c10069e8cff36387a0b22a14dd6a96fd2137703be275a/analysis/"
       }
     }
   },
