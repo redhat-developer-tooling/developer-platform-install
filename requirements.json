@@ -62,7 +62,7 @@
     "bundle": "no",
     "installAfter": "devstuidorhamt",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-updatesite-central.zip?workflow=direct",
-    "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/2018-01-22_21-05-10-B1884/all/devstudio-11.2.0.GA-v20180122-2025-B1884-updatesite-central.zip",
+    "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-updatesite-central.zip",
     "fileName": "devstudio-11.2.0.GA-updatesite-central.zip",
     "sha256sum": "420fb1d8c8ed28c63005a0fc5d714143dee0c35a0613ad5a624b0390c6a1ff79",
     "version": "11.2.0.GA",
