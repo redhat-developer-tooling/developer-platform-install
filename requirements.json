@@ -35,7 +35,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "jbosseap",
     "ius": [
       "org.jboss.tools.windup.feature.feature.group"
     ],
@@ -138,7 +137,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuidocentralcheckstyle",
     "ius": [
       "org.jboss.tools.bpel.feature.feature.group",
       "org.eclipse.bpmn2.feature.feature.group",
@@ -169,7 +167,6 @@
     "modulePath": "model/jdk-install",
     "targetFolderName": "jdk8",
     "detectable": true,
-    "installAfter": "kompose",
     "platform": {
       "win32": {
         "name": "OpenJDK",
@@ -255,8 +252,7 @@
         "version": "3.3.0-GA",
         "size": 481787904,
         "installSize" : 7243047404,
-        "requires": ["cygwin","hyperv||virtualbox"],
-        "installAfter": "cygwin"
+        "requires": ["cygwin","hyperv||virtualbox"]
       },
       "darwin": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.3.0-1-minishift-darwin-amd64?workflow=direct",
@@ -266,8 +262,7 @@
         "version": "3.3.0-GA",
         "size": 483310592,
         "installSize" : 7243047404,
-        "requires": ["virtualbox"],
-        "installAfter": "virtualbox"
+        "requires": ["virtualbox"]
       },
       "linux": {
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/16-Jan-2018.cdk-3.3.0/linux-amd64/minishift",
@@ -277,8 +272,7 @@
         "version": "3.3.0-GA",
         "size": 481478720,
         "installSize" : 836390912,
-        "requires": ["virtualbox"],
-        "installAfter": "virtualbox"
+        "requires": ["virtualbox"]
       }
     }
   },
@@ -365,7 +359,6 @@
     "installable": true,
     "bundle": "no",
     "targetFolderName": "jboss-fuse-eap",
-    "installAfter": "fusetools",
     "version": "6.3.0.GA",
     "size": 228052992,
     "installSize": 1045204992,
@@ -402,7 +395,6 @@
      "installable": true,
      "bundle": "no",
      "targetFolderName": "jboss-fuse-karaf",
-     "installAfter": "fuseplatform",
      "version": "6.3.0.GA",
      "size": 785784505,
      "installSize": 1129381888,
@@ -427,7 +419,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "jbosseap",
-    "installAfter": "fuseplatformkaraf",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-7.1.0-installer.jar?workflow=direct",
     "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.1.0/jboss-eap-7.1.0-installer.jar",
     "fileName": "jboss-eap-7.1.0-installer.jar",
@@ -545,7 +536,6 @@
     "detectable": true,
     "bundle": "always",
     "targetFolderName": "cygwin",
-    "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.9.0.exe",
     "sha256sum": "fa6215a71b1d2c817bb7331c245d61559be6e0047f384718b7c306424a408cfd",
