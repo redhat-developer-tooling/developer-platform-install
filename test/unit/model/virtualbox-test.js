@@ -31,13 +31,6 @@ describe('Virtualbox installer', function() {
   let downloadUrl = `http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe`;
   let item2;
 
-  installerDataSvc = sinon.stub(new InstallerDataService());
-  installerDataSvc.getRequirementByName.restore();
-  installerDataSvc.tempDir.returns('tempDirectory');
-  installerDataSvc.installDir.returns('installationFolder');
-  installerDataSvc.virtualBoxDir.returns('installationFolder/virtualbox');
-  installerDataSvc.localAppData.restore();
-
   let fakeProgress;
 
   let success = () => {};
@@ -47,7 +40,6 @@ describe('Virtualbox installer', function() {
     infoStub = sinon.stub(Logger, 'info');
     errorStub = sinon.stub(Logger, 'error');
     sha256Stub = sinon.stub(Hash.prototype, 'SHA256').callsFake(function(file, cb) { cb('hash'); });
-    item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
 
     mockfs({
       tempDirectory: {},
@@ -66,6 +58,13 @@ describe('Virtualbox installer', function() {
   });
 
   beforeEach(function () {
+    installerDataSvc = sinon.stub(new InstallerDataService());
+    installerDataSvc.getRequirementByName.restore();
+    installerDataSvc.tempDir.returns('tempDirectory');
+    installerDataSvc.installDir.returns('installationFolder');
+    installerDataSvc.virtualBoxDir.returns('installationFolder/virtualbox');
+    installerDataSvc.localAppData.restore();
+    item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
     installer = new VirtualBoxInstall(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
     installer.ipcRenderer = { on: function() {} };
     sandbox = sinon.sandbox.create();
@@ -432,6 +431,32 @@ describe('Virtualbox installer', function() {
       }
       installer.references = 0;
       expect(installer.isDisabled()).to.be.equal(false);
+    });
+  });
+
+  describe('hidden attribute', function() {
+    beforeEach(function() {
+      installerDataSvc.getInstallable.restore();
+    });
+    it('should evaluate to true in case hyper-v is detected', function() {
+      sandbox.stub(installerDataSvc, 'getInstallable').returns({
+        isDetected: function() {
+          return true;
+        }
+      });
+      expect(installer.hidden).equals(true);
+    });
+    it('should evaluate to false in case hyper-v is not detected', function() {
+      sandbox.stub(installerDataSvc, 'getInstallable').returns({
+        isDetected: function() {
+          return false;
+        }
+      });
+      expect(installer.hidden).equals(false);
+    });
+    it('should evaluate to false in case hyper-v installer is not present', function() {
+      sandbox.stub(installerDataSvc, 'getInstallable').returns();
+      expect(installer.hidden).equals(undefined);
     });
   });
 });
