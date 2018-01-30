@@ -53,18 +53,18 @@ class SelectionController {
 
   toggleSelection(type) {
     this.componentsInChannel(this.channel_tab).forEach((node)=>{
-      if(type==='all'){
+      if(type==='all') {
         if (node.isInstallable && node.isNotDetected()) {
           node.selectedOption = 'install';
         }
-      } else if(type==='none'){
+      } else if(type==='none') {
         node.selectedOption = 'detected';
       }
     });
   }
 
   channelBadge(tab) {
-    if(tab === 'all'){
+    if(tab === 'all') {
       return this.componentDetails.length;
     } else {
       var channels = this.componentDetails.filter(value=> {

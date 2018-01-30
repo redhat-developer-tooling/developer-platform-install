@@ -120,7 +120,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
       Logger.info(this.keyName + ' - Skipping certificate import due to error');
       Logger.error(this.keyName + ' - ' + error);
     }).then(() => {
-      return installer.exec([`"${this.downloadedFile}"`, '--extract', '-path', `"${this.installerDataSvc.virtualBoxDir()}"`, '--silent'].join(' '))
+      return installer.exec([`"${this.downloadedFile}"`, '--extract', '-path', `"${this.installerDataSvc.virtualBoxDir()}"`, '--silent'].join(' '));
     }).then(() => {
       return this.configure(installer);
     }).then(() => {
@@ -141,8 +141,8 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   createImportCommand() {
     let commands = [
       '$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2',
-      `$cert.Import((((Get-AuthenticodeSignature \"${this.downloadedFile}\").SignerCertificate).Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert)))`,
-      '$store = Get-Item \"Cert:\\LocalMachine\\TrustedPublisher\"',
+      `$cert.Import((((Get-AuthenticodeSignature "${this.downloadedFile}").SignerCertificate).Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert)))`,
+      '$store = Get-Item "Cert:\\LocalMachine\\TrustedPublisher"',
       '$store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]\'ReadWrite\')',
       '$store.Add($cert)',
       '$store.Close()',
@@ -182,7 +182,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
         resolve(res);
       });
     }).catch((err) => {
-       reject(err);
+      reject(err);
     }).then(()=>{
       del(['*.msi', '*.cab'], {cwd: this.installerDataSvc.virtualBoxDir()});
     });
