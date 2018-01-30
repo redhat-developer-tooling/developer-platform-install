@@ -8,7 +8,7 @@ on Windows and macOS platforms.
 Deliverables
 ------------
 Build output is two platform specific executables: Online and Bundle installer.
-Online Installer is lightweight (aproximately 50Mb) and it downloads everything
+Online Installer is lightweight (approximately 50Mb) and it downloads everything
 during installation. Bundle Installer includes most of binary dependencies and
 downloads binaries that cannot be included during installation.
 
@@ -380,11 +380,11 @@ or macOS.
 On Windows if you running from cmd, powershell or git bash console and going to install components
 that is MSI installers please be sure you started console as Administrator. That is required
 because installer starts MSI installers in non-interactive mode and they will fail to run
-without Administartive privileges.
+without Administrative privileges.
 
 #### macOS
 
-On macOS, installer starts with osascript that requests administartive account
+On macOS, installer starts with osascript that requests administrative account
 credential to continue. So you can run from any bash instance and installer will show request
 for account with rights to administer current machine.
 
