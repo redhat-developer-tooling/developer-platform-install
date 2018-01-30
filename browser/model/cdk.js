@@ -44,7 +44,7 @@ class CDKInstall extends InstallableItem {
         driverName = 'hyperv';
         return Platform.getHypervAdminsGroupName().then((group)=>{
           installer.exec(
-            `net localgroup "${group}" %USERDOMAIN%\\%USERNAME% /add`
+            `net localgroup "${group}" "%USERDOMAIN%\\%USERNAME%" /add`
           ).catch(()=>{});
         });
       }

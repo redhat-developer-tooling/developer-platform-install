@@ -287,7 +287,7 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
-          expect(Installer.prototype.exec).calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
+          expect(Installer.prototype.exec).calledWith('net localgroup "Hyper-V Administrators" "%USERDOMAIN%\\%USERNAME%" /add');
         }).catch((error)=>{
           console.log(error);
           expect.fail();
@@ -301,7 +301,7 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
-          expect(Installer.prototype.exec).not.calledWith('net localgroup "Hyper-V Administrators" %USERDOMAIN%\\%USERNAME% /add');
+          expect(Installer.prototype.exec).not.calledWith('net localgroup "Hyper-V Administrators" "%USERDOMAIN%\\%USERNAME%" /add');
         }).catch(()=>{
           expect.fail();
         });
