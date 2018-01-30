@@ -46,7 +46,7 @@ class FusePlatformInstallKaraf extends InstallableItem {
         });
     }).then(()=> {
       let users = path.join(this.installerDataSvc.fuseplatformkarafDir(), 'etc', 'users.properties');
-      let result = Promise.resolve();
+      let result;
       if(fse.existsSync(users)) {
         const user = 'admin=admin,admin,manager,viewer,Monitor, Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser';
         result = fse.appendFile(users, user).catch((error)=>{
