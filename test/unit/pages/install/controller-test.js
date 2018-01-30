@@ -135,7 +135,7 @@ describe('Install controller', function() {
 
     it('should process components that require download', function() {
       let jdk = new JdkInstall(installerDataSvc, 'jdk8', 'downloadUrl', 'fileName', 'sha256sum');
-        installerDataSvc.addItemToInstall('jdk', jdk);
+      installerDataSvc.addItemToInstall('jdk', jdk);
       vbox.downloaded = false;
       jdk.downloaded = true;
 

@@ -25,7 +25,7 @@ function electron() {
     },
     app: {
       getVersion() {
-        return "2.1.0-GA";
+        return '2.1.0-GA';
       }
     }
   };
