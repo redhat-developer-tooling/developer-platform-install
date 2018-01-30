@@ -6,8 +6,10 @@ import { default as sinonChai } from 'sinon-chai';
 import InstallerDataService from 'browser/services/data';
 import FusePlatformInstallKaraf from 'browser/model/jbossfusekaraf';
 import fs from 'fs';
+import fse from 'fs-extra';
 import path from 'path';
 import mkdirp from 'mkdirp';
+import Logger from 'browser/services/logger';
 
 import EventEmitter from 'events';
 
@@ -93,7 +95,7 @@ describe('jbossplaformkaraf nstaller', function() {
         );
       });
     });
-    
+
     it('should remove first level folder when unpack files from zip archive', function() {
       let mockDevSuiteInstaller = createInstallerMock(false);
       let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
@@ -141,6 +143,29 @@ describe('jbossplaformkaraf nstaller', function() {
         expect.fail();
       }).catch((error)=> {
         expect(error).equals('Error');
+      });
+    });
+
+    it('should add admin user to users.properties file', function() {
+      let mockDevSuiteInstaller = createInstallerMock(false);
+      sandbox.stub(fse, 'existsSync').returns(true);
+      sandbox.stub(fse, 'appendFile').resolves();
+      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
+      mockDevSuiteInstaller.emitEntries();
+      return promise.then(()=>{
+        expect(fse.appendFile).calledOnce;
+      });
+    });
+
+    it('should log error if adding admin user to file failed', function() {
+      let mockDevSuiteInstaller = createInstallerMock(false);
+      sandbox.stub(fse, 'existsSync').returns(true);
+      sandbox.stub(fse, 'appendFile').rejects();
+      sandbox.stub(Logger, 'error');
+      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
+      mockDevSuiteInstaller.emitEntries();
+      return promise.then(()=>{
+        expect(Logger.error.calledTwice);
       });
     });
   });
