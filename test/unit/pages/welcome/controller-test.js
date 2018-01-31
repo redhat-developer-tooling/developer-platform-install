@@ -11,7 +11,7 @@ require('browser/main');
 
 chai.use(sinonChai);
 
-describe('LocationController', function() {
+describe('WelcomeController', function() {
   let sandbox = sinon.sandbox.create();
   let electron = new ElectronMock();
   let $controller;
