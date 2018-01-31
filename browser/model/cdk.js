@@ -8,6 +8,8 @@ import Installer from './helpers/installer';
 import globby from 'globby';
 import fs from 'fs-extra';
 import pify from 'pify';
+import os from 'os';
+import Util from './helpers/util';
 
 class CDKInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -46,6 +48,10 @@ class CDKInstall extends InstallableItem {
           installer.exec(
             `net localgroup "${group}" "%USERDOMAIN%\\%USERNAME%" /add`
           ).catch(()=>{});
+        }).then(() => {
+          return Util.writeFile(path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1'), this.createHypervSwitch());
+        }).then(() => {
+          return installer.exec(`powershell -ExecutionPolicy Bypass -File ${path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1')}`);
         });
       }
     }).then(()=> {
@@ -116,6 +122,22 @@ class CDKInstall extends InstallableItem {
     let hyperv = this.installerDataSvc.getInstallable('hyperv');
     return virtualbox && virtualbox.isConfigured()
       || (hyperv && hyperv.isConfigured() || this.selectedOption !== 'install');
+  }
+
+  createHypervSwitch() {
+    let commands = [
+      '$ErrorActionPreference = "Stop"',
+      '$switchName = if ($env:HYPERV_VIRTUAL_SWITCH) {$env:HYPERV_VIRTUAL_SWITCH} else {"minishift-switch"}',
+      'try { Get-VMSwitch -Name $switchName }',
+      'catch { $adapterName;',
+      '[array]$adapters = Get-NetAdapter -Physical | Where-Object { $_.status -eq "up" }',
+      'foreach ($adapter in $adapters) {',
+      '$adapterName = $adapter.Name',
+      'if ($adapterName -like "ethernet*") { break } }',
+      'New-VMSwitch -Name $switchName -NetAdapterName $adapterName',
+      '[Environment]::SetEnvironmentVariable("HYPERV_VIRTUAL_SWITCH", $switchName, "User") }'
+    ];
+    return commands.join('\n');
   }
 }
 

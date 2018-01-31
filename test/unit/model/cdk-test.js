@@ -16,6 +16,8 @@ import InstallableItem from 'browser/model/installable-item';
 import child_process from 'child_process';
 import mockfs from 'mock-fs';
 import loadMetadata from 'browser/services/metadata';
+import Util from 'browser/model/helpers/util';
+import os from 'os';
 chai.use(sinonChai);
 let sinon  = require('sinon');
 
@@ -280,6 +282,7 @@ describe('CDK installer', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'BUILTIN\\Hyper-V Administrators');
         sandbox.stub(Installer.prototype, 'exec').onCall(0).rejects('Error');
         Installer.prototype.exec.onCall(1).resolves();
+        Installer.prototype.exec.onCall(2).resolves();
 
         let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
         svc.addItemsToInstall(hyperv);
@@ -304,6 +307,48 @@ describe('CDK installer', function() {
           expect(Installer.prototype.exec).not.calledWith('net localgroup "Hyper-V Administrators" "%USERDOMAIN%\\%USERNAME%" /add');
         }).catch(()=>{
           expect.fail();
+        });
+      });
+
+      it('should create a powershell script to set up a virtual switch for hyper-v', function() {
+        let utilStub = sandbox.stub(Util, 'writeFile').resolves();
+        let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
+        svc.addItemsToInstall(hyperv);
+        hyperv.addOption('detected', '1.0.0', 'hyperv', true);
+
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(() => {
+          expect(utilStub).calledOnce;
+          expect(utilStub).calledWith(path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1'), installer.createHypervSwitch());
+        });
+      });
+
+      it('should run the script to create a virtual switch when hyper-v is enabled', function() {
+        Installer.prototype.exec.restore();
+        let execStub = sandbox.stub(Installer.prototype, 'exec').resolves();
+        let utilStub = sandbox.stub(Util, 'writeFile').resolves();
+        let hyperv = new InstallableItem('hyperv', 'url', 'hypev.exe', 'hyperv', svc, false);
+        svc.addItemsToInstall(hyperv);
+        hyperv.addOption('detected', '1.0.0', 'hyperv', true);
+
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(() => {
+          expect(execStub).calledWith(`powershell -ExecutionPolicy Bypass -File ${path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1')}`);
+        });
+      });
+
+      it('should skip hyper-v related scripts when not detected', function() {
+        Installer.prototype.exec.restore();
+        let execStub = sandbox.stub(Installer.prototype, 'exec').resolves();
+        let utilStub = sandbox.stub(Util, 'writeFile').resolves();
+
+        return new Promise((resolve, reject)=>{
+          installer.installAfterRequirements(fakeProgress, resolve, reject);
+        }).then(() => {
+          expect(utilStub).not.calledWith(path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1'), installer.createHypervSwitch());
+          expect(execStub).not.calledWith(`powershell -ExecutionPolicy Bypass -File ${path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1')}`);
         });
       });
 
