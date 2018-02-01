@@ -188,6 +188,19 @@ describe('InstallableItem', function() {
         expect(stub).calledWithExactly(path.join(item.downloadFolder, item.files.foo.fileName));
       });
     });
+
+    it('should mark non existing files as not downloaded', function() {
+      let fsStub = sandbox.stub(fs, 'existsSync');
+      fsStub.onFirstCall().returns(false);
+      fsStub.onSecondCall().returns(true);
+      sandbox.stub(Hash.prototype, 'SHA256').resolves('sum');
+
+      return item.checkFiles().then(() => {
+        expect(item.files.foo.downloaded).to.be.true;
+        expect(item.files.jdk.downloaded).to.be.false;
+        expect(item.downloaded).to.be.false;
+      });
+    });
   });
 
   describe('downloadInstaller method', function() {
