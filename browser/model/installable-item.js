@@ -202,6 +202,9 @@ class InstallableItem {
             this.files[file].downloaded = false;
           }
         });
+      } else {
+        this.downloaded = false;
+        this.files[file].downloaded = false;
       }
     }
     return promise;
