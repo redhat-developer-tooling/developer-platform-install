@@ -48,6 +48,7 @@ describe('ComponentPanelDirective', function() {
     ds.getPassword.returns('password');
     ds.komposeDir.returns(path.join(ds.installDir(), 'kompose'));
     ds.localAppData.restore();
+    ds.programData.restore();
     return ds;
   }
 

@@ -38,6 +38,7 @@ describe('Cygwin installer', function() {
   installerDataSvc.cygwinDir.returns('install/Cygwin');
   installerDataSvc.getInstallable.returns(fakeInstallable);
   installerDataSvc.localAppData.restore();
+  installerDataSvc.programData.restore();
 
   let fakeProgress;
 

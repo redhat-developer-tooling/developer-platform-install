@@ -51,7 +51,7 @@ class InstallableItem {
     this.selectedOption = requirement.defaultOption ? requirement.defaultOption : 'install';
 
     this.downloader = null;
-    this.downloadFolder = path.join(this.installerDataSvc.localAppData(), 'cache');
+    this.downloadFolder = path.join(this.installerDataSvc.programData(), 'cache');
     if(!fs.existsSync(this.downloadFolder)) {
       mkdirp.sync(this.downloadFolder);
     }

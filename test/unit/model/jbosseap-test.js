@@ -54,6 +54,7 @@ describe('jbosseap installer', function() {
     ds.getPassword.returns('passwd');
     ds.devstudioDir.returns('installationFolder/devstudio');
     ds.localAppData.restore();
+    ds.programData.restore();
     return ds;
   }
 

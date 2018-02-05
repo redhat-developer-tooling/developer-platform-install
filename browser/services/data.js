@@ -223,6 +223,10 @@ class InstallerDataService {
     return Platform.localAppData();
   }
 
+  programData() {
+    return Platform.programData();
+  }
+
   isDownloading() {
     return this.downloading;
   }

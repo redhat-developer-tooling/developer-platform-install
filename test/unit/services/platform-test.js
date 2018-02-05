@@ -7,6 +7,8 @@ import child_process from 'child_process';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
 import fs from 'fs-extra';
+import path from 'path';
+import os from 'os';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -661,6 +663,52 @@ describe('Platform', function() {
   describe('getEnv', function() {
     it('returns process.env', function() {
       expect(Platform.getEnv()).to.be.equal(process.env);
+    });
+  });
+
+  describe('localAppData', function() {
+    it('returns path to %LOCALAPPDATA%/redhat/devsuite on windows', function() {
+      let fakeData = 'c:\\Users\\dev1\\appdata\\local';
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      sandbox.stub(Platform, 'getEnv').returns({LOCALAPPDATA: fakeData});
+
+      expect(Platform.localAppData()).to.equal(path.join(fakeData, 'RedHat', 'DevSuite'));
+    });
+
+    it('returns path to ~/Library/Application Support/RedHat/DevSuite on mac', function() {
+      let fakeHome = '/Home/user';
+      sandbox.stub(Platform, 'getOS').returns('darwin');
+      sandbox.stub(Platform, 'getEnv').returns({HOME: fakeHome});
+
+      expect(Platform.localAppData()).to.equal(path.join(fakeHome, 'Library', 'Application Support', 'RedHat', 'DevSuite'));
+    });
+
+    it('returns path to temp directory otherwise', function() {
+      sandbox.stub(Platform, 'getOS').returns('linux');
+      expect(Platform.localAppData()).to.equal(os.tmpdir());
+    });
+  });
+
+  describe('programData', function() {
+    it('returns path to %ALLUSERSPROFILE%/redhat/devsuite on windows', function() {
+      let fakeData = 'c:\\Users\\dev1\\appdata\\local';
+      sandbox.stub(Platform, 'getOS').returns('win32');
+      sandbox.stub(Platform, 'getEnv').returns({ALLUSERSPROFILE: fakeData});
+
+      expect(Platform.programData()).to.equal(path.join(fakeData, 'RedHat', 'DevSuite'));
+    });
+
+    it('calls localAppData on mac', function() {
+      sandbox.stub(Platform, 'getOS').returns('darwin');
+      let appDataStub = sandbox.stub(Platform, 'localAppData').returns('/user/home');
+      
+      expect(Platform.programData()).to.equal(Platform.localAppData());
+      expect(appDataStub).calledTwice;
+    });
+
+    it('returns path to temp directory otherwise', function() {
+      sandbox.stub(Platform, 'getOS').returns('linux');
+      expect(Platform.programData()).to.equal(os.tmpdir());
     });
   });
 });

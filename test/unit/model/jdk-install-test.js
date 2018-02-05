@@ -32,6 +32,7 @@ describe('JDK installer', function() {
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('passwd');
   installerDataSvc.localAppData.restore();
+  installerDataSvc.programData.restore();
 
   let fakeProgress;
 

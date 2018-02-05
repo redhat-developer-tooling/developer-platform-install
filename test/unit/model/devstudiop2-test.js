@@ -40,6 +40,7 @@ describe('devstudiop2 central installer', function() {
     ds.getUsername.returns('user');
     ds.getPassword.returns('passwd');
     ds.localAppData.restore();
+    ds.programData.restore();
     return ds;
   }
 
