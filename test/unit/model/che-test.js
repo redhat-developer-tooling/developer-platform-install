@@ -12,7 +12,7 @@ import CheInstall from 'browser/model/che';
 chai.use(sinonChai);
 let sinon  = require('sinon');
 
-describe('CDK installer', function() {
+describe('Che installer', function() {
   let sandbox, installerDataSvc;
   let infoStub, errorStub;
 
@@ -21,6 +21,7 @@ describe('CDK installer', function() {
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
   installerDataSvc.localAppData.restore();
+  installerDataSvc.programData.restore();
   installerDataSvc.tempDir.returns('temporaryFolder');
   installerDataSvc.installDir.returns('installFolder');
   installerDataSvc.getUsername.returns('user');

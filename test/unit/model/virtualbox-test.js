@@ -64,6 +64,7 @@ describe('Virtualbox installer', function() {
     installerDataSvc.installDir.returns('installationFolder');
     installerDataSvc.virtualBoxDir.returns('installationFolder/virtualbox');
     installerDataSvc.localAppData.restore();
+    installerDataSvc.programData.restore();
     item2 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', installerDataSvc);
     installer = new VirtualBoxInstall(installerDataSvc, 'virtualbox', downloadUrl, 'virtualbox.exe', 'sha', version, revision);
     installer.ipcRenderer = { on: function() {} };

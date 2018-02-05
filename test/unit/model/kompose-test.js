@@ -33,6 +33,7 @@ describe('kompose installer', function() {
   installerDataSvc.getPassword.returns('password');
   installerDataSvc.komposeDir.returns(path.join(installerDataSvc.installDir(), 'kompose'));
   installerDataSvc.localAppData.restore();
+  installerDataSvc.programData.restore();
 
   let installer;
 

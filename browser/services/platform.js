@@ -269,10 +269,10 @@ class Platform {
   }
 
   static localAppData() {
-    let appData = Platform.identify({
+    return Platform.identify({
       win32: ()=> {
-        let appDataPath = Platform.ENV.APPDATA;
-        return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : os.tmpdir();
+        let appDataPath = Platform.ENV.LOCALAPPDATA;
+        return appDataPath ? path.join(appDataPath, 'RedHat', 'DevSuite') : os.tmpdir();
       }, darwin: ()=> {
         let homePath = Platform.ENV.HOME;
         return homePath ? path.join(homePath, 'Library', 'Application Support', 'RedHat', 'DevSuite') : os.tmpdir();
@@ -280,7 +280,20 @@ class Platform {
         return os.tmpdir();
       }
     });
-    return path.resolve(appData);
+  }
+
+  static programData() {
+    return Platform.identify({
+      win32: () => {
+        let programDataPath = Platform.ENV.ALLUSERSPROFILE;
+        return programDataPath ? path.join(programDataPath, 'RedHat', 'DevSuite') : os.tmpdir();
+      }, darwin: () => {
+        // use the user specific folder because of permissions
+        return Platform.localAppData();
+      }, default: () => {
+        return os.tmpdir();
+      }
+    });
   }
 }
 

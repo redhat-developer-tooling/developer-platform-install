@@ -28,6 +28,7 @@ describe('CDK installer', function() {
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.restore();
   installerDataSvc.localAppData.restore();
+  installerDataSvc.programData.restore();
   installerDataSvc.tempDir.returns('temporaryFolder');
   installerDataSvc.installDir.returns('installFolder');
   installerDataSvc.getUsername.returns('user');
