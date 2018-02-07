@@ -12,6 +12,7 @@ import child_process from 'child_process';
 import unzip from 'unzip';
 import targz from 'targz';
 import EventEmitter from 'events';
+import sudo from 'sudo-prompt';
 chai.use(sinonChai);
 
 describe('Installer', function() {
@@ -87,6 +88,54 @@ describe('Installer', function() {
       sandbox.stub(child_process, 'exec').yields(err);
 
       return installer.exec(command, args)
+        .then(function() {
+          expect.fail('it did not reject');
+        })
+        .catch(function(error) {
+          expect(error).to.equal(err);
+        });
+    });
+  });
+
+  describe('execElevated', function() {
+    let command = 'command';
+    let args = { name: 'name', icns: 'icns'};
+
+    it('should call sudo-prompt#exec with the correct parameters', function() {
+      let stub = sandbox.stub(sudo, 'exec').yields();
+
+      return installer.execElevated(command, args)
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(command, args);
+        });
+    });
+
+    it('should set name and icon for default parameters', function() {
+      let stub = sandbox.stub(sudo, 'exec').yields();
+
+      return installer.execElevated(command)
+        .then(function() {
+          expect(stub).to.have.been.calledOnce;
+          expect(stub).to.have.been.calledWith(command, {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
+        });
+    });
+
+    it('should resolve as true if no error occurs', function() {
+      sandbox.stub(sudo, 'exec').yields(undefined, 'stdout', 'stderr');
+      infoStub.reset();
+      return installer.execElevated(command, args)
+        .then(function(result) {
+          expect(result).to.equal(true);
+          expect(infoStub).to.be.calledWith('test - stdout');
+        });
+    });
+
+    it('should reject when an error occurs', function() {
+      let err = new Error('fatal error');
+      sandbox.stub(sudo, 'exec').yields(err);
+
+      return installer.execElevated(command, args)
         .then(function() {
           expect.fail('it did not reject');
         })

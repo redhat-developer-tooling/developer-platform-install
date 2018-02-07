@@ -183,7 +183,7 @@ of Vagrant and VirtualBox (will download them):
 5. To build both installers in a single step:
 
         npm run dist
-        
+
 Running installer behind proxy
 ------------------------------
 
@@ -232,8 +232,8 @@ and raw coverage reports. The report format can be overridden with `--report`
 parameter like shown below
 
     npm test -- --report cobertura
-    
-To open html coverage report in your default browser after unit tests finished use 
+
+To open html coverage report in your default browser after unit tests finished use
 `--open-report` option
 
     npm test -- --spec-file=test/unit/pages/**/*.js --open-report
@@ -241,7 +241,7 @@ To open html coverage report in your default browser after unit tests finished u
 Running unit tests one by one for each installer module
 
     gulp unit-test-1by1
-    
+
 If you experience this error when running unit tests
 
     module.js:598
@@ -255,7 +255,7 @@ If you experience this error when running unit tests
 install 'keytar' module using npm
 
     npm install keytar
-    
+
 Debugging unit tests
 --------------------
 
@@ -384,8 +384,8 @@ without Administrative privileges.
 
 #### macOS
 
-On macOS, installer starts with osascript that requests administrative account
-credential to continue. So you can run from any bash instance and installer will show request
+On macOS, installer may request administrative account
+credentials to continue. So you can run from any bash instance and installer will show request
 for account with rights to administer current machine.
 
 Updating dependencies to latest

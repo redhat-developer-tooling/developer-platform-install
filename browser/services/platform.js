@@ -5,6 +5,7 @@ const pify = require('pify');
 const path = require('path');
 const fs = require('fs-extra');
 import os from 'os';
+import sudo from 'sudo-prompt';
 
 class Platform {
   static identify(map) {
@@ -258,14 +259,9 @@ class Platform {
     let commands = [];
     executables.forEach(function(executable) {
       let name = path.parse(executable).name;
-      commands.push(`rm -f /usr/local/bin/${name}; ln -s '${executable}' /usr/local/bin/${name};`);
+      commands.push(`rm -f /usr/local/bin/${name};ln -s '${executable}' /usr/local/bin/${name};`);
     });
-    let osaScript = [
-      'osascript',
-      '-e',
-      `"do shell script \\"${commands.join(' ')}\\" with administrator privileges"`
-    ];
-    return pify(child_process.exec)(osaScript.join(' '));
+    return pify(sudo.exec)(commands.join(''), {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
   }
 
   static localAppData() {

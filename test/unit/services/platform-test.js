@@ -7,6 +7,7 @@ import child_process from 'child_process';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
 import fs from 'fs-extra';
+import sudo from 'sudo-prompt';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -531,16 +532,25 @@ describe('Platform', function() {
       });
     });
     describe('on macos', function() {
+      let executables = [
+        '/Applications/devsuite/cdk/bin/oc',
+        '/Appications/devsuite/cdk/bin/minishift'];
+
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
+        sandbox.stub(sudo, 'exec').yields(undefined, '');
       });
-      it('passes new path value to shell script', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, '');
-        let executables = ['/Applications/devsuite/cdk/bin/oc',
-          '/Appications/devsuite/cdk/bin/minishift'];
+
+      it('passes new path value to elevated shell script', function() {        
         return Platform.addToUserPath(executables).then(() => {
-          expect(child_process.exec.getCall(0).args[0].includes(executables[0])).to.be.true;
-          expect(child_process.exec.getCall(0).args[0].includes(executables[1])).to.be.true;
+          expect(sudo.exec.getCall(0).args[0].includes(executables[0])).to.be.true;
+          expect(sudo.exec.getCall(0).args[0].includes(executables[1])).to.be.true;
+        });
+      });
+
+      it('sets the right name and icon for the sudo prompt', function() {
+        return Platform.addToUserPath(executables).then(() => {
+          expect(sudo.exec).calledWith(sinon.match.any, {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
         });
       });
     });

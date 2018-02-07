@@ -129,6 +129,8 @@ describe('Virtualbox installer', function() {
 
     describe('on macos', function() {
       beforeEach(function() {
+        sandbox.stub(Installer.prototype, 'exec').resolves(true);
+        sandbox.stub(Installer.prototype, 'execElevated').resolves(true);
         helper = new Installer('virtualbox', fakeProgress);
         sandbox.stub(Platform, 'getOS').returns('macOS');
         downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'virtualbox.exe');
@@ -136,10 +138,18 @@ describe('Virtualbox installer', function() {
         installer.ipcRenderer = {on: function() {}};
       });
 
-      it('should execute macos installer with osascript', function() {
-        sandbox.stub(Installer.prototype, 'exec').resolves(true);
-        installer.installAfterRequirements(fakeProgress, function() {}, function() {});
-        expect(Installer.prototype.exec).calledWith(installer.getScript());
+      it('should mount the dmg file', function() {
+        installer.installAfterRequirements(fakeProgress, function() {}, function() {})
+        .then(() => {
+          expect(Installer.prototype.exec).calledWith(installer.getScript());
+        });
+      });
+
+      it('should run the installer with elevated privileges', function() {
+        installer.installAfterRequirements(fakeProgress, function() {}, function() {})
+        .then(() => {
+          expect(Installer.prototype.execElevated).calledWith(installer.getSudoScript());
+        });
       });
     });
 
