@@ -5,6 +5,7 @@ let child_process = require('child_process');
 let unzip = require('unzip');
 let targz = require('targz');
 
+import sudo from 'sudo-prompt';
 import Logger from '../../services/logger';
 
 class Installer {
@@ -33,6 +34,25 @@ class Installer {
         }
       });
     });
+  }
+
+  execElevated(command, options = {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'}) {
+    return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Execute command ' + command);
+      sudo.exec(command, options, (error, stdout, stderr) => {
+        if (error) {
+          Logger.error(this.key + ' - ' + error);
+          Logger.error(this.key + ' - ' + stderr);
+          reject(error);
+        } else {
+          if (stdout) {
+            Logger.info(this.key + ' - ' + stdout);
+          }
+          Logger.info(this.key + ' - Execute ' + command + ' SUCCESS');
+          resolve(true);
+        }
+      });
+    })
   }
 
   execFile(file, args, options = {}) {

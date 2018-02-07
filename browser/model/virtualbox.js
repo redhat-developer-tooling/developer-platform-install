@@ -239,6 +239,8 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
     return installer.exec(this.getScript()).then((result) => {
+      return installer.execElevated(this.getSudoScript());
+    }).then((result) => {
       installer.succeed(result);
     }).catch((error) => {
       installer.fail(error);
@@ -247,18 +249,14 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
 
   getScript() {
     let dmgFile = this.downloadedFile;
-    //let timestamp = new Date().toJSON().replace(/:/g,'')
     let volumeName = `virtualbox-${this.version}`;
-    let shellScript = [
-      `hdiutil attach -mountpoint /Volumes/${volumeName}  '${dmgFile}'`,
-      `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`
-    ].join(';');
-    let osaScript = [
-      'osascript',
-      '-e',
-      `"do shell script \\"${shellScript}\\" with administrator privileges"`
-    ].join(' ');
-    return osaScript;
+    let script = `hdiutil attach -mountpoint /Volumes/${volumeName}  '${dmgFile}'`;
+    return script;
+  }
+
+  getSudoScript() {
+    let volumeName = `virtualbox-${this.version}`;
+    return `installer -pkg /Volumes/${volumeName}/VirtualBox.pkg -target /`;
   }
 }
 
