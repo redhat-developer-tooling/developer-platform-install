@@ -25,8 +25,27 @@ describe('Hyper-V Installer', function() {
 
   describe('detectExistingInstall', function() {
     describe('on windows', function() {
-      it('adds option \'detected\' if hypervisor detection script prints \'Enabled\' to stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+      beforeEach(function() {
+        sandbox.stub(Platform, 'isHypervisorAvailable').resolves(true);
+      });
+
+      it('first checks if hyper-v is available on the current OS version', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Hyper-V Host Compute Service \n Hyper-V Virtual Machine Management');
+        return hvInstall.detectExistingInstall().then(function() {
+          expect(Platform.isHypervisorAvailable).calledOnce;
+        });
+      });
+
+      it('skips the next steps if hyper-v is not available on current OS version', function() {
+        Platform.isHypervisorAvailable.resolves(false);
+        let spy = sandbox.spy(Platform, 'isHypervisorEnabled');
+        return hvInstall.detectExistingInstall().then(function() {
+          expect(spy).not.called;
+        });
+      });
+
+      it('adds option \'detected\' if hypervisor detection script find running Hyper-v services', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Hyper-V Host Compute Service \n Hyper-V Virtual Machine Management');
         return hvInstall.detectExistingInstall().then(function() {
           expect(hvInstall.hasOption('detected')).to.be.equal(true);
         });
@@ -39,8 +58,8 @@ describe('Hyper-V Installer', function() {
         });
       });
 
-      it('does not add option \'detected\' if hypervisor detection script prints \'Disabled\' to stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
+      it('does not add option \'detected\' if Hyper-v services are not found running', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'service1 \n service2 \n service3');
         return hvInstall.detectExistingInstall().then(function() {
           expect(hvInstall.hasOption('detected')).to.be.equal(false);
         });
@@ -128,8 +147,12 @@ describe('Hyper-V Installer', function() {
   });
 
   describe('isConfigured', function() {
+    beforeEach(function() {
+      sandbox.stub(Platform, 'isHypervisorAvailable').resolves(true);
+    });
+    
     it('on windows returns true if hyper-v is detected', function() {
-      sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+      sandbox.stub(child_process, 'exec').yields(undefined, 'Hyper-V Host Compute Service \n Hyper-V Virtual Machine Management');
       return hvInstall.detectExistingInstall().then(function() {
         expect(hvInstall.isConfigured()).to.be.equal(true);
       });

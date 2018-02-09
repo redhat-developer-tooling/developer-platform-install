@@ -15,7 +15,13 @@ class HypervInstall extends InstallableItem {
 
   detectExistingInstall() {
     if (Platform.OS == 'win32') {
-      return Platform.isHypervisorEnabled().then((detected)=>{
+      return Platform.isHypervisorAvailable().then((available) => {
+        if (available) {
+          return Platform.isHypervisorEnabled();
+        } else {
+          return Promise.resolve();
+        }
+      }).then((detected)=>{
         if(detected) {
           this.addOption('detected', '', '', detected);
         }

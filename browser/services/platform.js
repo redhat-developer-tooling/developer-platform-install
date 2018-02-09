@@ -66,13 +66,14 @@ class Platform {
   static isVirtualizationEnabled() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)('powershell.exe -command "(GWMI Win32_Processor).VirtualizationFirmwareEnabled;[Environment]::Exit(0);"').then((stdout)=>{
+        return pify(child_process.exec)('wmic cpu get virtualizationfirmwareenabled').then((stdout)=>{
           let result;
           if(stdout) {
-            stdout = stdout.replace(/\s/g, '');
-            if(stdout == 'True') {
+            stdout = stdout.split('\n');
+            stdout = stdout.length > 1 ? stdout[1].trim() : stdout[0];
+            if(stdout == 'TRUE') {
               result = true;
-            } else if(stdout == 'False') {
+            } else if(stdout == 'FALSE') {
               result = false;
             }
           }
@@ -99,10 +100,11 @@ class Platform {
   static getHypervisorVersion() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(get-item c:\\windows\\system32\\vmms.exe).VersionInfo.ProductVersion"').then((stdout) => {
+        return pify(child_process.exec)('wmic datafile where name="c:\\\\windows\\\\system32\\\\vmms.exe" get version').then((stdout) => {
           let result = 'Unknown';
-          if(stdout) {
-            stdout = stdout.replace(/\s/g, '');
+          if(stdout.trim()) {
+            stdout = stdout.split('\n');
+            stdout = stdout.length > 1 ? stdout[1] : stdout[0];
             if(stdout) {
               result = stdout;
             }
@@ -121,15 +123,12 @@ class Platform {
   static isHypervisorEnabled() {
     return Platform.identify({
       win32: function() {
-        return pify(child_process.exec)('PowerShell.exe -ExecutionPolicy Bypass -command "Get-WindowsOptionalFeature -Online | where FeatureName -eq Microsoft-Hyper-V-Hypervisor | foreach{$_.state}; [Environment]::Exit(0);"').then((stdout) => {
+        return pify(child_process.exec)('net start').then((stdout) => {
           let result;
           if(stdout) {
-            stdout = stdout.replace(/\s/g, '');
-            if(stdout == 'Enabled') {
-              result = true;
-            } else if(stdout == 'Disabled') {
-              result = false;
-            }
+            stdout = stdout.split('\n').map(x => x.trim());
+            result = (stdout.indexOf('Hyper-V Host Compute Service') > -1)
+              && (stdout.indexOf('Hyper-V Virtual Machine Management') > -1);
           }
           return result;
         }).catch(()=>{
@@ -139,6 +138,26 @@ class Platform {
         return Promise.resolve(false);
       }
     });
+  }
+
+  static isHypervisorAvailable() {
+    return Platform.identify({
+      win32: function() {
+        let winRegex = /.*Windows\s(10|8(\.1)?)\s(?!Home).+/
+        return pify(child_process.exec)('wmic os get caption').then((stdout) => {
+          let result;
+          if(stdout) {
+            stdout = stdout.split('\n');
+            stdout = stdout.length > 1 ? stdout[1] : stdout[0];
+            result = winRegex.test(stdout) && (os.arch() === 'x64');
+          }
+          return result;
+        }).catch(() => {});
+      },
+      default: function() {
+        return Promise.resolve(false);
+      }
+    })
   }
 
   static getUserHomePath() {

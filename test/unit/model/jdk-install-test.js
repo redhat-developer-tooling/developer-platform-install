@@ -17,6 +17,7 @@ import Hash from 'browser/model/helpers/hash';
 import InstallerDataService from 'browser/services/data';
 import {ProgressState} from 'browser/pages/install/controller';
 import mockfs from 'mock-fs';
+import child_process from 'child_process';
 chai.use(sinonChai);
 
 describe('JDK installer', function() {
@@ -82,8 +83,8 @@ describe('JDK installer', function() {
     sandbox.stub(Util, 'executeCommand')
       .onFirstCall().resolves(`version "${version}"`)
       .onSecondCall().resolves(location);
-    sandbox.stub(Util, 'writeFile').resolves(true);
     sandbox.stub(Util, 'executeFile').resolves('optput');
+    sandbox.stub(child_process, 'exec').yields(undefined, 'output');
   }
 
   describe('when instantiated', function() {
@@ -177,10 +178,7 @@ describe('JDK installer', function() {
         mockDetectedJvm('1.8.0_1');
         jdk.findMsiInstalledJava.restore();
         return jdk.detectExistingInstall().then(()=>{
-          expect(Util.writeFile).to.have.been.calledWith(
-            jdk.getMsiSearchScriptLocation(), jdk.getMsiSearchScriptData());
-          expect(Util.executeFile).to.have.been.calledWith(
-            'powershell', jdk.getMsiSearchScriptPowershellArgs(jdk.getMsiSearchScriptLocation()));
+          expect(child_process.exec).calledWith(jdk.getMsiSearchScriptData());
         });
       });
 
@@ -237,7 +235,7 @@ describe('JDK installer', function() {
         jdk.findMsiInstalledJava.restore();
         return jdk.detectExistingInstall().then(()=>{
           expect(Util.executeFile).to.have.not.been.called;
-          expect(Util.writeFile).to.have.not.been.called;
+          expect(child_process.exec).to.have.not.been.called;
         });
       });
 
