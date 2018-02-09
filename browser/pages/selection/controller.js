@@ -150,7 +150,7 @@ class SelectionController {
       this.timeout(()=>{});
       this.installedSearchNote = ' The system is checking if you have any installed components.';
       let detectors = [];
-      for (var installer of this.installerDataSvc.allInstallables().values()) {
+      for (let installer of this.installerDataSvc.allInstallables().values()) {
         detectors.push(installer.detectExistingInstall());
       }
       this.detection = Promise.all(detectors);

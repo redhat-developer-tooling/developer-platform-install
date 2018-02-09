@@ -8,6 +8,7 @@ import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import sudo from 'sudo-prompt';
+import os from 'os';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -209,14 +210,14 @@ describe('Platform', function() {
       });
 
       it('should return promise resolved to true if powershell script returns `True` in stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'True');
+        sandbox.stub(child_process, 'exec').yields(undefined, 'TRUE');
         return Platform.isVirtualizationEnabled().then((result) => {
           expect(result).to.be.true;
         });
       });
 
       it('should return promise resolved to true if powershell script returns `False` in stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'False');
+        sandbox.stub(child_process, 'exec').yields(undefined, 'FALSE');
         return Platform.isVirtualizationEnabled().then((result) => {
           expect(result).to.be.false;
         });
@@ -278,15 +279,15 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
       });
 
-      it('should return promise resolved to true if powershell script returns `Enabled` in stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'Enabled');
+      it('should return promise resolved to true if powershell script lists hyper-v services in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Hyper-V Host Compute Service \n Hyper-V Virtual Machine Management');
         return Platform.isHypervisorEnabled().then((result) => {
           expect(result).to.be.true;
         });
       });
 
-      it('should return promise resolved to true if powershell script returns `Disabled` in stdout', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, 'Disabled');
+      it('should return promise resolved to true if powershell script lists no hyper-v services in stdout', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'service1 \n service2 \n service3');
         return Platform.isHypervisorEnabled().then((result) => {
           expect(result).to.be.false;
         });
@@ -299,10 +300,10 @@ describe('Platform', function() {
         });
       });
 
-      it('should return promise resolved to undefined if powershell script returns unexpected value in stdout', function() {
+      it('should return promise resolved to false if powershell script returns unexpected value in stdout', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'Unexpected', undefined);
         return Platform.isHypervisorEnabled().then((result) => {
-          expect(result).to.be.undefined;
+          expect(result).to.be.false;
         });
       });
 
@@ -317,6 +318,69 @@ describe('Platform', function() {
         sandbox.stub(child_process, 'exec').yields('Error', null);
         return Platform.isHypervisorEnabled().then((result) => {
           expect(result).to.be.undefined;
+        });
+      });
+    });
+  });
+
+  describe('isHypervisorAvailable', function() {
+    describe('on mac', function() {
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+    });
+
+    describe('on linux', function() {
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+    });
+
+    describe('on windows', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        sandbox.stub(os, 'arch').returns('x64');
+      })
+
+      it('should return true for windows 8', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 8.1 Pro');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.true;
+        });
+      });
+
+      it('should return true for windows 10', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 10 Pro');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.true;
+        });
+      });
+
+      it('should return false for windows 7', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 7 Pro');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+
+      it('should return false for windows home edition', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 10 Home');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+
+      it('should return false for 32-bit architecture', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 10 Pro');
+        os.arch.returns('x86');
+        return Platform.isHypervisorAvailable().then((result) => {
+          expect(result).to.be.false;
         });
       });
     });

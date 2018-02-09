@@ -11,6 +11,8 @@ import Platform from '../services/platform';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Version from './helpers/version';
+import pify from 'pify'
+import child_process from 'child_process'
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -84,34 +86,14 @@ class JdkInstall extends InstallableItem {
     });
   }
 
-  getMsiSearchScriptLocation() {
-    return path.join(this.installerDataSvc.tempDir(), 'search-openjdk-msi.ps1');
-  }
-
   getMsiSearchScriptData() {
-    return [
-      '$vbox = Get-WmiObject Win32_Product | where {$_.Name -like \'*OpenJDK*\'};',
-      'echo $vbox.IdentifyingNumber;',
-      '[Environment]::Exit(0);'
-    ].join('\r\n');
-  }
-
-  getMsiSearchScriptPowershellArgs(msiSearchScript) {
-    return [
-      '-NonInteractive',
-      '-ExecutionPolicy',
-      'ByPass',
-      '-File',
-      msiSearchScript
-    ];
+    return 'REG QUERY HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall /f "OpenJDK" /s';
   }
 
   findMsiInstalledJava() {
-    let msiSearchScript = this.getMsiSearchScriptLocation();
-    let data = this.getMsiSearchScriptData();
-    let args = this.getMsiSearchScriptPowershellArgs(msiSearchScript);
-    return Util.writeFile(msiSearchScript, data).then(()=>{
-      return Util.executeFile('powershell', args);
+    return pify(child_process.exec)(this.getMsiSearchScriptData())
+    .catch((err) => {
+      return Promise.resolve('');
     });
   }
 
