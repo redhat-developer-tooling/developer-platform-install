@@ -8,6 +8,11 @@ import Request from 'browser/services/request';
 
 describe('Request Service', function() {
   let sandbox;
+  let window = {
+    navigator: {
+      userAgent: "user agent string"
+    }
+  };
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
   });
@@ -15,7 +20,7 @@ describe('Request Service', function() {
     sandbox.restore();
   });
   it('get should return promise that rejects in case of error', function() {
-    let r = new Request(sinon.stub().yields(new Error('request timeout')));
+    let r = new Request(sinon.stub().yields(new Error('request timeout')), window);
     return r.get('https://domain.com').then(()=>{
       expect().fail();
     }).catch((error)=>{
@@ -23,7 +28,7 @@ describe('Request Service', function() {
     });
   });
   it('get should return promise that resolves to integer status code and boolean data in case of sucessful request', function() {
-    let r = new Request(sinon.stub().yields(undefined, {statusCode: 200}, 'true'));
+    let r = new Request(sinon.stub().yields(undefined, {statusCode: 200}, 'true'), window);
     return r.get('https://domain.com').then((result)=>{
       expect(result.status).to.be.equal(200);
       expect(result.data).to.be.equal(JSON.parse('true'));
@@ -32,7 +37,7 @@ describe('Request Service', function() {
     });
   });
   it('get should return promise that resolves to integer status code and string data in case of unssucessful request', function() {
-    let r = new Request(sinon.stub().yields(undefined, {statusCode: 401}, 'string data'));
+    let r = new Request(sinon.stub().yields(undefined, {statusCode: 401}, 'string data'), window);
     return r.get('https://domain.com').then((result)=>{
       expect(result.status).to.be.equal(401);
       expect(result.data).to.be.equal('string data');
@@ -41,7 +46,7 @@ describe('Request Service', function() {
     });
   });
   it('get should return promise that resolves to integer status code in case of unsupported satus code', function() {
-    let r = new Request(sinon.stub().yields(undefined, {statusCode: 405}, 'string data'));
+    let r = new Request(sinon.stub().yields(undefined, {statusCode: 405}, 'string data'), window);
     return r.get('https://domain.com').then((result)=>{
       expect(result.status).to.be.equal(405);
       expect(result.data).to.be.undefined;
@@ -50,7 +55,7 @@ describe('Request Service', function() {
     });
   });
   it('get should return promise that resolves to integer status code in case of unsupported satus code', function() {
-    let r = new Request(sinon.stub().yields(undefined, {statusCode: 405}, 'string data'));
+    let r = new Request(sinon.stub().yields(undefined, {statusCode: 405}, 'string data'), window);
     return r.get('https://domain.com').then((result)=>{
       expect(result.status).to.be.equal(405);
       expect(result.data).to.be.undefined;
@@ -61,9 +66,21 @@ describe('Request Service', function() {
   it('factory should call get with provided URL', function() {
     let requestStub = sinon.stub().yields(undefined, {statusCode: 401}, 'true');
     sandbox.spy(Request.prototype, 'get');
-    let func = Request.factory(requestStub);
+    let func = Request.factory(requestStub, window);
     func('https://domain.com');
     expect(Request.prototype.get).has.been.calledOnce;
     expect(Request.prototype.get).has.been.calledWith('https://domain.com');
+  });
+  it('get should call request module with user agent string from current browser window', function() {
+    let requestMod = sinon.stub().yields(undefined, {statusCode: 200}, 'true');
+    let r = new Request(requestMod, window);
+    return r.get({url:'https://domain.com'}).then((result)=>{
+      expect(requestMod).calledWith({
+        url: 'https://domain.com',
+        headers: {
+          "User-Agent": window.navigator.userAgent
+        }
+      });
+    });
   });
 });

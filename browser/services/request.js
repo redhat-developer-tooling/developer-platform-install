@@ -1,13 +1,25 @@
 'use strict';
 
 class Request {
-  constructor(requestMod) {
+  constructor(requestMod, $window) {
     this.request = requestMod;
+    this.userAgentString = $window.navigator.userAgent;
   }
 
   get(req) {
     return new Promise((resolve, reject)=>{
-      this.request(req, (error, response, data) => {
+      let options;
+      if (req instanceof Object) {
+        options = req;
+      } else {
+        options = {
+          url: req
+        };
+      }
+      options.headers = {
+        'User-Agent': this.userAgentString
+      };
+      this.request(options, (error, response, data) => {
         if (error) {
           reject(error);
         } else if(response.statusCode == 200) {
@@ -29,13 +41,13 @@ class Request {
     });
   }
 
-  static factory(requestMod) {
+  static factory(requestMod, $window) {
     return function(req) {
-      return new Request(requestMod).get(req);
+      return new Request(requestMod, $window).get(req);
     };
   }
 }
 
-Request.factory.$inject=['requestMod'];
+Request.factory.$inject=['requestMod','$window'];
 
 export default Request;
