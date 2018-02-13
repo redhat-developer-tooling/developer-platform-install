@@ -16,9 +16,11 @@ class Request {
           url: req
         };
       }
-      options.headers = {
-        'User-Agent': this.userAgentString
-      };
+      if(options.header) {
+        options.header = {};
+      }
+      options.headers['User-Agent'] = this.userAgentString;
+
       this.request(options, (error, response, data) => {
         if (error) {
           reject(error);
