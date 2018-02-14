@@ -81,8 +81,7 @@ describe('Account controller', function() {
         auth: { pass: 'password', sendImmediately: true, user: 'username' },
         followAllRedirects: true,
         headers: {
-          Accept: 'application/json, text/plain, */*',
-          'User-Agent': undefined },
+          Accept: 'application/json, text/plain, */*'},
         method: 'GET',
         rejectUnauthorized: true,
         url: 'https://developers.redhat.com/download-manager/rest/tc-accepted?downloadURL=/file/cdk-2.1.0.zip'
