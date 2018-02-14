@@ -638,6 +638,32 @@
       "devstudio": { }
     }
   },
+  "rcpdevelopment": {
+    "name": "Eclipse RCP Application Development",
+    "description": "A curated set of tools with step by step instructions to develop Eclipse RCP Applications",
+    "vendor": "SonarSource",
+    "modulePath": "model/installable-item",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "installAfter": "devstuiocentralsonarlint",
+    "ius": [
+      "org.sonarlint.eclipse.feature.feature.group"
+    ],
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "1.0.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudio"],
+    "size": 0,
+    "installSize": 0,
+    "channel" : {
+      "guidedDev": { }
+    }
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
