@@ -16,8 +16,8 @@ class Request {
           url: req
         };
       }
-      if(options.header) {
-        options.header = {};
+      if(options.headers === undefined) {
+        options.headers = {};
       }
       options.headers['User-Agent'] = this.userAgentString;
 
