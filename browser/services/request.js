@@ -16,9 +16,11 @@ class Request {
           url: req
         };
       }
-      options.headers = {
-        'User-Agent': this.userAgentString
-      };
+      if(options.headers === undefined) {
+        options.headers = {};
+      }
+      options.headers['User-Agent'] = this.userAgentString;
+
       this.request(options, (error, response, data) => {
         if (error) {
           reject(error);

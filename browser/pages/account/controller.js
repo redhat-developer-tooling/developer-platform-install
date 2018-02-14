@@ -46,8 +46,7 @@ class AccountController {
         sendImmediately: true
       },
       headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'User-Agent': this.getUserAgent()
+        'Accept': 'application/json, text/plain, */*'
       },
       followAllRedirects: true,
       rejectUnauthorized: Util.getRejectUnauthorized()
