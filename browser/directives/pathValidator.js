@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Platform from '../services/platform';
 
-let pathWindowsRegex = /^[a-zA-Z]:\\(?:[^#%\\/:*?"<>|\r\n]+\\)*[^#%\\/:*?"<>|\r\n]*$/;
+let pathWindowsRegex = /^[a-zA-Z]:\\(?:[^#%\\/:*?"<>|\r\n\[\]{}]+\\)*[^#%\\/:*?"<>|\r\n\[\]{}]*$/;
 let nonAsciiRegex = /[^\x00-\x7F]+/;
 
 function pathValidator() {
