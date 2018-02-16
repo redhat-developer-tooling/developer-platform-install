@@ -15,7 +15,6 @@ class Downloader {
     this.success = success;
     this.failure = failure;
     this.downloads = new Map();
-    this.userAgentString = '';
     this.downloaded = 0;
     this.lastTime = 0;
     this.userAgentString = userAgentString;
