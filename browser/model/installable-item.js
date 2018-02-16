@@ -44,6 +44,10 @@ class InstallableItem {
 
     this.bundleFolder = remote && remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
     this.userAgentString = remote && remote.getCurrentWindow().webContents.session.getUserAgent();
+    if (process.env.DSI_TEST_AGENT) {
+      this.userAgentString = process.env.DSI_TEST_AGENT;
+    }
+
     this.bundledFile = path.join(this.bundleFolder, fileName);
 
     this.isCollapsed = true;
