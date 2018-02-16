@@ -176,7 +176,7 @@
         "installable": true,
         "bundle": "yes",
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.161-1.b14.redhat.windows.x86_64.msi?workflow=direct",
-        "url": "https://developers.redhat.com/download-manager/jdf/file/java-1.8.0-openjdk-1.8.0.161-1.b14.redhat.windows.x86_64.msi?workflow=direct",
+        "url": "http://download.eng.bos.redhat.com/brewroot/packages/openjdk8-win/1.8.0.161/1.b14/win/java-1.8.0-openjdk-1.8.0.161-1.b14.redhat.windows.x86_64.msi",
         "fileName": "java-1.8.0-openjdk-1.8.0.161-1.b14.redhat.windows.x86_64.msi",
         "sha256sum": "42467a370bb2cfbd8ad8d9c9dabf41e982d118d15d7a8a2954ef7fe484debf88",
         "version": "1.8.0_161",
