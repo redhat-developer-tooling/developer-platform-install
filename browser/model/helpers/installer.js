@@ -1,9 +1,10 @@
 'use strict';
 
 let fs = require('fs-extra');
-let child_process = require('child_process');
-let unzip = require('unzip');
 let targz = require('targz');
+let unzip = require('unzip-stream');
+let mkdirp = require('mkdirp');
+let child_process = require('child_process');
 
 import sudo from 'sudo-prompt';
 import Logger from '../../services/logger';
@@ -101,15 +102,25 @@ class Installer {
         });
       } else if(zipFile.endsWith('.zip')) {
         Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
-        fs.createReadStream(zipFile)
-          .pipe(unzip.Extract({path: extractTo}))
-          .on('close', () => {
-            Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
-            resolve(true);
-          })
-          .on('error', (err) => {
-            Logger.error(this.key + ' - ' + err);
-            reject(err);
+        fs.createReadStream(zipFile).pipe(unzip.Parse())
+          .on('entry', (entry)=> {
+            try {
+              var fileName = entry.path;
+              let f = fileName.substring(fileName.indexOf('/')+1);
+              let dest = path.join(extractTo, ...f.split('/'));
+              if (entry.type === 'File') {
+                entry.pipe(fs.createWriteStream(dest));
+              } else {
+                mkdirp.sync(dest);
+                entry.autodrain();
+              }
+            } catch(err) {
+              reject(err);
+            }
+          }).on('error', function (error) {
+            reject(error);
+          }).on('close', ()=> {
+            resolve();
           });
       } else {
         reject(`unsupported extension for ${zipFile}`);

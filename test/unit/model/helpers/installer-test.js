@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Installer from 'browser/model/helpers/installer';
 import mockfs from 'mock-fs';
+import mkdirp from 'mkdirp';
 import path from 'path';
 import Logger from 'browser/services/logger';
 import fs from 'fs-extra';
@@ -47,6 +48,7 @@ describe('Installer', function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    sandbox.stub(mkdirp, 'sync').returns();
   });
 
   afterEach(function() {
@@ -58,6 +60,44 @@ describe('Installer', function() {
     errorStub.restore();
     mockfs.restore();
   });
+
+  function createInstallerMock(installed) {
+    let emitter = new EventEmitter();
+    let pipe = function() {
+      return emitter;
+    };
+    sandbox.stub(fs, 'createReadStream').returns({pipe});
+    sandbox.stub(fs, 'createWriteStream').callsFake(function(arg) {
+      return arg;
+    });
+    let entries = [
+      {
+        path: 'folder1/folder1',
+        type: 'Directory',
+        pipe: function() {},
+        autodrain: function() {}
+
+      }, {
+        path: 'folder1/folder2/file1',
+        type: 'File',
+        pipe: function() {},
+        autodrain: function() {}
+      },
+    ];
+    function emitEntries() {
+      for(let entry of entries) {
+        emitter.emit('entry', entry);
+      }
+      emitter.emit('close');
+    }
+    function emitError(error) {
+      emitter.emit('error', error);
+    }
+    return {
+      emitEntries,
+      emitError
+    };
+  }
 
   describe('exec', function() {
     let command = 'command';
@@ -199,31 +239,40 @@ describe('Installer', function() {
           });
       });
 
-      it('should call unzip#Extract into a correct folder', function() {
-        let stub = sandbox.stub(unzip, 'Extract').throws('done');
-        let eventEmitter = new EventEmitter();
-        sandbox.stub(eventEmitter, 'on').yields();
-        let readStreamMock = { pipe: function() { return eventEmitter; }};
-        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
-        return installer.unzip(file, dir)
-          .catch(function() {
-            expect(stub).to.have.been.calledOnce;
-            expect(stub).to.have.been.calledWith({ path: dir });
-          });
+      it('should remove first level folder when unpack direcories from zip archive', function() {
+        let mockDevSuiteInstaller = createInstallerMock(true);
+        let promise = installer.unzip(file, dir);
+        mockDevSuiteInstaller.emitEntries();
+        return promise.then(()=>{
+          expect(mkdirp.sync).calledOnce;
+          expect(mkdirp.sync).calledWith(
+            path.join(dir, 'folder1')
+          );
+        });
       });
 
-      it('should resolve as true if no error occurs', function() {
-        let eventEmitter = new EventEmitter();
-        sandbox.stub(eventEmitter, 'on').yields();
-        let readStreamMock = { pipe: function() { return eventEmitter; }};
-        sandbox.stub(fs, 'createReadStream').returns(readStreamMock);
-        return installer.unzip(file, dir)
-          .then(function(result) {
-            expect(result).to.equal(true);
-          })
-          .catch(function(err) {
-            expect.fail(err);
-          });
+      it('should remove first level folder when unpack files from zip archive', function() {
+        let mockDevSuiteInstaller = createInstallerMock(false);
+        let promise = installer.unzip(file, dir);
+        mockDevSuiteInstaller.emitEntries();
+        return promise.then(()=>{
+          expect(fs.createWriteStream).calledWith(
+            path.join(dir, 'folder2', 'file1')
+          );
+        });
+      });
+
+      it('should return rejected promice if exception cought during unpacking', function() {
+        let mockDevSuiteInstaller = createInstallerMock(false);
+        mkdirp.sync.restore();
+        sandbox.stub(mkdirp, 'sync').throws('Error');
+        let promise = installer.unzip(file, dir);
+        mockDevSuiteInstaller.emitEntries();
+        return promise.then(()=>{
+          expect.fail();
+        }).catch((error)=> {
+          expect(error.name).equals('Error');
+        });
       });
 
       it('should reject when an error occurs', function() {
