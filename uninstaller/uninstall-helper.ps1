@@ -117,17 +117,23 @@ if ($lock) {
   echo 'DONE'
 
   echo 'Removing path entries'
-  [string[]] $pathFolders = [Environment]::GetEnvironmentVariable("Path", "User") -Split ';'
-  [Collections.ArrayList] $folderList = New-Object Collections.Arraylist
+  function Clear-Path {
+    param([string]$type)
+    [string[]] $pathFolders = [Environment]::GetEnvironmentVariable("Path", $type) -Split ';'
+    [Collections.ArrayList] $folderList = New-Object Collections.Arraylist
 
-  $pathFolders | foreach {
-    If (-Not ($_ -like "$targetFolder*")) {
-      $folderList.Add($_) | Out-Null
+    $pathFolders | foreach {
+      If (-Not ($_ -like "$targetFolder*")) {
+        $folderList.Add($_) | Out-Null
+      }
     }
+
+    [string] $delimitedFolders = $folderList -Join ';'
+    [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, $type)
   }
 
-  [string] $delimitedFolders = $folderList -Join ';'
-  [Environment]::SetEnvironmentVariable("Path", $delimitedFolders, "User")
+  Clear-Path -type "User"
+  Clear-Path -type "Machine"
 
   Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\DevelopmentSuite$timeStamp"
 

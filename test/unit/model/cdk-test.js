@@ -270,9 +270,8 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
           expect(Platform.addToUserPath).calledWith([
-            path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc.exe'),
-            path.join('ocBinRoot', 'minishift.exe')
-          ]);
+            path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc.exe')], 'User');
+          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift.exe')]);
         });
       });
 
@@ -371,10 +370,9 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=> {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
-          expect(Platform.addToUserPath).to.have.been.calledWith([
-            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe'),
-            path.join('ocBinRoot', 'minishift.exe')
-          ]);
+          expect(Platform.addToUserPath).calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe')], 'User');
+          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift.exe')]);
         });
       });
     });
@@ -414,9 +412,8 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
           expect(Platform.addToUserPath).calledWith([
-            path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc'),
-            path.join('ocBinRoot', 'minishift')
-          ]);
+            path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc')], 'User');
+          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift')]);
         });
       });
 
@@ -425,10 +422,9 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=> {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=> {
-          expect(Platform.addToUserPath).to.have.been.calledWith([
-            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc'),
-            path.join('ocBinRoot', 'minishift')
-          ]);
+          expect(Platform.addToUserPath).calledWith([
+            path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc')], 'User');
+          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift')]);
         });
       });
     });
