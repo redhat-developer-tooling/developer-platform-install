@@ -70,7 +70,9 @@ class CDKInstall extends InstallableItem {
     }).then(()=> {
       return Platform.makeFileExecutable(ocExe);
     }).then(()=> {
-      return Platform.addToUserPath([ocExe, this.minishiftExe]);
+      return Platform.addToUserPath([this.minishiftExe]);
+    }).then(() => {
+      return Platform.addToUserPath([ocExe], 'User');
     }).then(()=> {
       return pify(fs.appendFile)(
         path.join(home, 'cdk'),

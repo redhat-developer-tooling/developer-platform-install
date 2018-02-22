@@ -194,7 +194,7 @@ class Platform {
     });
   }
 
-  static addToUserPath(locations) {
+  static addToUserPath(locations, pathType = 'Machine') {
     return Platform.identify({
       win32: ()=> {
         let dirs = [];
@@ -205,23 +205,23 @@ class Platform {
             dirs.push(location);
           }
         });
-        return Platform.addToUserPath_win32(dirs);
+        return Platform.addToUserPath_win32(dirs, pathType);
       },
       darwin: ()=> Platform.addToUserPath_darwin(locations),
       default: ()=> Promise.resolve()
     });
   }
 
-  static removeFromUserPath(locations) {
+  static removeFromUserPath(locations, pathType = 'Machine') {
     return Platform.identify({
-      win32: ()=> Platform.removeFromUserPath_win32(locations),
+      win32: ()=> Platform.removeFromUserPath_win32(locations, pathType),
       default: ()=> Promise.resolve()
     });
   }
 
-  static setUserPath(newPath) {
+  static setUserPath(newPath, pathType = 'Machine') {
     return Platform.identify({
-      win32: ()=> Platform.setUserPath_win32(newPath),
+      win32: ()=> Platform.setUserPath_win32(newPath, pathType),
       default: ()=> Promise.resolve()
     });
   }
@@ -241,32 +241,30 @@ class Platform {
     Windows Platform Support
   */
 
-  static getUserPath_win32() {
+  static getUserPath_win32(pathType) {
     return pify(child_process.exec)(
-      'powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable(\'path\', \'User\');[Environment]::Exit(0);"'
+      `powershell.exe -executionpolicy bypass -command "[Environment]::GetEnvironmentVariable('path', '${pathType}');[Environment]::Exit(0);"`
     ).then(result=> result.replace(/\r?\n/g, ''));
   }
 
-  static setUserPath_win32(newPath) {
+  static setUserPath_win32(newPath, pathType) {
     newPath = newPath.replace(/'/g, '\'\'');
-    let powershellCommand = `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable('Path', '${newPath}', 'User');[Environment]::Exit(0);"`
+    let powershellCommand = `powershell.exe -executionpolicy bypass "[Environment]::SetEnvironmentVariable('Path', '${newPath}', '${pathType}');[Environment]::Exit(0);"`
       .replace(/`/g, '``');
-    return pify(child_process.exec)(
-      powershellCommand
-    );
+    return pify(child_process.exec)(powershellCommand);
   }
 
-  static addToUserPath_win32(locations) {
-    return Platform.getUserPath_win32().then((pathString)=>{
+  static addToUserPath_win32(locations, pathType) {
+    return Platform.getUserPath_win32(pathType).then((pathString)=>{
       let pathLocations = pathString.split(';');
-      return Platform.setUserPath_win32([...locations.filter(item=>!pathLocations.includes(item)), pathString].join(';'));
+      return Platform.setUserPath_win32([...locations.filter(item=>!pathLocations.includes(item)), pathString].join(';'), pathType);
     });
   }
 
-  static removeFromUserPath_win32(locations) {
-    return Platform.getUserPath_win32().then((pathString)=>{
+  static removeFromUserPath_win32(locations, pathType) {
+    return Platform.getUserPath_win32(pathType).then((pathString)=>{
       let pathLocations = pathString.split(';');
-      return Platform.setUserPath_win32([...pathLocations.filter(item=>!locations.includes(item))].join(';'));
+      return Platform.setUserPath_win32([...pathLocations.filter(item=>!locations.includes(item))].join(';'), pathType);
     });
   }
 

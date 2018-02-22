@@ -594,6 +594,15 @@ describe('Platform', function() {
           expect(Platform.setUserPath_win32).calledWith(['path2', 'path3', 'path1'].join(';'));
         });
       });
+      it('adds items to the Machine path by default', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'path1\r\n');
+        sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        let spy = sandbox.spy(Platform, 'addToUserPath_win32');
+        let locations = ['path1', 'path2'];
+        return Platform.addToUserPath(locations).then(() => {
+          expect(spy).calledWith(locations, 'Machine');
+        });
+      });
     });
     describe('on macos', function() {
       let executables = [
@@ -643,6 +652,12 @@ describe('Platform', function() {
           expect(child_process.exec.getCall(0).args[0].includes('\'c:\\path\'')).to.be.true;
         });
       });
+      it('uses the machine path as default', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.setUserPath('c:\\path').then(() => {
+          expect(child_process.exec.getCall(0).args[0].includes('Machine')).to.be.true;
+        });
+      });
     });
     describe('on linux', function() {
       beforeEach(function() {
@@ -677,6 +692,13 @@ describe('Platform', function() {
         sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
         return Platform.removeFromUserPath(locations).then(() => {
           expect(Platform.setUserPath_win32).calledWith('c:\\path4');
+        });
+      });
+      it('uses machine path by default', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, 'c:\\path1;c:\\path2;c:\\path3;c:\\path4');
+        sandbox.stub(Platform, 'setUserPath_win32').returns(Promise.resolve());
+        return Platform.removeFromUserPath(locations).then(() => {
+          expect(Platform.setUserPath_win32).calledWith('c:\\path4', 'Machine');
         });
       });
     });
