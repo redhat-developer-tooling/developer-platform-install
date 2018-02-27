@@ -1,5 +1,7 @@
 'use strict';
 
+let semver = require('semver');
+
 const pageIndex = 2;
 const name = 'Selection Page';
 
@@ -71,7 +73,8 @@ function testPage(common = require('./common')) {
 
     it('should display a warning when a component is newer than recommended', function() {
       for (var key in expectedComponents) {
-        if (expectedComponents[key].recommendedVersion && expectedComponents[key].installedVersion > expectedComponents[key].recommendedVersion) {
+        if (expectedComponents[key].recommendedVersion && expectedComponents[key].installedVersion
+           && semver.gt(expectedComponents[key].installedVersion, expectedComponents[key].recommendedVersion)) {
           expect(reqs[key].newerWarning.isDisplayed()).toBe(true);
         }
       }
@@ -79,9 +82,9 @@ function testPage(common = require('./common')) {
 
     it('should display a warning when a component is older than recommended', function() {
       for (var key in expectedComponents) {
-        if (expectedComponents[key].recommendedVersion) {
+        if (expectedComponents[key].recommendedVersion && key != 'cygwin') {
           let recommended = expectedComponents[key].recommendedVersion.match(/\d+\.\d+\.\d+/)[0];
-          if (expectedComponents[key].installedVersion < recommended) {
+          if (expectedComponents[key].installedVersion && semver.lt(expectedComponents[key].installedVersion, recommended)) {
             common.error = true;
             expect(reqs[key].olderWarning.isDisplayed()).toBe(true);
           }

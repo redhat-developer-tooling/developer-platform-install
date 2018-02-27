@@ -40,7 +40,7 @@ module.exports = function(gulp, reqs) {
   });
 
   gulp.task('unzip-7zip-extra', function(cb) {
-    let cmd = zaExe + ' e ' + zaExtra7z + ' -o' + zaRoot + ' -y ' + '7zS.sfx';
+    let cmd = '"' + zaExe + '" e ' + zaExtra7z + ' -o"' + zaRoot + '" -y ' + '7zS.sfx';
     // console.log(cmd);
     exec(cmd, common.createExecCallback(cb, true));
   });
