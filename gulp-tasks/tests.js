@@ -89,13 +89,13 @@ module.exports = function(gulp) {
   gulp.task('unpack-installer', function(cb) {
     process.env.PTOR_BINARY = yargs.argv.binary;
     var bundle = yargs.argv.bundle;
-    var zip = path.join(buildFolder, '7za.exe');
-    var targetFolder = path.join(buildFolder, 'target');
+    var zip = `"${path.join(buildFolder, '7za.exe')}"`;
+    var targetFolder = `"${path.join(buildFolder, 'target')}"`;
     var cmd;
 
     if (process.platform === 'win32') {
-      cmd = zip + ' x ' + process.env.PTOR_BINARY + ' -o' + targetFolder + ' -ry';
-      process.env.PTOR_BINARY = targetFolder;
+      cmd = zip + ' x "' + process.env.PTOR_BINARY + '" -o' + targetFolder + ' -ry';
+      process.env.PTOR_BINARY = path.join(buildFolder, 'target');
     } else if (process.platform === 'darwin') {
       targetFolder = 'dist';
       cmd = 'unzip -o ' + '"' + process.env.PTOR_BINARY + '" -d ' + targetFolder;
@@ -107,7 +107,7 @@ module.exports = function(gulp) {
       console.log(stderr);
       if (process.platform === 'win32' && bundle) {
         var fileName = globby.sync(process.env.PTOR_BINARY + '/devsuite*.exe')[0];
-        cmd = zip + ' x ' + fileName + ' -o' + targetFolder + ' -ry';
+        cmd = zip + ' x "' + fileName + '" -o' + targetFolder + ' -ry';
         exec(cmd, {maxbuffer: 1024 * 512}, function(error, stdo, stde) {
           console.log(stdo);
           console.log(stde);
