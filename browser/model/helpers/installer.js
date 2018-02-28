@@ -7,6 +7,7 @@ let targz = require('targz');
 
 import sudo from 'sudo-prompt';
 import Logger from '../../services/logger';
+import path from 'path';
 
 class Installer {
 
@@ -36,7 +37,7 @@ class Installer {
     });
   }
 
-  execElevated(command, options = {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'}) {
+  execElevated(command, options = {name: 'Red Hat Development Suite', icns: path.resolve(__dirname + '/../../../resources/devsuite.icns')}) {
     return new Promise((resolve, reject) => {
       Logger.info(this.key + ' - Execute command ' + command);
       sudo.exec(command, options, (error, stdout, stderr) => {

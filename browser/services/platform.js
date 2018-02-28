@@ -278,7 +278,7 @@ class Platform {
       let name = path.parse(executable).name;
       commands.push(`rm -f /usr/local/bin/${name};ln -s '${executable}' /usr/local/bin/${name};`);
     });
-    return pify(sudo.exec)(commands.join(''), {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
+    return pify(sudo.exec)(commands.join(''), {name: 'Red Hat Development Suite', icns: path.resolve(__dirname + '/../../resources/devsuite.icns')});
   }
 
   static localAppData() {

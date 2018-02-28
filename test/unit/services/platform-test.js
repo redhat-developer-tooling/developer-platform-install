@@ -9,6 +9,7 @@ import mockfs from 'mock-fs';
 import fs from 'fs-extra';
 import sudo from 'sudo-prompt';
 import os from 'os';
+import path from 'path';
 chai.use(sinonChai);
 
 describe('Platform', function() {
@@ -623,7 +624,7 @@ describe('Platform', function() {
 
       it('sets the right name and icon for the sudo prompt', function() {
         return Platform.addToUserPath(executables).then(() => {
-          expect(sudo.exec).calledWith(sinon.match.any, {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
+          expect(sudo.exec).calledWith(sinon.match.any, {name: 'Red Hat Development Suite', icns: path.resolve('./resources/devsuite.icns')});
         });
       });
     });
