@@ -117,7 +117,7 @@ describe('Installer', function() {
       return installer.execElevated(command)
         .then(function() {
           expect(stub).to.have.been.calledOnce;
-          expect(stub).to.have.been.calledWith(command, {name: 'Red Hat Development Suite', icns: 'resources/devsuite.icns'});
+          expect(stub).to.have.been.calledWith(command, {name: 'Red Hat Development Suite', icns: path.resolve('./resources/devsuite.icns')});
         });
     });
 
