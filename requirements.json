@@ -8,7 +8,6 @@
     "detectable": false,
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "installAfter": "jdk",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-installer-standalone.jar",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
@@ -59,7 +58,6 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "installAfter": "devstuidorhamt",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-updatesite-central.zip?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-updatesite-central.zip",
     "fileName": "devstudio-11.2.0.GA-updatesite-central.zip",
@@ -84,7 +82,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstudiocentral",
     "ius": [
       "org.jboss.tools.jst.angularjs.feature.feature.group"
     ],
@@ -110,7 +107,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuidocentralangularjs",
     "ius": [
       "net.sf.eclipsecs.feature.group",
       "com.github.sevntu.checkstyle.checks.feature.feature.group"
@@ -286,7 +282,6 @@
     "bundle": "no",
     "targetFolderName": "kompose",
     "version": "1.7.0 Technology Preview",
-    "installAfter": "cdk",
     "channel" : {
       "containerDev": { }
     },
@@ -333,7 +328,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstudio",
     "url": "https://devstudio.redhat.com/11/",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
     "sha256sum": "",
@@ -559,7 +553,6 @@
     "detectable": false,
     "bundle": "no",
     "useDownload": false,
-    "installAfter": "devstuidobpm",
     "url": "https://www.eclipse.org/che/",
     "version": "5.0 Technology Preview",
     "size": 0,
@@ -579,7 +572,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "cdkcheaddon",
     "ius": [
       "net.java.dev.jna.feature.group",
       "org.tigris.subversion.subclipse.feature.group",
@@ -609,7 +601,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuiocentralsubclipse",
     "ius": [
       "org.sonarlint.eclipse.feature.feature.group"
     ],
