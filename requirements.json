@@ -8,7 +8,6 @@
     "detectable": false,
     "bundle": "yes",
     "targetFolderName": "developer-studio",
-    "installAfter": "jdk",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-installer-standalone.jar",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
@@ -35,7 +34,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "jbosseap",
     "ius": [
       "org.jboss.tools.windup.feature.feature.group"
     ],
@@ -60,7 +58,6 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "installAfter": "devstuidorhamt",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-updatesite-central.zip?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-updatesite-central.zip",
     "fileName": "devstudio-11.2.0.GA-updatesite-central.zip",
@@ -85,7 +82,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstudiocentral",
     "ius": [
       "org.jboss.tools.jst.angularjs.feature.feature.group"
     ],
@@ -111,7 +107,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuidocentralangularjs",
     "ius": [
       "net.sf.eclipsecs.feature.group",
       "com.github.sevntu.checkstyle.checks.feature.feature.group"
@@ -138,7 +133,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuidocentralcheckstyle",
     "ius": [
       "org.jboss.tools.bpel.feature.feature.group",
       "org.eclipse.bpmn2.feature.feature.group",
@@ -169,7 +163,6 @@
     "modulePath": "model/jdk-install",
     "targetFolderName": "jdk8",
     "detectable": true,
-    "installAfter": "kompose",
     "platform": {
       "win32": {
         "name": "OpenJDK",
@@ -255,8 +248,7 @@
         "version": "3.3.0-GA",
         "size": 481787904,
         "installSize" : 7243047404,
-        "requires": ["cygwin","hyperv||virtualbox"],
-        "installAfter": "cygwin"
+        "requires": ["cygwin","hyperv||virtualbox"]
       },
       "darwin": {
         "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.3.0-1-minishift-darwin-amd64?workflow=direct",
@@ -266,8 +258,7 @@
         "version": "3.3.0-GA",
         "size": 483310592,
         "installSize" : 7243047404,
-        "requires": ["virtualbox"],
-        "installAfter": "virtualbox"
+        "requires": ["virtualbox"]
       },
       "linux": {
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/16-Jan-2018.cdk-3.3.0/linux-amd64/minishift",
@@ -277,8 +268,7 @@
         "version": "3.3.0-GA",
         "size": 481478720,
         "installSize" : 836390912,
-        "requires": ["virtualbox"],
-        "installAfter": "virtualbox"
+        "requires": ["virtualbox"]
       }
     }
   },
@@ -292,7 +282,6 @@
     "bundle": "no",
     "targetFolderName": "kompose",
     "version": "1.7.0 Technology Preview",
-    "installAfter": "cdk",
     "channel" : {
       "containerDev": { }
     },
@@ -339,7 +328,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstudio",
     "url": "https://devstudio.redhat.com/11/",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
     "sha256sum": "",
@@ -365,7 +353,6 @@
     "installable": true,
     "bundle": "no",
     "targetFolderName": "jboss-fuse-eap",
-    "installAfter": "fusetools",
     "version": "6.3.0.GA",
     "size": 228052992,
     "installSize": 1045204992,
@@ -402,7 +389,6 @@
      "installable": true,
      "bundle": "no",
      "targetFolderName": "jboss-fuse-karaf",
-     "installAfter": "fuseplatform",
      "version": "6.3.0.GA",
      "size": 785784505,
      "installSize": 1129381888,
@@ -427,7 +413,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "jbosseap",
-    "installAfter": "fuseplatformkaraf",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/jboss-eap-7.1.0-installer.jar?workflow=direct",
     "url": "http://download-node-02.eng.bos.redhat.com/released/JBEAP-7/7.1.0/jboss-eap-7.1.0-installer.jar",
     "fileName": "jboss-eap-7.1.0-installer.jar",
@@ -545,7 +530,6 @@
     "detectable": true,
     "bundle": "always",
     "targetFolderName": "cygwin",
-    "installAfter": "virtualbox",
     "url": "https://cygwin.com/setup-x86_64.exe",
     "fileName": "cygwin_2.10.0.exe",
     "sha256sum": "22d80e6893200d377bdb46a7080d3c60092e027bba51c6e73013969e05c629f9",
@@ -569,7 +553,6 @@
     "detectable": false,
     "bundle": "no",
     "useDownload": false,
-    "installAfter": "devstuidobpm",
     "url": "https://www.eclipse.org/che/",
     "version": "5.0 Technology Preview",
     "size": 0,
@@ -589,7 +572,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "cdkcheaddon",
     "ius": [
       "net.java.dev.jna.feature.group",
       "org.tigris.subversion.subclipse.feature.group",
@@ -619,7 +601,6 @@
     "detectable": false,
     "bundle": "no",
     "targetFolderName": "developer-studio",
-    "installAfter": "devstuiocentralsubclipse",
     "ius": [
       "org.sonarlint.eclipse.feature.feature.group"
     ],
