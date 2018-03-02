@@ -626,7 +626,7 @@
       "win32": {
         "version": "9.20",
         "size": 384846,
-        "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+        "url": "http://www.7-zip.org/a/7za920.zip",
         "fileName": "7zip.zip",
         "sha256sum": "2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
       }
@@ -641,7 +641,7 @@
       "win32": {
         "version": "9.20",
         "size": 520477,
-        "url": "https://downloads.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920_extra.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsevenzip%2Ffiles%2F7-Zip%2F9.20%2F",
+        "url": "http://www.7-zip.org/a/7z920_extra.7z",
         "fileName": "7zip-extra.7z",
         "sha256sum": "d65a1d1a050e4fd7912c18468954f64db824a1e1b621235a153d010beae14757"
       }
