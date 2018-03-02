@@ -72,24 +72,5 @@ describe('rhamt installer', function() {
         expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
       });
     });
-
-    it('should read the appropriate file', function() {
-      sandbox.stub(Installer.prototype, 'unzip').resolves(true);
-      let stub = sandbox.stub(fs, 'readFile').yields('text');
-      return rhamtInstall.installAfterRequirements(fakeProgress, success, failure).then(() => {
-          expect(stub).to.have.been.calledOnce;
-          expect(stub).to.have.been.calledWith('\\install\\rhmat\\bin\\rhamt-cli.bat', 'utf8');
-        });
-    });
-
-    it('should use utf8 as default encoding', function() {
-      let content = 'FOR /F "skip=2 tokens=2*" %%A IN' + '(' +"'"+'REG QUERY "HKLM\\Software\\JavaSoft\\Java Runtime Environment" /v CurrentVersion'+"'"+')'+ 'DO set CurVer=%%B'
-      sandbox.stub(Installer.prototype, 'unzip').resolves(true);
-      let stub = sandbox.stub(fs, 'readFile').yields(null, content);
-      return rhamtInstall.installAfterRequirements(fakeProgress, success, failure).then(() => {
-          expect(stub).to.have.been.calledWith('\\install\\rhmat\\bin\\rhamt-cli.bat', 'utf8');
-      });
-    });
-
   });
 });

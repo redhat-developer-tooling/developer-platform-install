@@ -5,7 +5,7 @@ let path = require('path');
 let mkdirp = require('mkdirp');
 let unzip = require('unzip-stream');
 
-
+import Util from './helpers/util';
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Platform from '../services/platform';
@@ -24,27 +24,24 @@ class RhamtInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
+    let command = 'java -XshowSettings';
     return installer.unzip(this.downloadedFile, this.installerDataSvc.rhamtDir()).then(()=>{
       return Platform.makeFileExecutable(this.installerDataSvc.rhamtDir());
-    }).then(()=> {
+    }).then(()=>{
+      return Util.executeCommand(command, 2);
+    }).then((output)=>{
+      let locationRegex = /java\.home*\s=*\s(.*)[\s\S]/;
+      var t = locationRegex.exec(output);
+      if (t && t.length > 1) {
+        return t[1];
+      } else {
+        return path.join(this.installerDataSvc.jdkDir(), 'jre');
+      }
+    }).then((output)=> {
       if (Platform.OS === 'win32') {
-        let rhamtcli = path.join(this.installerDataSvc.rhamtDir(), 'bin\\rhamt-cli.bat');
-        fs.readFile(rhamtcli, 'utf8', function (err,data) {
-          if (err) {
-            return console.log(err);
-          }
-          let regeditdata = data.match(/FOR \/F "skip=2 tokens=2.*.B/g)
-          let replacedata = data.replace(/FOR \/F "skip=2 tokens=2.*.B/, ' ');
-          fs.writeFile(rhamtcli, replacedata, 'utf8', function (err) {
-            if (err) return console.log(err);
-          });
-          var openJDK = 'REG QUERY "HKLM\\Software\\JavaSoft\\Java Runtime Environment\\1.8.0_161_1" /v JavaHome'
-          let batfiledata = 'REG QUERY "HKLM\\Software\\JavaSoft\\Java Runtime Environment\\1.8.0_161_1" >nul 2>nul\nIF %errorlevel%==0 GOTO openJDK\nIF %errorlevel%==1 GOTO oracleJDK\n:openJDK\n'+'FOR /F "skip=2 tokens=2*" %%A IN'+' '+'(' +"'"+ openJDK + "'"+ ')'+' '+'DO set JAVA_HOME=%%B\n'+'if not "%JAVA_HOME%" == "" goto OkJHome\n'+':oracleJDK\n'+regeditdata[0]+'\n'+regeditdata[1];
-          var result = replacedata.replace(/FOR \/F "skip=2 tokens=2.*.B/g, batfiledata);
-          fs.writeFile(rhamtcli, result, 'utf8', function (err) {
-            if (err) return console.log(err);
-          });
-        });
+        installer.exec(
+          `setx /M JAVA_HOME "${output}"`
+        )
       }
       installer.succeed(true);
     }).catch((error)=> {
