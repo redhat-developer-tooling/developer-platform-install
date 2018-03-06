@@ -181,15 +181,7 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     });
   };
 
-  return Promise.resolve()
-    .then(updateDevStudioVersion)
-    .then(updateDevStudioSha)
-    .then(updateDevStudioSize)
-    .then(()=>{
-      fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
-    }).catch((err)=>{
-      console.log(err);
-    });
+  return Promise.resolve();
 });
 
 gulp.task('test', ['unit-test']);
