@@ -24,10 +24,12 @@ describe('rhamt installer', function() {
   installerDataSvc = sinon.stub(new InstallerDataService());
   installerDataSvc.getRequirementByName.returns(downloadUrl);
   installerDataSvc.rhamtDir.returns('/install/rhmat');
+  installerDataSvc.jdkDir.returns('/install/jdk8');
   installerDataSvc.localAppData.restore();
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    sandbox.stub(Platform, 'addToUserPath').resolves();
     fakeProgress = {
       setStatus: sandbox.stub(),
       setComplete: sandbox.stub()
@@ -66,7 +68,8 @@ describe('rhamt installer', function() {
     });
 
     it('should set progress to "Installing"', function() {
-      sandbox.stub(Installer.prototype, 'unzip').resolves(true);
+      sandbox.stub(Installer.prototype, 'unzip').resolves();
+      sandbox.stub(Installer.prototype, 'exec').resolves();
       return rhamtInstall.installAfterRequirements(fakeProgress, success, failure).then(() => {
         expect(fakeProgress.setStatus).to.have.been.calledOnce;
         expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');

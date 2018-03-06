@@ -18,7 +18,7 @@ class RhamtInstall extends InstallableItem {
   }
 
   static get KEY() {
-    return 'rhamt';
+    return 'rhamtcli';
   }
 
   installAfterRequirements(progress, success, failure) {
@@ -39,10 +39,11 @@ class RhamtInstall extends InstallableItem {
       }
     }).then((output)=> {
       if (Platform.OS === 'win32') {
-        installer.exec(
-          `setx /M JAVA_HOME "${output}"`
-        )
+        return installer.exec(`setx /M JAVA_HOME "${output}"`);
       }
+    }).then(()=> {
+      return Platform.addToUserPath([path.join(this.installerDataSvc.rhamtDir(), 'bin')]);
+    }).then(()=> {
       installer.succeed(true);
     }).catch((error)=> {
       installer.fail(error);
