@@ -47,7 +47,31 @@
     "size": 331060218,
     "installSize": 441370241,
     "channel" : {
-      "devstudio": { }
+      "devstudio": { },
+      "javaDev": { }
+    }
+  },
+  "rhamtcli": {
+    "name": "Red Hat Application Migration Toolkit CLI",
+    "description": "An assembly of open source tools that enables large-scale application migrations and modernizations",
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/rhamt",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "rhamt",
+    "installAfter": "jdk",
+    "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/4.0.0/migrationtoolkit-rhamt-cli-4.0.0.offline.zip?workflow=direct",
+    "fileName": "migrationtoolkit-rhamt-cli-4.0.0.offline.zip",
+    "sha256sum": "6ee4ffddec425c90b67228c645b00fd61a5d1587c9a6b2ee69af07999b98e265",
+    "version": "4.0.0.GA",
+    "useDownload": true,
+    "defaultOption": "detected",
+    "requires": ["jdk"],
+    "size": 278064943,
+    "installSize": 378283285,
+    "channel" : {
+      "javaDev": { }
     }
   },
   "devstudiocentral": {

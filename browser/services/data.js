@@ -77,7 +77,7 @@ class InstallerDataService {
     }
   }
 
-  setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
+  setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, rhamtRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
     this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
     this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
     this.devstudioRoot = devstudioRoot || path.join(this.installRoot, 'devstudio');
@@ -85,6 +85,7 @@ class InstallerDataService {
     this.fuseplatformRoot = fuseplatformRoot || path.join(this.installRoot, 'fuseplatform');
     this.fuseplatformkarafRoot = fuseplatformkarafRoot || path.join(this.installRoot, 'fuseplatformkaraf');
     this.cygwinRoot = cygwinRoot || path.join(this.installRoot, 'cygwin');
+    this.rhamtRoot = rhamtRoot || path.join(this.installRoot, 'rhamt');
     this.komposeRoot = komposeRoot || path.join(this.installRoot, 'kompose');
     this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
     this.cdkBoxRoot = this.cdkRoot;
@@ -189,6 +190,10 @@ class InstallerDataService {
 
   cygwinDir() {
     return this.cygwinRoot;
+  }
+
+  rhamtDir() {
+    return this.rhamtRoot;
   }
 
   komposeDir() {

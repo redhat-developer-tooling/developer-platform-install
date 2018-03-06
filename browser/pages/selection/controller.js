@@ -168,7 +168,7 @@ class SelectionController {
   // Prep the install location path for each product, then go to the next page.
   next() {
     this.loader.orderInstallation(this.graph);
-    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'kompose', 'fuseplatform', 'fuseplatformkaraf'];
+    let possibleComponents = ['virtualbox', 'jdk', 'devstudio', 'jbosseap', 'cygwin', 'cdk', 'rhamt', 'kompose', 'fuseplatform', 'fuseplatformkaraf'];
     for (let i = 0; i < possibleComponents.length; i++) {
       let component = this.installerDataSvc.getInstallable(possibleComponents[i]);
       if (component) {
