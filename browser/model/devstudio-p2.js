@@ -3,7 +3,6 @@
 let path = require('path');
 
 import InstallableItem from './installable-item';
-import Installer from './helpers/installer';
 import Platform from '../services/platform';
 import Util from './helpers/util';
 

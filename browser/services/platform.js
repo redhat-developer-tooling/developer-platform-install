@@ -143,7 +143,7 @@ class Platform {
   static isHypervisorAvailable() {
     return Platform.identify({
       win32: function() {
-        let winRegex = /.*Windows\s(10|8(\.1)?)\s(?!Home).+/
+        let winRegex = /.*Windows\s(10|8(\.1)?)\s(?!Home).+/;
         return pify(child_process.exec)('wmic os get caption').then((stdout) => {
           let result;
           if(stdout) {
@@ -157,7 +157,7 @@ class Platform {
       default: function() {
         return Promise.resolve(false);
       }
-    })
+    });
   }
 
   static getUserHomePath() {

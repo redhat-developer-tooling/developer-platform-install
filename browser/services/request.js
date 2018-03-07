@@ -50,6 +50,6 @@ class Request {
   }
 }
 
-Request.factory.$inject=['requestMod','$window'];
+Request.factory.$inject=['requestMod', '$window'];
 
 export default Request;

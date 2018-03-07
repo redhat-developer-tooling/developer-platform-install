@@ -238,7 +238,7 @@ class VirtualBoxInstallDarwin extends VirtualBoxInstall {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
-    return installer.exec(this.getScript()).then((result) => {
+    return installer.exec(this.getScript()).then(() => {
       return installer.execElevated(this.getSudoScript());
     }).then((result) => {
       installer.succeed(result);

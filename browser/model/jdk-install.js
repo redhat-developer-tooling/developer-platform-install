@@ -11,8 +11,8 @@ import Platform from '../services/platform';
 import Installer from './helpers/installer';
 import Util from './helpers/util';
 import Version from './helpers/version';
-import pify from 'pify'
-import child_process from 'child_process'
+import pify from 'pify';
+import child_process from 'child_process';
 
 class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -91,8 +91,7 @@ class JdkInstall extends InstallableItem {
   }
 
   findMsiInstalledJava() {
-    return pify(child_process.exec)(this.getMsiSearchScriptData())
-    .catch((err) => {
+    return pify(child_process.exec)(this.getMsiSearchScriptData()).catch(() => {
       return Promise.resolve('');
     });
   }
