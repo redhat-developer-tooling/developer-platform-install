@@ -3,11 +3,9 @@
 import InstallableItem from './installable-item';
 import Installer from './helpers/installer';
 import Logger from '../services/logger';
-let fs = require('fs');
 let fse = require('fs-extra');
 let path = require('path');
 let unzip = require('unzip-stream');
-let mkdirp = require('mkdirp');
 
 class FusePlatformInstallKaraf extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -23,28 +21,8 @@ class FusePlatformInstallKaraf extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
-    return new Promise((resolve, reject)=> {
-      fs.createReadStream(this.downloadedFile).pipe(unzip.Parse())
-        .on('entry', (entry)=> {
-          try {
-            var fileName = entry.path;
-            let f = fileName.substring(fileName.indexOf('/')+1);
-            let dest = path.join(this.installerDataSvc.fuseplatformkarafDir(), ...f.split('/'));
-            if (entry.type === 'File') {
-              entry.pipe(fs.createWriteStream(dest));
-            } else {
-              mkdirp.sync(dest);
-              entry.autodrain();
-            }
-          } catch(err) {
-            reject(err);
-          }
-        }).on('error', function (error) {
-          reject(error);
-        }).on('close', ()=> {
-          resolve();
-        });
-    }).then(()=> {
+    return installer.unzip(this.downloadedFile, this.installerDataSvc.fuseplatformkarafDir())
+    .then(()=> {
       let users = path.join(this.installerDataSvc.fuseplatformkarafDir(), 'etc', 'users.properties');
       let result;
       if(fse.existsSync(users)) {
