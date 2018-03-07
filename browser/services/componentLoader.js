@@ -19,9 +19,8 @@ class ComponentLoader {
   }
 
   removeComponent(key) {
-    this.installerDataSvc.allInstallables().delete(key);
-    this.installerDataSvc.toDownload.delete(key);
-    this.installerDataSvc.toInstall.delete(key);
+    this.installerDataSvc.removeItemToInstall(key);
+    this.orderInstallation();
   }
 
   addComponent(key) {
@@ -61,14 +60,19 @@ class ComponentLoader {
         for(const dep of item.requires) {
           if(dep.includes('||')) {
             let orDeps = dep.split('||');
+            let selDep;
             for(let orDep of orDeps) {
               let installable = svc.getInstallable(orDep);
               let req = svc.getRequirementByName(orDep);
               // temp solution for conditional dependency resolution
               // would work for hyperv || virtualbox but not in general
-              if(installable && (installable.isValidVersionDetected() || req.installable === true)) {
-                graph.addDependency(key, orDep);
-                break;
+              if(installable.isValidVersionDetected() || req.installable === true) {
+                if(selDep) {
+                  svc.removeItemToInstall(orDep);
+                } else {
+                  selDep = orDep;
+                  graph.addDependency(key, orDep);
+                }
               }
             }
           } else {
