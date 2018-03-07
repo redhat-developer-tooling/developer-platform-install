@@ -79,6 +79,7 @@ class Installer {
 
   unzip(zipFile, extractTo, prefix) {
     return new Promise((resolve, reject) => {
+      Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
       if(zipFile.endsWith('.tar.gz')) {
         targz.decompress({
           src: zipFile,
@@ -101,7 +102,6 @@ class Installer {
           }
         });
       } else if(zipFile.endsWith('.zip')) {
-        Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo);
         fs.createReadStream(zipFile).pipe(unzip.Parse())
           .on('entry', (entry)=> {
             try {
@@ -117,9 +117,11 @@ class Installer {
             } catch(err) {
               reject(err);
             }
-          }).on('error', function (error) {
+          }).on('error', (error) => {
+            Logger.error(this.key + ' - ' + error);
             reject(error);
-          }).on('close', ()=> {
+          }).on('close', () => {
+            Logger.info(this.key + ' - Extract ' + zipFile + ' to ' + extractTo + ' SUCCESS');
             resolve();
           });
       } else {

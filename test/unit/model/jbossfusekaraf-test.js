@@ -5,113 +5,76 @@ import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import InstallerDataService from 'browser/services/data';
 import FusePlatformInstallKaraf from 'browser/model/jbossfusekaraf';
-import fs from 'fs';
 import fse from 'fs-extra';
 import path from 'path';
-import mkdirp from 'mkdirp';
 import Logger from 'browser/services/logger';
+import installer from 'browser/model/helpers/installer';
 
 import EventEmitter from 'events';
+import { unzip } from 'zlib';
 
 chai.use(sinonChai);
 
-describe('jbossplaformkaraf nstaller', function() {
+describe('jbossplaformkaraf installer', function() {
   let sandbox;
   let fuseInstaller;
   let fakeProgress;
   let success;
   let failure;
+  let unzipStub;
+  let svc;
 
   beforeEach(function() {
+    svc = new InstallerDataService();
     sandbox = sinon.sandbox.create();
-    fuseInstaller = new FusePlatformInstallKaraf(new InstallerDataService(), 'karaf', 'url', 'karaf.jar', 'sha256');
+    fuseInstaller = new FusePlatformInstallKaraf(svc, 'karaf', 'url', 'karaf.zip', 'sha256');
     fuseInstaller.ipcRenderer = new EventEmitter();
-    sandbox.stub(mkdirp, 'sync').returns();
+    fuseInstaller.downloadedFile = 'karaf.zip';
     fakeProgress = {
       setStatus: sandbox.stub(),
       setComplete: sandbox.stub()
     };
     success = sandbox.stub();
     failure = sandbox.stub();
-
+    unzipStub = sandbox.stub(installer.prototype, 'unzip');
+    sandbox.stub(svc, 'fuseplatformkarafDir').returns('fusekaraf');
   });
+
+  function createInstallerMock(installed) {
+    sandbox.stub(svc, 'getInstallable').returns({
+      installed: installed,
+      configureRuntimeDetection: sandbox.stub()
+    });
+  }
 
   afterEach(function() {
     sandbox.restore();
   });
 
-  function createInstallerMock(installed) {
-    let emitter = new EventEmitter();
-    let pipe = function() {
-      return emitter;
-    };
-    sandbox.stub(fs, 'createReadStream').returns({pipe});
-    sandbox.stub(fs, 'createWriteStream').callsFake(function(arg) {
-      return arg;
-    });
-    let entries = [
-      {
-        path: 'folder1/folder1',
-        type: 'Directory',
-        pipe: function() {},
-        autodrain: function() {}
-
-      }, {
-        path: 'folder1/folder2/file1',
-        type: 'File',
-        pipe: function() {},
-        autodrain: function() {}
-      },
-    ];
-    sandbox.stub(fuseInstaller.installerDataSvc, 'fuseplatformkarafDir').returns('fusekaraf');
-    sandbox.stub(fuseInstaller.installerDataSvc, 'getInstallable').returns({
-      installed: installed,
-      configureRuntimeDetection: sandbox.stub()
-    });
-    function emitEntries() {
-      for(let entry of entries) {
-        emitter.emit('entry', entry);
-      }
-      emitter.emit('close');
-    }
-    function emitError(error) {
-      emitter.emit('error', error);
-    }
-    return {
-      emitEntries,
-      emitError
-    };
-  }
-
   describe('installAfterRequirements', function() {
-    it('should remove first level folder when unpack direcories from zip archive', function() {
-      let mockDevSuiteInstaller = createInstallerMock(true);
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
-        expect(mkdirp.sync).calledOnce;
-        expect(mkdirp.sync).calledWith(
-          path.join(fuseInstaller.installerDataSvc.fuseplatformkarafDir(), 'folder1')
-        );
+    it('should unzip the downloaded file', function() {
+      unzipStub.resolves();
+      sandbox.stub(fse, 'existsSync').returns(false);
+      return fuseInstaller.installAfterRequirements(fakeProgress, success, failure).then(() => {
+        expect(unzipStub).calledWith('karaf.zip', svc.fuseplatformkarafDir());
       });
     });
 
-    it('should remove first level folder when unpack files from zip archive', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
-        expect(fs.createWriteStream).calledWith(
-          path.join(fuseInstaller.installerDataSvc.fuseplatformkarafDir(), 'folder2', 'file1')
-        );
+    it('should return rejected promice if exception was caught during unpacking', function() {
+      unzipStub.rejects('Error');
+      return fuseInstaller.installAfterRequirements(fakeProgress, success, failure).then(()=>{
+        expect.fail();
+      }).catch((error)=> {
+        expect(error.name).equals('Error');
       });
     });
 
     it('should configure runtime detection after devstudio installation finished', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
+      unzipStub.resolves();
+      sandbox.stub(fse, 'existsSync').returns(false);
+      createInstallerMock(false);
+
+      return fuseInstaller.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         let devstudioInstaller = fuseInstaller.installerDataSvc.getInstallable('devstudio');
         expect(devstudioInstaller.configureRuntimeDetection).not.called;
         fuseInstaller.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
@@ -122,49 +85,23 @@ describe('jbossplaformkaraf nstaller', function() {
       });
     });
 
-    it('should return rejected promice if exception cought during unpacking', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
-      mkdirp.sync.restore();
-      sandbox.stub(mkdirp, 'sync').throws('Error');
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
-        expect.fail();
-      }).catch((error)=> {
-        expect(error.name).equals('Error');
-      });
-    });
-
-    it('should return rejected promise if unzip-stream emitted error', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitError('Error');
-      return promise.then(()=>{
-        expect.fail();
-      }).catch((error)=> {
-        expect(error).equals('Error');
-      });
-    });
-
     it('should add admin user to users.properties file', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
+      unzipStub.resolves();
       sandbox.stub(fse, 'existsSync').returns(true);
       sandbox.stub(fse, 'appendFile').resolves();
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
+
+      return fuseInstaller.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(fse.appendFile).calledOnce;
       });
     });
 
     it('should log error if adding admin user to file failed', function() {
-      let mockDevSuiteInstaller = createInstallerMock(false);
+      unzipStub.resolves();
       sandbox.stub(fse, 'existsSync').returns(true);
       sandbox.stub(fse, 'appendFile').rejects();
-      sandbox.stub(Logger, 'error');
-      let promise = fuseInstaller.installAfterRequirements(fakeProgress, success, failure);
-      mockDevSuiteInstaller.emitEntries();
-      return promise.then(()=>{
+      sandbox.stub(Logger, 'error');;
+      
+      return fuseInstaller.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(Logger.error.calledTwice);
       });
     });
