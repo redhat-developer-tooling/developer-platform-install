@@ -23,7 +23,7 @@ class WelcomeController {
   }
 
   check() {
-    this.scope.status = 'Checking'
+    this.scope.status = 'Checking';
     let req = {
       method: 'GET',
       url: this.URL_DM_DEVSUITE_INFO
@@ -33,9 +33,9 @@ class WelcomeController {
       let version = this.scope.version;
       let devsuiteVersion = data.data[0].featuredArtifact.versionName;
       let numericVersion = version.split('-')[0];
-      if (Version.GT(devsuiteVersion, numericVersion)){
+      if (Version.GT(devsuiteVersion, numericVersion)) {
         this.scope.newVersion = devsuiteVersion;
-        this.scope.status = `New`;
+        this.scope.status = 'New';
       } else {
         this.scope.status = 'Current';
       }

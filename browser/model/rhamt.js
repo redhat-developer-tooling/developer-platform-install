@@ -1,9 +1,6 @@
 'use strict';
 
-let fs = require('fs');
 let path = require('path');
-let mkdirp = require('mkdirp');
-let unzip = require('unzip-stream');
 
 import Util from './helpers/util';
 import InstallableItem from './installable-item';

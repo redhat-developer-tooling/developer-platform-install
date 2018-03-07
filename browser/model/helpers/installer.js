@@ -54,7 +54,7 @@ class Installer {
           resolve(true);
         }
       });
-    })
+    });
   }
 
   execFile(file, args, options = {}) {

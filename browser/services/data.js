@@ -358,7 +358,7 @@ class InstallerDataService {
   downloadFiles(progress, userAgent) {
     let toDownload = [];
     let totalAmount = 0;
-    let totalDownloads = 0
+    let totalDownloads = 0;
     this.allInstallables().forEach((value, key) => {
       if(!value.isSkipped() && value.isDownloadRequired()) {
         toDownload.push(key);
