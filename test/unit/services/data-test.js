@@ -97,24 +97,6 @@ describe('InstallerDataService', function() {
       expect(svc.requirements).to.be.not.equal(undefined);
     });
 
-    it('setup should correctly initialize folders', function() {
-      svc.installRoot = 'installRoot';
-
-      svc.setup();
-
-      expect(svc.installDir()).to.equal(svc.installRoot);
-      expect(svc.virtualBoxDir()).to.equal(path.join(svc.installRoot, 'virtualbox'));
-      expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'jdk8'));
-      expect(svc.devstudioDir()).to.equal(path.join(svc.installRoot, 'devstudio'));
-      expect(svc.jbosseapDir()).to.equal(path.join(svc.installRoot, 'jbosseap'));
-      expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'cygwin'));
-      expect(svc.komposeDir()).to.equal(path.join(svc.installRoot, 'kompose'));
-      expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'cdk'));
-      expect(svc.cdkBoxDir()).to.equal(svc.cdkRoot);
-      expect(svc.cdkMarker()).to.equal(path.join(svc.cdkRoot, '.cdk'));
-      expect(svc.ocDir()).to.equal(path.join(svc.cdkRoot, 'bin'));
-    });
-
     it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost', PROGRAMFILES: 'C:\\Program Files'});
@@ -146,7 +128,6 @@ describe('InstallerDataService', function() {
       });
 
       it('should copy uninstaller powershell script to target install folder', function() {
-        svc.setup();
         svc.setupTargetFolder();
         expect(svc.copyUninstaller).calledOnce;
       });
@@ -154,7 +135,6 @@ describe('InstallerDataService', function() {
       it('should log error if copy operation failed', function() {
         fxExtraStub.yields('error');
         Logger.error.reset();
-        svc.setup();
         svc.setupTargetFolder();
         expect(Logger.error).calledOnce;
       });
@@ -162,7 +142,6 @@ describe('InstallerDataService', function() {
       it('should log sucess message if copy operation succeeded', function() {
         fxExtraStub.yields();
         Logger.info.reset();
-        svc.setup();
         svc.setupTargetFolder();
         expect(Logger.info).calledTwice;
       });
@@ -179,7 +158,6 @@ describe('InstallerDataService', function() {
           cb(undefined, 'stdout', '');
           resolve();
         });
-        svc.setup();
         svc.setupTargetFolder();
         return result.then(()=>{
           expect(child_process.exec).to.be.called;
@@ -200,7 +178,6 @@ describe('InstallerDataService', function() {
         sandbox.stub(Logger, 'error').callsFake(function() {
           resolve();
         });
-        svc.setup();
         svc.setupTargetFolder();
         return result.then(()=>{
           expect(child_process.exec).to.be.called;
@@ -211,7 +188,6 @@ describe('InstallerDataService', function() {
     describe('on macos', function() {
       it('should not copy uninstaller powershell script to target install folder', function() {
         sandbox.stub(Platform, 'getOS').returns('darwin');
-        svc.setup();
         expect(svc.copyUninstaller).not.called;
       });
     });
@@ -219,7 +195,6 @@ describe('InstallerDataService', function() {
     describe('on linux', function() {
       it('should not copy uninstaller powershell script to target install folder', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
-        svc.setup();
         expect(svc.copyUninstaller).not.called;
       });
     });

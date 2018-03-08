@@ -119,6 +119,10 @@ class InstallableItem {
     return this.productDesc;
   }
 
+  getTargetLocation () {
+    return path.join(this.installerDataSvc.installRoot, this.targetFolderName);
+  }
+
   getDownloadUrl() {
     return this.downloadUrl;
   }

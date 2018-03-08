@@ -26,10 +26,7 @@ describe('CDK installer', function() {
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('password');
   installerDataSvc.cdkDir.returns(path.join(installerDataSvc.installDir(), 'cdk'));
-  installerDataSvc.ocDir.returns(path.join(installerDataSvc.cdkDir(), 'bin'));
   installerDataSvc.virtualBoxDir.returns(path.join(installerDataSvc.installDir(), 'virtualbox'));
-  installerDataSvc.cdkBoxDir.returns(installerDataSvc.cdkDir());
-  installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkDir(), '.cdk'));
   installerDataSvc.getInstallable.returns({
     getLocation: function() {
       return 'minishiftPath';
