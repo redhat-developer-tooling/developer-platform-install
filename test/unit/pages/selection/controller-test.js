@@ -48,7 +48,6 @@ describe('SelectionController', function() {
     sandbox.stub(installerDataSvc, 'copyUninstaller');
     sandbox.stub(fs, 'existsSync').returns(true);
     sandbox.spy(_$state_, 'go');
-    installerDataSvc.setup();
 
     selectionController = $controller('SelectionController', {
       $scope,

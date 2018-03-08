@@ -77,22 +77,6 @@ class InstallerDataService {
     }
   }
 
-  setup(vboxRoot, jdkRoot, devstudioRoot, jbosseapRoot, cygwinRoot, cdkRoot, rhamtRoot, komposeRoot, fuseplatformRoot, fuseplatformkarafRoot) {
-    this.vboxRoot = vboxRoot || path.join(this.installRoot, 'virtualbox');
-    this.jdkRoot = jdkRoot || path.join(this.installRoot, 'jdk8');
-    this.devstudioRoot = devstudioRoot || path.join(this.installRoot, 'devstudio');
-    this.jbosseapRoot = jbosseapRoot || path.join(this.installRoot, 'jbosseap');
-    this.fuseplatformRoot = fuseplatformRoot || path.join(this.installRoot, 'fuseplatform');
-    this.fuseplatformkarafRoot = fuseplatformkarafRoot || path.join(this.installRoot, 'fuseplatformkaraf');
-    this.cygwinRoot = cygwinRoot || path.join(this.installRoot, 'cygwin');
-    this.rhamtRoot = rhamtRoot || path.join(this.installRoot, 'rhamt');
-    this.komposeRoot = komposeRoot || path.join(this.installRoot, 'kompose');
-    this.cdkRoot = cdkRoot || path.join(this.installRoot, 'cdk');
-    this.cdkBoxRoot = this.cdkRoot;
-    this.ocBinRoot = path.join(this.cdkRoot, 'bin');
-    this.cdkMarkerFile = path.join(this.cdkRoot, '.cdk');
-  }
-
   setupTargetFolder() {
     if (!fs.existsSync(this.installRoot)) {
       mkdirp.sync(path.resolve(this.installRoot));
@@ -101,6 +85,10 @@ class InstallerDataService {
     if(Platform.OS === 'win32') {
       this.copyUninstaller();
     }
+  }
+
+  getTargetLocation(key) {
+    return this.getInstallable(key).getTargetLocation();
   }
 
   copyUninstaller() {
@@ -165,55 +153,43 @@ class InstallerDataService {
   }
 
   virtualBoxDir() {
-    return this.vboxRoot;
+    return this.getTargetLocation("virtualbox");
   }
 
   jdkDir() {
-    return this.jdkRoot;
+    return this.getTargetLocation("jdk");
   }
 
   devstudioDir() {
-    return this.devstudioRoot;
+    return this.getTargetLocation("devstudio");
   }
 
   jbosseapDir() {
-    return this.jbosseapRoot;
+    return this.getTargetLocation("jbosseap");
   }
 
   fuseplatformDir() {
-    return this.fuseplatformRoot;
+    return this.getTargetLocation("fuseplatform");
   }
 
   fuseplatformkarafDir() {
-    return this.fuseplatformkarafRoot;
+    return this.getTargetLocation("fuseplatformkaraf");;
   }
 
   cygwinDir() {
-    return this.cygwinRoot;
+    return this.getTargetLocation("cygwin");;
   }
 
   rhamtDir() {
-    return this.rhamtRoot;
+    return this.getTargetLocation("rhamtcli");;
   }
 
   komposeDir() {
-    return this.komposeRoot;
+    return this.getTargetLocation("kompose");;
   }
 
   cdkDir() {
-    return this.cdkRoot;
-  }
-
-  cdkBoxDir() {
-    return this.cdkBoxRoot;
-  }
-
-  cdkMarker() {
-    return this.cdkMarkerFile;
-  }
-
-  ocDir() {
-    return this.ocBinRoot;
+    return this.getTargetLocation("cdk");;
   }
 
   installDir() {

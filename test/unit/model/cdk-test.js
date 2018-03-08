@@ -35,10 +35,7 @@ describe('CDK installer', function() {
   installerDataSvc.getUsername.returns('user');
   installerDataSvc.getPassword.returns('password');
   installerDataSvc.cdkDir.returns(path.join(installerDataSvc.installDir(), 'cdk'));
-  installerDataSvc.ocDir.returns(path.join(installerDataSvc.cdkDir(), 'bin'));
   installerDataSvc.virtualBoxDir.returns(path.join(installerDataSvc.installDir(), 'virtualbox'));
-  installerDataSvc.cdkBoxDir.returns(installerDataSvc.cdkDir());
-  installerDataSvc.cdkMarker.returns(path.join(installerDataSvc.cdkDir(), '.cdk'));
 
   let installer;
 
@@ -222,7 +219,7 @@ describe('CDK installer', function() {
       it('should copy cdk exe file to install folder', function(done) {
         installer.installAfterRequirements(fakeProgress, function success() {
           expect(Installer.prototype.copyFile).to.have.been.called;
-          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installer.installerDataSvc.ocDir(), 'minishift.exe'));
+          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installer.ocDir(), 'minishift.exe'));
           done();
         }, function failure(e) {
           console.log(e);
@@ -271,7 +268,7 @@ describe('CDK installer', function() {
         }).then(()=> {
           expect(Platform.addToUserPath).calledWith([
             path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc.exe')], 'User');
-          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift.exe')]);
+          expect(Platform.addToUserPath).calledWith([path.join(installer.ocDir(), 'minishift.exe')]);
         });
       });
 
@@ -372,7 +369,7 @@ describe('CDK installer', function() {
         }).then(()=> {
           expect(Platform.addToUserPath).calledWith([
             path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc.exe')], 'User');
-          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift.exe')]);
+          expect(Platform.addToUserPath).calledWith([path.join(installer.ocDir(), 'minishift.exe')]);
         });
       });
     });
@@ -394,7 +391,7 @@ describe('CDK installer', function() {
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).catch(()=> {
           expect(Installer.prototype.copyFile).to.have.been.called;
-          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installerDataSvc.ocDir(), 'minishift'));
+          expect(Installer.prototype.copyFile).calledWith(installer.downloadedFile, path.join(installer.ocDir(), 'minishift'));
         });
       });
 
@@ -402,7 +399,7 @@ describe('CDK installer', function() {
         return new Promise((resolve, reject)=>{
           installer.installAfterRequirements(fakeProgress, resolve, reject);
         }).then(()=>{
-          expect(child_process.exec).calledWith('chmod +x \'' + path.join('ocBinRoot', 'minishift') + '\'');
+          expect(child_process.exec).calledWith('chmod +x \'' + path.join(installer.ocDir(), 'minishift') + '\'');
           expect(child_process.exec).calledWith('chmod +x \'' + path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc') + '\'');
         });
       });
@@ -413,7 +410,7 @@ describe('CDK installer', function() {
         }).then(()=>{
           expect(Platform.addToUserPath).calledWith([
             path.join(process.cwd(), 'Users', 'dev1', '.minishift', 'cache', 'oc', '1.4.1', 'oc')], 'User');
-          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift')]);
+          expect(Platform.addToUserPath).calledWith([path.join(installer.ocDir(), 'minishift')]);
         });
       });
 
@@ -424,7 +421,7 @@ describe('CDK installer', function() {
         }).then(()=> {
           expect(Platform.addToUserPath).calledWith([
             path.join(process.cwd(), 'minishift-home', 'cache', 'oc', '1.4.1', 'oc')], 'User');
-          expect(Platform.addToUserPath).calledWith([path.join('ocBinRoot', 'minishift')]);
+          expect(Platform.addToUserPath).calledWith([path.join(installer.ocDir(), 'minishift')]);
         });
       });
     });
@@ -438,12 +435,12 @@ describe('CDK installer', function() {
       });
       it('returns copy of Platform.ENV with virtualbox location added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':'path'});
-        let pathArray = ['ocBinRoot', 'virtualbox', 'path'];
+        let pathArray = [installer.ocDir(), 'virtualbox', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'PATH':''});
-        let pathArray = ['ocBinRoot', 'virtualbox'];
+        let pathArray = [installer.ocDir(), 'virtualbox'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });
@@ -455,13 +452,13 @@ describe('CDK installer', function() {
       it('returns copy of Platform.ENV with virtualbox and cygwin locations added to PATH', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'path', PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer} = stubInstaller() );
-        let pathArray = ['cygwin', 'ocBinRoot', 'virtualbox', 'path'];
+        let pathArray = ['cygwin', installer.ocDir(), 'virtualbox', 'path'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
       it('does not use empty path', function() {
         sandbox.stub(Platform, 'getEnv').returns({'Path':'', PROGRAMFILES: 'C:\\Program Files'});
         ( {cdk: installer} = stubInstaller() );
-        let pathArray = ['cygwin', 'ocBinRoot', 'virtualbox'];
+        let pathArray = ['cygwin', installer.ocDir(), 'virtualbox'];
         expect(installer.createEnvironment()[Platform.PATH]).to.be.equal(pathArray.join(path.delimiter));
       });
     });

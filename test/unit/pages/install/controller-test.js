@@ -41,7 +41,6 @@ describe('Install controller', function() {
     sandbox = sinon.sandbox.create();
     sandbox.stub(InstallerDataService.prototype, 'copyUninstaller').returns();
     installerDataSvc = new InstallerDataService();
-    installerDataSvc.setup('installRoot');
     vbox = new VirtualBoxInstall(installerDataSvc, 'virtualbox',
       'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe', 'virtualbox.exe', 'sha', '5.0.8', '103449');
 

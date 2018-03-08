@@ -7,7 +7,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "yes",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/devstudio-11.2.0.GA-installer-standalone.jar?workflow=direct",
     "url": "https://devstudio.redhat.com/11/staging/builds/devstudio-11.2.0.GA-build-product/latest/all/devstudio-11.2.0.GA-installer-standalone.jar",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
@@ -33,7 +33,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "org.jboss.tools.windup.feature.feature.group"
     ],
@@ -104,7 +104,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "org.jboss.tools.jst.angularjs.feature.feature.group"
     ],
@@ -129,7 +129,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "net.sf.eclipsecs.feature.group",
       "com.github.sevntu.checkstyle.checks.feature.feature.group"
@@ -155,7 +155,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "org.jboss.tools.bpel.feature.feature.group",
       "org.eclipse.bpmn2.feature.feature.group",
@@ -350,7 +350,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "url": "https://devstudio.redhat.com/11/",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
     "sha256sum": "",
@@ -375,7 +375,7 @@
     "modulePath": "model/jbossfuse",
     "installable": true,
     "bundle": "no",
-    "targetFolderName": "jboss-fuse-eap",
+    "targetFolderName": "fuseplatform",
     "version": "6.3.0.GA",
     "size": 228052992,
     "installSize": 1045204992,
@@ -411,7 +411,7 @@
      "modulePath": "model/jbossfusekaraf",
      "installable": true,
      "bundle": "no",
-     "targetFolderName": "jboss-fuse-karaf",
+     "targetFolderName": "fuseplatformkaraf",
      "version": "6.3.0.GA",
      "size": 785784505,
      "installSize": 1129381888,
@@ -594,7 +594,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "net.java.dev.jna.feature.group",
       "org.tigris.subversion.subclipse.feature.group",
@@ -623,7 +623,7 @@
     "installable": true,
     "detectable": false,
     "bundle": "no",
-    "targetFolderName": "developer-studio",
+    "targetFolderName": "devstudio",
     "ius": [
       "org.sonarlint.eclipse.feature.feature.group"
     ],

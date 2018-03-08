@@ -23,7 +23,11 @@ class CDKInstall extends InstallableItem {
   }
 
   get minishiftExe() {
-    return path.join(this.installerDataSvc.ocDir(), Platform.OS === 'win32' ? 'minishift.exe' : 'minishift');
+    return path.join(this.ocDir(), Platform.OS === 'win32' ? 'minishift.exe' : 'minishift');
+  }
+
+  ocDir() {
+    return path.join(this.getTargetLocation(), 'bin');
   }
 
   installAfterRequirements(progress, success, failure) {
@@ -95,7 +99,7 @@ class CDKInstall extends InstallableItem {
       newPath.push(cygwinInstall.getLocation());
     }
 
-    newPath.push(this.installerDataSvc.ocDir());
+    newPath.push(this.ocDir());
 
     if(vboxInstall) {
       newPath.push(vboxInstall.getLocation());

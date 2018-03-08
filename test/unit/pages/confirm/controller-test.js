@@ -46,7 +46,6 @@ describe('ConfirmController', function() {
     sandbox.stub(installerDataSvc, 'copyUninstaller');
     sandbox.stub(fs, 'existsSync').returns(true);
     sandbox.spy(_$state_, 'go');
-    installerDataSvc.setup();
 
     confirmController = $controller('ConfirmController', {
       $scope,
