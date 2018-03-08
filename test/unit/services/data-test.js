@@ -97,6 +97,26 @@ describe('InstallerDataService', function() {
       expect(svc.requirements).to.be.not.equal(undefined);
     });
 
+    it('setup should correctly initialize folders', function() {
+
+      sandbox.stub(svc, 'getInstallable').returns(
+        new InstallableItem('jdk', 'https://developers.redhat.com/jdk.msi', 'jdk.msi', 'sub-dir', svc)
+      );
+      svc.installRoot = 'installRoot';
+
+      expect(svc.installDir()).to.equal(svc.installRoot);
+      expect(svc.virtualBoxDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.jdkDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.devstudioDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.jbosseapDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.cygwinDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.komposeDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.cdkDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.fuseplatformDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.fuseplatformkarafDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+      expect(svc.rhamtDir()).to.equal(path.join(svc.installRoot, 'sub-dir'));
+    });
+
     it('should replace developers.redhat.com host with value from DM_STAGE_HOST environment variable', function() {
       sandbox.stub(Platform, 'getOS').returns('win32');
       sandbox.stub(Platform, 'getEnv').returns({DM_STAGE_HOST:'localhost', PROGRAMFILES: 'C:\\Program Files'});
