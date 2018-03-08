@@ -22,8 +22,9 @@ class RhamtInstall extends InstallableItem {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
     let command = 'java -XshowSettings';
+    let rhamtBinFile = path.join(this.installerDataSvc.rhamtDir(), 'bin', 'rhamt-cli');
     return installer.unzip(this.downloadedFile, this.installerDataSvc.rhamtDir()).then(()=>{
-      return Platform.makeFileExecutable(this.installerDataSvc.rhamtDir());
+      return Platform.makeFileExecutable(rhamtBinFile);
     }).then(()=>{
       return Util.executeCommand(command, 2);
     }).then((output)=>{
@@ -39,7 +40,7 @@ class RhamtInstall extends InstallableItem {
         return installer.exec(`setx /M JAVA_HOME "${output}"`);
       }
     }).then(()=> {
-      return Platform.addToUserPath([path.join(this.installerDataSvc.rhamtDir(), 'bin')]);
+      return Platform.addToUserPath([rhamtBinFile]);
     }).then(()=> {
       installer.succeed(true);
     }).catch((error)=> {
