@@ -55,7 +55,7 @@ describe('InstallableItem', function() {
 
   describe('install method', function() {
 
-    it('should call installAfterRequirements if required component is already installed', function() {
+    it('should call installAfterRequirements', function() {
       let svc = new InstallerDataService();
       let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
       let item2 = new InstallableItem('cygwin', 'url', 'installFile', 'targetFolderName', svc);
@@ -65,41 +65,6 @@ describe('InstallableItem', function() {
       item2.install(fakeProgress, sinon.stub(), sinon.stub());
       expect(item2.installAfterRequirements).to.be.calledOnce;
     });
-
-    it('should call installAfterRequirements after required component installed', function() {
-      let svc = new InstallerDataService();
-      let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
-      let item2 = new InstallableItem('cygwin', 'url', 'installFile', 'targetFolderName', svc);
-      item2.ipcRenderer = {
-        on: sinon.stub().yields(undefined, item1.keyName)
-      };
-      item2.installAfterRequirements = sinon.stub();
-      item1.isInstalled = sinon.stub().returns(false);
-      item1.thenInstall(item2);
-
-      item2.install(fakeProgress, sinon.stub(), sinon.stub());
-
-      expect(item2.installAfterRequirements).to.be.calledOnce;
-      expect(item2.ipcRenderer.on).to.be.calledOnce;
-    });
-
-    it('should not call installAfterRequirements for installComplete event about other none required components', function() {
-      let svc = new InstallerDataService();
-      let item1 = new InstallableItem('jdk', 'url', 'installFile', 'targetFolderName', svc);
-      let item2 = new InstallableItem('cygwin', 'url', 'installFile', 'targetFolderName', svc);
-      item2.ipcRenderer = {
-        on: sinon.stub().yields(undefined, 'devstudio')
-      };
-      item2.installAfterRequirements = sinon.stub();
-      item1.isInstalled = sinon.stub().returns(false);
-      item1.thenInstall(item2);
-
-      item2.install(fakeProgress, sinon.stub(), sinon.stub());
-
-      expect(item2.installAfterRequirements).not.to.be.called;
-      expect(item2.ipcRenderer.on).to.be.calledOnce;
-    });
-
   });
 
   describe('getInstallAfter method', function() {

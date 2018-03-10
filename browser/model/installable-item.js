@@ -227,21 +227,10 @@ class InstallableItem {
   }
 
   install(progress, success, failure) {
-    if( !this.getInstallAfter() || this.getInstallAfter().isInstalled() ) {
       progress.productName = this.productName;
       progress.productVersion = this.productVersion;
       progress.$timeout();
       this.installAfterRequirements(progress, success, failure);
-    } else {
-      this.ipcRenderer.on('installComplete', (event, arg) => {
-        if (!this.isInstalled() && arg === this.getInstallAfter().keyName) {
-          progress.productName = this.productName;
-          progress.productVersion = this.productVersion;
-          progress.$timeout();
-          this.installAfterRequirements(progress, success, failure);
-        }
-      });
-    }
   }
 
   installAfterRequirements(progress, success) {
