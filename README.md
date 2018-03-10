@@ -388,6 +388,12 @@ On macOS, installer may request administrative account
 credentials to continue. So you can run from any bash instance and installer will show request
 for account with rights to administer current machine.
 
+Changing UserAgent string for HTTP(S) requests
+----------------------------------------------
+
+If you are developer set DSI_TEST_AGENT to be `RedHatDevelopmentSuiteTestInstaller/${version}-test` 
+to avoid interfrerance with real installer usage stats.
+
 Updating dependencies to latest
 -------------------------------
 
