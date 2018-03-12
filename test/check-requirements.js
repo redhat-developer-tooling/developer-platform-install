@@ -32,8 +32,8 @@ function checkRequirements() {
   fileNames['jbosseap'] = 'jboss-eap';
   fileNames['jdk'] = 'openjdk';
   fileNames['virtualbox'] = 'virtualbox';
-  fileNames['7zip'] = '7-zip';
-  fileNames['7zip-extra'] = '7-zip';
+  fileNames['7zip'] = '7-Zip';
+  fileNames['7zip-extra'] = '7-Zip';
   fileNames['kompose'] = 'kompose';
   fileNames['fuseplatformkaraf'] = 'karaf';
   fileNames['devstuidobpm'] = 'devstudio-integration-stack';
