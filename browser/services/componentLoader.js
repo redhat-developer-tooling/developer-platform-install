@@ -20,7 +20,6 @@ class ComponentLoader {
 
   removeComponent(key) {
     this.installerDataSvc.removeItemToInstall(key);
-    this.orderInstallation();
   }
 
   addComponent(key) {
@@ -49,15 +48,9 @@ class ComponentLoader {
     // first add all the nodes into graph
     for (let key in svc.requirements) {
       let item = svc.requirements[key];
-      if( item.bundle !== 'tools' && svc.getInstallable(key)) {
-        graph.addNode(key);
-      }
-    }
-    // then add releations between nodes
-    for (let key of graph.overallOrder()) {
-      let item = svc.requirements[key];
       if(item.requires) {
-        for(const dep of item.requires) {
+        for(let i=0; i<item.requires.length; i++) {
+          let dep = item.requires[i];
           if(dep.includes('||')) {
             let orDeps = dep.split('||');
             let selDep;
@@ -66,18 +59,32 @@ class ComponentLoader {
               let req = svc.getRequirementByName(orDep);
               // temp solution for conditional dependency resolution
               // would work for hyperv || virtualbox but not in general
-              if(installable.isValidVersionDetected() || req.installable === true) {
-                if(selDep) {
-                  svc.removeItemToInstall(orDep);
-                } else {
+              // looks for first valid detected or installable component
+              // and prefers it over others
+              if(selDep) {
+                svc.removeItemToInstall(orDep);
+              } else {
+                if(installable.isValidVersionDetected() || req.installable === true) {
                   selDep = orDep;
-                  graph.addDependency(key, orDep);
+                } else {
+                  svc.removeItemToInstall(orDep);
                 }
               }
             }
-          } else {
-            graph.addDependency(key, dep);
+            item.requires[i] = selDep;
           }
+        }
+      }
+      if(item.bundle !== 'tools' && svc.getInstallable(key)) {
+        graph.addNode(key);
+      }
+    }
+    // then add releations between nodes
+    for (let key of graph.overallOrder()) {
+      let item = svc.requirements[key];
+      if(item.requires) {
+        for(const dep of item.requires) {
+          graph.addDependency(key, dep);
         }
       }
     }

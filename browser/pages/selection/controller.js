@@ -88,11 +88,6 @@ class SelectionController {
   initPage() {
     return this.detectInstalledComponents().then(()=> {
       let checkboxModel = this.sc.checkboxModel;
-      if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
-        this.loader.removeComponent('virtualbox');
-      } else {
-        this.loader.removeComponent('hyperv');
-      }
       this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
       this.installWatchers();
     }).then(
