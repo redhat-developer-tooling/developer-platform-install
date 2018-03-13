@@ -281,7 +281,7 @@
         "version": "3.3.0-GA",
         "size": 483310592,
         "installSize" : 7243047404,
-        "requires": ["virtualbox"]
+        "requires": ["xhyve||virtualbox"]
       },
       "linux": {
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/16-Jan-2018.cdk-3.3.0/linux-amd64/minishift",
@@ -473,6 +473,34 @@
     },
     "platform": {
       "win32": {}
+    },
+    "channel" : {
+      "containerDev": { }
+    }
+  },
+  "xhyve": {
+    "name": "xhyve hypervisor",
+    "description": "macOS Virtualization Platform",
+    "modulePath": "model/xhyve",
+    "installable": false,
+    "detectable": true,
+    "bundle": "no",
+    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "",
+    "revision": 112440,
+    "virusTotalReport": "",
+    "vendor": "macOS",
+    "messages": {
+      "info": {
+        "message": "Follow these steps to install and enable xhyve virtualization",
+        "link": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v",
+        "linkDescription": "these steps"
+      }
+    },
+    "platform": {
+      "darwin": {}
     },
     "channel" : {
       "containerDev": { }
