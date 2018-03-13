@@ -153,43 +153,43 @@ class InstallerDataService {
   }
 
   virtualBoxDir() {
-    return this.getTargetLocation("virtualbox");
+    return this.getTargetLocation('virtualbox');
   }
 
   jdkDir() {
-    return this.getTargetLocation("jdk");
+    return this.getTargetLocation('jdk');
   }
 
   devstudioDir() {
-    return this.getTargetLocation("devstudio");
+    return this.getTargetLocation('devstudio');
   }
 
   jbosseapDir() {
-    return this.getTargetLocation("jbosseap");
+    return this.getTargetLocation('jbosseap');
   }
 
   fuseplatformDir() {
-    return this.getTargetLocation("fuseplatform");
+    return this.getTargetLocation('fuseplatform');
   }
 
   fuseplatformkarafDir() {
-    return this.getTargetLocation("fuseplatformkaraf");;
+    return this.getTargetLocation('fuseplatformkaraf');
   }
 
   cygwinDir() {
-    return this.getTargetLocation("cygwin");;
+    return this.getTargetLocation('cygwin');
   }
 
   rhamtDir() {
-    return this.getTargetLocation("rhamtcli");;
+    return this.getTargetLocation('rhamtcli');
   }
 
   komposeDir() {
-    return this.getTargetLocation("kompose");;
+    return this.getTargetLocation('kompose');
   }
 
   cdkDir() {
-    return this.getTargetLocation("cdk");;
+    return this.getTargetLocation('cdk');
   }
 
   installDir() {
