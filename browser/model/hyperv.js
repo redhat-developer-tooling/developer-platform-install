@@ -18,8 +18,6 @@ class HypervInstall extends InstallableItem {
       return Platform.isHypervisorAvailable().then((available) => {
         if (available) {
           return Platform.isHypervisorEnabled();
-        } else {
-          return Promise.resolve();
         }
       }).then((detected)=>{
         if(detected) {

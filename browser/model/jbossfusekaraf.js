@@ -5,7 +5,6 @@ import Installer from './helpers/installer';
 import Logger from '../services/logger';
 let fse = require('fs-extra');
 let path = require('path');
-let unzip = require('unzip-stream');
 
 class FusePlatformInstallKaraf extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
@@ -21,8 +20,7 @@ class FusePlatformInstallKaraf extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
-    return installer.unzip(this.downloadedFile, this.installerDataSvc.fuseplatformkarafDir())
-    .then(()=> {
+    return installer.unzip(this.downloadedFile, this.installerDataSvc.fuseplatformkarafDir()).then(()=> {
       let users = path.join(this.installerDataSvc.fuseplatformkarafDir(), 'etc', 'users.properties');
       let result;
       if(fse.existsSync(users)) {
