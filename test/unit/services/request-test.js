@@ -10,7 +10,7 @@ describe('Request Service', function() {
   let sandbox;
   let window = {
     navigator: {
-      userAgent: "user agent string"
+      userAgent: process.env.DSI_TEST_AGENT ? process.env.DSI_TEST_AGENT : 'user agent string'
     }
   };
   beforeEach(function() {
@@ -74,11 +74,11 @@ describe('Request Service', function() {
   it('get should call request module with user agent string from current browser window', function() {
     let requestMod = sinon.stub().yields(undefined, {statusCode: 200}, 'true');
     let r = new Request(requestMod, window);
-    return r.get({url:'https://domain.com'}).then((result)=>{
+    return r.get({url:'https://domain.com'}).then(()=>{
       expect(requestMod).calledWith({
         url: 'https://domain.com',
         headers: {
-          "User-Agent": window.navigator.userAgent
+          'User-Agent': window.navigator.userAgent
         }
       });
     });

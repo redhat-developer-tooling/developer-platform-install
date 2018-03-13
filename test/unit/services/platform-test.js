@@ -347,7 +347,7 @@ describe('Platform', function() {
       beforeEach(function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
         sandbox.stub(os, 'arch').returns('x64');
-      })
+      });
 
       it('should return true for windows 8', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, 'Windows 8.1 Pro');
@@ -615,7 +615,7 @@ describe('Platform', function() {
         sandbox.stub(sudo, 'exec').yields(undefined, '');
       });
 
-      it('passes new path value to elevated shell script', function() {        
+      it('passes new path value to elevated shell script', function() {
         return Platform.addToUserPath(executables).then(() => {
           expect(sudo.exec.getCall(0).args[0].includes(executables[0])).to.be.true;
           expect(sudo.exec.getCall(0).args[0].includes(executables[1])).to.be.true;
