@@ -485,7 +485,7 @@
     "installable": false,
     "detectable": true,
     "bundle": "no",
-    "url": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/",
+    "url": "https://docs.openshift.org/latest/minishift/getting-started/installing.html",
     "fileName": "",
     "sha256sum": "",
     "version": "",
@@ -495,7 +495,7 @@
     "messages": {
       "info": {
         "message": "Follow these steps to install and enable xhyve virtualization",
-        "link": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v",
+        "link": "https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install",
         "linkDescription": "these steps"
       }
     },
