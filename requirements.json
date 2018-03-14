@@ -268,8 +268,8 @@
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/windows-amd64/minishift.exe",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/windows-amd64/minishift.exe",
         "fileName": "minishift_3_4_0__Alpha_1.exe",
-        "sha256sum": "eb5d8042f464dcc8428558a3b8dcd935a87096791f69aa39a9bf72b98f9cc246 ",
-        "size": 481787904,
+        "sha256sum": "eb5d8042f464dcc8428558a3b8dcd935a87096791f69aa39a9bf72b98f9cc246",
+        "size": 480504832,
         "installSize" : 7243047404,
         "requires": ["cygwin","hyperv||virtualbox"]
       },
@@ -278,7 +278,7 @@
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/darwin-amd64/minishift",
         "fileName": "minishift_3_4_0__Alpha_1",
         "sha256sum": "623dbda65e2663f2fb41ee6b6329a37c94f89a5eb5eeb5d0f0e0264071b38a62",
-        "size": 483310592,
+        "size": 482035264,
         "installSize" : 7243047404,
         "requires": ["virtualbox"]
       },
@@ -287,7 +287,7 @@
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/linux-amd64/minishift",
         "fileName": "minishift_3_4_0__Alpha_1",
         "sha256sum": "97a244a7a81eabbeb19dc5190cb4fd64d7f83ed147f5a387c9a7ed6a8749ce34",
-        "size": 481478720,
+        "size": 480206048,
         "installSize" : 836390912,
         "requires": ["virtualbox"]
       }
