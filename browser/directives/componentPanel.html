@@ -36,12 +36,14 @@
     </div>
   </div>
 
-  <div class="help-block" ng-show="item.messages.info !== undefined && !item.isDetected()">
-    <span class="pficon pficon-info"></span>
-    <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[0]}}</span>
-    <a type="button" class="pointer" ng-click="openUrl(item.messages.info.link ? item.messages.info.link : item.downloadUrl)">
-      {{item.messages.info.linkDescription}}</a>
-    <span>{{item.messages.info.message.split(item.messages.info.linkDescription)[1]}}</span>
+  <div ng-repeat="message in item.messages.info">
+    <div class="help-block" ng-show="message !== undefined && !item.isDetected()">
+      <span class="pficon pficon-info"></span>
+      <span>{{message.message.split(message.linkDescription)[0]}}</span>
+      <a type="button" class="pointer" ng-click="openUrl(message.link ? message.link : item.downloadUrl)">
+        {{message.linkDescription}}</a>
+      <span>{{message.message.split(message.linkDescription)[1]}}</span>
+    </div>
   </div>
 
   <div class="message-container error-message" ng-show="filtered.length > 0 && !item.isConfigured()">
