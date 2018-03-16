@@ -6,10 +6,11 @@ import humanize from 'humanize';
 import Platform from '../../services/platform';
 
 class InstallController {
-  constructor($scope, $timeout, installerDataSvc, electron, $window) {
+  constructor($state, $scope, $timeout, installerDataSvc, electron, $window) {
     this.$scope = $scope;
     this.$timeout = $timeout;
     this.$window = $window;
+    this.router = $state;
     this.installerDataSvc = installerDataSvc;
     this.electron = electron;
     this.electron.ipcRenderer.setMaxListeners(0);
@@ -39,7 +40,7 @@ class InstallController {
         this.itemProgress.current = 100;
         this.$timeout();
         this.$timeout(() => {
-          this.installerDataSvc.router.go('start');
+          this.router.go('start');
         }, 700);
       }
     });
@@ -168,7 +169,7 @@ class ProgressState {
   }
 }
 
-InstallController.$inject = ['$scope', '$timeout', 'installerDataSvc', 'electron', '$window'];
+InstallController.$inject = ['$state', '$scope', '$timeout', 'installerDataSvc', 'electron', '$window'];
 
 export default InstallController;
 export { ProgressState };
