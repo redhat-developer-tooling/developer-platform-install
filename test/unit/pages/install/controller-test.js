@@ -121,6 +121,20 @@ describe('Install controller', function() {
       expect(verifyStub).calledOnce;
       expect(verifyStub).calledWith(ctrl.itemProgress, 'virtualbox', 'jdk');
     });
+
+    it('should start downloding files after verification is complete', function() {
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      sandbox.stub(installerDataSvc, 'downloadFiles');
+      ctrl.electron.ipcRenderer.emit('checkComplete', undefined, 'all');
+      expect(installerDataSvc.downloadFiles).calledWith(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
+    });
+
+    it('should start installstion after downloading is complete', function() {
+      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      sandbox.stub(installerDataSvc, 'processInstall');
+      ctrl.electron.ipcRenderer.emit('downloadingComplete', undefined, 'all');
+      expect(installerDataSvc.processInstall).calledWith(ctrl.itemProgress);
+    });
   });
 
   describe('downloadFiles', function() {
