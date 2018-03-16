@@ -54,7 +54,7 @@ describe('Install controller', function() {
   describe('constrution', function() {
     it('should verify existing files', function() {
       let stub = sandbox.stub(installerDataSvc, 'verifyFiles').returns();
-      new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(stub).calledOnce;
     });
@@ -69,7 +69,7 @@ describe('Install controller', function() {
       };
 
       let spy = sandbox.spy(tron.ipcRenderer, 'on');
-      new InstallController({}, {}, installerDataSvc, tron, window);
+      new InstallController({}, {}, {}, installerDataSvc, tron, window);
 
       expect(spy).calledThrice;
       expect(spy).calledWith('checkComplete');
@@ -87,7 +87,7 @@ describe('Install controller', function() {
 
     it('should select component for file verification if some of its files are downloaded', function() {
       vbox.files.virtualbox.downloaded = true;
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(verifyStub).calledOnce;
       expect(verifyStub).calledWith(ctrl.itemProgress, 'virtualbox');
@@ -95,7 +95,7 @@ describe('Install controller', function() {
 
     it('should skip a component if none of its files are downloaded', function() {
       vbox.files.virtualbox.downloaded = false;
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(verifyStub).calledOnce;
       expect(verifyStub).calledWithExactly(ctrl.itemProgress);
@@ -104,7 +104,7 @@ describe('Install controller', function() {
     it('should skip a component if it is bundled', function() {
       vbox.files.virtualbox.downloaded = true;
       vbox.downloadedFile = vbox.bundledFile;
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(verifyStub).calledOnce;
       expect(verifyStub).calledWithExactly(ctrl.itemProgress);
@@ -116,24 +116,36 @@ describe('Install controller', function() {
       installerDataSvc.addItemToInstall('jdk', jdk);
       jdk.files.jdk.downloaded = true;
 
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
 
       expect(verifyStub).calledOnce;
       expect(verifyStub).calledWith(ctrl.itemProgress, 'virtualbox', 'jdk');
     });
 
     it('should start downloding files after verification is complete', function() {
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
       sandbox.stub(installerDataSvc, 'downloadFiles');
       ctrl.electron.ipcRenderer.emit('checkComplete', undefined, 'all');
       expect(installerDataSvc.downloadFiles).calledWith(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
     });
 
-    it('should start installstion after downloading is complete', function() {
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+    it('should start installation after downloading is complete', function() {
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
       sandbox.stub(installerDataSvc, 'processInstall');
       ctrl.electron.ipcRenderer.emit('downloadingComplete', undefined, 'all');
       expect(installerDataSvc.processInstall).calledWith(ctrl.itemProgress);
+    });
+
+    it('should route to final page after installation is complete', function() {
+      let router = {
+        'go': sinon.stub()
+      };
+      let timeout = function(cb) {
+        cb && cb();
+      };
+      let ctrl = new InstallController(router, {}, timeout, installerDataSvc, new ElectronMock(), window);
+      ctrl.electron.ipcRenderer.emit('installComplete', undefined, 'all');
+      expect(router.go).calledWith('start');
     });
   });
 
@@ -152,7 +164,7 @@ describe('Install controller', function() {
       vbox.downloaded = false;
       jdk.downloaded = true;
 
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
       installerDataSvc.downloadFiles(ctrl.itemProgress, window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
@@ -168,7 +180,7 @@ describe('Install controller', function() {
         size: 123
       };
 
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
       installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(progressStub).calledOnce;
@@ -187,7 +199,7 @@ describe('Install controller', function() {
         size: 123
       };
 
-      let ctrl = new InstallController({}, {}, installerDataSvc, new ElectronMock(), window);
+      let ctrl = new InstallController({}, {}, {}, installerDataSvc, new ElectronMock(), window);
       installerDataSvc.downloadFiles(ctrl.itemProgress, ctrl.$window.navigator.userAgent);
 
       expect(dlStub).calledOnce;
@@ -207,21 +219,21 @@ describe('Install controller', function() {
     it.skip('logs error in case of install failed', function() {
       vbox.install.restore();
       sandbox.stub(vbox, 'install').callsArgWith(2, 'Error');
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, {}, timeoutStub, installerDataSvc, new ElectronMock());
       expect(errorStub).calledTwice;
     });
 
     it.skip('should call the installables install method', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, {}, timeoutStub, installerDataSvc, new ElectronMock());
       expect(vboxStub).calledOnce;
     });
 
     it.skip('should call data services installDone when install finishes', function() {
       sandbox.stub(installerDataSvc, 'startInstall').returns();
 
-      new InstallController({}, timeoutStub, installerDataSvc, new ElectronMock());
+      new InstallController({}, {}, timeoutStub, installerDataSvc, new ElectronMock());
 
       expect(doneStub).calledOnce;
       expect(doneStub).calledWith(sinon.match.any, 'virtualbox');
@@ -389,7 +401,7 @@ describe('Install controller', function() {
         let electron = new ElectronMock();
         sandbox.stub(installerDataSvc, 'verifyFiles').returns();
         sandbox.stub(electron.remote.currentWindow);
-        let installController = new InstallController({}, {}, installerDataSvc, electron, window);
+        let installController = new InstallController({}, {}, {}, installerDataSvc, electron, window);
         installController.exit();
         expect(electron.remote.currentWindow.close).calledOnce;
       });
@@ -410,7 +422,7 @@ describe('Install controller', function() {
       callback && callback();
     };
 
-    let installCtrl = new InstallController(scopeStub, timeoutStub, installerDataSvc, new ElectronMock());
+    let installCtrl = new InstallController({}, scopeStub, timeoutStub, installerDataSvc, new ElectronMock());
     sandbox.spy(installCtrl, 'closeDownloadAgainDialog');
     installCtrl.downloadAgain();
     expect(InstallableItem.prototype.restartDownload).calledOnce;
