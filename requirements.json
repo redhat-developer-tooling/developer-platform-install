@@ -257,11 +257,9 @@
     },
     "messages": {
       "info": {
-        "cdkinfo": {
-          "message": "Visit https://developers.redhat.com/products/cdk to learn everything you need to build your first application",
-          "link": "https://developers.redhat.com/products/cdk/overview/",
-          "linkDescription": "https://developers.redhat.com/products/cdk"
-        }
+        "message": "Visit https://developers.redhat.com/products/cdk to learn everything you need to build your first application",
+        "link": "https://developers.redhat.com/products/cdk/overview/",
+        "linkDescription": "https://developers.redhat.com/products/cdk"
       }
     },
     "platform": {
@@ -312,11 +310,9 @@
     },
     "messages": {
       "info": {
-        "komposeinfo": {
-          "message": "For additional information and documentation visit http://kompose.io",
-          "link": "http://kompose.io",
-          "linkDescription": "http://kompose.io"
-        }
+        "message": "For additional information and documentation visit http://kompose.io",
+        "link": "http://kompose.io",
+        "linkDescription": "http://kompose.io"
       }
     },
     "platform": {
@@ -470,11 +466,9 @@
     "vendor": "Microsoft, Inc.",
     "messages": {
       "info": {
-        "hypervinfo": {
-          "message": "Follow these steps to install and enable Microsoft Hyper-V on Windows 10",
-          "link": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v",
-          "linkDescription": "these steps"
-        }
+        "message": "Follow these steps to install and enable Microsoft Hyper-V on Windows 10",
+        "link": "https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v",
+        "linkDescription": "these steps"
       }
     },
     "platform": {
@@ -500,16 +494,9 @@
     "vendor": "macOS",
     "messages": {
       "info": {
-        "xhyveinfo": {
-          "message": "Follow these steps to install and enable xhyve virtualization",
-          "link": "https://docs.openshift.org/latest/minishift/getting-started/installing.html",
-          "linkDescription": "these steps"
-        },
-        "xhyvedriverinfo": {
-          "message": "Follow these steps to install and enable xhyve docker machine driver",
-          "link": "https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install",
-          "linkDescription": "these steps"
-        }
+        "message": "Follow these steps to install and enable xhyve docker machine driver",
+        "link": "https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install",
+        "linkDescription": "these steps"
       }
     },
     "platform": {
