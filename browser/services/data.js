@@ -123,6 +123,12 @@ class InstallerDataService {
     }
   }
 
+  removeItemToInstall(key) {
+    this.allInstallables().delete(key);
+    this.toDownload.delete(key);
+    this.toInstall.delete(key);
+  }
+
   getInstallable(key) {
     return this.installableItems.get(key);
   }

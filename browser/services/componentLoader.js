@@ -19,9 +19,7 @@ class ComponentLoader {
   }
 
   removeComponent(key) {
-    this.installerDataSvc.allInstallables().delete(key);
-    this.installerDataSvc.toDownload.delete(key);
-    this.installerDataSvc.toInstall.delete(key);
+    this.installerDataSvc.removeItemToInstall(key);
   }
 
   addComponent(key) {
@@ -50,7 +48,34 @@ class ComponentLoader {
     // first add all the nodes into graph
     for (let key in svc.requirements) {
       let item = svc.requirements[key];
-      if( item.bundle !== 'tools' && svc.getInstallable(key)) {
+      if(item.requires) {
+        for(let i=0; i<item.requires.length; i++) {
+          let dep = item.requires[i];
+          if(dep.includes('||')) {
+            let orDeps = dep.split('||');
+            let selDep;
+            for(let orDep of orDeps) {
+              let installable = svc.getInstallable(orDep);
+              let req = svc.getRequirementByName(orDep);
+              // temp solution for conditional dependency resolution
+              // would work for hyperv || virtualbox but not in general
+              // looks for first valid detected or installable component
+              // and prefers it over others
+              if(selDep) {
+                svc.removeItemToInstall(orDep);
+              } else {
+                if(installable.isValidVersionDetected() || req.installable === true) {
+                  selDep = orDep;
+                } else {
+                  svc.removeItemToInstall(orDep);
+                }
+              }
+            }
+            item.requires[i] = selDep;
+          }
+        }
+      }
+      if(item.bundle !== 'tools' && svc.getInstallable(key)) {
         graph.addNode(key);
       }
     }
@@ -59,21 +84,7 @@ class ComponentLoader {
       let item = svc.requirements[key];
       if(item.requires) {
         for(const dep of item.requires) {
-          if(dep.includes('||')) {
-            let orDeps = dep.split('||');
-            for(let orDep of orDeps) {
-              let installable = svc.getInstallable(orDep);
-              let req = svc.getRequirementByName(orDep);
-              // temp solution for conditional dependency resolution
-              // would work for hyperv || virtualbox but not in general
-              if(installable && (installable.isValidVersionDetected() || req.installable === true)) {
-                graph.addDependency(key, orDep);
-                break;
-              }
-            }
-          } else {
-            graph.addDependency(key, dep);
-          }
+          graph.addDependency(key, dep);
         }
       }
     }
