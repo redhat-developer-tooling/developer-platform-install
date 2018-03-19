@@ -276,9 +276,6 @@ describe('InstallableItem', function() {
   });
 
   describe('when instantiated', function() {
-    it('should have no existing install', function() {
-      expect(item.hasExistingInstall()).to.be.equal(false);
-    });
 
     it('should have no installAfter initialized', function() {
       expect(item.getInstallAfter()).to.be.equal(undefined);
