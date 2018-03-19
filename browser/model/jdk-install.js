@@ -18,7 +18,6 @@ class JdkInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum) {
     super(JdkInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, true);
     this.sha256 = sha256sum;
-    this.existingVersion = '';
     this.minimumVersion = '1.8.0';
     this.openJdkMsi = false;
   }

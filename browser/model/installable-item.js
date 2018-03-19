@@ -13,34 +13,29 @@ let ipcRenderer = require('electron').ipcRenderer;
 class InstallableItem {
   constructor(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, authRequired) {
     this.keyName = keyName;
+    if (downloadUrl == null || downloadUrl == '') {
+      throw(new Error(`No download URL set for ${keyName} Installer`));
+    }
+    this.downloadUrl = downloadUrl;
     this.fileName = fileName;
+    this.targetFolderName = targetFolderName;
+    this.installerDataSvc = installerDataSvc;
+    this.authRequired = authRequired;
+
     let requirement = installerDataSvc.getRequirementByName(keyName);
     this.productName = requirement.name;
     this.productVersion = requirement.version;
     this.productDesc = requirement.description;
     this.isInstallable = requirement.installable;
-    this.targetFolderName = targetFolderName;
-    this.installerDataSvc = installerDataSvc;
-    this.existingInstall = false;
-    this.existingInstallLocation = '';
-    this.existingVersion = '';
+    this.messages = requirement.messages;
     this.useDownload = requirement.useDownload == undefined ? true : requirement.useDownload;
-    this.downloaded = false;
-    this.installed = false;
     this.size = requirement.size;
     this.installSize = requirement.installSize;
     this.version = requirement.version;
     this.channel = requirement.channel;
 
-    this.detected = false;
-    this.detectedVersion = 'unknown';
-    this.detectedInstallLocation = '';
-
-    if (downloadUrl == null || downloadUrl == '') {
-      throw(new Error(`No download URL set for ${keyName} Installer`));
-    }
-
-    this.downloadUrl = downloadUrl;
+    this.downloaded = false;
+    this.installed = false;
 
     this.bundleFolder = remote && remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
     this.userAgentString = remote && remote.getCurrentWindow().webContents.session.getUserAgent();
@@ -97,10 +92,8 @@ class InstallableItem {
 
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
-    this.authRequired = authRequired;
     this.references = 0;
 
-    this.messages = requirement.messages;
     this.totalDownloads = Object.keys(this.files).length;
   }
 
@@ -133,10 +126,6 @@ class InstallableItem {
 
   isInstalled() {
     return this.installed;
-  }
-
-  hasExistingInstall() {
-    return this.existingInstall;
   }
 
   isDownloadRequired() {
