@@ -6,7 +6,6 @@ import Installer from './helpers/installer';
 import Utils from './helpers/util';
 import Platform from '../services/platform';
 import fs from 'fs-extra';
-import replace from 'replace-in-file';
 
 class EclipseGuidedDevInstall extends InstallableItem {
   constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID) {
@@ -52,6 +51,12 @@ class EclipseGuidedDevInstall extends InstallableItem {
     let csDir = path.join(devstudioDir,'cheatsheets');
     let csLocation = path.join(csDir, 'guided-development.xml');
     return Promise.resolve().then(()=> {
+
+      if(EclipseGuidedDevInstall.firstCall) {
+        //delete cheatsheets xml if exists
+        fs.rmdirSync(csDir);
+        EclipseGuidedDevInstall.firstCall = false;
+      }
       if(!fs.existsSync(csDir)) {
         fs.mkdirSync(csDir);
       }
@@ -59,7 +64,7 @@ class EclipseGuidedDevInstall extends InstallableItem {
         return Utils.writeFile(csLocation, this.getDefaultCsContent());
       }
     }).then(()=> {
-      return replace({
+      return Utils.replaceInFile({
         files: csLocation,
         from: '<!-- tasks -->',
         to: this.getTaskContents()
@@ -79,5 +84,6 @@ function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fil
 }
 
 EclipseGuidedDevInstall.convertor = {fromJson};
+EclipseGuidedDevInstall.firstCall = true;
 
 export default EclipseGuidedDevInstall;

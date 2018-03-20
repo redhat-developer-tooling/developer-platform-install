@@ -2,6 +2,7 @@
 
 let child_process = require('child_process');
 let fs = require('fs-extra');
+import replace from 'replace-in-file';
 import Platform from '../../services/platform';
 
 class Util {
@@ -42,7 +43,9 @@ class Util {
       });
     });
   }
-
+static replaceInFile(options) {
+  return replace(options);
+}
   static folderContains(folder, fileNames) {
     return new Promise((resolve, reject) => {
       fs.readdir(folder, (err, files) => {
