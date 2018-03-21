@@ -512,7 +512,7 @@
     },
     "platform": {
       "win32": {
-        "url": "https://download.virtualbox.org/virtualbox/5.2.8/VirtualBox-5.2.8-121009-Win.exe",
+        "url": " https://developers.redhat.com/redirect/to/virtualbox-windows-5.2.8.download",
         "fileName": "virtualbox_5.2.8.exe",
         "sha256sum": "bbd74e2d9717285863578ff728c16b411c88d1d0b63e3fd456cd09d2131635b3",
         "version": "5.2.8",
@@ -522,7 +522,7 @@
         "virusTotalReport": "https://virustotal.com/en/file/c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a/analysis/"
       },
       "darwin": {
-        "url": "https://download.virtualbox.org/virtualbox/5.2.8/VirtualBox-5.2.8-121009-OSX.dmg",
+        "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.2.8.download",
         "fileName": "virtualbox_5.2.8.dmg",
         "sha256sum": "97764ad37c5fafdeccecfb660ce056f625e9048890af772befe0330ed2def1d8",
         "version": "5.2.8",
