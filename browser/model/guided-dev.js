@@ -51,12 +51,11 @@ class EclipseGuidedDevInstall extends InstallableItem {
     let csDir = path.join(devstudioDir,'cheatsheets');
     let csLocation = path.join(csDir, 'guided-development.xml');
     return Promise.resolve().then(()=> {
-
-      if(EclipseGuidedDevInstall.firstCall) {
+      if(EclipseGuidedDevInstall.firstCall && fs.existsSync(csDir)) {
         //delete cheatsheets xml if exists
         fs.rmdirSync(csDir);
-        EclipseGuidedDevInstall.firstCall = false;
       }
+      EclipseGuidedDevInstall.firstCall = false;
       if(!fs.existsSync(csDir)) {
         fs.mkdirSync(csDir);
       }
