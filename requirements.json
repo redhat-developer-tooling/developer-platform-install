@@ -512,31 +512,31 @@
     },
     "platform": {
       "win32": {
-        "url": "https://developers.redhat.com/redirect/to/virtualbox-windows-5.1.24.download",
-        "fileName": "virtualbox_5.1.24.exe",
-        "sha256sum": "c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a",
-        "version": "5.1.24",
-        "size": 123792216,
+        "url": "https://download.virtualbox.org/virtualbox/5.2.8/VirtualBox-5.2.8-121009-Win.exe",
+        "fileName": "virtualbox_5.2.8.exe",
+        "sha256sum": "bbd74e2d9717285863578ff728c16b411c88d1d0b63e3fd456cd09d2131635b3",
+        "version": "5.2.8",
+        "size": 113710424,
         "installSize": 179499008,
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/c617cc5bcf68c9cc907a8d561b89aab9a3e93feb2b43807f80fb3fdd31eb148a/analysis/"
       },
       "darwin": {
-        "url": "https://developers.redhat.com/redirect/to/virtualbox-macos-5.1.24.download",
-        "fileName": "virtualbox_5.1.24.dmg",
-        "sha256sum": "5ac1a7b53d35cfde01a17a87ff2361bee37f4afe197d8e7f02239967b183d9f0",
-        "version": "5.1.24",
-        "size": 94535029,
+        "url": "https://download.virtualbox.org/virtualbox/5.2.8/VirtualBox-5.2.8-121009-OSX.dmg",
+        "fileName": "virtualbox_5.2.8.dmg",
+        "sha256sum": "97764ad37c5fafdeccecfb660ce056f625e9048890af772befe0330ed2def1d8",
+        "version": "5.2.8",
+        "size": 95409332,
         "installSize": 179499008,
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/5ac1a7b53d35cfde01a17a87ff2361bee37f4afe197d8e7f02239967b183d9f0/analysis/"
       },
       "linux": {
-        "url": "http://download.virtualbox.org/virtualbox/5.1.24/VirtualBox-5.1-5.1.24_117012_fedora25-1.x86_64.rpm",
-        "fileName": "VirtualBox-5.1-5.1.24_117012_fedora25-1.x86_64.rpm",
-        "sha256sum": "459269bddb94e6d91a6925ea1642f911b30fddcbe7f12c21e891271351db9644",
-        "version": "5.1.24",
-        "size": 71803242,
+        "url": "https://download.virtualbox.org/virtualbox/5.2.8/VirtualBox-5.2-5.2.8_121009_fedora26-1.x86_64.rpm",
+        "fileName": "VirtualBox-5.2-5.2.8_121009_fedora26-1.x86_64.rpm",
+        "sha256sum": "5cb652c73df2f2d391982dfffe82057ce46e1dd1148d354d5142e52d124caccb",
+        "version": "5.2.8",
+        "size": 72244730,
         "revision": "117012",
         "virusTotalReport": "https://virustotal.com/en/file/459269bddb94e6d91a6925ea1642f911b30fddcbe7f12c21e891271351db9644/analysis/1500980721/"
       }

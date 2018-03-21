@@ -26,7 +26,7 @@ describe('Virtualbox installer', function() {
   let installerDataSvc, installer;
   let infoStub, errorStub, sandbox, sha256Stub;
 
-  let version = '5.1.24';
+  let version = '5.2.8';
   let revision = '117012';
   let downloadUrl = `http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe`;
   let item2;
@@ -413,7 +413,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add error for version out of range', function() {
-      installer.option['detected'].version = '5.2.12';
+      installer.option['detected'].version = '5.5.12';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
