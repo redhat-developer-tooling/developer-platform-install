@@ -148,7 +148,7 @@ describe('JDK installer', function() {
         mockDetectedJvm('');
         return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('install');
-          expect(jdk.getLocation()).to.be.equal('');
+          expect(jdk.getLocation()).to.be.equal(installerDataSvc.jdkDir());
         });
       });
 
