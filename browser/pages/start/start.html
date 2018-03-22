@@ -1,17 +1,78 @@
 <breadcrumb></breadcrumb>
 <main>
-  <div class="col-sm-12 bottom-spacer">
-    <div class="middle-high-pos text-center">
-      <div class="text-padding">Everything's installed and you're good to go!</div>
-      <div class="text-padding">What’s next? <a id="quickstart-link" href="" ng-click="startCtrl.learnCDK()">Learn how to create your first CDK project.</a></div>
+  <div class="col-sm-12 bottom-spacer" style="margin-top:20px;">
+    <div class="container-fluid container-cards-pf">
+      <div class="alert alert-success">
+        <span class="pficon pficon-ok"></span>
+        <strong>Great job!!&nbsp;</strong><span>Everything's installed and you're good to go!</span>
+      </div>
+      <div class="row row-cards-pf" ng-hide="startCtrl.devstudioInstall.isSkipped() && startCtrl.fuseInstall.isSkipped()">
+        <div class="col-xs-12">
+          <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
+            <div class="card-pf-body" style="height: 230px;">
+              <section class="product-header devstudio">
+                <div class="row">
+                  <div class="header-column"> 
+                    <h2>
+                      <span class="field-name-title">Red Hat JBoss Developer Studio</span>
+                    </h2> 
+                    <div class="field-item">
+                      A development environment with superior support for your entire development lifecycle.
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <div class="card-pf-top-element">
+                <div class="startForm pull-right">
+                  <button type="submit" id="start-submit" class="btn-getStarted" ng-submit="startCtrl.start()">Get Started</button>
+                  <div>
+                    <ul class="inline-list">
+                      <li>
+                        <a id="datagrid-docs-and-apis" ng-click="startCtrl.gotoDocs('devstudio')"><i class="fa fa-file-text-o"></i> Docs and APIs</a>
+                      </li>
+                      <li><a id="learn-datagrid" ng-click="startCtrl.gotoLearnDevStudio()"><i class="fa fa-files-o"></i> Learn</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-cards-pf" ng-hide="startCtrl.cdkInstall.isSkipped()">
+        <div class="col-xs-12">
+          <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
+            <div class="card-pf-body" style="height: 230px;">
+              <section class="product-header cdk">
+                <div class="row">
+                  <div class="header-column"> 
+                    <h2>
+                      <span class="field-name-title">Red Hat Container Development Kit</span>
+                    </h2> 
+                    <div class="field-item">
+                      Run and develop on OpenShift Container Platform 3 locally
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <div class="card-pf-top-element">
+                <div class="startForm pull-right">
+                  <button type="submit" class="btn-getStarted" ng-submit="startCtrl.start()">Get Started</button>
+                  <div>
+                    <ul class="inline-list">
+                      <li>
+                        <a id="datagrid-docs-and-apis" ng-click="startCtrl.gotoDocs('cdk')"><i class="fa fa-file-text-o"></i> Docs and APIs</a>
+                      </li>
+                      <li><a id="learn-datagrid" ng-click="startCtrl.gotoLearnCDK()"><i class="fa fa-files-o"></i> Learn</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <form id="startForm" role="form" class="text-center" ng-submit="startCtrl.start()">
-      <div ng-hide="startCtrl.devstudioInstall.isSkipped() && startCtrl.fuseInstall.isSkipped()">
-        <button type="submit" id="start-submit" class="btn btn-primary">Open Red Hat JBoss Developer Studio</button>
-      </div>
-      <div>
-        <button type="button" id="exit-btn" class="btn btn-default btn-lg" ng-click="startCtrl.exit()">Close the installer</button>
-      </div>
-    </form>
   </div>
 </main>

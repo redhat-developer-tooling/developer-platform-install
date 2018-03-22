@@ -655,8 +655,8 @@ footer {
     padding-top: 1%;
   }
 
-  #startForm {
-    padding-top: 5%;
+  .startForm {
+    padding-top: 4%;
   }
 
   #start-submit {
@@ -992,5 +992,70 @@ footer {
   .channel-info .status {
     font-weight: 600;
     padding-right: 10px;
+  }
+
+  .product-header {
+    border-bottom: 9px solid #9fd2ec;
+    height: 90px;
+    background-size: cover;
+  }
+
+  .product-header.devstudio {
+    background-image: url(images/prod_header_jboss_devstudio.png);
+  }
+
+  .product-header.cdk {
+    background-image: url(images/RHDev_productheader_desktop_cdk.png);
+  }
+
+  .header-column {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .field-name-title {
+    display: inline-block;
+    color: #fff;
+    font-weight: 400;
+  }
+
+  .field-item {
+    color: #ffffff;
+    font-weight: 400;
+  }
+
+  .btn-getStarted {
+    background: #fff;
+    color: #0088ce;
+    border: 1px solid #0088ce;
+    padding: 8px 40px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.44;
+    transition: background .2s ease-in 0s;
+  }
+
+  .btn-getStarted:hover {
+    background-color: #0088ce;
+    color: #fff;
+  }
+
+  .inline-list {
+    font-size: 14px;
+    padding: 9px;
+    margin-left: -10px;
+  }
+
+  .inline-list>li {
+    list-style: none;
+    float: left;
+    margin-left: 10px;
+    display: block;
+  }
+
+  .inline-list>li>a:hover {
+    text-decoration: none;
   }
 }

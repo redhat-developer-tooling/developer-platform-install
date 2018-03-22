@@ -14,16 +14,9 @@ class StartController {
     this.electron = electron;
     this.devstudioInstall = this.installerDataSvc.getInstallable('devstudio');
     this.fuseInstall = this.installerDataSvc.getInstallable('fusetools');
+    this.cdkInstall = this.installerDataSvc.getInstallable('cdk');
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
-  }
-
-  learnCDK() {
-    this.electron.shell.openExternal(StartController.LEARN_CDK_URL);
-  }
-
-  static get LEARN_CDK_URL () {
-    return 'http://developers.redhat.com/devstudio-preview';
   }
 
   start() {
@@ -32,6 +25,18 @@ class StartController {
     } else {
       this.launchDevstudio();
     }
+  }
+
+  gotoDocs(component) {
+    this.electron.shell.openExternal('https://developers.redhat.com/products/'+component+'/docs-and-apis/');
+  }
+
+  gotoLearnDevStudio() {
+    this.electron.shell.openExternal('https://developers.redhat.com/products/devstudio/learn/');
+  }
+
+  gotoLearnCDK() {
+    this.electron.shell.openExternal('https://developers.redhat.com/topics/containers/');
   }
 
   launchDevstudio_darwin() {
