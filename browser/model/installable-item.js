@@ -69,27 +69,27 @@ class InstallableItem {
     }
 
     this.downloaded = true;
-
-    for (let file in this.files) {
-      if (!fs.existsSync(path.join(this.bundleFolder, this.files[file].fileName))) {
-        if (fs.existsSync(path.join(this.downloadFolder, this.files[file].fileName))) {
-          try {
-            let stat = fs.statSync(path.join(this.downloadFolder, this.files[file].fileName));
-            this.files[file].downloaded = stat && stat.size == this.files[file].size;
-            this.downloaded = this.downloaded && this.files[file].downloaded;
-          } catch (error) {
+    if(this.useDownload) {
+      for (let file in this.files) {
+        if (!fs.existsSync(path.join(this.bundleFolder, this.files[file].fileName))) {
+          if (fs.existsSync(path.join(this.downloadFolder, this.files[file].fileName))) {
+            try {
+              let stat = fs.statSync(path.join(this.downloadFolder, this.files[file].fileName));
+              this.files[file].downloaded = stat && stat.size == this.files[file].size;
+              this.downloaded = this.downloaded && this.files[file].downloaded;
+            } catch (error) {
+              this.downloaded = false;
+              Logger.info(`${this.keyName} - fstat function failure ${error}`);
+            }
+          } else {
             this.downloaded = false;
-            Logger.info(`${this.keyName} - fstat function failure ${error}`);
           }
         } else {
-          this.downloaded = false;
+          this.files[file].downloaded = true;
+          this.downloadedFile = path.join(this.bundleFolder, this.files[file].fileName);
         }
-      } else {
-        this.files[file].downloaded = true;
-        this.downloadedFile = path.join(this.bundleFolder, this.files[file].fileName);
       }
     }
-
     this.installAfter = undefined;
     this.ipcRenderer = ipcRenderer;
     this.references = 0;
