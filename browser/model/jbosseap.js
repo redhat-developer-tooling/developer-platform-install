@@ -25,7 +25,7 @@ class JbosseapInstall extends InstallableItem {
   installAfterRequirements(progress, success, failure) {
     progress.setStatus('Installing');
     let version = /(\d+\.\d+\.\d+).*/.exec(this.version)[1];
-    this.installGenerator = new JbosseapAutoInstallGenerator(this.installerDataSvc.jbosseapDir(), this.installerDataSvc.jdkDir(), version);
+    this.installGenerator = new JbosseapAutoInstallGenerator(this.installerDataSvc.jbosseapDir(), this.installerDataSvc.getInstallable('jdk').getLocation(), version);
     let installer = new Installer(this.keyName, progress, success, failure);
 
     if(fs.existsSync(this.installerDataSvc.jbosseapDir())) {
@@ -63,7 +63,7 @@ class JbosseapInstall extends InstallableItem {
       this.installConfigFile
     ];
     let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts
+      path.join(this.installerDataSvc.getInstallable('jdk').getLocation(), 'bin', 'java'), javaOpts
     );
 
     return res;

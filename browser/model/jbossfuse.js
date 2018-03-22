@@ -90,7 +90,7 @@ class FusePlatformInstall extends InstallableItem {
   }
 
   get javaPath() {
-    return path.join(this.installerDataSvc.jdkDir(), 'bin', 'java');
+    return path.join(this.installerDataSvc.getInstallable('jdk').getLocation(), 'bin', 'java');
   }
 
   isConfigurationValid() {
