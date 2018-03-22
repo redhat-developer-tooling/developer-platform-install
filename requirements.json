@@ -776,6 +776,38 @@
       "devstudio": { }
     }
   },
+  "cdkdevelopment": {
+    "name": "OpenShift Guided Development",
+    "description": "A step by step application development for Openshift!",
+    "congratulation": "Congratulations! You've learned how to create and deploy applications on Openshift!",
+    "file": {
+      "creating-project": {
+        "fileName": "cdk-creating-project-gd.xml",
+        "taskName": "Creating, buildin and deploying application to OpenShift",
+        "intro": "This cheatsheet explains how to create, build and deploy application to Openshift using Red Hat Developer Studio and Container Development Kit.",
+        "onCompletion": "Congratulations! You have learned how to create, build and deploy application to Openshift!"
+      }
+    },
+    "vendor": "Red Hat, Inc.",
+    "modulePath": "model/guided-dev",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "1.0.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudio", "cdk"],
+    "size": 0,
+    "installSize": 0,
+    "channel" : {
+      "containerDev": { },
+      "guidedDev": { }
+    }
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
