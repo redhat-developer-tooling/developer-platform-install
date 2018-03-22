@@ -27,7 +27,7 @@ class JdkInstall extends InstallableItem {
   }
 
   getLocation() {
-    if(this.hasOption(this.selectedOption)) {
+    if(this.hasOption(this.selectedOption) && !this.isSelected()) {
       return this.option[this.selectedOption].location;
     }
     return this.installerDataSvc.jdkDir();

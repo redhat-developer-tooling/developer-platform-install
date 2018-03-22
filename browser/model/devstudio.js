@@ -37,7 +37,7 @@ class DevstudioInstall extends InstallableItem {
     }
     this.InstallConfigRecord = path.join(this.installerDataSvc.devstudioDir(), 'InstallConfigRecord.xml');
     this.RenameInstallConfigRecord = path.join(this.installerDataSvc.devstudioDir(), 'InstallConfigRecord-' + this.keyName + '.xml');
-    this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.jdkDir(), this.version, this.additionalLocations, this.additionalIus);
+    this.installGenerator = new DevstudioAutoInstallGenerator(this.installerDataSvc.devstudioDir(), this.installerDataSvc.getInstallable('jdk').getLocation(), this.version, this.additionalLocations, this.additionalIus);
     let installer = new Installer(this.keyName, progress, success, failure);
     Logger.info(this.keyName + ' - Generate devstudio auto install file content');
     let data = this.installGenerator.fileContent();
@@ -67,7 +67,7 @@ class DevstudioInstall extends InstallableItem {
       this.installConfigFile
     ];
     let res = installer.execFile(
-      path.join(this.installerDataSvc.jdkDir(), 'bin', 'java'), javaOpts
+      path.join(this.installerDataSvc.getInstallable('jdk').getLocation(), 'bin', 'java'), javaOpts
     );
 
     return res;

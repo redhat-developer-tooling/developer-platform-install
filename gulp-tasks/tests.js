@@ -19,7 +19,7 @@ module.exports = function(gulp) {
               read: false
             }).pipe(mocha({
               recursive: false,
-              compilers: 'js:babel-core/register',
+              require: 'babel-core/register',
               env: {
                 NODE_PATH: '.'
               },
@@ -38,7 +38,7 @@ module.exports = function(gulp) {
       read: false
     }).pipe(mocha({
       recursive: true,
-      compilers: 'js:babel-core/register',
+      require: 'babel-core/register',
       env: {
         NODE_PATH: '.'
       },

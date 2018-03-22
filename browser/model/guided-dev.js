@@ -6,6 +6,7 @@ import Installer from './helpers/installer';
 import Utils from './helpers/util';
 import Platform from '../services/platform';
 import fs from 'fs-extra';
+import pify from 'pify';
 
 class EclipseGuidedDevInstall extends InstallableItem {
   constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID) {
@@ -19,30 +20,38 @@ class EclipseGuidedDevInstall extends InstallableItem {
   getDefaultCsContent() {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <compositeCheatsheet name="Red Hat Development Suite">
-   <taskGroup kind="set" name="Guided Development" skip="false">
+   <taskGroup kind="set" name="${this.productName}" skip="false">
       <intro>
-         This is the list of tasks you requested in Development Suite Installer
+         ${this.productDesc}
       </intro>
       <onCompletion>
-         Congratulation! You just finished all your guided development courses!
+         ${this.congratulation}
       </onCompletion>
       <!-- tasks -->
    </taskGroup>
 </compositeCheatsheet>`;
   }
 
-  getTaskContents() {
-    return `<task kind="cheatsheet" name="${this.productName}" skip="false">
+  getTaskContent(file) {
+    return `
+<task kind="cheatsheet" name="${file.taskName}" skip="false">
    <intro>
-      ${this.productDesc}
+      ${file.intro}
    </intro>
    <onCompletion>
-      ${this.congratulation}
+      ${file.onCompletion}
    </onCompletion>
-   <param name="id" value="${this.csID}">
+   <param name="path" value="${file.fileName}">
    </param>
-</task>
-<!-- tasks -->`;
+</task>`;
+  }
+
+  getTasksContents() {
+    let contents = '';
+    for (let file in this.files) {
+      contents += this.getTaskContent(this.files[file]);
+    }
+    return contents + '\n<!-- tasks -->';
   }
 
   installAfterRequirements(progress, success, failure) {
@@ -53,11 +62,11 @@ class EclipseGuidedDevInstall extends InstallableItem {
     return Promise.resolve().then(()=> {
       if(EclipseGuidedDevInstall.firstCall && fs.existsSync(csDir)) {
         //delete cheatsheets xml if exists
-        fs.rmdirSync(csDir);
+        fs.removeSync(csDir);
       }
       EclipseGuidedDevInstall.firstCall = false;
       if(!fs.existsSync(csDir)) {
-        fs.mkdirSync(csDir);
+        fs.ensureDirSync(csDir);
       }
       if(!fs.existsSync(csLocation)) {
         return Utils.writeFile(csLocation, this.getDefaultCsContent());
@@ -66,8 +75,14 @@ class EclipseGuidedDevInstall extends InstallableItem {
       return Utils.replaceInFile({
         files: csLocation,
         from: '<!-- tasks -->',
-        to: this.getTaskContents()
+        to: this.getTasksContents()
       });
+    }).then(()=> {
+      for (let file in this.files) {
+        fs.copySync(
+          path.resolve(__dirname, '..', '..', 'cheatsheets', this.files[file].fileName),
+          path.join(csDir, this.files[file].fileName));
+      }
     }).then(()=> {
       success(true);
     }).catch((error)=> {
@@ -75,7 +90,6 @@ class EclipseGuidedDevInstall extends InstallableItem {
       failure(error);
     });
   }
-
 }
 
 function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID}) {

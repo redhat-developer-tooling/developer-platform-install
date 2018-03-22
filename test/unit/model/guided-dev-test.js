@@ -52,7 +52,8 @@ describe('guided development installer', function() {
       sandbox.stub(Installer.prototype, 'unzip').resolves();
       sandbox.stub(Installer.prototype, 'exec').resolves();
       sandbox.stub(fs, 'rmdirSync').returns();
-      sandbox.stub(fs, 'mkdirSync').returns();
+      sandbox.stub(fs, 'ensureDirSync').returns();
+      sandbox.stub(fs, 'copySync').returns();
       sandbox.stub(Utils, 'writeFile').resolves(true);
       sandbox.stub(Utils, 'replaceInFile').resolves(true);
     });
@@ -80,8 +81,8 @@ describe('guided development installer', function() {
 
     it('should create "cheatsheets" folder in devstudio location if it is missing', function() {
       return guidedDevInstall.installAfterRequirements(fakeProgress, success, failure).then(()=> {
-        expect(fs.mkdirSync).to.have.been.calledOnce;
-        expect(fs.mkdirSync).to.have.been.calledWith(
+        expect(fs.ensureDirSync).to.have.been.calledOnce;
+        expect(fs.ensureDirSync).to.have.been.calledWith(
           path.join('install', 'devstudio', 'cheatsheets'));
       });
     });
@@ -89,7 +90,7 @@ describe('guided development installer', function() {
     it('should not create "cheatsheets" folder in devstudio location if it exists', function() {
       sandbox.stub(fs, 'existsSync').onFirstCall().returns(true).onSecondCall().returns(false);
       return guidedDevInstall.installAfterRequirements(fakeProgress, success, failure).then(()=> {
-        expect(fs.mkdirSync).not.called;
+        expect(fs.ensureDirSync).not.called;
       });
     });
 
