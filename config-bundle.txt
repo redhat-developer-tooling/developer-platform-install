@@ -1,4 +1,4 @@
 ;!@Install@!UTF-8!
 Title="Red Hat Development Suite"
-RunProgram="devsuite-2.2.0-GA-installer.exe %%T"
+RunProgram="devsuite-2.3.0-GA-installer.exe %%T"
 ;!@InstallEnd@!
