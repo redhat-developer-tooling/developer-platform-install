@@ -25,7 +25,8 @@ describe('devstudio installer', function() {
   let downloadUrl = 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar';
   let fakeInstall = {
     isInstalled: function() { return false; },
-    isSkipped: function() { return true; }
+    isSkipped: function() { return true; },
+    getLocation: function() {return '' }
   };
   let success = () => {};
   let failure = () => {};
@@ -178,7 +179,7 @@ describe('devstudio installer', function() {
       sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
 
-      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.jdkDir(), installer.version).fileContent();
+      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.getInstallable("jdk").getLocation(), installer.version).fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
       installer.installAfterRequirements(fakeProgress, success, failure);
 
@@ -190,7 +191,7 @@ describe('devstudio installer', function() {
       sandbox.stub(fsextra, 'writeFile').yields();
       let spy = sandbox.spy(Installer.prototype, 'writeFile');
       installer = new DevstudioInstall(DevstudioInstall.KEY, installerDataSvc, 'dev-studio', downloadUrl, 'devstudio.jar', 'sha', 'additionalLocations', 'additionalIUs');
-      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.jdkDir(), installer.version, 'additionalLocations', 'additionalIUs').fileContent();
+      let data = new DevstudioAutoInstallGenerator(installerDataSvc.devstudioDir(), installerDataSvc.getInstallable("jdk").getLocation(), installer.version, 'additionalLocations', 'additionalIUs').fileContent();
       let installConfigFile = path.join(installerDataSvc.tempDir(), 'devstudio-autoinstall.xml');
       installer.installAfterRequirements(fakeProgress, success, failure);
 
@@ -237,7 +238,7 @@ describe('devstudio installer', function() {
       it('should perform headless install into the installation folder', function() {
         let spy = sandbox.spy(helper, 'execFile');
         let downloadedFile = path.join(installerDataSvc.localAppData(), 'cache', 'devstudio.jar');
-        let javaPath = path.join(installerDataSvc.jdkDir(), 'bin', 'java');
+        let javaPath = path.join(installerDataSvc.getInstallable("jdk").getLocation(), 'bin', 'java');
         let javaOpts = [
           '-DTRACE=true',
           '-jar',
