@@ -27,7 +27,8 @@ describe('jbosseap installer', function() {
   let downloadUrl = 'http://download-node-02.eng.bos.redhat.com/devel/candidates/JBEAP/JBEAP-7.1.0.Alpha/jboss-eap-7.1.0.Alpha-installer.jar';
   let fakeInstall = {
     isInstalled: function() { return false; },
-    isSkipped: function() { return true; }
+    isSkipped: function() { return true; },
+    getLocation: function() { return 'install/jdk8'; }
   };
   let success = () => {};
   let failure = () => {};
@@ -262,8 +263,9 @@ describe('jbosseap installer', function() {
         installed: false,
         configureRuntimeDetection: sinon.stub()
       };
-      installer.installerDataSvc.getInstallable.restore();
-      sandbox.stub(installer.installerDataSvc, 'getInstallable').returns(devStudio);
+      installer.installerDataSvc.getInstallable.withArgs('jdk').returns(fakeInstall);
+      installer.installerDataSvc.getInstallable.withArgs('devstudio').returns(devStudio);
+      // sandbox.stub(installer.installerDataSvc, 'getInstallable').returns(devStudio);
       return installer.installAfterRequirements(fakeProgress, success, failure).then(()=>{
         expect(installer.ipcRenderer.on).calledWith('installComplete');
         installer.ipcRenderer.emit('installComplete', 'installComplete', 'devstudio');
