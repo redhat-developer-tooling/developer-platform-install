@@ -25,13 +25,13 @@ describe('xhyve Installer', function() {
   describe('detectExistingInstall', function() {
     describe('on macOS', function() {
       beforeEach(function() {
-        sandbox.stub(Platform, 'isxhyveAvailable').resolves(true);
+        sandbox.stub(Platform, 'isXhyveAvailable').resolves(true);
       });
 
       it('first checks if xhyve is available on the current OS version', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '/usr/local/bin/docker-machine-driver-xhyve');
         return xhInstall.detectExistingInstall().then(function() {
-          expect(Platform.isxhyveAvailable).calledOnce;
+          expect(Platform.isXhyveAvailable).calledOnce;
         });
       });
 
@@ -111,7 +111,7 @@ describe('xhyve Installer', function() {
 
   describe('isConfigured', function() {
     beforeEach(function() {
-      sandbox.stub(Platform, 'isxhyveAvailable').resolves(true);
+      sandbox.stub(Platform, 'isXhyveAvailable').resolves(true);
     });
 
     it('on macOS returns true if xhyve is detected', function() {

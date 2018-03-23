@@ -387,11 +387,11 @@ describe('Platform', function() {
     });
   });
 
-  describe('isxhyveAvailable', function() {
+  describe('isXhyveAvailable', function() {
     describe('on windows', function() {
       it('should return false', function() {
         sandbox.stub(Platform, 'getOS').returns('win32');
-        return Platform.isxhyveAvailable().then((result) => {
+        return Platform.isXhyveAvailable().then((result) => {
           expect(result).to.be.false;
         });
       });
@@ -400,7 +400,7 @@ describe('Platform', function() {
     describe('on linux', function() {
       it('should return false', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
-        return Platform.isxhyveAvailable().then((result) => {
+        return Platform.isXhyveAvailable().then((result) => {
           expect(result).to.be.false;
         });
       });
@@ -413,14 +413,14 @@ describe('Platform', function() {
 
       it('should return true', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '/usr/local/bin/docker-machine-driver-xhyve');
-        return Platform.isxhyveAvailable().then((result) => {
+        return Platform.isXhyveAvailable().then((result) => {
           expect(result).to.be.true;
         });
       });
 
       it('should return false if xhyve driver not found', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '');
-        return Platform.isxhyveAvailable().then((result) => {
+        return Platform.isXhyveAvailable().then((result) => {
           expect(result).to.be.false;
         });
       });
