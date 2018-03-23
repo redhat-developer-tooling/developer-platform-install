@@ -48,7 +48,8 @@
     "installSize": 441370241,
     "channel" : {
       "devstudio": { },
-      "javaDev": { }
+      "javaDev": { },
+      "rhProds": { }
     }
   },
   "rhamtcli": {
@@ -70,7 +71,8 @@
     "size": 278064943,
     "installSize": 378283285,
     "channel" : {
-      "javaDev": { }
+      "javaDev": { },
+      "rhProds": { }
     }
   },
   "devstudiocentral": {
