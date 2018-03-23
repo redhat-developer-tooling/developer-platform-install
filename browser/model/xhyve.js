@@ -15,14 +15,13 @@ class XhyveInstall extends InstallableItem {
 
   detectExistingInstall() {
     if (Platform.OS == 'darwin') {
-      return Platform.isxhyveAvailable().then((available) => {
+      return Platform.isXhyveAvailable().then((available) => {
         if(available) {
           this.addOption('detected', '', '', available);
+        } else if (this.option.detected) {
+          delete this.option.detected;
         }
-        this.selectedOption = 'detected';
       });
-    } else {
-      this.selectedOption = 'detected';
     }
     return Promise.resolve();
   }
