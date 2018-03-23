@@ -160,6 +160,25 @@ class Platform {
     });
   }
 
+  static isxhyveAvailable() {
+    return Platform.identify({
+      darwin: function() {
+        return pify(child_process.exec)('which docker-machine-driver-xhyve').then((stdout) => {
+          let result;
+          if(stdout.trim()) {
+            result = true;
+          } else {
+            result = false;
+          }
+          return result;
+        }).catch(() => {});
+      },
+      default: function() {
+        return Promise.resolve(false);
+      }
+    });
+  }
+
   static getUserHomePath() {
     return Platform.identify({
       win32: ()=> {

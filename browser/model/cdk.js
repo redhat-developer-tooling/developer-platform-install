@@ -46,6 +46,7 @@ class CDKInstall extends InstallableItem {
       return Platform.makeFileExecutable(this.minishiftExe);
     }).then(()=> {
       let hv = this.installerDataSvc.getInstallable('hyperv');
+      let xh = this.installerDataSvc.getInstallable('xhyve');
       if (hv && hv.hasOption('detected')) {
         driverName = 'hyperv';
         return Platform.getHypervAdminsGroupName().then((group)=>{
@@ -57,6 +58,8 @@ class CDKInstall extends InstallableItem {
         }).then(() => {
           return installer.exec(`powershell -ExecutionPolicy Bypass -File ${path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1')}`);
         });
+      } else if (xh && xh.hasOption('detected')) {
+        driverName = 'xhyve';
       }
     }).then(()=> {
       return installer.exec(
@@ -126,8 +129,10 @@ class CDKInstall extends InstallableItem {
   virtualizationIsConfigured() {
     let virtualbox = this.installerDataSvc.getInstallable('virtualbox');
     let hyperv = this.installerDataSvc.getInstallable('hyperv');
+    let xhyve = this.installerDataSvc.getInstallable('xhyve');
     return virtualbox && virtualbox.isConfigured()
-      || (hyperv && hyperv.isConfigured() || this.selectedOption !== 'install');
+      || (hyperv && hyperv.isConfigured() || this.selectedOption !== 'install')
+      || (xhyve && xhyve.isConfigured() || this.selectedOption !== 'install');
   }
 
   createHypervSwitch() {

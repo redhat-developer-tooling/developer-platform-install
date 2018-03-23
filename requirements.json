@@ -280,7 +280,7 @@
         "sha256sum": "623dbda65e2663f2fb41ee6b6329a37c94f89a5eb5eeb5d0f0e0264071b38a62",
         "size": 482035264,
         "installSize" : 7243047404,
-        "requires": ["virtualbox"]
+        "requires": ["xhyve||virtualbox"]
       },
       "linux": {
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/linux-amd64/minishift",
@@ -471,6 +471,34 @@
     },
     "platform": {
       "win32": {}
+    },
+    "channel" : {
+      "containerDev": { }
+    }
+  },
+  "xhyve": {
+    "name": "xhyve hypervisor",
+    "description": "A lightweight virtualization platform for macOS",
+    "modulePath": "model/xhyve",
+    "installable": false,
+    "detectable": true,
+    "bundle": "no",
+    "url": "https://docs.openshift.org/latest/minishift/getting-started/installing.html",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "",
+    "revision": 112440,
+    "virusTotalReport": "",
+    "vendor": "macOS",
+    "messages": {
+      "info": {
+        "message": "Follow these steps to install and enable xhyve docker machine driver",
+        "link": "https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install",
+        "linkDescription": "these steps"
+      }
+    },
+    "platform": {
+      "darwin": {}
     },
     "channel" : {
       "containerDev": { }
