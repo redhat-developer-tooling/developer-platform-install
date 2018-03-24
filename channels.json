@@ -28,5 +28,10 @@
     "id": "devstudio",
     "name": "Developer Studio",
     "description": "An Eclipse-based IDE to create apps for web, mobile, transactional enterprise, and SOA-based integration apps/services."
+  },
+  "guidedDev": {
+    "id": "guidedDev",
+    "name": "Guided Development",
+    "description": "A set of ready to install components that guides you through development proceess of your first application"
   }
 }
