@@ -668,6 +668,37 @@
       "devstudio": { }
     }
   },
+  "fusedevelopment": {
+    "name": "Red Hat Fuse Guided Development",
+    "description": "A step by step Red Hat Fuse application development",
+    "congratulation": "Congratulations! You've learned how to create and deploy Fuse applications!",
+    "ref" : {
+      "camel-project" : {
+        "id": "org.fusesource.ide.cheatsheets.createCamelProject",
+        "taskName": "Create a Fuse Integration Project",
+        "intro": "This cheat sheet walks you through the steps to create a new <b>Fuse Integration</b> project using the Content-Based Router pattern.",
+        "onCompletion": "Congratulation! You have learned how to Fuse Integration Project!"
+      }
+    },
+    "vendor": "Red Hat Inc.",
+    "modulePath": "model/guided-dev",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "1.0.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["fusetools"],
+    "size": 0,
+    "installSize": 0,
+    "channel" : {
+      "guidedDev": { }
+    }
+  },
   "7zip": {
     "name": "7zip",
     "description": "7Zip Command Line Version",
