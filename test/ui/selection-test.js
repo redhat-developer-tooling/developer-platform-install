@@ -51,7 +51,7 @@ describe('Selection page', function selectionPage() {
     let footer, cancelButton, backButton, installSizeFooter;
 
     beforeAll(function() {
-      browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
+      return browser.wait(conditions.invisibilityOf(element(By.id('detection-info'))))
         .then(function() {
           for (let key in requirements) {
             requirements[key].name = requirements[key].name.toUpperCase();
@@ -61,7 +61,7 @@ describe('Selection page', function selectionPage() {
             requirements[key].sizeElement = element(By.id(key + '-size'));
             requirements[key].descriptionElement = element(By.id(key + '-description'));
 
-            if(key === 'virtualbox') {
+            if(key === 'virtualbox' || key === 'xhyve') {
               requirements[key].installedNote = element(By.id(key + '-installed-note'));
               requirements[key].newerWarning = element(By.id(key + '-newer-warning'));
               requirements[key].newerMessage = element(By.id(key + '-newer-message'));
@@ -108,7 +108,9 @@ describe('Selection page', function selectionPage() {
 
     it('should display a panel for each component', function() {
       for (let key in requirements) {
-        expect(requirements[key].panel.isDisplayed()).toBe(true);
+        if(!(key == 'virtualbox' && requirements.xhyve && requirements.xhyve.installedNote.isDisplayed())) {
+          expect(requirements[key].panel.isDisplayed()).toBe(true);
+        }
       }
     });
 
@@ -125,27 +127,35 @@ function testComponentPanel(key) {
     let component = requirements[key];
 
     it('should display a correct name', function() {
-      expect(component.nameElement.isDisplayed()).toBe(true);
-      expect(component.nameElement.getText()).toEqual(component.name);
+      if(!(key == 'virtualbox' && requirements.xhyve && requirements.xhyve.installedNote.isDisplayed())) {
+        expect(component.nameElement.isDisplayed()).toBe(true);
+        expect(component.nameElement.getText()).toEqual(component.name);
+      }
     });
 
     it('should display a correct version', function() {
-      expect(component.versionElement.isDisplayed()).toBe(true);
-      expect(component.versionElement.getText()).toEqual(component.version);
+      if(!(key == 'virtualbox' && requirements.xhyve && requirements.xhyve.installedNote.isDisplayed())) {
+        expect(component.versionElement.isDisplayed()).toBe(true);
+        expect(component.versionElement.getText()).toEqual(component.version);
+      }
     });
 
     it('should display a correct size', function() {
-      if (component.size > 0) {
-        expect(component.sizeElement.isDisplayed()).toBe(true);
-        expect(component.sizeElement.getText()).toEqual(humanize.filesize(component.size));
-      } else {
-        expect(component.sizeElement.isDisplayed()).toBe(false);
+      if(!(key == 'virtualbox' && requirements.xhyve && requirements.xhyve.installedNote.isDisplayed())) {
+        if (component.size > 0) {
+          expect(component.sizeElement.isDisplayed()).toBe(true);
+          expect(component.sizeElement.getText()).toEqual(humanize.filesize(component.size));
+        } else {
+          expect(component.sizeElement.isDisplayed()).toBe(false);
+        }
       }
     });
 
     it('should display a correct description', function() {
-      expect(component.descriptionElement.isDisplayed()).toBe(true);
-      expect(component.descriptionElement.getText()).toEqual(component.description);
+      if(!(key == 'virtualbox' && requirements.xhyve && requirements.xhyve.installedNote.isDisplayed())) {
+        expect(component.descriptionElement.isDisplayed()).toBe(true);
+        expect(component.descriptionElement.getText()).toEqual(component.description);
+      }
     });
 
     if (key === 'virtualbox') {
