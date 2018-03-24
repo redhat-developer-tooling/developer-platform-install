@@ -696,7 +696,8 @@
     "size": 0,
     "installSize": 0,
     "channel" : {
-      "guidedDev": { }
+      "guidedDev": { },
+      "fuseDev": { }
     }
   },
   "7zip": {
