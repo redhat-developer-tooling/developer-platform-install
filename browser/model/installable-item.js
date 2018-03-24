@@ -60,12 +60,14 @@ class InstallableItem {
       this.files = requirement.file;
     } else {
       this.files = {};
-      this.files[this.keyName] = {
-        dmUrl: downloadUrl,
-        fileName: path.basename(fileName),
-        sha256sum: requirement.sha256sum,
-        size: this.size
-      };
+      if(requirement.fileName){
+        this.files[this.keyName] = {
+          dmUrl: downloadUrl,
+          fileName: path.basename(fileName),
+          sha256sum: requirement.sha256sum,
+          size: this.size
+        };
+      }
     }
 
     this.downloaded = true;

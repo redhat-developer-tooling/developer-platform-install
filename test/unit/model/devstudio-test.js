@@ -33,7 +33,9 @@ describe('devstudio installer', function() {
 
   function stubDataService() {
     let reqsJson = {
-      devstudio: {},
+      devstudio: {
+        fileName: "devstudio.jar"
+      },
       jdk:{
         name: 'OpenJDK'
       }
