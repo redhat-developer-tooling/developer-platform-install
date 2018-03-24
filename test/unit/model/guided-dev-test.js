@@ -51,7 +51,7 @@ describe('guided development installer', function() {
     beforeEach(function() {
       sandbox.stub(Installer.prototype, 'unzip').resolves();
       sandbox.stub(Installer.prototype, 'exec').resolves();
-      sandbox.stub(fs, 'rmdirSync').returns();
+      sandbox.stub(fs, 'removeSync').returns();
       sandbox.stub(fs, 'ensureDirSync').returns();
       sandbox.stub(fs, 'copySync').returns();
       sandbox.stub(Utils, 'writeFile').resolves(true);
@@ -101,13 +101,22 @@ describe('guided development installer', function() {
           path.join('install','devstudio', 'cheatsheets', 'guided-development.xml'),
           guidedDevInstall.getDefaultCsContent());
       });
-    })
+    });
 
     it('should not write default content in cheatsheet xml file if it exists', function() {
         sandbox.stub(fs, 'existsSync').onFirstCall().returns(true).onSecondCall().returns(true);
       return guidedDevInstall.installAfterRequirements(fakeProgress, success, failure).then(()=> {
         expect(Utils.writeFile).to.not.have.been.calledOnce;
       });
-    })
+    });
+
+    it('should delete "cheatsheets" folder if exists for first guided development install', function() {
+      EclipseGuidedDevInstall.firstCall = true;
+      sandbox.stub(fs, 'existsSync').returns(true);
+      return guidedDevInstall.installAfterRequirements(fakeProgress, success, failure).then(()=> {
+        expect(fs.removeSync).to.have.been.calledWith(
+          path.join(installerDataSvc.devstudioDir(), 'cheatsheets'));
+      });
+    });
   });
 });
