@@ -77,7 +77,7 @@ class SelectionController {
   componentsSelected() {
     let downloadedComponents = [];
     this.componentsInChannel(this.channel_tab).forEach((value)=> {
-      if(value.selectedOption == 'install') {
+      if(value.selectedOption == 'install' && !value.isSkipped()) {
         downloadedComponents.push(value);
       }
       this.downloadComp = downloadedComponents;
@@ -87,12 +87,6 @@ class SelectionController {
 
   initPage() {
     return this.detectInstalledComponents().then(()=> {
-      let checkboxModel = this.sc.checkboxModel;
-      if (checkboxModel.hyperv && checkboxModel.hyperv.isConfigured()) {
-        this.loader.removeComponent('virtualbox');
-      } else {
-        this.loader.removeComponent('hyperv');
-      }
       this.graph = ComponentLoader.loadGraph(this.installerDataSvc);
       this.installWatchers();
     }).then(
