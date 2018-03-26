@@ -1,0 +1,31 @@
+<div class="row row-cards-pf" ng-hide="checkStatus(component)">
+  <div class="col-xs-12">
+    <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
+      <div class="card-pf-body" style="height: 230px;">
+        <section class="product-header" ng-class="component">
+          <div class="row">
+            <div class="header-column"> 
+              <h2>
+                <span class="field-name-title">{{fetchName(component)}}</span>
+              </h2> 
+              <div class="field-item">{{fetchDesc(component)}}</div>
+            </div>
+          </div>
+        </section>
+        <div class="card-pf-top-element">
+          <div class="startForm pull-right">
+            <button type="submit" class="btn-getStarted" ng-submit="startCtrl.start()">Get Started</button>
+            <div>
+              <ul class="inline-list">
+                <li>
+                  <a id="datagrid-docs-and-apis" ng-click="gotoDocs(component)"><i class="fa fa-file-text-o"></i> Docs and APIs</a>
+                </li>
+                <li><a id="learn-datagrid" ng-click="gotoLearn(component)"><i class="fa fa-files-o"></i> Learn</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
