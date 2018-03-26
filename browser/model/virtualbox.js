@@ -57,7 +57,12 @@ class VirtualBoxInstall extends InstallableItem {
 
   get hidden() {
     let hv = this.installerDataSvc.getInstallable('hyperv');
-    return hv && hv.isDetected();
+    let xh = this.installerDataSvc.getInstallable('xhyve');
+    if (Platform.OS == 'win32') {
+      return hv && hv.isDetected();
+    } else {
+      return xh && xh.isDetected();
+    }
   }
 }
 
@@ -110,7 +115,12 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
 
   isSkipped() {
     let hyperv = this.installerDataSvc.getInstallable('hyperv');
-    return hyperv && hyperv.isConfigured() || super.isSkipped();
+    let xhyve = this.installerDataSvc.getInstallable('xhyve');
+    if (Platform.OS == 'win32') {
+      return hyperv && hyperv.isConfigured() || super.isSkipped();
+    } else {
+      return xhyve && xhyve.isConfigured() || super.isSkipped();
+    }
   }
 
   installAfterRequirements(progress, success, failure) {

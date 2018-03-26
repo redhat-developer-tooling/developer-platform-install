@@ -48,7 +48,8 @@
     "installSize": 441370241,
     "channel" : {
       "devstudio": { },
-      "javaDev": { }
+      "javaDev": { },
+      "rhProds": { }
     }
   },
   "rhamtcli": {
@@ -70,7 +71,8 @@
     "size": 278064943,
     "installSize": 378283285,
     "channel" : {
-      "javaDev": { }
+      "javaDev": { },
+      "rhProds": { }
     }
   },
   "devstudiocentral": {
@@ -280,7 +282,7 @@
         "sha256sum": "623dbda65e2663f2fb41ee6b6329a37c94f89a5eb5eeb5d0f0e0264071b38a62",
         "size": 482035264,
         "installSize" : 7243047404,
-        "requires": ["virtualbox"]
+        "requires": ["xhyve||virtualbox"]
       },
       "linux": {
         "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/linux-amd64/minishift",
@@ -476,6 +478,34 @@
       "containerDev": { }
     }
   },
+  "xhyve": {
+    "name": "xhyve hypervisor",
+    "description": "A lightweight virtualization platform for macOS",
+    "modulePath": "model/xhyve",
+    "installable": false,
+    "detectable": true,
+    "bundle": "no",
+    "url": "https://docs.openshift.org/latest/minishift/getting-started/installing.html",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "",
+    "revision": 112440,
+    "virusTotalReport": "",
+    "vendor": "macOS",
+    "messages": {
+      "info": {
+        "message": "Follow these steps to install and enable xhyve docker machine driver",
+        "link": "https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install",
+        "linkDescription": "these steps"
+      }
+    },
+    "platform": {
+      "darwin": {}
+    },
+    "channel" : {
+      "containerDev": { }
+    }
+  },
   "virtualbox": {
     "name": "Oracle VirtualBox",
     "description": "A virtualization software package developed by Oracle",
@@ -636,6 +666,38 @@
     "installSize": 13140571,
     "channel" : {
       "devstudio": { }
+    }
+  },
+  "fusedevelopment": {
+    "name": "Red Hat Fuse Guided Development",
+    "description": "A step by step Red Hat Fuse application development",
+    "congratulation": "Congratulations! You've learned how to create and deploy Fuse applications!",
+    "ref" : {
+      "camel-project" : {
+        "id": "org.fusesource.ide.cheatsheets.createCamelProject",
+        "taskName": "Create a Fuse Integration Project",
+        "intro": "This cheat sheet walks you through the steps to create a new <b>Fuse Integration</b> project using the Content-Based Router pattern.",
+        "onCompletion": "Congratulation! You have learned how to Fuse Integration Project!"
+      }
+    },
+    "vendor": "Red Hat Inc.",
+    "modulePath": "model/guided-dev",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "1.0.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["fusetools"],
+    "size": 0,
+    "installSize": 0,
+    "channel" : {
+      "guidedDev": { },
+      "fuseDev": { }
     }
   },
   "7zip": {

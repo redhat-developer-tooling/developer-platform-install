@@ -9,12 +9,12 @@ import fs from 'fs-extra';
 import pify from 'pify';
 
 class EclipseGuidedDevInstall extends InstallableItem {
-  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID) {
+  constructor(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, ref) {
     super(keyName, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
     this.addOption('install', this.version, '', false);
     this.sha256 = sha256sum;
     this.congratulation = congratulation;
-    this.csID = csID;
+    this.refs = ref;
   }
 
   getDefaultCsContent() {
@@ -41,15 +41,25 @@ class EclipseGuidedDevInstall extends InstallableItem {
    <onCompletion>
       ${file.onCompletion}
    </onCompletion>
-   <param name="path" value="${file.fileName}">
-   </param>
+   ${this.getParamContents(file)}
 </task>`;
+  }
+
+  getParamContents(item) {
+    return item.id ? `
+      <param name="id" value="${item.id}">
+      </param>` : `
+      <param name="path" value="${item.fileName}">
+      </param>`;
   }
 
   getTasksContents() {
     let contents = '';
     for (let file in this.files) {
       contents += this.getTaskContent(this.files[file]);
+    }
+    for (let id in this.refs) {
+      contents += this.getTaskContent(this.refs[id]);
     }
     return contents + '\n<!-- tasks -->';
   }
@@ -92,8 +102,8 @@ class EclipseGuidedDevInstall extends InstallableItem {
   }
 }
 
-function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID}) {
-  return new EclipseGuidedDevInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, csID);
+function fromJson({keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, ref}) {
+  return new EclipseGuidedDevInstall(keyName, installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, congratulation, ref);
 }
 
 EclipseGuidedDevInstall.convertor = {fromJson};

@@ -387,6 +387,46 @@ describe('Platform', function() {
     });
   });
 
+  describe('isXhyveAvailable', function() {
+    describe('on windows', function() {
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('win32');
+        return Platform.isXhyveAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+    });
+
+    describe('on linux', function() {
+      it('should return false', function() {
+        sandbox.stub(Platform, 'getOS').returns('linux');
+        return Platform.isXhyveAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+    });
+
+    describe('on macOS', function() {
+      beforeEach(function() {
+        sandbox.stub(Platform, 'getOS').returns('darwin');
+      })
+
+      it('should return true', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '/usr/local/bin/docker-machine-driver-xhyve');
+        return Platform.isXhyveAvailable().then((result) => {
+          expect(result).to.be.true;
+        });
+      });
+
+      it('should return false if xhyve driver not found', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        return Platform.isXhyveAvailable().then((result) => {
+          expect(result).to.be.false;
+        });
+      });
+    });
+  });
+
   describe('getHypervisorVersion', function() {
 
     describe('on mac', function() {
