@@ -18,6 +18,10 @@ class StartController {
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
+  
+  static get START_CDK_URL () {
+    return 'https://developers.redhat.com/products/cdk/hello-world/';
+  }
 
   startDevstudio() {
     if(this.devstudioInstall.isSkipped() && this.fuseInstall.isSkipped()) {
@@ -28,7 +32,7 @@ class StartController {
   }
 
   startCdk() {
-    this.electron.shell.openExternal('https://developers.redhat.com/products/cdk/hello-world/');
+    this.electron.shell.openExternal(StartController.START_CDK_URL);
   }
 
   launchDevstudio_darwin() {

@@ -41,19 +41,19 @@ describe('StartController', function() {
     });
   });
 
-  describe('learnCDK', function() {
-    it('opens external url ' + StartController.LEARN_CDK_URL, function() {
+  describe('startCDK', function() {
+    it('opens external url ' + StartController.START_CDK_URL, function() {
       let electron = new ElectronMock();
       sandbox.stub(electron.shell, 'openExternal');
       let $scope = {};
       let ctrl = $controller('StartController', { $scope, electron });
-      ctrl.learnCDK();
+      ctrl.startCdk();
       expect(electron.shell.openExternal).calledOnce;
-      expect(electron.shell.openExternal).calledWith(StartController.LEARN_CDK_URL);
+      expect(electron.shell.openExternal).calledWith(StartController.START_CDK_URL);
     });
   });
 
-  describe('start', function() {
+  describe('startDevstudio', function() {
     function createController(devstudioInstalled) {
       let electron = new ElectronMock();
       let installerDataSvc = new InstallerDataService();
@@ -72,13 +72,13 @@ describe('StartController', function() {
     it('calls exit from installer if DevStudio is not installed', function() {
       let ctrl = createController(true);
       sandbox.stub(ctrl, 'exit');
-      ctrl.start();
+      ctrl.startDevstudio();
       expect(ctrl.exit).calledOnce;
     });
     it('calls DevStudio launch method and exits from installer if DevStudio is installed', function() {
       let ctrl = createController(false);
       sandbox.stub(ctrl, 'launchDevstudio');
-      ctrl.start();
+      ctrl.startDevstudio();
       expect(ctrl.launchDevstudio).calledOnce;
     });
     describe('on windows', function() {
@@ -88,7 +88,7 @@ describe('StartController', function() {
         let stubLaunchWin32 = sandbox.stub(StartController.prototype, 'launchDevstudio_win32');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
-        ctrl.start();
+        ctrl.startDevstudio();
         expect(stubLaunchWin32).calledOnce;
       });
       it('should spawn new process and exit', function() {
@@ -107,7 +107,7 @@ describe('StartController', function() {
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
 
-        ctrl.start();
+        ctrl.startDevstudio();
 
         expect(child_process.spawn).to.be.calledOnce;
         expect(child_process.spawn).to.be.calledWith('cmd.exe');
@@ -123,7 +123,7 @@ describe('StartController', function() {
         let stubLaunchDarwin = sandbox.stub(StartController.prototype, 'launchDevstudio_darwin');
         let ctrl = createController(false);
         sandbox.stub(ctrl, 'exit');
-        ctrl.start();
+        ctrl.startDevstudio();
         expect(stubLaunchDarwin).calledOnce;
       });
       it('starts devstudio with rhel.subscription.password environment variable', function() {
@@ -154,7 +154,7 @@ describe('StartController', function() {
         sandbox.stub(Platform, 'getOS').returns('linux');
         sandbox.spy(StartController.prototype, 'launchDevstudio_linux');
         let ctrl = createController(false);
-        ctrl.start();
+        ctrl.startDevstudio();
         expect(ctrl.launchDevstudio_linux).has.been.calledOnce;
       });
     });
