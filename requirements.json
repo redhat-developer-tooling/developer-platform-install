@@ -676,8 +676,8 @@
       "camel-project" : {
         "id": "org.fusesource.ide.cheatsheets.createCamelProject",
         "taskName": "Create a Fuse Integration Project",
-        "intro": "This cheat sheet walks you through the steps to create a new <b>Fuse Integration</b> project using the Content-Based Router pattern.",
-        "onCompletion": "Congratulation! You have learned how to Fuse Integration Project!"
+        "intro": "This cheat sheet walks you through the steps to create a new <b>Fuse Integration project</b> using the Content-Based Router pattern.",
+        "onCompletion": "Congratulation! You have learned how to create <b>Fuse Integration project</b>!"
       }
     },
     "vendor": "Red Hat Inc.",
