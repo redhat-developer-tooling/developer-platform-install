@@ -20,16 +20,23 @@ class EclipseGuidedDevInstall extends InstallableItem {
   getDefaultCsContent() {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <compositeCheatsheet name="Red Hat Development Suite">
-   <taskGroup kind="set" name="${this.productName}" skip="false">
-      <intro>
-         ${this.productDesc}
-      </intro>
-      <onCompletion>
-         ${this.congratulation}
-      </onCompletion>
-      <!-- tasks -->
-   </taskGroup>
+  <taskGroup kind="set" name="Guided Development" skip="false">
+    <!-- groups -->
+  </taskGroup>
 </compositeCheatsheet>`;
+  }
+
+  getGroupContents() {
+    return `<taskGroup kind="set" name="${this.productName}" skip="false">
+       <intro>
+          ${this.productDesc}
+       </intro>
+       <onCompletion>
+          ${this.congratulation}
+       </onCompletion>
+       ${this.getTasksContents()}
+    </taskGroup>
+    <!-- groups -->`;
   }
 
   getTaskContent(file) {
@@ -61,7 +68,7 @@ class EclipseGuidedDevInstall extends InstallableItem {
     for (let id in this.refs) {
       contents += this.getTaskContent(this.refs[id]);
     }
-    return contents + '\n<!-- tasks -->';
+    return contents;
   }
 
   installAfterRequirements(progress, success, failure) {
@@ -84,8 +91,8 @@ class EclipseGuidedDevInstall extends InstallableItem {
     }).then(()=> {
       return Utils.replaceInFile({
         files: csLocation,
-        from: '<!-- tasks -->',
-        to: this.getTasksContents()
+        from: '<!-- groups -->',
+        to: this.getGroupContents()
       });
     }).then(()=> {
       for (let file in this.files) {

@@ -1,10 +1,13 @@
 'use strict';
 var DepGraph = require('dependency-graph').DepGraph;
+var yargs = require('yargs');
+import {remote} from 'electron';
 
 class ComponentLoader {
   constructor(installerDataSvc) {
     this.requirements = installerDataSvc.requirements;
     this.installerDataSvc = installerDataSvc;
+
   }
 
   loadComponents() {
@@ -81,12 +84,24 @@ class ComponentLoader {
   }
 }
 
+let skipInstall = remote && remote.getCurrentWindow().skipInstall ? remote.getCurrentWindow().skipInstall : false;
+
 class DynamicClass {
   constructor (modulePath, config) {
     let klass = require(`../${modulePath}`);
     let obj = klass.default.convertor.fromJson(config);
+    if(skipInstall) {
+      obj.installAfterRequirements = installAfterRequirements.bind(obj);
+      obj.checkFiles = function() {};
+      obj.useDownload = false;
+    }
     return obj;
   }
+}
+
+function installAfterRequirements(progress, success) {
+  progress.setStatus('Installing');
+  success && success(true);
 }
 
 export default ComponentLoader;
