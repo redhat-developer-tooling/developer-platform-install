@@ -718,7 +718,45 @@
         "onCompletion": "Congratulations!  You just created a plug-in, defined a plug-in based product, customized a product, exported an RCP product and defined a feature-based product using PDE."
       }
     },
-    "vendor": "Red Hat Inc.",
+    "vendor": "Eclipse Foundation",
+    "modulePath": "model/guided-dev",
+    "installable": true,
+    "detectable": false,
+    "bundle": "no",
+    "targetFolderName": "developer-studio",
+    "url": "https://developers.redhat.com/downloads",
+    "fileName": "",
+    "sha256sum": "",
+    "version": "1.0.0",
+    "useDownload": false,
+    "defaultOption": "detected",
+    "requires": ["devstudio"],
+    "size": 0,
+    "installSize": 0,
+    "channel" : {
+      "guidedDev": { },
+      "devstudio": { }
+    }
+  },
+  "javadevelopment": {
+    "name": "Java Guided Development",
+    "description": "A step by step guided Java development",
+    "congratulation": "Congratulations! You've learned how to create Java applications!",
+    "ref" : {
+      "hello-world" : {
+        "id": "org.eclipse.jdt.helloworld",
+        "taskName": "Creating a Hello World Java application",
+        "intro": "This cheat sheet shows you how to create the famous \"Hello World\" application and try it out. You will create a Java project and a Java class that will print \"Hello world!\" in the console when run.<br/><br/>If you need help at any step, click the (?) to the right. Let's get started!",
+        "onCompletion": "Congratulations!  You just created your first Java application!"
+      },
+      "hello-world-swt" : {
+        "id": "org.eclipse.jdt.helloworld.swt",
+        "taskName": "Create a Hello World SWT Java application",
+        "intro": "This cheat sheet shows you how to create a \"Hello World\" application that uses the Standard Widget Toolkit (SWT). The application will simply display an empty window to the user.<br/><br/>If you need help at any step, click the (?) to the right. Let's get started!",
+        "onCompletion": "Congratulations!  You just created your first Java application that uses the Standard Widget Toolkit (SWT)."
+      }
+    },
+    "vendor": "Eclipse Foundation.",
     "modulePath": "model/guided-dev",
     "installable": true,
     "detectable": false,
