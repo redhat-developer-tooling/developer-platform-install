@@ -714,8 +714,8 @@
       "rcp-app" : {
         "id": "org.eclipse.pde.rcpapp",
         "taskName": "Create Eclipse rich client application",
-        "intro": "This cheat sheet will guide you through the individual steps to create a plug-in, a plug-in extension, a feature and an update site using the Plug-in Development Environment (PDE). It will also demonstrate how to install and uninstall a feature using Install/Update.<br/><br/>To assist you along the way, wizards and commands will be available for you to launch automatically.",
-        "onCompletion": "Congratulations!  You just created a plug-in, a plug-in extension, a feature and an update site using PDE. You also installed and uninstalled a feature using Install/Update."
+        "intro": "This cheat sheet will guide you through the individual steps to create a plug-in, define a plug-in based product, customize a product, export a Rich Client Platform (RCP) application and define a feature-based product using the Plug-in Development Environment (PDE). <br/><br/> To assist you along the way, wizards and commands will be available for you to launch automatically.",
+        "onCompletion": "Congratulations!  You just created a plug-in, defined a plug-in based product, customized a product, exported an RCP product and defined a feature-based product using PDE."
       }
     },
     "vendor": "Red Hat Inc.",
