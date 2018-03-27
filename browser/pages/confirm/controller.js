@@ -18,7 +18,7 @@ class ConfirmController {
   updateTotalDownloadSize() {
     let totalDownloadSize = 0;
     for (let value of this.installerDataSvc.allInstallables().values()) {
-      if(value.size && value.selectedOption == 'install' && !value.downloaded) {
+      if(value.size && value.selectedOption == 'install' && !value.downloaded && !value.isSkipped()) {
         for (let file in value.files) {
           if (!value.files[file].downloaded) {
             totalDownloadSize += value.files[file].size;
@@ -32,7 +32,7 @@ class ConfirmController {
   updateTotalInstallSize() {
     let totalInstallSize = 0;
     for (let value of this.installerDataSvc.allInstallables().values()) {
-      if(value.installSize && value.selectedOption == 'install') {
+      if(value.installSize && value.selectedOption == 'install' && !value.isSkipped()) {
         totalInstallSize += value.installSize;
       }
     }
@@ -42,7 +42,7 @@ class ConfirmController {
   detectDownloadedComponents() {
     let downloadedComponents = [];
     for (let value of this.installerDataSvc.allInstallables().values()) {
-      if(value.selectedOption == 'install') {
+      if(value.selectedOption == 'install' && !value.isSkipped()) {
         downloadedComponents.push(value);
       }
       this.downloadComp = downloadedComponents;
@@ -58,7 +58,7 @@ class ConfirmController {
     let required = false;
     for (let value of this.installerDataSvc.allInstallables().values()) {
       required = value.authRequired
-        && value.selectedOption == 'install';
+        && value.selectedOption == 'install' && !value.isSkipped();
       if(required) {
         break;
       }
