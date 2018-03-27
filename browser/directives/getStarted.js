@@ -26,13 +26,12 @@ function getStarted() {
           electron.shell.openExternal('https://developers.redhat.com/topics/containers/');
         }
       };
-
-
     }]),
     restrict: 'E',
     replace: true,
     scope: {
-      component: '='
+      component: '=',
+      start: '&'
     },
     templateUrl: 'directives/getStarted.html'
   };

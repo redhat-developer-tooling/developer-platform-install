@@ -655,10 +655,6 @@ footer {
     padding-top: 1%;
   }
 
-  .startForm {
-    padding-top: 4%;
-  }
-
   #start-submit {
     font-size: 24px;
     padding: 6px 10px;
@@ -1057,5 +1053,9 @@ footer {
 
   .inline-list>li>a:hover {
     text-decoration: none;
+  }
+
+  .startForm {
+    padding-top: 3%;
   }
 }

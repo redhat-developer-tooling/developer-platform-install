@@ -19,7 +19,7 @@ class StartController {
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
 
-  start() {
+  startDevstudio() {
     if(this.devstudioInstall.isSkipped() && this.fuseInstall.isSkipped()) {
       this.exit();
     } else {
@@ -27,16 +27,8 @@ class StartController {
     }
   }
 
-  gotoDocs(component) {
-    this.electron.shell.openExternal('https://developers.redhat.com/products/'+component+'/docs-and-apis/');
-  }
-
-  gotoLearnDevStudio() {
-    this.electron.shell.openExternal('https://developers.redhat.com/products/devstudio/learn/');
-  }
-
-  gotoLearnCDK() {
-    this.electron.shell.openExternal('https://developers.redhat.com/topics/containers/');
+  startCdk() {
+    this.electron.shell.openExternal('https://developers.redhat.com/products/cdk/hello-world/');
   }
 
   launchDevstudio_darwin() {
