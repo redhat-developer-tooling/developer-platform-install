@@ -94,6 +94,8 @@ app.on('ready', function() {
     mainWindow.bundleTempFolder = process.argv.length > 1 ? process.argv[1].replace(/^--/, '') : undefined;
   }
 
+  mainWindow.skipInstall = process.argv.filter(name => name == 'skipInstall').length == 1;
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
