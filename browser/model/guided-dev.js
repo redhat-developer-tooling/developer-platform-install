@@ -20,7 +20,7 @@ class EclipseGuidedDevInstall extends InstallableItem {
   getDefaultCsContent() {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <compositeCheatsheet name="Red Hat Development Suite">
-  <taskGroup kind="set" name="Guided Development}" skip="false">
+  <taskGroup kind="set" name="Guided Development" skip="false">
     <!-- groups -->
   </taskGroup>
 </compositeCheatsheet>`;
