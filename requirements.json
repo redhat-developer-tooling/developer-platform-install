@@ -700,7 +700,7 @@
       "fuseDev": { }
     }
   },
-  "javadevelopment": {
+  "eclipsedevelopment": {
     "name": "Eclipse Plugin Guided Development",
     "description": "A step by step guided Eclipse development",
     "congratulation": "Congratulations! You've learned how to create Eclipse based applications!",
