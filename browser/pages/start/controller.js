@@ -14,24 +14,25 @@ class StartController {
     this.electron = electron;
     this.devstudioInstall = this.installerDataSvc.getInstallable('devstudio');
     this.fuseInstall = this.installerDataSvc.getInstallable('fusetools');
+    this.cdkInstall = this.installerDataSvc.getInstallable('cdk');
     this.electron.remote.getCurrentWindow().removeAllListeners('close');
     this.launchDevstudio = this['launchDevstudio_' + Platform.OS];
   }
-
-  learnCDK() {
-    this.electron.shell.openExternal(StartController.LEARN_CDK_URL);
+  
+  static get START_CDK_URL () {
+    return 'https://developers.redhat.com/products/cdk/hello-world/';
   }
 
-  static get LEARN_CDK_URL () {
-    return 'http://developers.redhat.com/devstudio-preview';
-  }
-
-  start() {
+  startDevstudio() {
     if(this.devstudioInstall.isSkipped() && this.fuseInstall.isSkipped()) {
       this.exit();
     } else {
       this.launchDevstudio();
     }
+  }
+
+  startCdk() {
+    this.electron.shell.openExternal(StartController.START_CDK_URL);
   }
 
   launchDevstudio_darwin() {

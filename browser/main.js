@@ -21,6 +21,7 @@ import Request from './services/request';
 import Electron from 'electron';
 import request from 'request';
 import humanize from 'humanize';
+import getStarted from './directives/getStarted';
 
 let mainModule =
   angular.module('devPlatInstaller', ['ui.router', 'base64', 'ngMessages', 'focus-if'])
@@ -39,6 +40,7 @@ let mainModule =
     .directive(componentPanel.name, componentPanel)
     .directive(breadcrumb.name, breadcrumb)
     .directive(pathValidator.name, pathValidator)
+    .directive(getStarted.name, getStarted)
     .config( ['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
       $urlRouterProvider.otherwise('/welcome');
       $stateProvider
