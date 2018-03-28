@@ -1,10 +1,9 @@
 'use strict';
 
 var ipcRenderer = require('electron').ipcRenderer;
+var ipcRendererStub = { send: function() {} };
 
 class Logger {
-  constructor() {
-  }
 
   static initialize(installRoot) {
     Logger.getIpcRenderer().send('install-root', installRoot);
@@ -23,7 +22,7 @@ class Logger {
   }
 
   static getIpcRenderer() {
-    return ipcRenderer? ipcRenderer : { send: function() {} };
+    return ipcRenderer? ipcRenderer : ipcRendererStub;
   }
 }
 
