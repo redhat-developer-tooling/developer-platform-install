@@ -4,25 +4,19 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import Logger from 'browser/services/logger';
+import proxyquire from 'proxyquire';
 
 chai.use(sinonChai);
 
 describe('Logger', function() {
   let sandbox, ipcRenderer, getIpcRendererStub;
 
-  before(function() {
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
     ipcRenderer = {
       send: function() {}
     };
-    getIpcRendererStub = sinon.stub(Logger, 'getIpcRenderer').returns(ipcRenderer);
-  });
-
-  after(function() {
-    getIpcRendererStub.restore();
-  });
-
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create();
+    getIpcRendererStub = sandbox.stub(Logger, 'getIpcRenderer').returns(ipcRenderer);
   });
 
   afterEach(function() {
@@ -59,5 +53,32 @@ describe('Logger', function() {
 
     Logger.error(message);
     expect(spySend).calledWith('log', `ERROR: ${message}`);
+  });
+
+  describe('getIpcRenderer', function() {
+    it('should return electron\'s ipcRenderer if not undefined', function() {
+      Logger.getIpcRenderer.restore();
+      let electronMock = {
+          ipcRenderer: { send: function(){}}
+      };
+      let logger = proxyquire('browser/services/logger', {
+        electron: electronMock
+      });
+      expect(logger.default.getIpcRenderer()).equals(electronMock.ipcRenderer);
+    })
+
+    it('should return electron\'s ipcRenderer stub if undefined', function() {
+      Logger.getIpcRenderer.restore();
+      let electronMock = {
+          ipcRenderer: undefined
+      };
+      let logger = proxyquire('browser/services/logger', {
+        electron: electronMock
+      });
+      expect(logger.default.getIpcRenderer()).not.undefined;
+      sandbox.spy(logger.default.getIpcRenderer(), 'send');
+      logger.default.log('mesage');
+      expect(logger.default.getIpcRenderer().send).calledOnce;
+    })
   });
 });
