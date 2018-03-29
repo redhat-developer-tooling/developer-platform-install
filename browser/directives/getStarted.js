@@ -4,6 +4,7 @@ function getStarted() {
   return {
     controller: ('getStartedController', ['$scope', 'electron', 'installerDataSvc', function($scope, electron, installerDataSvc) {
       $scope.checkStatus = function(component) {
+
         return installerDataSvc.getInstallable(component).isSkipped();
       };
 
@@ -18,7 +19,7 @@ function getStarted() {
       $scope.gotoDocs = function(component) {
         electron.shell.openExternal('https://developers.redhat.com/products/'+ component +'/docs-and-apis/');
       };
-    
+
       $scope.gotoLearn = function(component) {
         if(component==='devstudio'){
           electron.shell.openExternal('https://developers.redhat.com/products/devstudio/learn/');
