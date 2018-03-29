@@ -34,7 +34,6 @@ describe('ComponentPanelDirective', function() {
   function buildScope() {
     let ds = buildSvc();
     let scope = $rootScope.$new();
-    console.log($rootScope.openUrl);
     scope.item = new InstallableItem('kompose', 'url', 'kompose.exe', 'kompose', ds, false);
     return scope;
   }
