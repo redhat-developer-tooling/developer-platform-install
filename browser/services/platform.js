@@ -7,6 +7,8 @@ const fs = require('fs-extra');
 import os from 'os';
 import sudo from 'sudo-prompt';
 
+const IGNORE = function() {};
+
 class Platform {
   static identify(map) {
     if (map[Platform.OS]) {
@@ -33,39 +35,33 @@ class Platform {
 
   static get PATH() {
     return Platform.identify({
-      win32: ()=>'Path',
-      default: ()=>'PATH'
+      win32: ()=> 'Path',
+      default: ()=> 'PATH'
     });
   }
 
   static getHypervAdminsGroupName() {
     return Platform.identify({
-      win32: function() {
+      win32: ()=> {
         return pify(child_process.exec)('powershell -ExecutionPolicy ByPass -command "(New-Object System.Security.Principal.SecurityIdentifier(\'S-1-5-32-578\')).Translate([System.Security.Principal.NTAccount]).Value;[Environment]::Exit(0);"').then((stdout)=>{
           return stdout ? stdout.trim().replace('BUILTIN\\', '') : '';
-        }).catch(function() {});
+        }).catch(IGNORE);
       },
-      default: function() {
-        return Promise.resolve();
-      }
+      default: ()=> Promise.resolve()
     });
   }
 
   static getProgramFilesPath() {
     return Platform.identify({
-      win32: function() {
-        return Platform.ENV.PROGRAMFILES;
-      }, darwin: function() {
-        return '/Applications';
-      }, default: function() {
-        return Platform.getUserHomePath();
-      }
+      win32: ()=> Platform.ENV.PROGRAMFILES,
+      darwin: ()=> '/Applications',
+      default: ()=> Platform.getUserHomePath()
     });
   }
 
   static isVirtualizationEnabled() {
     return Platform.identify({
-      win32: function() {
+      win32: ()=> {
         return pify(child_process.exec)('wmic cpu get virtualizationfirmwareenabled').then((stdout)=>{
           let result;
           if(stdout) {
@@ -78,28 +74,22 @@ class Platform {
             }
           }
           return result;
-        }).catch(()=>{
-          // Ignore errors
-        });
+        }).catch(IGNORE);
       },
-      darwin: function() {
+      darwin: ()=> {
         return pify(child_process.exec)('sysctl -a | grep -o VMX').then((stdout)=>{
           if(stdout) {
             return stdout.replace(/\s/g, '') == 'VMX';
           }
-        }).catch(()=>{
-          // ignore errors
-        });
+        }).catch(IGNORE);
       },
-      default: function() {
-        return Promise.resolve(true);
-      }
+      default: ()=> Promise.resolve(true)
     });
   }
 
   static getHypervisorVersion() {
     return Platform.identify({
-      win32: function() {
+      win32: ()=> {
         return pify(child_process.exec)('wmic datafile where name="c:\\\\windows\\\\system32\\\\vmms.exe" get version').then((stdout) => {
           let result = 'Unknown';
           if(stdout.trim()) {
@@ -110,19 +100,15 @@ class Platform {
             }
           }
           return result;
-        }).catch(()=>{
-          return 'Unknown';
-        });
+        }).catch(()=> 'Unknown');
       },
-      default: function() {
-        return Promise.resolve('Unknown');
-      }
+      default: ()=> Promise.resolve('Unknown')
     });
   }
 
   static isHypervisorEnabled() {
     return Platform.identify({
-      win32: function() {
+      win32: ()=> {
         return pify(child_process.exec)('net start').then((stdout) => {
           let result;
           if(stdout) {
@@ -131,18 +117,15 @@ class Platform {
               && (stdout.indexOf('Hyper-V Virtual Machine Management') > -1);
           }
           return result;
-        }).catch(()=>{
-        });
+        }).catch(IGNORE);
       },
-      default: function() {
-        return Promise.resolve(false);
-      }
+      default: ()=> Promise.resolve(false)
     });
   }
 
   static isHypervisorAvailable() {
     return Platform.identify({
-      win32: function() {
+      win32: ()=> {
         let winRegex = /.*Windows\s(10|8(\.1)?)\s(?!Home).+/;
         return pify(child_process.exec)('wmic os get caption').then((stdout) => {
           let result;
@@ -152,37 +135,27 @@ class Platform {
             result = winRegex.test(stdout) && (os.arch() === 'x64');
           }
           return result;
-        }).catch(() => {});
+        }).catch(IGNORE);
       },
-      default: function() {
-        return Promise.resolve(false);
-      }
+      default: ()=> Promise.resolve(false)
     });
   }
 
   static isXhyveAvailable() {
     return Platform.identify({
-      darwin: function() {
+      darwin: ()=> {
         return pify(child_process.exec)('which docker-machine-driver-xhyve').then((stdout) => {
           return stdout.trim().length > 0;
-        }).catch(() => {
-          return false;
-        });
+        }).catch(()=> false);
       },
-      default: function() {
-        return Promise.resolve(false);
-      }
+      default: ()=> Promise.resolve(false)
     });
   }
 
   static getUserHomePath() {
     return Platform.identify({
-      win32: ()=> {
-        return Platform.ENV.USERPROFILE;
-      },
-      default: ()=> {
-        return Platform.ENV.HOME;
-      }
+      win32: ()=> Platform.ENV.USERPROFILE,
+      default: ()=> Platform.ENV.HOME
     });
   }
 
@@ -192,8 +165,7 @@ class Platform {
         let disk = path.parse(location).root.charAt(0);
         return pify(child_process.exec)(`powershell -command "& {(Get-WMIObject Win32_Logicaldisk -filter deviceid='''${disk}:''').FreeSpace;[Environment]::Exit(0);}"`).then((stdout) => {
           return Number.parseInt(stdout);
-        }).catch(()=>{
-        });
+        }).catch(IGNORE);
       },
       darwin: ()=> {
         let path = location[0] === '/' ? '/' + location.split('/')[1] : location.split('/')[0];
@@ -201,9 +173,7 @@ class Platform {
           let lines = stdout.split('\n');
           let split = lines[1].replace( / +/g, ' ' ).split(' ');
           return Number.parseInt(split[split.length - 1] === '/' ? split[3] : split[4]);
-        }).catch(()=>{
-          return 'No such file or dir';
-        });
+        }).catch(()=> 'No such file or dir');
       },
       default: ()=> Promise.resolve()
     });
@@ -243,12 +213,8 @@ class Platform {
 
   static makeFileExecutable(file) {
     return Platform.identify({
-      win32: ()=> {
-        return Promise.resolve();
-      },
-      default: ()=> {
-        return pify(child_process.exec)(`chmod +x '${file}'`);
-      }
+      win32: ()=> Promise.resolve(),
+      default: ()=> pify(child_process.exec)(`chmod +x '${file}'`)
     });
   }
 
@@ -298,15 +264,9 @@ class Platform {
 
   static localAppData() {
     let appData = Platform.identify({
-      win32: ()=> {
-        let appDataPath = Platform.ENV.APPDATA;
-        return appDataPath ? path.join(appDataPath, '..', 'Local', 'RedHat', 'DevSuite') : os.tmpdir();
-      }, darwin: ()=> {
-        let homePath = Platform.ENV.HOME;
-        return homePath ? path.join(homePath, 'Library', 'Application Support', 'RedHat', 'DevSuite') : os.tmpdir();
-      }, default: ()=> {
-        return os.tmpdir();
-      }
+      win32: ()=> Platform.ENV.APPDATA ? path.join(Platform.ENV.APPDATA, '..', 'Local', 'RedHat', 'DevSuite') : os.tmpdir(),
+      darwin: ()=> Platform.ENV.HOME ? path.join(Platform.ENV.HOME, 'Library', 'Application Support', 'RedHat', 'DevSuite') : os.tmpdir(),
+      default: ()=> os.tmpdir()
     });
     return path.resolve(appData);
   }
