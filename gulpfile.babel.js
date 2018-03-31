@@ -116,7 +116,7 @@ gulp.task('run-clean', function(cb) {
 });
 
 gulp.task('run', ['update-requirements', 'create-modules-link', 'electron-rebuild'], function(cb) {
-  let skipInstall = process.argv.filter(name => name === '--skipInstall').length == 1 ? "skipInstall":"";
+  let skipInstall = process.argv.filter(name => name === '--skip-install').length == 1 ? "skip-install":"";
   exec(path.join('node_modules', '.bin') + path.sep + 'electron transpiled ' + skipInstall, common.createExecCallback(cb));
 });
 

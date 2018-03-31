@@ -131,7 +131,7 @@ class InstallableItem {
   }
 
   isDownloadRequired() {
-    return !this.downloaded;
+    return this.useDownload && !this.downloaded;
   }
 
   setDownloadComplete() {
