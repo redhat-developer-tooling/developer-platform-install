@@ -91,17 +91,21 @@ class DynamicClass {
     let klass = require(`../${modulePath}`);
     let obj = klass.default.convertor.fromJson(config);
     if(skipInstall) {
-      obj.installAfterRequirements = installAfterRequirements.bind(obj);
-      obj.checkFiles = function() {};
+      obj.installAfterRequirements = skipInstallation.bind(this);
+      obj.checkFiles = skipOperation.bind(this);
       obj.useDownload = false;
     }
     return obj;
   }
 }
 
-function installAfterRequirements(progress, success) {
+function skipInstallation(progress, success) {
   progress.setStatus('Installing');
   success && success(true);
+}
+
+function skipOperation() {
+  return Promise.resolve();
 }
 
 export default ComponentLoader;

@@ -93,8 +93,8 @@ app.on('ready', function() {
   if (process.platform === 'win32') {
     mainWindow.bundleTempFolder = process.argv.length > 1 ? process.argv[1].replace(/^--/, '') : undefined;
   }
-
-  mainWindow.skipInstall = process.argv.filter(name => name == 'skipInstall').length == 1;
+  console.log(process.argv);
+  mainWindow.skipInstall = process.argv.filter(name => name == 'skip-install').length == 1;
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
