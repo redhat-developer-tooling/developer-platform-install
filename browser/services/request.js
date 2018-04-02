@@ -3,7 +3,7 @@
 class Request {
   constructor(requestMod, $window) {
     this.request = requestMod;
-    this.userAgentString = process.env.DSI_TEST_AGENT ? process.env.DSI_TEST_AGENT : $window.navigator.userAgent;
+    this.userAgentString = process.env.DSI_TEST_AGENT ? "RedHatDevelopmentSuiteTestInstaller/2.3.0-test" : $window.navigator.userAgent;
   }
 
   get(req) {
