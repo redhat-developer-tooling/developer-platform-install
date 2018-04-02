@@ -391,8 +391,9 @@ for account with rights to administer current machine.
 Changing UserAgent string for HTTP(S) requests
 ----------------------------------------------
 
-If you are developer set DSI_TEST_AGENT to be `RedHatDevelopmentSuiteTestInstaller/${version}-test` 
-to avoid interfrerance with real installer usage stats.
+If you are developer set DSI_TEST_AGENT to be any truthy string value to get
+original user agent string replaced with modified one to avoid interference with
+real installer usage stats.
 
 Debugging GUI without running actual installation
 -------------------------------------------------
@@ -400,7 +401,7 @@ Debugging GUI without running actual installation
 If you developing UI and not really needed to install anything and be able to go though all the steps
 quickly use `--skip-install` option when running installer with npm.
 
-``` shell 
+``` shell
 npm start -- --skip-install
 ```
 
