@@ -40,7 +40,7 @@ class InstallableItem {
     this.bundleFolder = remote && remote.getCurrentWindow().bundleTempFolder ? remote.getCurrentWindow().bundleTempFolder : path.normalize(path.join(__dirname, '../../../..'));
     this.userAgentString = remote && remote.getCurrentWindow().webContents.session.getUserAgent();
     if (process.env.DSI_TEST_AGENT) {
-      this.userAgentString = process.env.DSI_TEST_AGENT;
+      this.userAgentString = "RedHatDevelopmentSuiteTestInstaller/2.3.0-test";
     }
 
     this.bundledFile = path.join(this.bundleFolder, fileName);
