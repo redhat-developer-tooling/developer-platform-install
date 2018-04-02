@@ -23,8 +23,6 @@ var fs = require('fs-extra'),
 require('./gulp-tasks/tests')(gulp);
 require('./gulp-tasks/dist-' + process.platform)(gulp, reqs);
 
-var testAgent = 'RedHatDevelopmentSuiteTestInstaller/' + pjson.version + ' test/' + pjson.version;
-
 process.on('uncaughtException', function(err) {
   if(err) {
     throw err;
@@ -111,7 +109,7 @@ gulp.task('generate', ['create-modules-link', 'update-requirements', 'electron-r
 gulp.task('default', ['run-clean']);
 
 gulp.task('run-clean', function(cb) {
-  process.env.DSI_TEST_AGENT = testAgent;
+  process.env.DSI_TEST_AGENT = 'y';
   return runSequence( 'clean-transpiled', 'run', cb);
 });
 
@@ -196,13 +194,13 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 gulp.task('test', ['unit-test']);
 
 gulp.task('ui-test', function(cb) {
-  process.env.DSI_TEST_AGENT = testAgent;
+  process.env.DSI_TEST_AGENT = 'y';
   process.env.PTOR_TEST_RUN = 'ui';
   return runSequence(['generate'], 'protractor-run', cb);
 });
 
 gulp.task('system-test', function(cb) {
-  process.env.DSI_TEST_AGENT = testAgent;
+  process.env.DSI_TEST_AGENT = 'y';
   process.env.PTOR_TEST_RUN = 'system';
   let tasks = [];
   if (process.platform === 'win32') {
