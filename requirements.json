@@ -317,7 +317,7 @@
     },
     "platform": {
       "win32": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.11.0/kompose-windows-amd64.exe",
+        "url": "https://developers.redhat.com/redirect/to/kompose-windows-1.11.0.download",
         "fileName": "kompose-1.11.0.TP-windows-amd64.exe",
         "sha256sum": "06b07de78c4dd90fc7bf1c89389d085fbae7a7d3ed9baf934a3f71c511a91248",
         "size": 47717376,
@@ -325,7 +325,7 @@
         "virusTotalReport": "https://www.virustotal.com/#/file/06b07de78c4dd90fc7bf1c89389d085fbae7a7d3ed9baf934a3f71c511a91248/detection"
       },
       "darwin": {
-        "url": "https://github.com/kubernetes/kompose/releases/download/v1.11.0/kompose-darwin-amd64",
+        "url": "https://developers.redhat.com/redirect/to/kompose-macos-1.11.0.download",
         "fileName": "kompose-1.11.0.TP-darwin-amd64",
         "sha256sum": "95c8ce19c7f15efa4f7fd8aa426eb32e67c722e568b2c19d254069e76d46c646",
         "size": 47310192,
