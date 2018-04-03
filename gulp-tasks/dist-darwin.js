@@ -25,7 +25,7 @@ function buildInstaller(gulp, origin, destination, extraFiles) {
       mac: {
         category: 'public.app-category.developer-tools',
         icon: 'resources/devsuite.icns',
-        target: ['zip'],
+        target: ['dmg'],
         publish: null
       },
       files: '**/*',
@@ -68,8 +68,8 @@ function darwinDist(gulp, reqs) {
 
   gulp.task('dist-bundle', ['prefetch'], function() {
     return buildInstaller(gulp,
-      `dist/${productName}-${productVersion}-mac.zip`,
-      `dist/devsuite-${productVersion}-bundle-installer-mac.zip`,
+      `dist/${productName}-${productVersion}.dmg`,
+      `dist/devsuite-${productVersion}-bundle-installer-mac.dmg`,
       [{
         'from': 'requirements-cache',
         'to': '.',
@@ -79,13 +79,16 @@ function darwinDist(gulp, reqs) {
 
   gulp.task('dist-simple', function() {
     return buildInstaller(gulp,
-      `dist/${productName}-${productVersion}-mac.zip`,
-      `dist/devsuite-${productVersion}-installer-mac.zip`
+      `dist/${productName}-${productVersion}.dmg`,
+      `dist/devsuite-${productVersion}-installer-mac.dmg`
     );
   });
 
   gulp.task('cleanup', function() {
-    return del(['dist/mac', `dist/${productName}-${productVersion}-mac.zip`],
+    return del([
+      'dist/mac',
+      `dist/${productName}-${productVersion}.dmg`,
+      `dist/${productName}-${productVersion}.dmg.blockmap`],
       { force: false });
   });
 

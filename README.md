@@ -20,7 +20,7 @@ the GNU LGPL license, more details on <https://www.7zip.org>).
 
 #### macOS
 
-Both Installers are zipped macOS Application Bundles.
+Each Installer is a disk image (.dmg file) with macOS Application Bundle inside.
 
 Architecture
 ------------
@@ -117,8 +117,8 @@ in bash terminal
 
         npm run dist:mac
 
-After build finishes ./dist folder should contain zipped macOS application
-package files for On-line and Bundle Installers.
+After build finishes ./dist folder should contain disk image files (.dmg) with macOS application
+packages for On-line and Bundle Installers.
 
 #### Linux
 
