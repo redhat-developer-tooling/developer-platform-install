@@ -13,10 +13,12 @@
           </div>
         </section>
         <div class="card-pf-top-element">
-          <div class="col-sm-8" style="margin-top: 3%">
-            <ul style="margin-left: -20px">
+          <div class="col-sm-8" style="margin-top: 2%">
+            <ul style="margin-left: -50px;list-style: none;">
               <li ng-repeat="dependency in displayDependentComponents(component)" style="margin: 6px">
-                {{dependency}}
+                <i class="pficon-applications"></i>
+                <span>{{dependency.productName}}&nbsp;|</span>
+                <span class="product-info">{{dependency.version}}</span>
               </li>
             </ul>
           </div>

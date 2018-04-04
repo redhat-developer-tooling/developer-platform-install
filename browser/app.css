@@ -1012,7 +1012,7 @@ footer {
     background: #fff;
     color: #0088ce;
     border: 1px solid #0088ce;
-    padding: 8px 40px;
+    padding: 6px 20px;
     text-transform: uppercase;
     text-decoration: none;
     font-size: 16px;
@@ -1027,9 +1027,8 @@ footer {
   }
 
   .inline-list {
-    font-size: 14px;
-    padding: 9px;
-    margin-left: -10px;
+    padding: 5px;
+    margin-left: -20px;
   }
 
   .inline-list>li {
@@ -1044,6 +1043,6 @@ footer {
   }
 
   .startForm {
-    padding-top: 3%;
+    padding-top: 2%;
   }
 }
