@@ -991,32 +991,20 @@ footer {
   }
 
   .product-header {
-    border-bottom: 9px solid #9fd2ec;
-    height: 90px;
-    background-size: cover;
-  }
-
-  .product-header.devstudio {
-    background-image: url(images/prod_header_jboss_devstudio.png);
-  }
-
-  .product-header.cdk {
-    background-image: url(images/RHDev_productheader_desktop_cdk.png);
+    border-top: 4px solid #00B9E4;
+    height: 82px;
+    background-size: contain;
+    background-image: url(images/rhd-background-bar.png)
   }
 
   .header-column {
     position: relative;
     padding-left: 40px;
+    color: #242424;
   }
 
   .field-name-title {
     display: inline-block;
-    color: #fff;
-    font-weight: 400;
-  }
-
-  .field-item {
-    color: #ffffff;
     font-weight: 400;
   }
 
