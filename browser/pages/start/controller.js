@@ -20,7 +20,7 @@ class StartController {
   }
   
   static get START_CDK_URL () {
-    return 'https://developers.redhat.com/products/cdk/hello-world/';
+    return 'https://developers.redhat.com/products/cdk/hello-world/#cdk_build-your-first-app';
   }
 
   startDevstudio() {
