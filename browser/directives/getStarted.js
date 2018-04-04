@@ -6,17 +6,18 @@ function getStarted() {
 
       $scope.displayDependentComponents = function(component) {
         let dependencyList = [];
-        let temp1 = installerDataSvc.getInstallable(component).dependenciesOf;
-        for (const [key, value] of Object.entries(temp1)) {
-          if(value.installed) {
-            dependencyList.push(value.productName);
+        let installObj = installerDataSvc.getInstallable(component).dependenciesOf;
+        if(installObj != null || installObj !=undefined) {
+          for (const [key, value] of Object.entries(installObj)) {
+            if(value.installed) {
+              dependencyList.push(value);
+            }
           }
+          return dependencyList;
         }
-        return dependencyList
-      }
+      };
 
       $scope.checkStatus = function(component) {
-
         return installerDataSvc.getInstallable(component).isSkipped();
       };
 
