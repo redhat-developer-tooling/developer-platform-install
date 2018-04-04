@@ -13,6 +13,13 @@
           </div>
         </section>
         <div class="card-pf-top-element">
+          <div class="col-sm-8" style="margin-top: 3%">
+            <ul style="margin-left: -20px">
+              <li ng-repeat="dependency in displayDependentComponents(component)" style="margin: 6px">
+                {{dependency}}
+              </li>
+            </ul>
+          </div>
           <div class="startForm pull-right">
             <button type="submit" class="btn-getStarted" ng-click="start()">Get Started</button>
             <div>
