@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cheatsheet title="Creating and deploying application to OpenShift">
+<cheatsheet title="Creating, building and deploying application to OpenShift">
 	<intro>
 		<description>This cheatsheet will guide you through creating, building and deploying
 			application to Openshift.
@@ -9,7 +9,7 @@
 		<description>Follow these steps to start CDK/Minishift in Eclipse
 		</description>
   <subitem
-        label="Open &apos;Servers View&apos;">
+        label="Open &apos;Servers&apos; View">
   </subitem>
   <subitem
         label="Select &apos;Container Development Environment 3.2+&apos;">
@@ -27,30 +27,28 @@
 	<item title="Create OpenShift Application">
 		<description>Follow these steps to create, build, and deploy the application 
 		</description>
-		<subitem label="Open Openshift Explorer View">
+		<subitem label="Open &apos;Openshift Explorer&apos; View">
      <command
            required="true"
            serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.jboss.tools.openshift.express.ui.explorer.expressConsoleView)"/>
 		</subitem>
 		<subitem label="Select &apos;New-&gt;Application...&apos; from context menu for root node">
 		</subitem>
-		<subitem label="Select nodejs-mongo-persistent project from &apos;Server application source&apos; list">
+		<subitem label="Select &apos;nodejs-mongo-persistent&apos; project from &apos;Server application source&apos; list">
 		</subitem>
-		  <subitem label="Press &apos;Next&apos; button to see &apos;Template parameters&apos; page">
+		  <subitem label="Press &apos;Next&apos; button to see &apos;Template Parameters&apos; page">
 		  </subitem>
 		  <subitem label="Press &apos;Finish&apos; button to create application">
 		  </subitem>
 		  <subitem label="Press &apos;OK&apos; button in &apos;Create Application Summary&apos; dialog">
 		  </subitem>
-		  <subitem label="Press &apos;OK&apos; button in &apos;Create Application Summary&apos; dialog">
-		  </subitem>
 		  <subitem label="Press &apos;Finish&apos; button in &apos;Import OpenShift Application&apos; dialog">
 		  </subitem>
-		  <subitem label="Press &apos;Yes&apos; button to create server adapter for imported application">
+		  <subitem label="Press &apos;Yes&apos; button for request to create server adapter for created application">
 		  </subitem>
 	</item>
 	<item title="Wait Application built and deployed">
-		<description>When the application is finished building and deploying you should see two running pods in <b>OpenShift Explorer View</b>. 
+		<description>When the application is finished building and deploying you should see two running pods in <b>OpenShift Explorer</b> View. 
 		</description>
 	</item>
 	<item title="Open Application home page in browser">
