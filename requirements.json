@@ -86,7 +86,7 @@
     "dmUrl": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/devstudio-11.3.0.latest-updatesite-central.zip",
     "url": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/devstudio-11.3.0.latest-updatesite-central.zip",
     "fileName": "devstudiocentral-11.3.0.GA-updatesite-central.zip",
-    "sha256sum": "https://devstudio.redhat.com/11/snapshots/builds/devstudio.product_master/latest/all/devstudio-11.3.0.latest-updatesite-central.zip.sha256",
+    "sha256sum": "",
     "version": "11.3.0.GA",
     "useDownload": true,
     "defaultOption": "detected",
