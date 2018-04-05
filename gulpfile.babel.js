@@ -156,24 +156,24 @@ gulp.task('update-requirements', ['transpile:app'], function() {
     });
   };
 
-  let updateDevStudioSha = ()=>{
+  let updateSha = (key)=>{
     return new Promise((resolve) => {
-      let url = reqs['devstudio'].sha256sum;
+      let url = reqs[key].sha256sum;
       if (url.length == 64 && url.indexOf('http')<0 && url.indexOf('ftp')<0) {
         resolve();
       } else {
         request(url, (err, response, body) => {
-          reqs['devstudio'].sha256sum = body;
+          reqs[key].sha256sum = body;
           resolve();
         });
       }
     });
   };
 
-  let updateDevStudioSize = ()=>{
+  let updateSize = (key)=>{
     return new Promise((resolve) => {
-      let req = request.get(reqs.devstudio.url).on('response', function(response) {
-        reqs.devstudio.size = parseInt(response.headers['content-length'], 10);
+      let req = request.get(reqs[key].url).on('response', function(response) {
+        reqs[key].size = parseInt(response.headers['content-length'], 10);
         req.abort();
         resolve();
       });
@@ -182,8 +182,10 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   return Promise.resolve()
     .then(updateDevStudioVersion)
-    .then(updateDevStudioSha)
-    .then(updateDevStudioSize)
+    .then(updateSha.bind(undefined, 'devstudio'))
+    .then(updateSha.bind(undefined, 'devstudiocentral'))
+    .then(updateSize.bind(undefined, 'devstudio'))
+    .then(updateSize.bind(undefined, 'devstudiocentral'))
     .then(()=>{
       fs.writeFile('./transpiled/requirements.json', JSON.stringify(reqs, null, 2));
     }).catch((err)=>{
