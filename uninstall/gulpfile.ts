@@ -34,8 +34,7 @@ gulp.task('transpile:app', function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('transpiled'));
 
-  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json',
-    'cheatsheets/*', 'uninstaller/*', 'requirements.json', 'channels.json', 'resources/*'], {base: '.'}
+  var resources = gulp.src(['browser/**/*', '!browser/**/*.js', 'package.json'], {base: '.'}
   ).pipe(gulp.dest('transpiled'));
 
   return merge(sources, resources);
