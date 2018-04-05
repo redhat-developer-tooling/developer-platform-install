@@ -169,14 +169,14 @@
       "org.kie.eclipse.navigator.feature.feature.group",
       "org.jboss.tools.runtime.drools.detector.feature.feature.group"
     ],
-    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/11.1.0.Beta1b/devstudio-integration-stack-11.1.0.Beta1b-updatesite.zip",
-    "fileName": "devstudio-integration-stack-11.1.0.Beta1b-updatesite.zip",
-    "sha256sum": "10e72ec681917bc60cf6bfce65822f2a467db673ba4a28e5a41499005c330e5d",
+    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/11.2.0.GA/devstudio-integration-stack-11.2.0.GA-updatesite.zip",
+    "fileName": "devstudio-integration-stack-11.2.0.GA-updatesite.zip",
+    "sha256sum": "d066c158800a918584e032b7775c30a26ed5b1618d50bda5e50cd0097e270b9a",
     "version": "7.5.0.Final",
     "useDownload": true,
     "defaultOption": "detected",
     "requires": ["devstudio"],
-    "size": 309327956,
+    "size": 382713327,
     "installSize": 41381109,
     "channel" : {
       "devstudio": { }
