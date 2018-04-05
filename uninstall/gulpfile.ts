@@ -1,8 +1,11 @@
 'use strict';
+// import gulp from 'gulp';
 
 var gulp = require('gulp'),
+  fs = require('fs-extra'),
   babel = require('gulp-babel'),
   runSequence = require('run-sequence'),
+  request = require('request'),
   del = require('del'),
   exec = require('child_process').exec,
   pjson = require('./package.json'),
@@ -13,6 +16,7 @@ var gulp = require('gulp'),
   symlink = require('gulp-symlink'),
   common = require('./gulp-tasks/common'),
   config = require('./gulp-tasks/config'),
+  yargs = require('yargs');
 
 
 

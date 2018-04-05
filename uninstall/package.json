@@ -4,16 +4,8 @@
   "version": "2.3.0-GA",
   "description": "Red Hat Development Suite Installer",
   "main": "main/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/redhat-developer-tooling/developer-platform-install.git"
-  },
   "author": "Red Hat Developer Tooling Group",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/redhat-developer-tooling/developer-platform-install/issues"
-  },
-  "homepage": "https://github.com/redhat-developer-tooling/developer-platform-install#readme",
   "scripts": {
     "start": "./node_modules/.bin/gulp",
     "update-deps": "node_modules/.bin/ncu --upgrade --loglevel verbose --packageFile package.json && npm update"
