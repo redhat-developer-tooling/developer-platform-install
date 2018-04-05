@@ -169,14 +169,14 @@
       "org.kie.eclipse.navigator.feature.feature.group",
       "org.jboss.tools.runtime.drools.detector.feature.feature.group"
     ],
-    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/11.1.0.Beta1b/devstudio-integration-stack-11.1.0.Beta1b-updatesite.zip",
-    "fileName": "devstudio-integration-stack-11.1.0.Beta1b-updatesite.zip",
-    "sha256sum": "10e72ec681917bc60cf6bfce65822f2a467db673ba4a28e5a41499005c330e5d",
+    "url": "https://devstudio.redhat.com/11/development/updates/integration-stack/11.2.0.GA/devstudio-integration-stack-11.2.0.GA-updatesite.zip",
+    "fileName": "devstudio-integration-stack-11.2.0.GA-updatesite.zip",
+    "sha256sum": "d066c158800a918584e032b7775c30a26ed5b1618d50bda5e50cd0097e270b9a",
     "version": "7.5.0.Final",
     "useDownload": true,
     "defaultOption": "detected",
     "requires": ["devstudio"],
-    "size": 309327956,
+    "size": 382713327,
     "installSize": 41381109,
     "channel" : {
       "devstudio": { }
@@ -267,29 +267,29 @@
     },
     "platform": {
       "win32": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/windows-amd64/minishift.exe",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/windows-amd64/minishift.exe",
-        "fileName": "minishift_3_4_0__Alpha_1.exe",
-        "sha256sum": "eb5d8042f464dcc8428558a3b8dcd935a87096791f69aa39a9bf72b98f9cc246",
-        "size": 480504832,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/windows-amd64/minishift.exe",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/windows-amd64/minishift.exe",
+        "fileName": "minishift_3_4_0__GA.exe",
+        "sha256sum": "c247d7438df2b53192669c6ad4b1b77964dfcc2ab21534afed4d56a53a81d5d2",
+        "size": 492542976,
         "installSize" : 7243047404,
         "requires": ["cygwin","hyperv||virtualbox"]
       },
       "darwin": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/darwin-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/darwin-amd64/minishift",
-        "fileName": "minishift_3_4_0__Alpha_1",
-        "sha256sum": "623dbda65e2663f2fb41ee6b6329a37c94f89a5eb5eeb5d0f0e0264071b38a62",
-        "size": 482035264,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/darwin-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/darwin-amd64/minishift",
+        "fileName": "minishift_3_4_0__GA",
+        "sha256sum": "dd0efb2f450a6bdb2c535dd43b72069ad89293b4c6592d89f4fc7dc2840046c2",
+        "size": 494150832,
         "installSize" : 7243047404,
         "requires": ["xhyve||virtualbox"]
       },
       "linux": {
-        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/linux-amd64/minishift",
-        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/19-Feb-2018.cdk-3.4.0-alpha.1/linux-amd64/minishift",
-        "fileName": "minishift_3_4_0__Alpha_1",
-        "sha256sum": "97a244a7a81eabbeb19dc5190cb4fd64d7f83ed147f5a387c9a7ed6a8749ce34",
-        "size": 480206048,
+        "dmUrl": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/linux-amd64/minishift",
+        "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/04-Apr-2018.cdk-3.4.0-rc.1/linux-amd64/minishift",
+        "fileName": "minishift_3_4_0__GA",
+        "sha256sum": "5fc8445091e79640c633cca2940840a12a73ebe6c48d1930b8b92014f911b9b3",
+        "size": 492245408,
         "installSize" : 836390912,
         "requires": ["virtualbox"]
       }
