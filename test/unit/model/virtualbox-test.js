@@ -140,16 +140,16 @@ describe('Virtualbox installer', function() {
 
       it('should mount the dmg file', function() {
         installer.installAfterRequirements(fakeProgress, function() {}, function() {})
-        .then(() => {
-          expect(Installer.prototype.exec).calledWith(installer.getScript());
-        });
+          .then(() => {
+            expect(Installer.prototype.exec).calledWith(installer.getScript());
+          });
       });
 
       it('should run the installer with elevated privileges', function() {
         installer.installAfterRequirements(fakeProgress, function() {}, function() {})
-        .then(() => {
-          expect(Installer.prototype.execElevated).calledWith(installer.getSudoScript());
-        });
+          .then(() => {
+            expect(Installer.prototype.execElevated).calledWith(installer.getSudoScript());
+          });
       });
     });
 
@@ -386,7 +386,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add warning for newer version', function() {
-      installer.option['detected'].version = '5.1.99';
+      installer.option['detected'].version = '5.2.99';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
@@ -404,7 +404,7 @@ describe('Virtualbox installer', function() {
     });
 
     it('should add neither warning nor error for recomended version', function() {
-      installer.option['detected'].version = '5.1.22';
+      installer.option['detected'].version = '5.2.8';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
@@ -412,13 +412,13 @@ describe('Virtualbox installer', function() {
       expect(option.valid).to.equal(true);
     });
 
-    it('should add error for version out of range', function() {
-      installer.option['detected'].version = '5.5.12';
+    it('should add warning for version newer than required', function() {
+      installer.option['detected'].version = '10.5.12';
       installer.validateVersion();
 
       expect(option.error).to.equal('');
       expect(option.warning).to.equal('newerVersion');
-      expect(option.valid).to.equal(false);
+      expect(option.valid).to.equal(true);
     });
   });
 

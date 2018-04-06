@@ -14,8 +14,7 @@ class VirtualBoxInstall extends InstallableItem {
   constructor(installerDataSvc, targetFolderName, downloadUrl, fileName, sha256sum, version, revision) {
     super(VirtualBoxInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
-    this.minimumVersion = '5.1.22';
-    this.maximumVersion = '5.4.0';
+    this.minimumVersion = '5.1.12';
     this.revision = revision;
 
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
@@ -39,12 +38,12 @@ class VirtualBoxInstall extends InstallableItem {
         option.valid = false;
         option.error = 'oldVersion';
         option.warning = '';
-      } else if(Version.GT(option.version, this.minimumVersion) && Version.LT(option.version, this.maximumVersion)) {
+      } else if(Version.GE(option.version, this.minimumVersion) && Version.LT(option.version, this.version)) {
         option.valid = true;
-        option.error = '';
-        option.warning = 'newerVersion';
-      } else if(Version.GE(option.version, this.maximumVersion)) {
-        option.valid = false;
+        option.error = 'oldVersion';
+        option.warning = '';
+      } else if(Version.GT(option.version, this.version)) {
+        option.valid = true;
         option.error = '';
         option.warning = 'newerVersion';
       }
@@ -54,7 +53,7 @@ class VirtualBoxInstall extends InstallableItem {
   isDisabled() {
     return this.hasOption('detected') || this.references > 0;
   }
-  
+
   isSkipped() {
     let hyperv = this.installerDataSvc.getInstallable('hyperv');
     let xhyve = this.installerDataSvc.getInstallable('xhyve');
