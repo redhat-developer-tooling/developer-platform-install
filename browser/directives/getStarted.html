@@ -1,7 +1,7 @@
 <div class="row row-cards-pf" ng-hide="checkStatus(component)">
   <div class="col-xs-12">
     <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
-      <div class="card-pf-body" style="height: 200px;">
+      <div class="card-pf-body" style="min-height: 100px; overflow: hidden;">
         <section class="product-header">
           <div class="row">
             <div class="header-column"> 
@@ -20,6 +20,7 @@
                 <span>{{dependency.productName}}&nbsp;|</span>
                 <span class="product-info">{{dependency.version}}</span>
               </li>
+              <li ng-hide="displayDependentComponents(component).length > 0">No dependent components installed.</li>
             </ul>
           </div>
           <div class="startForm pull-right">
