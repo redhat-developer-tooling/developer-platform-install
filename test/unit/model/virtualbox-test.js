@@ -412,7 +412,7 @@ describe('Virtualbox installer', function() {
       expect(option.valid).to.equal(true);
     });
 
-    it('should add warning for version never than required', function() {
+    it('should add warning for version newer than required', function() {
       installer.option['detected'].version = '10.5.12';
       installer.validateVersion();
 
