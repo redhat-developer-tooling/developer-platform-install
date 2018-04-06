@@ -31,7 +31,7 @@ describe('GetStartedDirective', function() {
     sandbox.restore();
   });
 
-  it('generates html with comoponent name', function() {
+  it('generates html with component name', function() {
     let scope = $rootScope.$new();
     let compiledDirective = $compile(angular.element(
       '<get-started component="\'cdk\'"></get-started>'))(scope);

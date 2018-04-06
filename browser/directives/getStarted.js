@@ -3,8 +3,21 @@
 function getStarted() {
   return {
     controller: ('getStartedController', ['$scope', 'electron', 'installerDataSvc', function($scope, electron, installerDataSvc) {
-      $scope.checkStatus = function(component) {
 
+      $scope.displayDependentComponents = function(component) {
+        let dependencyList = [];
+        let installObj = installerDataSvc.getInstallable(component).dependenciesOf;
+        if(installObj != null || installObj !=undefined) {
+          for (const [key, value] of Object.entries(installObj)) {
+            if(value.installed) {
+              dependencyList.push(value);
+            }
+          }
+          return dependencyList;
+        }
+      };
+
+      $scope.checkStatus = function(component) {
         return installerDataSvc.getInstallable(component).isSkipped();
       };
 
