@@ -24,21 +24,19 @@ describe('xhyve Installer', function() {
 
   describe('detectExistingInstall', function() {
     describe('on macOS', function() {
-      beforeEach(function() {
-        sandbox.stub(Platform, 'isXhyveAvailable').resolves(true);
-      });
 
-      it('first checks if xhyve is available on the current OS version', function() {
-        sandbox.stub(child_process, 'exec').yields(undefined, '/usr/local/bin/docker-machine-driver-xhyve');
-        return xhInstall.detectExistingInstall().then(function() {
-          expect(Platform.isXhyveAvailable).calledOnce;
-        });
-      });
-
-      it('adds option \'detected\' if xhyve detection', function() {
+      it('adds option \'detected\' if xhyve detected', function() {
         sandbox.stub(child_process, 'exec').yields(undefined, '/usr/local/bin/docker-machine-driver-xhyve');
         return xhInstall.detectExistingInstall().then(function() {
           expect(xhInstall.hasOption('detected')).to.be.equal(true);
+        });
+      });
+
+      it('removes option \'detected\' if xhyve was uninstalled and detection ran again', function() {
+        sandbox.stub(child_process, 'exec').yields(undefined, '');
+        xhInstall.addOption('detected');
+        return xhInstall.detectExistingInstall().then(function() {
+          expect(xhInstall.hasOption('detected')).to.be.equal(false);
         });
       });
     });
@@ -157,5 +155,17 @@ describe('xhyve Installer', function() {
       xhInstall.references = 0;
       expect(xhInstall.isDisabled()).to.be.equal(true);
     });
+  });
+
+  describe('fromJson', function() {
+      it('returns new XhyveInstaller instance', function() {
+          let data = {
+            installerDataSvc: new InstallerDataService(),
+            downloadUrl: 'url'
+          };
+          let installer = XhyveInstall.convertor.fromJson(data);
+          expect(installer.installerDataSvc === data.installerDataSvc).equals(true);
+          expect(installer.downloadUrl).equals('url');
+      });
   });
 });
