@@ -701,7 +701,7 @@
     }
   },
   "eclipsedevelopment": {
-    "name": "Eclipse Plugin Guided Development",
+    "name": "Eclipse Plug-in Guided Development",
     "description": "A step by step guided Eclipse development",
     "congratulation": "Congratulations! You've learned how to create Eclipse based applications!",
     "ref" : {
@@ -709,7 +709,7 @@
         "id": "org.eclipse.pde.helloworld",
         "taskName": "Creating an Eclipse plug-in",
         "intro": "This cheat sheet will guide you through the individual steps to create a plug-in, a plug-in extension, a feature and an update site using the Plug-in Development Environment (PDE). It will also demonstrate how to install and uninstall a feature using Install/Update.<br/><br/>To assist you along the way, wizards and commands will be available for you to launch automatically.",
-        "onCompletion": "Congratulations!  You just created a plug-in, a plug-in extension, a feature and an update site using PDE.  You also installed and uninstalled a feature using Install/Update."
+        "onCompletion": "Congratulations!  You just created a plug-in, a plug-in extension, a feature and an update site using PDE. You also installed and uninstalled a feature using Install/Update."
       },
       "rcp-app" : {
         "id": "org.eclipse.pde.rcpapp",
@@ -777,9 +777,9 @@
     }
   },
   "cdkdevelopment": {
-    "name": "OpenShift Guided Development",
+    "name": "Guided Development on local OpenShift",
     "description": "A step by step application development for Openshift!",
-    "congratulation": "Congratulations! You've learned how to create and deploy applications on Openshift!",
+    "congratulation": "Congratulations! You've learned how to create, build and deploy applications on Openshift!",
     "file": {
       "creating-project": {
         "fileName": "cdk-creating-project-gd.xml",
