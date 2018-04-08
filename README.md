@@ -398,8 +398,8 @@ real installer usage stats.
 Debugging GUI without running actual installation
 -------------------------------------------------
 
-If you developing UI and not really needed to install anything and be able to go though all the steps
-quickly use `--skip-install` option when running installer with npm.
+If you are developing UI and do not really needed to install anything, you can go though all the steps
+quickly using `--skip-install` option when running installer with npm.
 
 ``` shell
 npm start -- --skip-install
