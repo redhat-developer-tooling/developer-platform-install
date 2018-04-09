@@ -162,6 +162,19 @@ describe('Virtualbox installer', function() {
         installer.ipcRenderer = {on: function() {}};
       });
 
+
+    it('should set progress to "Installing"', function() {
+      sandbox.stub(Installer.prototype, 'exec').resolves();
+      sandbox.stub(installer, 'configure').resolves();
+      sandbox.stub(Platform, 'addToUserPath').resolves();
+
+      return installer.installAfterRequirements(fakeProgress, success, failure)
+        .then(() => {
+          expect(fakeProgress.setStatus).to.have.been.calledOnce;
+          expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
+        });
+    });
+
       it('should import the certificate from the executable', function() {
         sandbox.stub(child_process, 'execFile').yields('done');
 
@@ -212,13 +225,6 @@ describe('Virtualbox installer', function() {
           sandbox.stub(child_process, 'execFile').yields(undefined, '', '');
           resolve = (argument) => { Promise.resolve(argument); };
           reject = (argument) => { Promise.reject(argument); };
-        });
-
-        it('should set progress to "Installing"', function() {
-          installer.installMsi(helper, resolve, reject);
-
-          expect(fakeProgress.setStatus).to.have.been.calledOnce;
-          expect(fakeProgress.setStatus).to.have.been.calledWith('Installing');
         });
 
         it('should execute the msi installer', function() {

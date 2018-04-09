@@ -123,6 +123,7 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   }
 
   installAfterRequirements(progress, success, failure) {
+    progress.setStatus('Installing');
     let installer = new Installer(this.keyName, progress, success, failure);
     return this.importCertificate(installer
     ).catch((error) => {
@@ -165,7 +166,6 @@ class VirtualBoxInstallWindows extends VirtualBoxInstall {
   }
 
   installMsi(installer, resolve, reject) {
-    installer.progress.setStatus('Installing');
     let msiFile = path.join(this.installerDataSvc.virtualBoxDir(), '/VirtualBox-' + this.version + '-r' + this.revision + '-MultiArch_amd64.msi');
     return installer.exec(['msiexec',
       '/i',
