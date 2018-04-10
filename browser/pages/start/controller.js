@@ -23,6 +23,25 @@ class StartController {
     return 'https://developers.redhat.com/products/cdk/hello-world/#cdk_build-your-first-app';
   }
 
+  fetchMiscComponents() {
+    let miscComponents = [];
+    this.removeComponents('devstudio');
+    this.removeComponents('cdk');
+    for (let [key, value] of this.installerDataSvc.allInstallables()) {
+      if(value.installed && key!=="devstudio" && key!=="cdk" && key!==undefined){
+        miscComponents.push(value);
+      }
+    }
+    return miscComponents;
+  }
+
+  removeComponents(key) {
+    for(let list of this.installerDataSvc.getInstallable(key).dependenciesOf){
+      this.installerDataSvc.allInstallables().delete(list.keyName);
+    }
+    return;
+  }
+
   startDevstudio() {
     if(this.devstudioInstall.isSkipped() && this.fuseInstall.isSkipped()) {
       this.exit();
