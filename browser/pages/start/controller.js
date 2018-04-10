@@ -6,6 +6,8 @@ let fs = require('fs-extra');
 import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';
 import Platform from '../../services/platform';
+let at = require('lodash/omit');
+
 
 class StartController {
 
@@ -21,6 +23,16 @@ class StartController {
   
   static get START_CDK_URL () {
     return 'https://developers.redhat.com/products/cdk/hello-world/#cdk_build-your-first-app';
+  }
+
+  fetchMiscComponents() {
+    let miscComponents = [];
+    for (let [k, v] of this.installerDataSvc.allInstallables()) {
+      if(v.installed && k!=="devstudio" && k!=="cdk" && k!==undefined){
+        miscComponents.push(v);
+      }
+    }
+    return miscComponents;
   }
 
   startDevstudio() {
