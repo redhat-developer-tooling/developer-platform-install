@@ -4,7 +4,12 @@
     <div class="container-fluid container-cards-pf">
       <div class="alert alert-success success-message col-sm-10">
         <span class="pficon pficon-ok"></span>
-        <span id="install-alert">Great job!! All components installed. Click on <b>Get Started</b> to proceed.</span>
+        <span id="install-alert" ng-show="startCtrl.devstudioInstall.installed || startCtrl.cdkInstall.installed">
+          Great job!! All components installed. Click on <b>Get Started</b> to proceed.
+        </span>
+        <span id="install-alert" ng-hide="startCtrl.devstudioInstall.installed || startCtrl.cdkInstall.installed">
+          Great job!! All components installed.
+        </span>
       </div>
       <div>
         <button type="button" class="btn btn-default btn-close pull-right" id="exit-btn" ng-click="startCtrl.exit()">Close installer</button>
@@ -18,10 +23,10 @@
               <section class="product-header">
                 <div class="row">
                   <div class="header-column">
-                    <h2 ng-hide="!startCtrl.devstudioInstall.installed && !startCtrl.cdkInstall.installed">
+                    <h2 ng-show="startCtrl.devstudioInstall.installed || startCtrl.cdkInstall.installed">
                       <span class="field-name-title">Miscellaneous Installed Components</span>
                     </h2>
-                    <div ng-hide="!startCtrl.devstudioInstall.installed && !startCtrl.cdkInstall.installed">
+                    <div ng-show="startCtrl.devstudioInstall.installed || startCtrl.cdkInstall.installed">
                       The list of other installed components
                     </div>
                     <h2 ng-hide="startCtrl.devstudioInstall.installed || startCtrl.cdkInstall.installed">
