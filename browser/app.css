@@ -661,10 +661,6 @@ footer {
     border-radius: 1px;
   }
 
-  #exit-btn {
-    margin-top: 1%;
-  }
-
   .progress-description {
     max-width: 100%;
   }
@@ -1044,5 +1040,20 @@ footer {
 
   .startForm {
     padding-top: 2%;
+  }
+
+  .success-message{
+    border-width: 0px;
+    border-color: white;
+    background-color: white;
+    margin-bottom: 3px;
+    margin-top: -5px;
+  }
+
+  .btn-close {
+    padding: 6px 10px;
+    line-height: 1.33;
+    border-radius: 1px;
+    text-transform: uppercase;
   }
 }

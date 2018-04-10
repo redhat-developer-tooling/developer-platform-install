@@ -2,9 +2,12 @@
 <main>
   <div class="col-sm-12 bottom-spacer" style="margin-top:20px;">
     <div class="container-fluid container-cards-pf">
-      <div class="alert alert-success">
+      <div class="alert alert-success success-message col-sm-10">
         <span class="pficon pficon-ok"></span>
-        <strong>Great job!!&nbsp;</strong><span id="install-alert">Everything's installed and you're good to go!</span>
+        <span id="install-alert">Great job!! All components installed. Click on <b>Get Started</b> to proceed.</span>
+      </div>
+      <div>
+        <button type="button" class="btn btn-default btn-close pull-right" id="exit-btn" ng-click="startCtrl.exit()">Close installer</button>
       </div>
       <get-started component="'devstudio'" start="startCtrl.startDevstudio()"></get-started>
       <get-started component="'cdk'" start="startCtrl.startCdk()"></get-started>
