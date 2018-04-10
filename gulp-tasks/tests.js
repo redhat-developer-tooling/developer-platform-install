@@ -97,8 +97,8 @@ module.exports = function(gulp) {
       cmd = zip + ' x "' + process.env.PTOR_BINARY + '" -o' + targetFolder + ' -ry';
       process.env.PTOR_BINARY = path.join(buildFolder, 'target');
     } else if (process.platform === 'darwin') {
-      targetFolder = 'dist';
-      cmd = 'unzip -o ' + '"' + process.env.PTOR_BINARY + '" -d ' + targetFolder;
+      targetFolder = '/Volumes/devsuite';
+      cmd = `hdiutil attach -mountpoint ${targetFolder} '${process.env.PTOR_BINARY}'`;
       process.env.PTOR_BINARY = path.join(targetFolder, 'Red\ Hat\ Development\ Suite\ Installer.app', 'Contents');
     }
 

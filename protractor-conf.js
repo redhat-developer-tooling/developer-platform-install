@@ -18,7 +18,7 @@ var chromeArgs = [];
 if (process.env.PTOR_TEST_RUN === 'system') {
   files = ['test/system/system-test.js'];
   report = path.join(__dirname, 'system-tests');
-  executable = path.join(__dirname, process.env.PTOR_BINARY);
+  executable = path.join(process.platform === 'win32' ? __dirname : '',  process.env.PTOR_BINARY);
   chromeArgs.push(executable);
   if (process.platform === 'win32') {
     executable = path.join(executable, 'devsuite.exe');
