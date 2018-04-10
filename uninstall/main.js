@@ -1,5 +1,5 @@
 'use strict';
-import { app, ipcMain, BrowserWindow, dialog, Menu, globalShortcut } from 'electron';
+const { app, ipcMain, BrowserWindow, dialog, Menu, globalShortcut } =  require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,7 +32,7 @@ app.on('ready', function() {
   let baseLocation = encodeURI(__dirname.replace(/\\/g, '/')).replace(/#/g, '%23');
 
   // Load the index.html of the app
-  mainWindow.loadURL(`file://${baseLocation}/../browser/index.html`);
+  mainWindow.loadURL(`file://${baseLocation}/dist/index.html`);
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
