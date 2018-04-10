@@ -91,7 +91,7 @@ class DynamicClass {
     let klass = require(`../${modulePath}`);
     let obj = klass.default.convertor.fromJson(config);
     if(skipInstall) {
-      obj.installAfterRequirements = skipInstallation.bind(this);
+      obj.installAfterRequirements = skipInstallation.bind(obj);
       obj.checkFiles = skipOperation.bind(this);
       obj.useDownload = false;
     }
@@ -101,6 +101,7 @@ class DynamicClass {
 
 function skipInstallation(progress, success) {
   progress.setStatus('Installing');
+  this.setInstallComplete();
   success && success(true);
 }
 
