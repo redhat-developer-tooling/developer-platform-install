@@ -6,8 +6,6 @@ let fs = require('fs-extra');
 import Logger from '../../services/logger';
 import Util from '../../model/helpers/util';
 import Platform from '../../services/platform';
-let at = require('lodash/omit');
-
 
 class StartController {
 
@@ -27,9 +25,9 @@ class StartController {
 
   fetchMiscComponents() {
     let miscComponents = [];
-    for (let [k, v] of this.installerDataSvc.allInstallables()) {
-      if(v.installed && k!=="devstudio" && k!=="cdk" && k!==undefined){
-        miscComponents.push(v);
+    for (let [key, value] of this.installerDataSvc.allInstallables()) {
+      if(value.installed && key!=="devstudio" && key!=="cdk" && key!==undefined){
+        miscComponents.push(value);
       }
     }
     return miscComponents;
