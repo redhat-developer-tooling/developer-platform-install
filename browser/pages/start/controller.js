@@ -25,12 +25,21 @@ class StartController {
 
   fetchMiscComponents() {
     let miscComponents = [];
+    this.removeComponents('devstudio');
+    this.removeComponents('cdk');
     for (let [key, value] of this.installerDataSvc.allInstallables()) {
       if(value.installed && key!=="devstudio" && key!=="cdk" && key!==undefined){
         miscComponents.push(value);
       }
     }
     return miscComponents;
+  }
+
+  removeComponents(key) {
+    for(let list of this.installerDataSvc.getInstallable(key).dependenciesOf){
+      this.installerDataSvc.allInstallables().delete(list.keyName);
+    }
+    return;
   }
 
   startDevstudio() {
