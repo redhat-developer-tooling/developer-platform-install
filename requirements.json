@@ -343,7 +343,7 @@
     }
   },
   "fusetools": {
-    "name": "Red Hat JBoss Fuse Tooling",
+    "name": "Red Hat Fuse Tooling",
     "description": "A certified Eclipse-based integrated development environment (IDE) for Fuse",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/devstudio",
@@ -369,7 +369,7 @@
     }
   },
   "fuseplatform": {
-    "name": "Red Hat JBoss Fuse on JBoss EAP",
+    "name": "Red Hat Fuse on JBoss EAP",
     "description": "An agile, lightweight and modern integration platform (installed on JBoss EAP)",
     "vendor": "Red Hat, Inc.",
     "modulePath": "model/jbossfuse",
@@ -405,7 +405,7 @@
     }
   },
   "fuseplatformkaraf": {
-    "name": "Red Hat JBoss Fuse on Apache Karaf",
+    "name": "Red Hat Fuse on Apache Karaf",
      "description": "An agile, lightweight and modern integration platform (installed on Apache Karaf package)",
      "vendor": "Red Hat, Inc.",
      "modulePath": "model/jbossfusekaraf",
