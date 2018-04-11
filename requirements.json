@@ -276,7 +276,7 @@
         "requires": ["cygwin","hyperv||virtualbox"]
       },
       "darwin": {
-        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.3.0-1-minishift-darwin-amd64?workflow=direct",
+        "dmUrl": "https://developers.redhat.com/download-manager/jdf/file/cdk-3.4.0-1-minishift-darwin-amd64?workflow=direct",
         "url": "http://cdk-builds.usersys.redhat.com/builds/weekly/10-Apr-2018.cdk-3.4.0/darwin-amd64/minishift",
         "fileName": "minishift_3_4_0__1__GA",
         "sha256sum": "80dd2042a4dbe52a7f31a250143abc8a0c26db629e30df5d3aee24518f9c6307",
