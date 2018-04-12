@@ -15,9 +15,9 @@ class VirtualBoxInstall extends InstallableItem {
     super(VirtualBoxInstall.KEY, downloadUrl, fileName, targetFolderName, installerDataSvc, false);
 
     this.minimumVersion = '5.1.12';
-    this.revision = revision;
     this.orHigher = ' or higher';
-    
+    this.revision = revision;
+
     this.downloadUrl = this.downloadUrl.split('${version}').join(this.version);
     this.downloadUrl = this.downloadUrl.split('${revision}').join(this.revision);
 
