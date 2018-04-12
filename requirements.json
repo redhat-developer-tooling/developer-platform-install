@@ -354,7 +354,7 @@
     "url": "https://devstudio.redhat.com/11/",
     "fileName": "devstudio-11.2.0.GA-installer-standalone.jar",
     "sha256sum": "",
-    "version": "10.2.0.GA",
+    "version": "10.3.0.GA",
     "additionalLocation": "",
     "additionalIus": "com.jboss.devstudio.fuse.feature.feature.group",
     "useDownload": false,
