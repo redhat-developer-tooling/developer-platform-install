@@ -168,7 +168,7 @@ describe('JDK installer', function() {
       });
 
       it('should reject openjdk if location for java is not found', function() {
-        mockDetectedJvm('1.8.0', '');
+        mockDetectedJvm('', '');
         return jdk.detectExistingInstall().then(()=> {
           expect(jdk.selectedOption).to.be.equal('install');
         });

@@ -20,6 +20,7 @@ class JdkInstall extends InstallableItem {
     this.sha256 = sha256sum;
     this.minimumVersion = '1.8.0';
     this.openJdkMsi = false;
+    this.orHigher = '';
   }
 
   static get KEY() {
@@ -34,7 +35,7 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
-    let versionRegex = /version\s"(\d+\.\d+\.\d+)_.*"/;
+    let versionRegex = /version\s"(\d+\.\d+\.\d+).*"/;
     let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], this.installerDataSvc.jdkDir(), true);

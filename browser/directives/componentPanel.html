@@ -49,7 +49,7 @@
     <span>You have selected
       <ng-repeat ng-repeat="dep in filtered = (item.dependenciesOf | filter: {selectedOption: 'install'} | limitTo:1)">
         <span>{{dep.productName}},</span>
-      </ng-repeat> which requires {{item.productName}} version {{item.minimumVersion}} or higher.</span>
+      </ng-repeat> which requires {{item.productName}} version {{item.minimumVersion}}{{item.orHigher}}.</span>
       <span ng-show="item.messages.dependency !== undefined">
         <span>{{item.messages.dependency.message.split(item.messages.dependency.linkDescription)[0]}}</span>
         <a type="button" class="pointer" ng-click="openUrl(item.messages.dependency.link ? item.messages.dependency.link : item.downloadUrl)">
