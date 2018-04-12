@@ -129,7 +129,10 @@ class SelectionController {
     if(installer.isSelected()) {
       for(let dep of graph.dependenciesOf(node)) {
         let depInstaller = checkboxModel[dep];
-        if(depInstaller.isInstallable && depInstaller.references === 0 && depInstaller.isNotDetected()) {
+        if(depInstaller.isInstallable
+          && !depInstaller.isDisabled()
+          && depInstaller.references === 0
+          && (depInstaller.isNotDetected() || depInstaller.isInvalidVersionDetected())) {
           depInstaller.selectedOption = 'install';
         }
         depInstaller.references++;
