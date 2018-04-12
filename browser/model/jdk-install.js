@@ -27,7 +27,7 @@ class JdkInstall extends InstallableItem {
   }
 
   getLocation() {
-    if(this.hasOption(this.selectedOption) && !this.isSelected()) {
+    if(this.hasOption(this.selectedOption)) {
       return this.option[this.selectedOption].location;
     }
     return this.installerDataSvc.jdkDir();
@@ -37,7 +37,7 @@ class JdkInstall extends InstallableItem {
     let versionRegex = /version\s"(\d+\.\d+\.\d+)_.*"/;
     let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
-    this.addOption('install', versionRegex1.exec(this.version)[1], '', true);
+    this.addOption('install', versionRegex1.exec(this.version)[1], this.installerDataSvc.jdkDir(), true);
     return Promise.resolve().then(()=>{
       if(Platform.OS == 'win32') {
         return this.findMsiInstalledJava();
@@ -142,6 +142,7 @@ class JdkInstall extends InstallableItem {
         if(targetDir !== this.getLocation()) {
           Logger.info(this.keyName + ' - OpenJDK location not detected, it is installed into ' + targetDir + ' according info in log file');
           this.installerDataSvc.jdkRoot = targetDir;
+          this.option.install.location = targetDir;
         }
         installer.succeed(true);
       }).catch(()=>{
