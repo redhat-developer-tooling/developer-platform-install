@@ -778,7 +778,7 @@
   },
   "cdkdevelopment": {
     "name": "Guided Development on local OpenShift",
-    "description": "A step by step application development for Openshift!",
+    "description": "A step by step application development for Openshift",
     "congratulation": "Congratulations! You've learned how to create, build and deploy applications on Openshift!",
     "file": {
       "creating-project": {
