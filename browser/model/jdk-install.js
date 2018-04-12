@@ -119,7 +119,7 @@ class JdkInstall extends InstallableItem {
         option.error = 'oldVersion';
         option.warning = '';
       } else if(Version.GT(option.version, this.minimumVersion)) {
-        option.valid = true;
+        option.valid = false;
         option.error = '';
         option.warning = 'newerVersion';
       }
