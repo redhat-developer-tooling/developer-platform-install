@@ -41,12 +41,6 @@ describe('WelcomeController', function() {
     sandbox.restore();
   });
 
-  it('openDevSuiteOverview opens external browser with devsuite page', function() {
-    sandbox.stub(electron.shell, 'openExternal');
-    welcomeController.openDevSuiteOverview();
-    expect(electron.shell.openExternal).calledOnce;
-  });
-
   describe('next', function() {
     beforeEach(function() {
       sandbox.stub(welcomeController.router, 'go');
