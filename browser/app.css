@@ -288,36 +288,13 @@ footer {
     margin-right: 13px;
   }
 
-  /* .spinner {
-    display: inline-block;
-    opacity: 0;
-    width: 0;
-
-    -webkit-transition: opacity 0.25s, width 0.25s;
-    -moz-transition: opacity 0.25s, width 0.25s;
-    -o-transition: opacity 0.25s, width 0.25s;
-    transition: opacity 0.25s, width 0.25s;
-  } */
-
   .spinner.spinner-bgcolour {
-    /* animation: rotation 600ms infinite linear;
-    border-bottom: 4px solid rgba(3, 3, 3, 0.25);
-    border-left: 4px solid rgba(3, 3, 3, 0.25);
-    border-right: 4px solid rgba(3, 3, 3, 0.25);
-    border-radius: 100%; */
     border-top: 4px solid #00a8e1;
     border-width: 5px;
     height: 29px;
     width: 29px;
-    /* margin: 0 auto;
-    position: relative; */
-  }
 
-  /* .spinner.spinner-lg {
-    border-width: 15px;
-    height: 120px;
-    width: 120px;
-  } */
+  }
 
   .has-spinner.active {
     cursor:progress;
@@ -409,17 +386,30 @@ footer {
 
   .footer-version {
     position: absolute;
-    bottom: 16px;
+    /* bottom: 16px; */
     left: 16px;
-    font-size: 15px;
+    margin-left: 65px;
+    font-weight: 600;
+    padding-top: 2px;
   }
 
   .footer-version-new {
     color: #c00;
+    font-weight: 400;
+  }
+
+  .footer-version-check {
+    margin-right: 4px;
+    top: 2px;
   }
 
   .footer-version-current {
-    color: green;
+    color: #1b96d5;
+  }
+
+  .footer-version-field {
+    font-weight: 700;
+    font-size: 13px;
   }
 
   .footer-border{
@@ -1056,4 +1046,34 @@ footer {
     border-radius: 1px;
     text-transform: uppercase;
   }
+
+  .effect-icon {
+    transition: all 0.2s linear 0s;
+  }
+
+  .effect-icon:before {
+    content: "\f019";
+    font-family: FontAwesome;
+    font-size: 15px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: -30px;
+    top: 10px;
+    opacity: 0;
+    height: 100%;
+    width: 40px;
+    transition: all 0.2s linear 0s;
+  }
+    
+  .effect-icon:hover {
+      text-indent: -20px;
+  }
+
+  .effect-icon:hover::before {
+    opacity: 1;
+    text-indent: 0px;
+  }
+
 }
