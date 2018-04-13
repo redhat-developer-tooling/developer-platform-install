@@ -77,11 +77,11 @@ describe('JDK installer', function() {
     sandbox.restore();
   });
 
-  function mockDetectedJvm(version, location = 'java.home = /java/home\n') {
+  function mockDetectedJvm(version, location = 'java.home = /java/home\n', buildDate = '2018-03-20') {
     sandbox.stub(JdkInstall.prototype, 'findMsiInstalledJava').resolves('');
     sandbox.stub(JdkInstall.prototype, 'findDarwinJava').resolves('');
     sandbox.stub(Util, 'executeCommand')
-      .onFirstCall().resolves(`version "${version}"`)
+      .onFirstCall().resolves(`version "${version}" ${buildDate}`)
       .onSecondCall().resolves(location);
     sandbox.stub(Util, 'executeFile').resolves('optput');
     sandbox.stub(child_process, 'exec').yields(undefined, 'output');
@@ -137,6 +137,22 @@ describe('JDK installer', function() {
     it('should not fail if selected option is not present in available options', function() {
       jdk.selectedOption = 'detected';
       jdk.validateVersion();
+    });
+
+    it('should detect Java 9 and mark it as invalid', function() {
+      mockDetectedJvm('9.0.4.1-redhat');
+      return jdk.detectExistingInstall().then(()=>{
+        expect(jdk.selectedOption).to.be.equal('detected');
+        expect(jdk.option.detected.valid).to.be.equal(false);
+      });
+    });
+
+    it('should detect Java 10 and mark it as invalid', function() {
+      mockDetectedJvm('10');
+      return jdk.detectExistingInstall().then(()=>{
+        expect(jdk.selectedOption).to.be.equal('detected');
+        expect(jdk.option.detected.valid).to.be.equal(false);
+      });
     });
 
     describe('on windows', function() {
@@ -271,7 +287,7 @@ describe('JDK installer', function() {
         mockDetectedJvm('1.9.0_1');
         return jdk.detectExistingInstall().then(()=>{
           expect(jdk.selectedOption).to.be.equal('detected');
-          expect(jdk.option.detected.version).to.be.equal('1.9.0');
+          expect(jdk.option.detected.version).to.be.equal('1.9.0_1');
           Util.executeCommand.rejects();
           return jdk.detectExistingInstall();
         }).then(()=>{

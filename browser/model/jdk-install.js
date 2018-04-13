@@ -2,7 +2,8 @@
 
 let fs = require('fs-extra');
 let path = require('path');
-var rimraf = require('rimraf');
+let rimraf = require('rimraf');
+let semver = require('semver');
 
 
 import InstallableItem from './installable-item';
@@ -35,7 +36,7 @@ class JdkInstall extends InstallableItem {
   }
 
   detectExistingInstall() {
-    let versionRegex = /version\s"(\d+\.\d+\.\d+).*"/;
+    let versionRegex = /version\s"(.+)".*/;
     let versionRegex1 = /(\d+\.\d+\.\d+).*/;
     let command = 'java -XshowSettings';
     this.addOption('install', versionRegex1.exec(this.version)[1], this.installerDataSvc.jdkDir(), true);
@@ -53,15 +54,11 @@ class JdkInstall extends InstallableItem {
     }).then((output) => {
       return new Promise((resolve, reject) => {
         let version = versionRegex.exec(output);
-        if (version && version.length > 1) {
+        if (version && version.length > 1 && version[1].length > 0) {
           this.addOption('detected', version[1], '', true);
-          this.option['detected'].version = version[1];
           this.selectedOption = 'detected';
           this.validateVersion();
-          if(this.option['detected'].valid) {
-            this.selectedOption = 'detected';
-          }
-          resolve(true);
+          resolve();
         } else {
           reject('No java detected');
         }
@@ -111,14 +108,15 @@ class JdkInstall extends InstallableItem {
   validateVersion() {
     let option = this.option[this.selectedOption];
     if(option) {
+      let v = semver.coerce(option.version);
       option.valid = true;
       option.error = '';
       option.warning = '';
-      if(Version.LT(option.version, this.minimumVersion)) {
+      if(Version.LT(v, this.minimumVersion)) {
         option.valid = false;
         option.error = 'oldVersion';
         option.warning = '';
-      } else if(Version.GT(option.version, this.minimumVersion)) {
+      } else if(Version.GT(v, this.minimumVersion)) {
         option.valid = false;
         option.error = '';
         option.warning = 'newerVersion';
