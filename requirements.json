@@ -479,7 +479,7 @@
     }
   },
   "xhyve": {
-    "name": "xhyve hypervisor",
+    "name": "Xhyve hypervisor",
     "description": "A lightweight virtualization platform for macOS",
     "modulePath": "model/xhyve",
     "installable": false,
