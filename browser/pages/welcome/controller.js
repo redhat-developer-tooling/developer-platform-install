@@ -15,7 +15,6 @@ class WelcomeController {
 
     this.URL_DM_DEVSUITE_INFO = 'https://developers.redhat.com/download-manager/rest/available/devsuite/?nv=1';
     this.URL_DEVSUITE_DOWNLOAD_PAGE = 'https://developers.redhat.com/products/devsuite/download/';
-    this.URL_DEVELOPER_PROGRAM_SITE = 'https://developers.redhat.com';
   }
 
   next() {
@@ -30,9 +29,9 @@ class WelcomeController {
     };
 
     return this.http(req).then((data)=>{
-      let version = this.scope.version;
+      let appVersion = this.scope.version;
       let devsuiteVersion = data.data[0].featuredArtifact.versionName;
-      let numericVersion = version.split('-')[0];
+      let numericVersion = appVersion.split('-')[0];
       if (Version.GT(devsuiteVersion, numericVersion)) {
         this.scope.newVersion = devsuiteVersion;
         this.scope.status = 'New';
@@ -54,9 +53,6 @@ class WelcomeController {
     this.electron.remote.getCurrentWindow().close();
   }
 
-  openDevSuiteOverview() {
-    this.electron.shell.openExternal(this.URL_DEVELOPER_PROGRAM_SITE);
-  }
 }
 
 WelcomeController.$inject = ['$state', '$scope', 'electron', 'request'];

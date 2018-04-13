@@ -48,21 +48,19 @@
 </main>
 
 <footer id="footer-navigation" class="no-background-color">
-
   <div class="form-group pull-right form-buttons">
-    <div ng-show="status=='New'">
-      <button type="button" class="btn btn-primary btn-lg version-check" ng-click="welcomeCtrl.downloadLatestVersion()">
-        <span>Download latest version</span>
-      </button>
-    </div>
-      <button id="welcomeNextButton" type="button" class="go-btn footer-btns btn btn-primary btn-lg" form="welcomeForm"
-        ng-click="welcomeCtrl.next()" autofocus>
+    <button id="welcomeNextButton" type="button" class="go-btn footer-btns btn btn-primary btn-lg" form="welcomeForm" ng-click="welcomeCtrl.next()" autofocus>
       <span id="welcome-form-btn-text">Next</span>
     </button>
   </div>
-  <span class="footer-version">Version: {{version}}
-    <span ng-show="status=='Checking'">(Checking for Development Suite Installer updates)</span>
-    <span class="footer-version-new" ng-show="status=='New'">(New Development Suite Installer {{newVersion}} is available)</span>
-    <span class="footer-version-current" ng-show="status=='Current' || status=='Error'">(Development Suite Installer is up to date)</span>
+  <span class="footer-version">
+    <span class="footer-version-field">Version: {{version}}</span>
+    <div ng-if="status=='Checking'">
+      <div class="spinner spinner-xs inline footer-version-check"></div><span>Checking for new version</span>
+    </div>
+    <div class="footer-version-new" ng-if="status=='New'">Update Available: {{newVersion}}&nbsp;
+      <span class="effect-icon pointer" ng-click="welcomeCtrl.downloadLatestVersion()">| Download</span>
+    </div>
+    <div class="footer-version-current" ng-if="status=='Current' || status=='Error'">Installer is up to date.</div>
   </span>
 </footer>
