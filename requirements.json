@@ -783,7 +783,7 @@
     "file": {
       "creating-project": {
         "fileName": "cdk-creating-project-gd.xml",
-        "taskName": "Creating, buildin and deploying application to OpenShift",
+        "taskName": "Creating, building and deploying application to OpenShift",
         "intro": "This cheatsheet explains how to create, build and deploy application to Openshift using Red Hat Developer Studio and Container Development Kit.",
         "onCompletion": "Congratulations! You have learned how to create, build and deploy application to Openshift!"
       }
