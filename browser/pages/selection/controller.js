@@ -52,6 +52,7 @@ class SelectionController {
   }
 
   toggleSelection(type) {
+    let deselectedComponents = [];
     this.componentsInChannel(this.channel_tab).forEach((node)=>{
       if(type==='all') {
         if (node.isInstallable && node.isNotDetected()) {
@@ -59,8 +60,14 @@ class SelectionController {
         }
       } else if(type==='none') {
         node.selectedOption = 'detected';
+        deselectedComponents.push(node);
       }
     });
+    for (const node of deselectedComponents) {
+      if (node.references > 0) {
+        node.selectedOption = 'install';
+      }
+    }
   }
 
   channelBadge(tab) {
