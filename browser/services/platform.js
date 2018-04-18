@@ -145,10 +145,12 @@ class Platform {
     return Platform.identify({
       darwin: ()=> {
         return pify(child_process.exec)('which docker-machine-driver-xhyve').then((stdout) => {
-          return stdout.trim().length > 0;
-        }).catch(()=> false);
+          return Promise.resolve(stdout.trim().length > 0);
+        }).catch(() => { 
+          return Promise.resolve(false);
+        });
       },
-      default: ()=> Promise.resolve(false)
+      default: () => { return Promise.resolve(false); }
     });
   }
 
