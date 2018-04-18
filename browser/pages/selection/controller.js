@@ -58,7 +58,7 @@ class SelectionController {
         if (node.isInstallable && node.isNotDetected()) {
           node.selectedOption = 'install';
         }
-      } else if(type==='none') {
+      } else if(type ==='none' && node.selectedOption === 'install') {
         node.selectedOption = 'detected';
         deselectedComponents.push(node);
       }
