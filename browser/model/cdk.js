@@ -57,6 +57,8 @@ class CDKInstall extends InstallableItem {
           return Util.writeFile(path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1'), this.createHypervSwitch());
         }).then(() => {
           return installer.exec(`powershell -ExecutionPolicy Bypass -File ${path.join(os.tmpdir(), 'rd-devsuite-vswitch.ps1')}`);
+        }).catch(() => {
+          Logger.info(this.keyName + ' - Could not configure HYPERV_VIRTUAL_SWITCH env variable, please do it manually before starting minishift');
         });
       } else if (xh && xh.hasOption('detected')) {
         driverName = 'xhyve';
