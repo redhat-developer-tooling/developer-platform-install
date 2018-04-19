@@ -125,7 +125,7 @@
   },
   "devstuidocentralcheckstyle": {
     "name": "Eclipse Checkstyle",
-    "description": "Checkstye Integration into the Eclipse IDE.",
+    "description": "Checkstyle Integration into the Eclipse IDE.",
     "vendor": "eclipse-cs and sevntu-checkstyle",
     "modulePath": "model/devstudio-central-p2-zip",
     "installable": true,
@@ -670,7 +670,7 @@
   },
   "fusedevelopment": {
     "name": "Red Hat Fuse Guided Development",
-    "description": "A step by step Red Hat Fuse application development",
+    "description": "Develop a Red Hat Fuse application with step-by-step instructions",
     "congratulation": "Congratulations! You've learned how to create and deploy Fuse applications!",
     "ref" : {
       "camel-project" : {
@@ -702,7 +702,7 @@
   },
   "eclipsedevelopment": {
     "name": "Eclipse Plug-in Guided Development",
-    "description": "A step by step guided Eclipse development",
+    "description": "Develop an Eclipse based application with step-by-step instructions",
     "congratulation": "Congratulations! You've learned how to create Eclipse based applications!",
     "ref" : {
       "plugin-project" : {
@@ -740,7 +740,7 @@
   },
   "javadevelopment": {
     "name": "Java Guided Development",
-    "description": "A step by step guided Java development",
+    "description": "Develop a Java application with step-by-step instructions",
     "congratulation": "Congratulations! You've learned how to create Java applications!",
     "ref" : {
       "hello-world" : {
@@ -778,14 +778,14 @@
   },
   "cdkdevelopment": {
     "name": "Guided Development on local OpenShift",
-    "description": "A step by step application development for Openshift",
-    "congratulation": "Congratulations! You've learned how to create, build and deploy applications on Openshift!",
+    "description": "Develop an application on OpenShift with step-by-step instructions",
+    "congratulation": "Congratulations! You've learned how to create, build and deploy applications on OpenShift!",
     "file": {
       "creating-project": {
         "fileName": "cdk-creating-project-gd.xml",
         "taskName": "Creating, building and deploying application to OpenShift",
-        "intro": "This cheatsheet explains how to create, build and deploy application to Openshift using Red Hat Developer Studio and Container Development Kit.",
-        "onCompletion": "Congratulations! You have learned how to create, build and deploy application to Openshift!"
+        "intro": "This cheatsheet explains how to create, build and deploy application to OpenShift using Red Hat Developer Studio and Container Development Kit.",
+        "onCompletion": "Congratulations! You have learned how to create, build and deploy application to OpenShift!"
       }
     },
     "vendor": "Red Hat, Inc.",
