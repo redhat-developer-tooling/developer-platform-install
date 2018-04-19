@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet title="Creating, building and deploying application to OpenShift">
 	<intro>
-		<description>This cheatsheet will guide you through creating, building and deploying
-			application to Openshift.
+		<description>This cheat sheet will guide you through creating, building and deploying
+			an application to Openshift.
 		</description>
 	</intro>
 	<item title="Start CDK/Minishift">
@@ -21,14 +21,14 @@
         label="On local tool bar press &apos;Start the server&apos; button">
   </subitem>
   <subitem
-        label="Wait for virtual machine is up and running">
+        label="Wait until virtual machine is running">
   </subitem>
   <subitem
-        label="Accept untrusted SSL certificate to connect to OpenShift cluster">
+        label="Accept the untrusted SSL certificate to connect to OpenShift cluster">
   </subitem>
 	</item>
-	<item title="Create OpenShift Application">
-		<description>Follow these steps to create, build, and deploy the application 
+	<item title="Create an OpenShift Application">
+		<description>Follow these steps to create, build, and deploy the application
 		</description>
 		<subitem label="Open &apos;Openshift Explorer&apos; View">
      <command
@@ -39,22 +39,22 @@
 		</subitem>
 		<subitem label="Select &apos;nodejs-mongo-persistent&apos; project from &apos;Server application source&apos; list and press &apos;Next&apos; button.">
 		</subitem>
-		  <subitem label="On &apos;Template Parameters&apos; page press &apos;Finish&apos; button to create OpenShift application.">
+		  <subitem label="On &apos;Template Parameters&apos; page, press &apos;Finish&apos; button to create OpenShift application.">
 		  </subitem>
-		  <subitem label="When &apos;Create Application Summary&apos; dialog shows up press &apos;OK&apos; button.">
+		  <subitem label="When &apos;Create Application Summary&apos; dialog box displays, press &apos;OK&apos; button.">
 		  </subitem>
-		  <subitem label="In &apos;Import OpenShift Application&apos; dialog press &apos;Finish&apos; button.">
+		  <subitem label="When &apos;Import OpenShift Application&apos; dialog box displays, press &apos;Finish&apos; button.">
 		  </subitem>
-		  <subitem label="When request to create server adapter for new application pops up press &apos;Yes&apos; button.">
+		  <subitem label="When request to create server adapter for new application dialog box displays, press &apos;Yes&apos; button.">
 		  </subitem>
 	</item>
 	<item title="Wait Application built and deployed">
-		<description>When the application is finished building and deploying you should see two running pods in <b>OpenShift Explorer</b> View. 
+		<description>When the application is finished building and deploying you should see two running pods in <b>OpenShift Explorer</b> View.
 		</description>
 	</item>
 	<item title="Open Application home page in browser">
 		<description>
-		At this point, you&apos;ve successfully created, built and deployed a Node.js and MongoDB application in containers running on OpenShift in your personal OpenShift cluster. 
+		At this point, you&apos;ve successfully created, built and deployed a Node.js and MongoDB application in containers running on OpenShift in your personal OpenShift cluster.
 		From context menu for &apos;My Project&apos; node in OpenShift Explorer tree select &apos;Show In-&gt;Web Browser&apos; to see your Application home page in browser.
 		</description>
 	</item>
