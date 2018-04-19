@@ -692,7 +692,7 @@
     "version": "1.0.0 Technology Preview",
     "useDownload": false,
     "defaultOption": "detected",
-    "requires": ["fusetools"],
+    "requires": ["fusetools", "fuseplatformkaraf"],
     "size": 0,
     "installSize": 0,
     "channel" : {
