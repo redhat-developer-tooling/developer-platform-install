@@ -144,7 +144,9 @@ class Platform {
   static isXhyveAvailable() {
     return Platform.identify({
       darwin: ()=> {
-        return pify(child_process.exec)('which docker-machine-driver-xhyve').then((stdout) => {
+        let newPath = `/usr/local/bin${path.delimiter}${process.env.PATH}`;
+
+        return pify(child_process.exec)('which docker-machine-driver-xhyve', {env: {PATH: newPath}}).then((stdout) => {
           return Promise.resolve(stdout.trim().length > 0);
         }).catch(() => { 
           return Promise.resolve(false);
