@@ -13,9 +13,9 @@ class Request {
   get(req) {
     return new Promise((resolve)=> {
       if(this.electron) {
-        this.electron.remote.getCurrentWindow().webContents.session.resolveProxy("https://google.com", function(p){
-          //parse PROXY XXX.XXX.XXX.XXX:XXXX;
-          let proxy = p.replace(/(PROXY|DIRECT)/g,'').replace(/;/g,'').replace(/ /g,'');
+        this.electron.remote.getCurrentWindow().webContents.session.resolveProxy("https://developers.redhat.com", function(p){
+          //PROXY XXX.XXX.XXX.XXX:XXXX;DIRECT;
+          let proxy = p.replace(/(PROXY|DIRECT|;| )/g,'');
           resolve(proxy.length > 0 ? `http://${proxy}`: undefined);
           console.log(proxy);
         });
