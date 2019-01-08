@@ -70,7 +70,7 @@
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "codecov": "3.0.0",
-    "electron": "1.8.4",
+    "electron": "1.8.8",
     "electron-builder": "20.8.1",
     "electron-packager": "11.2.0",
     "electron-rebuild": "1.7.3",
