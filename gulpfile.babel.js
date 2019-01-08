@@ -122,37 +122,37 @@ gulp.task('update-requirements', ['transpile:app'], function() {
 
   let updateDevStudioVersion = ()=>{
     return new Promise((resolve, reject) => {
-      let url;
-      if(reqs['devstudio'].url.endsWith('/')) {
-        url = reqs['devstudio'].url + '/content.json';
-      } else {
-        url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
-      }
+      // let url;
+      // if(reqs['devstudio'].url.endsWith('/')) {
+      //   url = reqs['devstudio'].url + '/content.json';
+      // } else {
+      //   url = reqs['devstudio'].url.substring(0, reqs['devstudio'].url.lastIndexOf('/')) + '/content.json';
+      // }
 
-      console.log(url);
-      request(url, (err, response, body)=>{
-        if (err) {
-          reject(err);
-        } else {
-          let meta = JSON.parse(body);
-          let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
-          let finalVersion = versionRegex.exec(meta.fullVersion)[1];
+      // console.log(url);
+      // request(url, (err, response, body)=>{
+      //   if (err) {
+      //     reject(err);
+      //   } else {
+      //     let meta = JSON.parse(body);
+      //     let versionRegex = /(\d+\.\d+\.\d+\.\w+\d*).*/;
+      //     let finalVersion = versionRegex.exec(meta.fullVersion)[1];
 
-          if (reqs.devstudio.version != finalVersion) {
-            reqs.devstudio.version = finalVersion;
-          }
-          console.log(meta);
-          if(reqs.devstudio.sha256sum == '') {
-            let latestUrl = meta.installer.replace(/devstudio-.+\.jar/, 'devstudio-' + finalVersion.substring(0, finalVersion.lastIndexOf('.') + 1) + 'latest-installer-standalone.jar');
-            reqs.devstudio.url = latestUrl;
-            reqs.devstudio.dmUrl = latestUrl;
-            reqs.devstudio.fileName = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/') + 1);
-            reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
-          }
-          reqs.fusetools.fileName = reqs.devstudio.fileName;
-          resolve();
-        }
-      });
+      //     if (reqs.devstudio.version != finalVersion) {
+      //       reqs.devstudio.version = finalVersion;
+      //     }
+      //     console.log(meta);
+      //     if(reqs.devstudio.sha256sum == '') {
+      //       let latestUrl = meta.installer.replace(/devstudio-.+\.jar/, 'devstudio-' + finalVersion.substring(0, finalVersion.lastIndexOf('.') + 1) + 'latest-installer-standalone.jar');
+      //       reqs.devstudio.url = latestUrl;
+      //       reqs.devstudio.dmUrl = latestUrl;
+      //       reqs.devstudio.fileName = reqs.devstudio.url.substring(reqs.devstudio.url.lastIndexOf('/') + 1);
+      //       reqs.devstudio.sha256sum = reqs.devstudio.url + '.sha256';
+      //     }
+      //     reqs.fusetools.fileName = reqs.devstudio.fileName;
+           resolve();
+      //   }
+      // });
     });
   };
 
