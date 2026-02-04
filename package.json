@@ -55,7 +55,7 @@
     "replace-in-file": "^3.4.0",
     "request": "^2.85.0",
     "rimraf": "2.6.2",
-    "semver": "5.5.0",
+    "semver": "5.7.2",
     "sudo-prompt": "^8.2.0",
     "targz": "1.0.1",
     "unzip": "0.1.11",
